@@ -287,3 +287,12 @@ Revised after a review of the six commits above by agents of the authors' family
 | File | sha256 before | sha256 after |
 |---|---|---|
 | `tools/check_manifests.py` | 6fa83222e8104b3e59a73e2d94c7435da6605f5929efd63e2bdf32b54770de01 | 355e5ff4e88015007c70aa38064f18e9f86034994575479668dd970491fefd83 |
+
+## The linux-ci change, revised: the ledger and the CI document (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `docs/GUARANTEES-LEDGER.md` | a16ad9cafde68092b6d82ab9edd2a709ad546e747afb984dd5b17b3f1aab5f31 | 3fd71c8d54108d6a42616c5bfe4b9a790d162d4efd141e381dd4e40d9399ff7e |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | 737bb1a98093f6de7cf5bf3ccb00a166a954df4568488aac2f7da5ea2ba26252 | 3bfb369d499f23129dc6d6b80bcbba2ed572de2dc198461ffbedae7865c460c0 |
