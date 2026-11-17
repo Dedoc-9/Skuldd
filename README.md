@@ -3,17 +3,17 @@
 
 **Licence:** [AGPL-3.0-only](LICENSE), and a commercial licence on request ([LICENSING.txt](LICENSING.txt)).
 **Status:** first release. Nothing here is adopted as final by its owner unless a file says so.
-**Theorems:** every proved claim is listed in [THEOREMS.md](THEOREMS.md); nothing else is claimed as proved.
+**Theorems:** every proved claim of the kernel is listed in [THEOREMS.md](THEOREMS.md), the kernel-checked examples and plant refutations of `kernel/hardening/` among them; outside the imported documents of `orlog/` and `verdandi/` and the comments inside frozen files, nothing else is claimed as proved.
 
 Three subsystems, built apart, in one tree:
 
 | Part | What it is | Its own brief |
 |---|---|---|
-| [`kernel/`](kernel) | MathKernel: binary32 functions computed with binary64 operations; statements written before their proofs, checked in Coq 8.20.1 with Flocq 4.2.1 | this file and [AGENTS.md](AGENTS.md) |
+| [`kernel/`](kernel) | MathKernel: binary32 functions computed with binary64 operations; statements that their authors declare were written before their proofs (DECLARED; compose's own header claims no such order), checked in Coq 8.20.1 with Flocq 4.2.1 | this file and [AGENTS.md](AGENTS.md) |
 | [`orlog/`](orlog) | Ørlǫg: a prose language whose law bytes are held byte-identical across a reference interpreter and Python, C99 and Rust backends | [orlog/AGENTS.md](orlog/AGENTS.md) |
 | [`verdandi/`](verdandi) | Verðandi: the deterministic studio and renderer | [verdandi/AGENTS.md](verdandi/AGENTS.md) |
 
-Verðandi and Ørlǫg may use the kernel; the kernel uses neither, and Ørlǫg is optional. Where every file came from:
+Verðandi and Ørlǫg may use the kernel; the kernel's proofs and gates use neither, and Ørlǫg is optional (the `corpus` steps of two frozen evidence scripts, `kernel/coq/orl/emit.py` and `emit2.py`, run Ørlǫg's arbiter). Where every file came from:
 [PROVENANCE.md](PROVENANCE.md). Why the three belong together: [the paper](docs/paper/SYSTEM-GUARANTEES.md).
 
 ## Proved
@@ -40,7 +40,7 @@ library, as its gate's Print Assumptions row reads: `ClassicalDedekindReals.sig_
 | `sincos32i` | [`SINCOS32_IEEE_Statement.v`](kernel/coq/sincos32i/SINCOS32_IEEE_Statement.v) (`SINCOS32_IEEE`) | candidate |
 | `sincos32z` | [`SINCOS32_IEEE_Zero_Statement.v`](kernel/coq/sincos32z/SINCOS32_IEEE_Zero_Statement.v) (`SINCOS32_IEEE_ZERO`) | candidate |
 
-Some comments inside frozen files are wrong or stale; frozen bytes never change, so the corrections sit in a dated
+Some comments inside frozen files are wrong or stale; frozen bytes never change, so corrections sit in dated notes: for `F32_Statement.v`, `P32_Statement.v` and `EXP32_Statement.v`, those of 2026-11-14 beside Verðandi's byte-identical copies (`verdandi/mathkernel/F32/<folder>/`); for `sincos32i` and `sincos32z`, a dated
 note beside the tier: [kernel/notes/CORRECTIONS-2026-11-16.md](kernel/notes/CORRECTIONS-2026-11-16.md).
 
 "Candidate" means proved and not adopted: the statements were written and the proofs checked by AI assistants
@@ -50,7 +50,7 @@ should. A proof shows that the statement follows; it does not show that the stat
 <details>
 <summary>Evidence that the proofs are accepted (MEASURED on one host; what it does not show)</summary>
 
-- Every folder's gate (`kernel/coq/gate/gate4.py`, run in a pinned container with no network) HELD on 2026-11-10 to
+- Every folder's gate (`kernel/coq/gate/gate4.py`, run in a pinned container with no network) HELD (the consoles of `f32`, `p32`, `p32r`, `exp32`, `exp32r` and `ieee64` are in `verdandi/mathkernel/F32/<folder>/`, the rest only in the authors' workspace) on 2026-11-14 to
   2026-11-16: F32 20 of 20, P32 35 of 35, P32R 41 of 41, EXP32 47 of 47, EXP32R 54 of 54, IEEE64 13 of 13 rows of
   its own gate and 148 of 148 of gate4 on a copy, SIN32 75 of 75, COS32 103 of 103, LOG32 73 of 73, SINCOS32 134 of
   134, COMPOSE 145 of 145, SINCOS32_IEEE 290 of 290, SINCOS32_IEEE_ZERO 288 of 288. Of the last two counts, 119 and
@@ -65,9 +65,9 @@ should. A proof shows that the statement follows; it does not show that the stat
   coqchk, and reads one recursive coqchk summary strictly) HELD 8 of 8 on `sincos32i` and `sincos32z`, with the
   owner's own sha256 of their freeze lists, both in the workspace and again on this tree's copy of `kernel/coq`
   (2026-11-17); its four canaries (a wrong anchor, a changed byte, an admitted top theorem, an unlisted import) each
-  failed at the row they target.
+  failed at rows their change should reach (ARGUED: the expected rows were not written down before the runs).
 - Does not show: anything on another host, compiler or Coq release; the gates of the eleven older folders do not yet
-  read coqchk's axiom list or a statement hash given from outside; Coq's own kernel is trusted (its published list of
+  read coqchk's axiom list (only the harness does, on two folders), and their anchors are freeze-list hashes the authors computed, not the owner; Coq's own kernel is trusted (its published list of
   critical bugs is being worked through: see the paper's section on trust).
 
 </details>
@@ -86,13 +86,13 @@ Result digests: sine 93a4a68e97524b7d7a235f135260ede57f23ab510f00fc10ca85245876d
 8eaa582fa2c0b97566447b9cf0b06f1e189e83825f02d0b990fec9c466adeaf7. The transcription, its consoles and the law
 statement itself are withheld from this tree until an independent reviewer has written a blind formalisation of the
 same convention, so that the reviewer's version cannot be shaped by this one.
-Does not show: a proof; another host or compiler; MPFR's own correctness, which is trusted.
+Does not show: a proof; that the transcription equals the law at patterns other than the 2,096 compared (Coq's own evaluation of the law has not been run on every input); another host or compiler; MPFR's own correctness, which is trusted.
 
 </details>
 
 ## Not done yet
 
-- The law on 32-bit patterns for the turns kernel: stated, not frozen, not proved, and withheld from this tree until
+- The law on 32-bit patterns for the turns kernel: stated, not frozen, not proved in this tree, and withheld from this tree until
   the reviewer's blind formalisation exists.
 - No C, Rust or Python library of the kernel exists yet: the printers that would generate them from the proved
   shapes are designed, not built.

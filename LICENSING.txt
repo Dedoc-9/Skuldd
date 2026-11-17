@@ -1,6 +1,6 @@
 LICENSING
 
-This repository is offered under two licences. You may choose either.
+This repository, apart from the nine fdlibm 5.3 files noted below, is offered under two licences. You may choose either.
 
 1. The GNU Affero General Public License, version 3 only (AGPL-3.0-only).
 
@@ -20,9 +20,9 @@ To ask about a commercial licence, write to:
 
 Notes
 
-- The copyright holder offers the whole repository under both licences. The SPDX tags in its files name the public
+- The nine fdlibm 5.3 files in verdandi/mathkernel/ORACLE/src/ carry Sun Microsystems' notice and stay under its terms; the copyright holder offers his own work in this repository under both licences. The SPDX tags in its files name the public
   licence, AGPL-3.0-only; the commercial licence is a separate written agreement and needs no tag.
-- THIRD-PARTY.md lists what the repository uses from other authors and under which licences. None of it is copied
+- THIRD-PARTY.md lists what the repository uses from other authors and under which licences. Nine fdlibm 5.3 source files (Copyright Sun Microsystems, Inc.) are copied into verdandi/mathkernel/ORACLE/src/, and the graybox in verdandi/graybox/ re-implements fdlibm's sine, cosine and atan2 algorithms with fdlibm's constants; nothing else of it is copied
   into this repository; that file says what was checked.
 - Contributions: until the copyright holder sets contribution terms that let him offer every contribution under
   both licences, this repository accepts no outside contribution.

@@ -5,10 +5,8 @@ labels, refuted in Coq by kernel conversion (naming what is refuted), possibly-t
 with its evidence", with refutations "by kernel conversion or vm_compute only (never native_compute)".
 
 Evidence for the "refuted in Coq" rows: `runs/refute4-console.txt` (sha256
-ee20fca4895aea41cdfd0311ccd4f2359da8167bc5d4d1f3862dd81f3c87b97a). In `stage3/`, each `<tag>/S.v` is the gate's planted
-file, byte for byte; for the nine shape plants it is cut before its first eq_refl tie, the line where the gate refuses
-it. Each `<tag>/Refute.v` proves `~` of the planted claim at the named input by `vm_compute` against the frozen
-candidates' own theorems (IEEE_SINTURN32_proof, IEEE_COSTURN32_proof, IEEE_TCST_proof, sinturn32_exact).
+ee20fca4895aea41cdfd0311ccd4f2359da8167bc5d4d1f3862dd81f3c87b97a). In `stage3/`, each `<tag>/S.v` but one is the gate's planted file, byte for byte (`i_core_bound_2p200` has none: its planted lemma is restated in its `Refute.v`); for the nine shape plants it is cut before its first eq_refl tie, and the gate refuses each at the tie of the shape it changes, which is that first tie only for shape-narrow-add. Each `<tag>/Refute.v` proves `~` of the planted claim at the named input by `vm_compute` against the frozen
+candidates' own theorems (IEEE_SINTURN32_proof, IEEE_COSTURN32_proof, IEEE_TCST_proof, sinturn32_exact) in 33 of the 45; the other 12 (ten sincos32z rows, i_prem_sin_no_finite and i_core_bound_2p200) use none of them and compute the planted claim with `vm_compute`, all but z_nonfinite_cos_unstepped helped by the lemmas of `stage3/R4Lib.v`.
 - All 45 compile against the frozen closure.
 - Print Assumptions of each lists exactly the four axioms of the tier.
 - One recursive coqchk over all of them exits 0: its summary holds exactly the four axioms and nothing unsafe.
@@ -80,16 +78,16 @@ Notes on what these show:
 - The nineteen constant plants are refuted in the planted statement's IEEE_TCST part, the part their change falsifies.
   Whether the planted shapes compute other binary32 results than the frozen ones is not settled here. The plant
   author's sampling found a function-level witness for two of them (cst-4-ulp, cst-BIG-2p22). An exhaustive comparison
-  with the T2 harness would settle it (candidate slice).
+  would settle it.
 - The nine shape plants are refuted in the claim the planted file would state, written out with the planted shape.
-  The planted file itself does not compile past its first tie, and that tie is where the gate refuses it.
+  The planted file itself compiles up to the tie of the shape it changes and fails there, which is where the gate refuses it; only for shape-narrow-add is that the first tie.
 
 ## Possibly-true variant (4)
 
 | Plant | Status |
 |---|---|
-| i ieee-mul-toward-zero (multiplication rounds toward zero) | Not refuted; no witness among the plant author's 81,686 sampled inputs. An exhaustive comparison is possible with the T2 harness (candidate slice). |
-| i prem-cos-no-format (IEEE_COSTURN32 for every finite binary64 input, not only binary32 numbers) | Not refuted; argued probably true by the overclaim audit of Turn 227 (the cosine's value before narrowing is near 1 for every finite input). |
+| i ieee-mul-toward-zero (multiplication rounds toward zero) | Not refuted; no witness among the plant author's 81,686 sampled inputs. An exhaustive comparison is possible. |
+| i prem-cos-no-format (IEEE_COSTURN32 for every finite binary64 input, not only binary32 numbers) | Not refuted, and not known false (the gate's own entry says so). The overclaim audit of Turn 227 reported one of the gate's two ROUTE ONLY plants (this one and ieee-mul-toward-zero) probably true; that it was this one is the assistant's account (REPORTED; the audit's reasoning was not kept). |
 | i two-of-three (Closed.v states two of the three parts under the name SINCOS32_IEEE) | True: it is the conjunction of two proved parts. The identity row refuses it. |
 | z four-of-six (Closed.v states four of the six parts under the name SINCOS32_IEEE_ZERO) | True: the conjunction of four proved parts. The identity row refuses it. |
 
@@ -109,7 +107,7 @@ reading of assumptions and its guard check, or a step of a proof.
 
 The ruling's three labels do not fit them. Naming this fourth group is the owner's to rule.
 
-Evidence that each is refused (READ, own; the assistant's own gate runs of the frozen candidates):
+Evidence that each is refused (READ, own; the assistant's own gate runs of the frozen candidates; the two gate consoles named below are kept in the authors' workspace, not in this tree):
 - `night\gate-runs\sincos32i-gate4-own1-console.txt` (sha256
   693194718a896567359a1aa0661370e36a934cc95ae6c6b9f90272a0441fc749; SINCOS32_IEEE GATE4 HELD: 290 of 290):
   admitted-closed, admitted-stages, admitted-tops and tcst-axiom refused because Print Assumptions names the admitted

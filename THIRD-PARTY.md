@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 # Third-party components
 
-What this repository uses from other authors, and how. Nothing below is copied into the repository.
+What this repository uses from other authors, and how. Nine fdlibm 5.3 source files are copied into the repository, in `verdandi/mathkernel/ORACLE/src/` (Copyright Sun Microsystems, Inc.; their notice permits use, copying, modification and distribution if it is preserved). Verðandi's graybox re-implements fdlibm 5.3's sine, cosine and atan2 algorithms, with fdlibm's constants and FreeBSD's later correction to atan2, in `verdandi/graybox/web/sim.js` and `verdandi/graybox/rules_ref.py`. Verðandi's characterization tooling (`verdandi/mathkernel/CHARACTERIZATION/tooling/`) imports gmpy2, python-flint and mpmath. None of these is in the table below, and nothing in the table is copied into the repository.
 
 | Component | Licence | How it is used | In this tree |
 |---|---|---|---|
@@ -12,8 +12,8 @@ What this repository uses from other authors, and how. Nothing below is copied i
 | CoqInterval 4.11.1 | CeCILL-C | its pattern (an operations record with integer constants, a program with sharing, one simulation theorem) was studied for the design; no code was copied | no |
 | Engine content named by `verdandi/art` | that engine's EULA | named by path for an optional engine integration (36 entries in `verdandi/art/director/vectors.json`); no file of such content is in the tree | no |
 
-The licences of Coq, Flocq, MPFR and CoqInterval were read from the Debian copyright files inside the pinned image
-on 2026-11-17. What was checked in the tree (2026-11-17, by search over the assembled tree): every SPDX tag in the tree reads
-`AGPL-3.0-only` (238 files); no copyright line names a holder other than the owner, apart from the Free Software
+From the Debian copyright files inside the container image of the kernel's runs, the licences of Coq, Flocq, MPFR and CoqInterval were read (DECLARED; no record of the reading is in this tree)
+on 2026-11-17. What was checked in the tree (2026-11-17, by search over the assembled tree; no record of these searches is in this tree, and two of their results, the SPDX count and the copyright holders, were corrected after an audit of the same day): every SPDX tag in the tree reads
+`AGPL-3.0-only` (245 files in the import); copyright lines name only the owner, apart from Sun Microsystems, Inc. in the nine fdlibm 5.3 files of `verdandi/mathkernel/ORACLE/src/` (and in three records of `verdandi/mathkernel/` that cite those lines) and the Free Software
 Foundation's lines inside the licence text; no JavaScript or HTML file carries another licence; no mesh, texture or
 engine asset file is in `verdandi/`. A search shows what it searched for, not that nothing else exists.

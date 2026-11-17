@@ -9,9 +9,9 @@ listed, file by file with its sha256 before and after, in `CHANGES-AFTER-IMPORT.
 | Part | Source | Pinned at | Files | Manifest sha256 |
 |---|---|---|---|---|
 | `orlog/` | the Ørlǫg repository (github.com/Dedoc-9/Orlog) | commit 0748adaca1dbb5367f40e7dc5f5906079745b4ba, tree f19b6f719c97af2c8729c2fc7a425778240ca0df | 1,288 | 4cab06df2093e8bd4d84e38a4b78a90418ec8269332cfe069c090126a5313b17 |
-| `verdandi/` | the Verðandi repository | commit a01b3a1e2cc36bafc34ea85449c14bd3028fc37c, tree 3cdfd5bdbb6d49d4c2edaf4ed9c2e120dc169494 | 780 | d9ec0d6371f0c8d4ec0108e84f5474619e7bdfbbf0dbd275fe30de26fe267708 |
+| `verdandi/` | the Verðandi repository (github.com/Dedoc-9/Verdandi; the pinned commit is four commits past 577bc2a, the last main pushed there from the owner's checkout before the import) | commit a01b3a1e2cc36bafc34ea85449c14bd3028fc37c, tree 3cdfd5bdbb6d49d4c2edaf4ed9c2e120dc169494 | 780 | d9ec0d6371f0c8d4ec0108e84f5474619e7bdfbbf0dbd275fe30de26fe267708 |
 | `kernel/` | the MathKernel proof tier and its evidence, from the owner's scratch workspace | 2026-11-17 | 494 | 110646121e814d91116ca7b88955f6981aa07b526df6ea095bb7e8c270e99143 |
-| root files | `LICENSE` (the AGPL-3.0 text, taken from the Ørlǫg blob and checked equal to the Verðandi blob), the top-level documents and `tools/assemble.py` | 2026-11-17 | 11 | f20ccb5f5f46c86db04545c88fe4592f2a5b093ea8b885b0074d3a0fa915a59d (all root files but PROVENANCE.md) |
+| root files | `LICENSE` (the AGPL-3.0 text, taken from the Ørlǫg blob and checked equal to the Verðandi blob), the top-level documents and `tools/assemble.py` | 2026-11-17 | 11, plus the four manifests | f20ccb5f5f46c86db04545c88fe4592f2a5b093ea8b885b0074d3a0fa915a59d (all root files but PROVENANCE.md and the four manifests) |
 
 How each part was taken:
 - `orlog/` and `verdandi/`: every blob of the pinned commit's tree, written byte for byte as git stores it. The
@@ -22,7 +22,7 @@ How each part was taken:
   objects). At assembly every freeze list was checked against the copy: 13 lists, 665
   entries, none missing and none with another sha256. The owner's own anchors for `sincos32i` (1477b814…e2d4) and
   `sincos32z` (a55d1c08…1172) are the sha256 of two of these lists.
-- `kernel/law/`, `kernel/hardening/`, `kernel/evidence/`: named files and folders of the workspace, listed in
+- `kernel/hardening/` and `kernel/notes/`: named files and folders of the workspace (the law draft and its T2 sweep, `kernel/law/` and `kernel/evidence/`, are withheld: the import was assembled without `--with-law`), listed in
   `tools/assemble.py`, copied byte for byte.
 
 To check a part: recompute the sha256 of each file and compare with its manifest line, then the manifest's own

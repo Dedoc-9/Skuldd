@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 # Theorems
 
-Every proved claim of Skuldd, in one place. Nothing absent from this file is claimed as proved anywhere.
+Every proved claim of the kernel, in one place. Coq has also checked the following, all under `kernel/hardening/` with their consoles: 32 examples at ±2^106, +2^104, +2^105, +2^107 and the two binary32 neighbours of +2^106 (`big106/Big106.v`), 25 examples about `sincos32i` and `sincos32z` (`examples/Examples.v`), 45 refutations of planted claims (`plants/stage3/`, listed in `plants/PLANT-LABELS.md`) and one narrowing probe (`r7-probes/NarrowProbe.v`); none of them is one of the candidate statements below. Skuldd claims as proved nothing absent from this file; the imported documents of `orlog/` and `verdandi/`, and comments inside frozen files, keep their own words.
 
 - A **statement file** is the claim: read it, not a summary of it. Its sha256 is in its folder's `FROZEN4.txt`.
 - The **closing theorem** is the proof's name. Each folder's `Identity.v` types it by the statement, so Coq itself
@@ -11,16 +11,16 @@ Every proved claim of Skuldd, in one place. Nothing absent from this file is cla
   `FunctionalExtensionality.functional_extensionality_dep` and `Classical_Prop.classic`.
 - **Candidate** means proved and not adopted by the owner as final (see `kernel/notes/LIMITATIONS.md`).
 
-## The law of the turns kernel: stated, NOT PROVEN
+## The law of the turns kernel: stated, NOT PROVEN IN THIS TREE
 
 | Statement | Status | Its theorem, once proved |
 |---|---|---|
-| `SINCOS32_LAW`: sine and cosine of 2πx on 32-bit patterns, the two conversions, the NaN pattern, the sign of every zero, every intermediate finite and moderate | **stated, not proven**; withheld from this tree until an independent reviewer has written a blind formalisation of the same convention | `MKF.sincos32law.Closed.sincos32_law_holds`, in `kernel/coq/sincos32law/Closed.v`, typed by `kernel/coq/sincos32law/Identity.v`; it will be the first row below |
+| `SINCOS32_LAW`: sine and cosine of 2πx on 32-bit patterns, the two conversions, the NaN pattern, the sign of every zero, every intermediate finite and moderate | **stated, not proven in this tree**; withheld from this tree until an independent reviewer has written a blind formalisation of the same convention | `MKF.sincos32law.Closed.sincos32_law_holds`, in `kernel/coq/sincos32law/Closed.v`, typed by `kernel/coq/sincos32law/Identity.v`; it will be the first row below |
 
 ## Proved (candidates)
 
 All paths are under `kernel/coq/`. Gate verdicts are those of each folder's gate (`gate/gate4.py`), run in a pinned
-container with no network between 2026-11-10 and 2026-11-16.
+container with no network between 2026-11-14 and 2026-11-16, each given its folder's `FROZEN4.txt` sha256 as its anchor. The consoles of `f32`, `p32`, `p32r`, `exp32`, `exp32r` and `ieee64` are in Verðandi's copies of those folders (`verdandi/mathkernel/F32/<folder>/`, from the tree's root); those of the other seven stayed in the authors' workspace.
 
 | Folder | Statement (`MKF.` …) | Statement file | Closing theorem (`MKF.` …) | Gate |
 |---|---|---|---|---|
@@ -56,5 +56,5 @@ None of this shows that a statement is the right one, or anything on another hos
 
 From `kernel/coq`, in the pinned image: compile the folder's sources in import order with `coqc -R . MKF`, then
 `coqc -R . MKF <folder>/Identity.v` prints the closing theorem's assumptions, and
-`coqchk -silent -o -R . MKF MKF.<folder>.Identity` rechecks it independently. The harness does all of this in one
+`coqchk -silent -o -R . MKF MKF.<folder>.Identity` rechecks it from the compiled files (coqchk shares Coq's kernel code, so this is a second check, not an independent one). The harness does all of this in one
 command (see `AGENTS.md`).

@@ -4,7 +4,7 @@ Written by the assistant (main session) after the overclaim audit of Turn 227. E
 stale or says more than its evidence, where it stands, and the wording that is right. The files themselves stay as
 they are: both statements are frozen by the owner's rulings (build log, Turns 223 and 225) and the candidate
 folders are on anchored freeze lists. "own" = checked by the main session this turn; "reported" = found by the
-audit agent, not re-checked.
+audit agent, not re-checked. [Added after the import into this tree: the paths below are those of the authors' workspace. `mkf-ext\<folder>\` is `kernel/coq/<folder>/` here, `gate\` is `kernel/coq/gate/`, and `src\SINCOS32_IEEE_Zero_Statement.v` is `kernel/coq/sincos32z/SINCOS32_IEEE_Zero_Statement.v`; `STATEMENT-FROZEN.txt`, `STATEMENT-ZERO-FROZEN.txt` and `harden-probes\runs\` are not in this tree.]
 
 ## Frozen statement files (comments only; no definition is affected)
 

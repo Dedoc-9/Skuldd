@@ -8,13 +8,13 @@ A brief for a coding agent working in this tree. Read it first, then the brief o
 
 One repository holding three subsystems that were built apart and are meant to strengthen each other:
 - `kernel/`: MathKernel, binary32 mathematical functions computed with binary64 operations, whose statements are
-  written before their proofs and checked in Coq 8.20.1 with Flocq 4.2.1 (`kernel/coq`), with the gates, plants and
-  exhaustive measurements that hold them (`kernel/hardening`, `kernel/evidence`).
+  checked in Coq 8.20.1 with Flocq 4.2.1 (`kernel/coq`; ten of the thirteen statement files declare that they were written before their proofs, which this tree does not show, and `compose`'s says it makes no such claim), with the gates, plants and
+  canaries that test them (`kernel/coq/gate`, `kernel/hardening`). `kernel/evidence/` is withheld with the law draft; the exhaustive sweeps of kernel functions in this tree are Verðandi's records for sqrt32, rsqrt32 and exp32 (narrow was swept at five binary64 values per finite binary32 number, except the values of magnitude at or above the largest binary32 number), under `verdandi/mathkernel/F32/orl/`.
 - `orlog/`: Ørlǫg, a prose language: a program is a numbered legal text whose law bytes are held byte-identical
   across a reference interpreter and Python, C99 and Rust backends.
 - `verdandi/`: Verðandi, the deterministic studio and renderer over a frozen oracle.
 
-The direction of use is one way: Verðandi and Ørlǫg may use the kernel; the kernel uses neither. Ørlǫg is optional:
+The direction of use is one way: Verðandi and Ørlǫg may use the kernel; the kernel's proofs and gates use neither. Ørlǫg is optional, except for the corpus mode of the emitters (`kernel/coq/orl/emit.py` and `emit2.py`, and the five emitters in `verdandi/mathkernel/F32/orl/`), which runs Ørlǫg's arbiter (`orl.py`); apart from that,
 nothing in `kernel/` or `verdandi/` needs it.
 
 ## Rules that hold everywhere
@@ -41,11 +41,11 @@ nothing in `kernel/` or `verdandi/` needs it.
 
 ## The kernel's checks
 
-All run in the pinned Coq image (Coq 8.20.1, Flocq 4.2.1), with `kernel/coq` mounted read-only:
+All run in a container image with Coq 8.20.1 and Flocq 4.2.1 (its recipe is not in this tree and no file under `kernel/` names it; the harness consoles print the sha256 of the coqc and coqchk they ran), with `kernel/coq` mounted read-only, except for the folder gate, which writes `<folder>/out4/` and `libcache/` inside the tree it judges and so needs it mounted writable:
 - the feature row: `python3 -B kernel/hardening/features/feature_row3.py <coq-root> --list <coq-root>/<folder>/FROZEN4.txt`
   (refuses recursive definitions, checking-flag changes and the Coq features behind the upstream critical-bugs list
   that the tier does not use; earlier versions are kept beside it with their runs);
-- the minimal harness: `python3 -B kernel/hardening/harness/harness2.py --src <coq-root> --list <folder>/FROZEN4.txt
+- the minimal harness, for a folder with a `Closed.v` (only `ieee64`, `sincos32i` and `sincos32z` have one; version 1 held on `sincos32i` and `sincos32z`, this version on `sincos32z`): `python3 -B kernel/hardening/harness/harness2.py --src <coq-root> --list <folder>/FROZEN4.txt
   --anchor <the owner's sha256 of that list> --statement <Module.NAME> --theorem <Module.name> --axioms
   gate/expected-pa-flocq4.txt`: eight rows, among them a fresh root, compilation in import order, the harness's own
   check file and one recursive coqchk with its summary read strictly;
@@ -111,7 +111,6 @@ In `kernel/` and this folder:
 - Changes reach the main branch through a pull request the owner merges. No outside contribution is accepted until
   the owner sets contribution terms (`LICENSING.txt`).
 - One phase per session; record what was built, what ran and how each result is graded.
-- Every proved theorem is listed in `THEOREMS.md` with its statement file, its closing theorem and its evidence; a
-  theorem that is not listed there is not claimed anywhere.
+- Every closing theorem of the kernel's folders is listed in `THEOREMS.md` with its statement file and its gate verdict. Other results checked by Coq in `kernel/hardening/` (the 45 plant refutations of `plants/PLANT-LABELS.md`, the examples of `examples/` and `big106/`, the narrowing probe of `r7-probes/`) are stated in their own files; `THEOREMS.md` names them and marks them as not candidates.
 - Changes after the import are listed in `CHANGES-AFTER-IMPORT.md`; the manifests describe the import.
 - Licensing: `LICENSE` (AGPL-3.0-only), `LICENSING.txt` (the dual offer), `THIRD-PARTY.md`, `PROVENANCE.md`.

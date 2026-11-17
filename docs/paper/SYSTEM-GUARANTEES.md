@@ -2,24 +2,24 @@
 # Skuldd: Proved Arithmetic, Prose Laws and a Deterministic Studio in One Repository
 
 *Working draft of 2026-11-17, written in the form of a systems paper. It reports what is proved and what is
-measured, and grades everything else. Every claim carries one of five grades: PROVEN (a theorem Coq has checked),
+measured, and grades everything else. Every graded claim carries READ (read in a file), REPORTED (found by others or by agents, not rechecked here), NOT PROVEN, NOT MET or one of five grades: PROVEN (a theorem Coq has checked),
 MEASURED (a run on record), DESIGNED (specified, not built), ARGUED (reasoning, not checked by any run) or
 NOT MEASURED. Long evidence is collapsed.*
 
 ## Abstract
 
-Real-time simulations, competitive games among them, need the same numbers on every machine and in every language
+Some real-time simulations, lockstep competitive games among them, need the same numbers on every machine and in every language
 that touches the simulation. Floating point gives that only when its behaviour is pinned down: the rounding mode,
 contraction into fused operations, extended precision, flush-to-zero, NaN payloads and every library function.
 This paper describes a repository that joins three subsystems built apart: **MathKernel**, binary32 functions computed
-with binary64 operations and checked in Coq; **Ørlǫg**, a prose language whose programs give byte-identical results on
+with binary64 operations and checked in Coq; **Ørlǫg**, a prose language whose programs are held to byte-identical results (measured on 11 programs of its corpus) on
 a reference interpreter and on Python, C99 and Rust backends; and **Verðandi**, a deterministic studio and renderer.
 The guarantee proved today is narrow and exact: thirteen statement files about the kernel's functions are proved in
 Coq 8.20.1 with Flocq 4.2.1 under exactly four standard axioms (PROVEN). For one function pair, sine and cosine of
 2πx, an exhaustive run over all 2^32 binary32 inputs found no result that is not faithfully rounded, every zero with
 its required sign, and the one NaN pattern for every non-finite input (MEASURED). The bit-level law that would turn
-that measurement into a theorem is stated, not proved. The code generators that would carry the kernel into C99,
-Rust, Python and Ørlǫg are designed, not built. We describe the discipline that keeps these grades honest:
+that measurement into a theorem is stated; this tree holds no proof of it. The code generators that would carry the kernel into C99,
+Rust and Python are designed, not built; one for Ørlǫg is planned, not yet designed. We describe the discipline that keeps these grades honest:
 statements fixed before proofs, gates that are shown to fail, the owner's own hashes, and documents that claim
 nothing beyond their proofs. We then argue, without measurement, how the merge could shorten work in art, design and
 engineering, and say how each argument would be measured.
@@ -40,12 +40,10 @@ platform, which gives up portability. This repository takes a third route: keep 
 behaviour by specification, and prove what each function computes.
 
 **Contributions**, each with its present grade:
-1. A discipline for numeric kernels in which every statement is written and hashed before its proof, every check
-   is shown to fail on a planted fault, and the owner, not the author, computes the hashes that anchor the claims
-   (DESIGNED and in use).
+1. A discipline for numeric kernels in which each statement is to be written and hashed before its proof, each check is to be shown to fail on a planted fault, and the owner, not the author, is to compute the hashes that anchor the claims (DESIGNED; in use in part: `compose`'s statement claims no such order, not every check has been shown to fail, and the owner holds the hashes of two folders only).
 2. Thirteen proved statement files for binary32 functions computed in binary64 (PROVEN; candidates, section 3).
 3. A bit-level law for the turns kernel (sine and cosine of 2πx) that speaks of 32-bit patterns in and out, of both
-   conversions, of NaN bytes and of every intermediate value (stated; NOT PROVEN).
+   conversions, of NaN bytes and of every intermediate value (stated; NOT PROVEN in this tree).
 4. An exhaustive measurement of that law over all 2^32 inputs against a correctly rounded oracle (MEASURED).
 5. A hardened checking stack: a minimal harness, source rows that refuse risky Coq features, canaries, and
    refutations of planted claims (MEASURED).
@@ -54,38 +52,37 @@ behaviour by specification, and prove what each function computes.
 
 **What this paper does not claim.** No statement here has been read by anyone outside the model family of the AI
 assistants that wrote and proved it, and none is adopted by its owner as final. Nothing has run on a second host.
-No backend in C99, Rust, Python or Ørlǫg exists yet for the kernel. No speed-up for any person's work is measured.
+No C99, Rust, Python or Ørlǫg library of the kernel's binary32 functions exists yet; the C sweep programs and Ørlǫg corpus laws of the five older ones (`narrow`, `sqrt32`, `rsqrt32`, `hypot32`, `exp32`) under `verdandi/mathkernel/F32/orl` are unadmitted test renderings. No speed-up for any person's work is measured.
 
 ## 2 The three subsystems
 
 **MathKernel.** Each function is first a real-number graph in which every rounding to binary64 is explicit (round to
-nearest even, written RN64), proved to be a faithful rounding of the real function on its domain. Then an IEEE shape
+nearest even, written RN64), proved to be a faithful rounding of the real function on its domain. For the five older functions and the turns kernel, though not yet for `log32`, `sin32` or `cos32` on their own, an IEEE shape
 writes the same computation once, polymorphic over a record of operations; instantiated at Flocq's binary64
 operations, it is tied to the graph by a theorem. For the turns kernel two more layers exist: a zero layer that fixes
-the sign of every zero result, and the law, stated on 32-bit patterns. The kernel's folders (`kernel/coq`) hold
+the sign of the result wherever the function is exactly zero (that no other result is zero is MEASURED, section 5.3), and the law, stated on 32-bit patterns. The kernel's folders (`kernel/coq`) hold
 thirteen proved statement files, their proofs, their plants (deliberately wrong files each gate must refuse) and
 their freeze lists.
 
 **Ørlǫg.** A program is a numbered legal text. A reference interpreter is its authority by declaration, and three
-generated backends, Python, C99 and Rust, are held to byte-identical output against 20,015 runtime vectors and a
-corpus run four ways (READ, Ørlǫg's own brief). Its floats are binary64 with the basic operations only, and every NaN
+generated backends, Python, C99 and Rust, are held to byte-identical output on a corpus run four ways, and the C99 and Rust runtimes to 20,015 runtime vectors (READ, Ørlǫg's own brief). Its floats are binary64 with the basic operations only, and every NaN
 is made canonical.
 
 **Verðandi.** A deterministic studio over a frozen oracle: worlds are designed, previewed, admitted and undone through
-a design tool, and rendered without hidden state (READ, its own brief).
+a design tool, and rendered deterministically (READ, its own brief).
 
 ## 3 Guarantees
 
 | | Guarantee | Grade today | Evidence | What it does not show |
 |---|---|---|---|---|
 | G1 | Each of the 13 statement files is implied by its proof, with exactly four standard axioms | PROVEN | each folder's gate; for two folders the stricter harness | that the statements are the right ones; anything about compiled code |
-| G2 | The turns kernel on 32-bit patterns: every finite input gives a faithful rounding; zero signs as specified; every infinite or NaN input gives 0x7FC00000; every intermediate finite and moderate | stated, MEASURED on all 2^32 inputs | the T2 sweep (section 5.3) | a proof; other hosts, compilers or MPFR builds |
-| G3 | Every backend (C99, Rust, Python, Ørlǫg) gives the same bytes as the proved program on every input | DESIGNED | none yet | — |
-| G4 | The admitted floating-point state is checked at entry; conversions on integer bits make the kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; immunity ARGUED from G2's measured ranges | T2's measured intermediate ranges | the check itself, which is not built |
-| G5 | Every file of the tree is accounted for: two parts are blob-exact copies of pinned commits, and the kernel's freeze lists match | MEASURED | the assembler's manifests; 665 of 665 freeze entries | who wrote each file's content |
+| G2 | The turns kernel on 32-bit patterns: every finite input gives a faithful rounding; zero signs as specified; every infinite or NaN input gives 0x7FC00000; every intermediate finite and moderate | stated, MEASURED on all 2^32 inputs | the T2 sweep (section 5.3), whose transcription and consoles are withheld from this tree with the law | a proof; that the transcription equals the law outside 2,096 sampled patterns; other hosts, compilers or MPFR builds; MPFR's correctness, which is trusted |
+| G3 | Every backend (C99, Rust, Python; one for Ørlǫg planned, not yet designed) gives the same bytes as the proved program on every input | DESIGNED | none yet | — |
+| G4 | The admitted floating-point state is checked at entry; conversions on integer bits make the turns kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; immunity ARGUED from G2's measured ranges | T2's measured intermediate ranges | the check itself, which is not built |
+| G5 | Every file of the tree is accounted for: two parts were blob-exact copies of pinned commits at the import, with every later change listed in `CHANGES-AFTER-IMPORT.md`, and the kernel's freeze lists match | MEASURED | the assembler's manifests; 665 of 665 freeze entries | who wrote each file's content |
 | G6 | A statement is read by someone outside the authors' model family before its owner adopts it | process, NOT MET yet | — | — |
 
-**G1 in the owner's words.** The thirteen statements are candidates: proved, not adopted. A proof shows that a
+**G1 in plain words.** The thirteen statements are candidates: proved, not adopted. A proof shows that a
 statement follows from four axioms; it does not show that the statement says what its owner meant. That second
 question is why G6 exists, and why the law (G2) is withheld from the published tree until an independent reviewer
 has written a blind formalisation of the same convention.
@@ -97,13 +94,13 @@ by the owner's ruling; NaN payloads are not kept.
 
 ## 4 Design
 
-**One tree, one direction.** Verðandi and Ørlǫg may use the kernel; the kernel uses neither, and Ørlǫg is optional.
+**One tree, one direction.** Verðandi and Ørlǫg may use the kernel; the kernel's proofs and gates use neither (the `corpus` steps of two of its emitters, `kernel/coq/orl/emit.py` and `emit2.py`, run Ørlǫg's arbiter as a cross-check), and Ørlǫg is optional.
 Each part keeps its own brief and its own checks; the root holds what spans them (licence, provenance, the tree
 gate to come). Logical names in Coq are permanent once a frozen file imports them: the kernel's thirteen prefixes
 stay, unmoved, and shared code is planned under a new sibling prefix (DESIGNED).
 
-**From hand renderings to one source** (DESIGNED, R7 design sheet). Today a function exists in about nine hand-kept
-renderings (graph table, generated graph, IEEE shape typed by hand, ties, constants typed twice, zero step,
+**From hand renderings to one source** (DESIGNED, R7 design sheet). Today there are at least nine hand-kept
+renderings of the turns kernel (reported: graph table, generated graph, IEEE shape typed by hand, ties, constants typed twice, zero step,
 transcriptions) and two operation records with closed lists of constants. The design replaces them with:
 - one operations record with open constants (an integer pair m, e meaning m·2^e), instantiated at Flocq's binary64,
   at the reals with explicit rounding, and at a flagged carrier that checks every intermediate;
@@ -114,8 +111,7 @@ transcriptions) and two operation records with closed lists of constants. The de
   independent checker replays every VM computation without the VM;
 - printers, written in Coq's own language and evaluated by Coq, from a program to C99, Rust, Python and an
   S-expression, printing constants as 64-bit patterns and conversions as integer bit code. A gate row pins each
-  committed file to the printer's output. What the printed text means under a compiler is shown only by exhaustive
-  sweeps; the printers and compilers stay trusted, as in fiat-crypto (reported).
+  committed file to the printer's output. What the printed text means under a compiler is shown only by sweeps, exhaustive for one-input functions and sampled for `hypot32`; the printers and compilers stay trusted, as in fiat-crypto (reported).
 
 One measurement already supports the record's feasibility: the turns kernel's narrowing and the five older
 functions' narrowing are the same term up to their records, accepted by Coq's kernel by reflexivity (MEASURED,
@@ -125,19 +121,18 @@ functions' narrowing are the same term up to their records, accepted by Coq's ke
 theorem's type against the frozen statement, reads Print Assumptions and coqchk, and refuses every plant. A minimal
 harness runs nothing from the judged tree but coqc and coqchk and reads one recursive coqchk summary strictly. A source
 row refuses recursive definitions, checking-flag changes and the Coq features named by the upstream critical-bugs list
-that the tier does not use. The owner computes the sha256 of every statement and freeze list himself; checks are
+that the tier does not use. Under his custody ruling the owner computes the sha256 of each statement and freeze list himself; so far he has done so for the two newest folders, and the eleven older folders' anchors were computed by the authors. For those two folders the harness is
 given his values, never values read from the tree. Planned: one tree verdict, one append-only anchors file whose head
 the owner computes (DESIGNED).
 
-**Language surfaces** (DESIGNED). The same proved program, printed four ways: a C99 header and source taking and
-returning 32-bit patterns; a std-only Rust module; a standard-library Python module; Ørlǫg laws. Each is usable alone,
+**Language surfaces** (DESIGNED). The same proved program, printed in three programming languages: a C99 header and source taking and
+returning 32-bit patterns; a std-only Rust module; a standard-library Python module (Ørlǫg's use of the kernel is planned, not yet designed). Each is usable alone,
 and any mix of them gives the same bytes, since each runs the same operations in the same order under the one admitted
 floating-point state.
 
 ## 5 Evaluation
 
-All runs are on one Windows host, in a pinned container image (Coq 8.20.1, Flocq 4.2.1) with no network and the
-judged files mounted read-only. Each claim below is MEASURED unless marked; each says what it does not show.
+All runs are on one Windows host, in a pinned container image (Coq 8.20.1, Flocq 4.2.1) with no network; the containers of the hardening runs and of the sweep had the judged files mounted read-only, while the folder gates mount the tree writable and fail their last row if anything in it changed outside their own output folders. Each claim below is MEASURED unless marked; each says what it does not show.
 
 ### 5.1 Proof checking
 
@@ -193,7 +188,7 @@ each sign), each with the input's sign, exactly where 2x is a whole number; cosi
 exactly where 4x is an odd whole number. All 16,777,216 infinite and NaN inputs give 0x7FC00000. No value computed on a
 finite input is non-finite, and each is a zero or of magnitude between 2^-400 and 2^400 (smallest 0x1.810231811663dp-301,
 largest 2^128 - 2^104). The integer-bit conversions equal the hardware conversions on every finite input and result.
-Reported, not predicted: correctly rounded results, sine 4,278,189,318 and cosine 4,278,175,524. Wall time 1,146 s on
+Reported, not predicted: results equal to MPFR's round to nearest, sine 4,278,189,318 and cosine 4,278,175,524. Wall time 1,146 s on
 12 worker processes. Digests of the results: sine 93a4a68e97524b7d7a235f135260ede57f23ab510f00fc10ca85245876d7e694,
 cosine 8eaa582fa2c0b97566447b9cf0b06f1e189e83825f02d0b990fec9c466adeaf7. Not shown: a proof; that the transcription
 equals the law outside the 2,096 sampled patterns (a planned Coq run over all inputs would compare per-block
@@ -207,15 +202,14 @@ The kernel's reduction computes N(x) = (x + C) − C with C = 3·2^51 to find th
 binary32 input of magnitude at least 2^23, which is already a whole number, N(x) = x except at x = +2^106, where the
 addition rounds back to x and the subtraction, starting from the bottom of a binade, rounds down to 2^106 − 2^53. The
 values that follow (f = 2^53, q = k = 2^55, r = +0) are all discarded by the kernel's selections, and both functions
-still return the right results, +0 and 1. Thirty-two kernel-checked examples prove the values at ±2^106 and at its
-neighbours (PROVEN, `kernel/hardening/big106`); that it is the only such input is MEASURED by the exhaustive sweep and
-ARGUED by a short derivation; the general lemma the law's proof needs is not written yet.
+still return the right results, +0 and 1. Thirty-two Coq examples, accepted by coqc and a recursive coqchk, give the values at ±2^106 and N and r at +2^104, +2^105, +2^107 and the two binary32 neighbours of +2^106 (MEASURED, `kernel/hardening/big106`); that it is the only such input is MEASURED by the exhaustive sweep and
+ARGUED by a short derivation; this tree holds no proof of the general lemma the law's proof needs.
 
 ### 5.5 Trusting Coq
 
 Coq's own project keeps a list of critical bugs. Read entry by entry (REPORTED; agents of the authors' family, with an
 adversarial check that upheld 45 of 46 labels and found no entry missing), 45 entries affect Coq 8.20.1 and one is
-unclear. None is triggered by the tier's own sources:
+unclear. The check refuted one label: the tier's `field` calls reach the `vm_cast_no_check` of entry #16891, which coqchk's re-check without the VM covers, like the VM entries below. For the others, the reading found no trigger in the tier's own sources:
 - the triggers of most are constructs the tier does not use, which the version-3 source row now refuses on every
   run (MEASURED: it holds on the tier and refuses each of its plants);
 - the tier does use Coq's virtual machine (vm_compute, and the lia, lra, ring and field tactics build VM casts), so
@@ -225,10 +219,9 @@ unclear. None is triggered by the tier's own sources:
 
 ### 5.6 Assembly and provenance
 
-The tree is built by one script from three sources. Ørlǫg and Verðandi are taken blob by blob at pinned commits, each
+The import commit's tree is built by one script from three sources; every later change is listed in `CHANGES-AFTER-IMPORT.md`. Ørlǫg and Verðandi are taken blob by blob at pinned commits, each
 blob's git object id recomputed; the Verðandi tree is the one the owner's own check held. The kernel is copied byte
-for byte and its 13 freeze lists (665 entries) are checked against the copy. A privacy and naming scan of the whole
-tree is recorded with the decision it raised.
+for byte and its 13 freeze lists (665 entries) are checked against the copy. A privacy and naming scan of the whole tree was run outside it; the changes it led to are listed, with the rulings they carry out, in `CHANGES-AFTER-IMPORT.md`.
 
 ## 6 How the merge could speed art, design and engineering
 
@@ -243,33 +236,30 @@ tool's preview and the shipped build on each platform, with and without the shar
 
 **Design.** Byte-identical recomputation makes every design change a clean experiment: replay the same inputs before
 and after, and the only differences are the change's own. Ørlǫg adds a layer a designer can read: rules written as
-numbered prose whose meaning is held identical across four executions. *Measure:* the time to find which change
+numbered prose, whose outputs are held byte-identical across four executions on Ørlǫg's corpus; all four read the prose through one shared front end. *Measure:* the time to find which change
 caused a behaviour difference (a bisection over recorded sessions), with exact replay against approximate replay.
 
 **Engineering.** One source for each function replaces several hand-kept renderings in several languages, so a fix
-is made once. The proofs remove whole classes of edge-case defects (signs of zeros, NaN handling, overflow in
-discarded branches) for the functions they cover. Lockstep networking stops needing float workarounds when every peer
+is made once. For the turns kernel, the proofs fix, at binary64, the sign of the result at each exact zero and a NaN result for each non-finite input; no other function's statement gives these rules, and finite intermediates in discarded branches are a clause of the law, measured (section 5.3), not proved in this tree. Lockstep networking stops needing float workarounds when every peer
 computes the same bits. The gates catch regressions before review. *Measure:* defects per thousand lines in numeric
 code; desynchronisation rate in lockstep soak tests across platforms; time from a numeric fix to its release in all
 languages.
 
-**The symbiosis.** Each part gives the others something they lack. The kernel gives Ørlǫg and Verðandi functions
-whose results are proved, not just tested. Ørlǫg gives the kernel a fourth, independent execution path and a readable
+**The symbiosis.** Each part gives the others something they lack. The kernel would give Ørlǫg and Verðandi functions whose Coq shapes are proved, not just tested, once printers carry them into code (G3, DESIGNED). Ørlǫg would give the kernel a fourth execution path and a readable
 law layer, and its discipline of byte-identical backends is the model for the kernel's printers. Verðandi gives the
-kernel a demanding consumer and a visual oracle: a deterministic renderer shows a wrong bit as a visible difference.
-All three share one way of working: claims graded, checks shown to fail, records never rewritten.
+kernel a demanding consumer and a visual oracle: a deterministic renderer shows a wrong result as a difference in its output bytes when the error reaches a pixel, which a one-bit error need not do.
+All three share one way of working: claims graded, checks shown to fail, records changed only by the owner's ruling and listed (`CHANGES-AFTER-IMPORT.md` lists each change after the import, file by file, with the ruling it carries out).
 
 ## 7 Prior art
 
 Pages below were opened by research agents for this work (REPORTED); none is copied.
 
-- **Correct rounding and exhaustive testing.** CORE-MATH provides correctly rounded functions, checks binary32
-  functions exhaustively, and has functions in GNU libc (core-math.gitlabpages.inria.fr). RLIBM approximates the
-  correctly rounded result with one polynomial for several formats; LLVM adopted several of its functions
+- **Correct rounding and exhaustive testing.** CORE-MATH provides correctly rounded functions, checks its univariate binary32
+  functions exhaustively (bivariate ones on known hard cases), and has functions in GNU libc (core-math.gitlabpages.inria.fr). RLIBM approximates the
+  correctly rounded result with one polynomial for several formats; LLVM's logf and log2f use RLIBM's polynomials, and LLVM's expf and exp2f RLIBM's range reduction
   (people.cs.rutgers.edu/~sn349/rlibm). LLVM's libc aims at correct rounding in all rounding modes and tests every
-  single-precision input (libc.llvm.org/math). These give stronger rounding than this kernel's faithful rounding, by
-  testing and analysis; this kernel gives weaker rounding with machine-checked proofs and bit-level rules for NaN,
-  zero signs and intermediates.
+  input of its univariate single-precision functions (libc.llvm.org/math). These give stronger rounding than this kernel's faithful rounding, by
+  testing and analysis; this kernel gives weaker rounding with machine-checked proofs; its bit-level rules for NaN, zero signs and intermediates, for the turns kernel only, are a law that is stated and measured, withheld from this tree and not proved in it.
 - **Verified floating point in proof assistants.** Flocq formalises IEEE 754 in Coq and underlies this work.
   VCFloat proves round-off error bounds of floating-point expressions against exact reals
   (github.com/VeriNum/vcfloat); its expressions hold no selection and no shared stage, and its claim is a bound, where
@@ -286,22 +276,20 @@ Pages below were opened by research agents for this work (REPORTED); none is cop
   (docs.python.org). These facts set the build flags and the integer-bit conversions of the design.
 
 What is different here: exact equality with an explicitly rounded graph rather than an error bound; a law on bit
-patterns that covers NaN bytes, zero signs and discarded branches; and a custody discipline in which the owner, not
-the author, holds the hashes.
+patterns that covers NaN bytes, zero signs and discarded branches (stated and measured; withheld from this tree and not proved in it); and a custody discipline in which the owner, not the author, holds the hashes (so far those of the two newest folders and of the law).
 
 ## 8 Intellectual property
 
-- **Ownership and authorship.** The repository's owner holds it. Its text, code and proofs were written by the owner
-  and by AI assistants working for him, as its records state. How copyright applies to machine-written parts is a
+- **Ownership and authorship.** The repository's owner holds it. Apart from the licence text in its three `LICENSE` files (the Free Software Foundation's) and nine fdlibm 5.3 source files in `verdandi/mathkernel/ORACLE/src` (written by Sun Microsystems and carried with their notices as the oracle of `verdandi/mathkernel`), its text, code and proofs were written by the owner and by AI assistants working for him, as its records state. How copyright applies to machine-written parts is a
   legal question this paper does not answer.
-- **Licences.** The repository is offered under the GNU Affero General Public License version 3 only, whose exact text
+- **Licences.** The repository, apart from nine fdlibm 5.3 files under Sun Microsystems' notice (`verdandi/mathkernel/ORACLE/src`), is offered under the GNU Affero General Public License version 3 only, whose exact text
   is in `LICENSE` (the same bytes as in the Ørlǫg and Verðandi repositories), and under a separate commercial licence
   from the copyright holder; `LICENSING.txt` gives the contact, in plain text.
 - **Third parties.** Coq (LGPL-2.1), Flocq (LGPL-3), GNU MPFR (LGPL-3.0 or later) and the compilers are tools the
   build runs; none is copied into the tree. CoqInterval (CeCILL-C) was studied for its pattern; none of its code was
   copied. Verðandi's art
   layer names engine content by path for an optional integration, under that engine's licence; no such content is in
-  the tree. `THIRD-PARTY.md` lists what was checked.
+  the tree. Nine fdlibm 5.3 source files (Sun Microsystems, under a permissive notice that must be kept) are copied into `verdandi/mathkernel/ORACLE/src` as the oracle of `verdandi/mathkernel`. `THIRD-PARTY.md` lists what was checked.
 - **Patents and trademarks.** The AGPL-3.0's section 11 grants a patent licence from each contributor for its
   contribution; this paper makes no patent claim. Names of other products belong to their owners.
 - **Contributions.** Because of the commercial licence, contributions from others need terms that let the holder
@@ -312,12 +300,12 @@ the author, holds the hashes.
 
 One host ran everything. One model family wrote and checked the statements, the proofs and the checks, and agreement
 within one family is corroboration, not proof. Coq's kernel and checker share one code base. MPFR, the compilers and
-the printers to come are trusted. The thirteen statements are candidates, not adopted. The law of section 3 is not
-proved. The benefits of section 6 are not measured.
+the printers to come are trusted. The thirteen statements are candidates, not adopted. This tree holds no proof of the law
+of section 3. The benefits of section 6 are not measured.
 
 ## 10 Conclusion
 
-The repository's present guarantee is small, exact and checkable: thirteen proved statements, one exhaustively
+The repository's present guarantee is small and exact: thirteen proved statement files that a reader can check, one exhaustively
 measured function pair, and a record of every file's origin. Its design shows how the same proved source can reach
 four languages and a studio without any claim outrunning its evidence. The next steps are the ones that change a
 grade: the law's proof, the printers, a second host, a second Coq release, and readers outside the authors' family.
