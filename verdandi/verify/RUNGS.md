@@ -496,10 +496,10 @@ G31.
 **On the host, the prediction tested (2026-10-08).** Before the run, the prediction was written down: in a clone
 under a folder whose name holds a space, `input-tamper`, `input-not-authority`, `input-demo` and `reasoncourt-watch`
 fail, and every other row passes. The owner cloned the pushed tree to
-`C:\Users\dillb_lzxy763\Desktop\Verdandi space probe` and ran the gate there: `GATE FAILED`, 247 rows / 4 fail,
+`C:\Users\USER\Desktop\Verdandi space probe` and ran the gate there: `GATE FAILED`, 247 rows / 4 fail,
 those four. Row for row, the verdicts are the build container's perturbed pass.
 
-The words differ. Cut at the space, the path became `C:\Users\dillb_lzxy763\Desktop\Verdandi`: the owner's own
+The words differ. Cut at the space, the path became `C:\Users\USER\Desktop\Verdandi`: the owner's own
 checkout, a folder that exists. Windows answered *Access is denied*, a folder read as a file. Here the cut path
 named nothing, and the answer was *No such file or directory*.
 
@@ -566,7 +566,7 @@ before it is run; *if either fails, investigate rather than weaken the probe*.
 | prediction | the run | result |
 |---|---|---|
 | the build container's perturbed whole pass, the same instrument and the same seven changes, on the built tree: 247 rows / 0 fail | the build commit, checked out under `…/Urðr 4242 a private title the log must never hold focus pause capture blur foreground adopted/tree`; the clock in 2041; a time zone fourteen hours ahead; a Turkish locale; umask 077; another home; another hash seed | **247 rows / 0 fail.** Met |
-| the owner's host, the gate in a clone under `C:\Users\dillb_lzxy763\Desktop\Verdandi space probe`: 247 rows / 0 fail | the owner's clone, brought to the series by a fast-forward, run twice by the witness (2026-10-09) | **247 rows / 0 fail, twice, FULL×2.** Met |
+| the owner's host, the gate in a clone under `C:\Users\USER\Desktop\Verdandi space probe`: 247 rows / 0 fail | the owner's clone, brought to the series by a fast-forward, run twice by the witness (2026-10-09) | **247 rows / 0 fail, twice, FULL×2.** Met |
 
 **Grade.** ESTABLISHED (gate, the build container): the rows as built. OBSERVED (the build container): the mutants;
 the first prediction met. MEASURED (host): the second prediction met, and FULL×2 on the owner's checkout.
@@ -6936,7 +6936,7 @@ them. In his words, *an evidence collector—not a new authority that gets to de
 
 **And 0159 to 0162, by the witness (the host, 2026-10-09).** The first runs of `verdandi-witness.py`. 0159 to 0162 were
 applied on `59edc01`, and the witness was run twice: on the owner's checkout, and on the clone under
-`C:\Users\dillb_lzxy763\Desktop\Verdandi space probe`, brought to the same commit by a fast-forward. Its files were read
+`C:\Users\USER\Desktop\Verdandi space probe`, brought to the same commit by a fast-forward. Its files were read
 here and the readings recomputed from them, apart from the witness's own summary.
 
 | | the checkout | the clone with a space |
