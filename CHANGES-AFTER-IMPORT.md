@@ -279,3 +279,11 @@ Revised after a review of the six commits above by agents of the authors' family
 | `.github/workflows/integrity.yml` | (new) | b1161b44a27d7805e73b8bbb1d1c245610b7022f2da49ccfac18d0ed972154ae |
 | `.github/workflows/mathkernel-linux.yml` | ccdb18335443011ebc9f183ecfd3cd8c9e1732d44ec535bb8d7ea2a06fab1082 | 0ee2cd2373b009c8193e882effed27396898d44f2c9be473a3a3b57dfa9b087e |
 | `ci/mathkernel/Dockerfile` | 0dc712cbafab7dbba07684a229cf35b73241106ef6db437eb1a1e7783fbcf593 | fef148b6668e8d732f0231539c68983541a012aaa54cf7230cd7aee6c91e69b5 |
+
+## The linux-ci change, revised: the manifest check (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `tools/check_manifests.py` | 6fa83222e8104b3e59a73e2d94c7435da6605f5929efd63e2bdf32b54770de01 | 355e5ff4e88015007c70aa38064f18e9f86034994575479668dd970491fefd83 |
