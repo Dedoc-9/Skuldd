@@ -257,3 +257,15 @@ Carries out the owner's ruling D1 (a) of 2026-11-17.
 - `docs/paper/SYSTEM-GUARANTEES.md`, line 83: was "| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | process, NOT MET yet | — | — |"; now "| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | MET at statement level for the 13 statement files: one model outside the authors' family (ChatGPT, OpenAI), administered by the owner, 2026-11-17 | the review's findings, verified against the files (docs/GUARANTEES-LEDGER.md §1) | that a human outside the authors has read them; that the statements say what their owner meant; the law (G2), which was not in the review |"
 
 sha256 before and after: `docs/paper/SYSTEM-GUARANTEES.md` cd1b3466adace9a078e9b1ff73e7eceda884d489cdf4c2b628487096ddb1b003, 2cfadd0d4bd544aab5f73158b2db508821f6e8d21f360fdb22c87d785df85047
+
+## The linux-ci change, revised: the guard (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `kernel/runtime/README.md` | b1000e7ca5822cf7e06092e6a31511ecdbd6b5ce3cd1d523b703a470137bccfe | ac840d342c71e7c38fc0ef581c65c2794e09bbd6e007403671adc14606f52912 |
+| `kernel/runtime/check_fpenv.py` | e3b0959ce742fd9e37ea056143ac7ec0138ba3c4527a1b5ab8020798aee2ead5 | f6f6f47995c85f7d835d7891206a504a5a76eea1e318f65eb398c3e972eb1df0 |
+| `kernel/runtime/mk_fpenv.c` | f3abea02ccf388b85ddb5116b07774a629d28beab693daf83a7f2101c4e74555 | 2f746a49c6b98edb62b7933ff7f6d736f49f2f98979d7d1c88d66ea23b0a135e |
+| `kernel/runtime/mk_fpenv.h` | 1f82a206b0c2043248cd4ad8b9ac2707e2f814a8fe4deb063478e79c4715bbd6 | d1a760305dcc620488ee8d9a0f03700a04053afaa510160c542531cf57054981 |
+| `kernel/runtime/test_fpenv.c` | 15c521b0fd7f9030654a87b63483fe7a9740af3571387a90dcc32ee403d1b814 | f3c9e4720823070d7d9be89b305fd335b0464ab1bc2343cf14ecc7fceaf6615d |

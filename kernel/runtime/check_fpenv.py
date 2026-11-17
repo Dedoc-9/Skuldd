@@ -8,14 +8,17 @@ For each C compiler (by default whichever of clang, gcc and cc are on the PATH; 
   "FPENV SELFTEST n/n" with n of at least 5 (the admitted state, three rounding modes, the state again);
   compile-time plants: -ffast-math and -ffinite-math-only must each be refused with mk_fpenv's own #error; a build for
   x87 (excess precision) must be refused where the compiler can target it (skipped, and said, where it cannot);
-  a run-time plant: mk_fpenv.c built with contraction on (-ffp-contract=fast, and -mfma on x86-64) must make the
-  self-test's first row fail and name contraction;
+  contraction plants, built with -ffp-contract=fast (and -mfma on x86-64): in a GNU dialect the run-time canary must
+  make the self-test's first row fail and name contraction; in ISO C99 the build must be refused at compile time (GCC
+  announces contraction there by setting __GCC_IEC_559 to 0) or the canary must report it;
   mutants: mk_fpenv.c with one check disabled at a time must make the self-test fail; a mutant whose plant does not
-  exist on this processor is equivalent here and is skipped, and said.
+  exist on this processor is equivalent here and is skipped, and said; when the self-test with the register reads did
+  not hold, every mutant is a failed row, never a skip.
+On POSIX systems the self-test is linked with -lm (glibc keeps fegetround and fesetround in libm).
 Then, as notes and not rows: which other parts of fast-math this compiler announces, so the header can refuse them.
 
 Everything is built in a temporary folder outside the tree. Last line: "FPENV CHECK HELD: n of n rows" (exit 0) or
-"FPENV CHECK FAILED: k of n rows" (exit 1); skipped rows are named on that line and never counted as passes.
+"FPENV CHECK FAILED: k of n rows failed" (exit 1); skipped rows are named on that line and never counted as passes.
 What it does not show: that the kernel's operations are deterministic; anything on a compiler, flag set or processor
 it did not run on; that a program which does not call mk_fpenv_check is protected.
 """
@@ -29,6 +32,7 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 STRICT = ['-std=c99', '-pedantic', '-Wall', '-Wextra', '-ffp-contract=off', '-fno-fast-math']
+LIBS = [] if os.name == 'nt' else ['-lm']  # glibc keeps fegetround and fesetround in libm
 X86 = platform.machine().lower() in ('amd64', 'x86_64')
 # (label, text to disable, its replacement, extra flags, the self-test's plant row that must catch it)
 MUTANTS = [
@@ -66,14 +70,14 @@ def run(cmd, cwd):
     return p.returncode, p.stdout.decode('utf-8', 'replace')
 
 
-def selftest(cc, work, sources, flags):
-    """(exit code, last line, whole output) of the self-test, or (None, why, '') when it does not build."""
+def selftest(cc, work, sources, flags, base=None):
+    """(exit code, last line, whole output) of the self-test, or (None, why, build output) when it does not build."""
     exe = os.path.join(work, 'test_fpenv.exe' if os.name == 'nt' else 'test_fpenv')
     if os.path.exists(exe):
         os.remove(exe)
-    code, out = run([cc] + STRICT + flags + sources + ['-o', exe], work)
+    code, out = run([cc] + (STRICT if base is None else base) + flags + sources + ['-o', exe] + LIBS, work)
     if code != 0:
-        return None, 'build exit %d: %s' % (code, out.strip().splitlines()[-1] if out.strip() else ''), ''
+        return None, 'build exit %d: %s' % (code, out.strip().splitlines()[-1] if out.strip() else ''), out
     code, out = run([exe], work)
     return code, (out.strip().splitlines()[-1] if out.strip() else ''), out
 
@@ -99,15 +103,15 @@ def main(argv):
         for cc in ccs:
             code, ver = run([cc, '--version'], work)
             print('%s: %s' % (cc, ver.strip().splitlines()[0] if ver.strip() else 'exit %d' % code))
-            planted = ''
+            planted, ran = '', False
             for opt in ('-O0', '-O2'):
                 for mode, extra in (('registers', []), ('probes alone', ['-DMK_FPENV_PROBES_ONLY'])):
                     code, last, out = selftest(cc, work, ['mk_fpenv.c', 'test_fpenv.c'], [opt] + extra)
                     c = counts(last)
-                    row(code == 0 and c and c[0] == c[1] and c[1] >= 5,
-                        '%s %s, %s: the self-test holds' % (cc, opt, mode), last)
-                    if mode == 'registers':
-                        planted = planted or out
+                    held = code == 0 and c and c[0] == c[1] and c[1] >= 5
+                    row(held, '%s %s, %s: the self-test holds' % (cc, opt, mode), last)
+                    if mode == 'registers' and held and not ran:
+                        planted, ran = out, True
             for flag, msg in (('-ffast-math', 'mk_fpenv: compiled with fast-math'),
                               ('-ffinite-math-only', 'mk_fpenv: compiled assuming finite math only')):
                 code, out = run([cc, '-std=c99', flag, '-c', 'mk_fpenv.c', '-o', 'x.o'], work)
@@ -120,14 +124,29 @@ def main(argv):
             else:
                 skip('plant %s x87' % cc, 'this compiler cannot target x87 here (exit %d)' % code)
             fma = ['-ffp-contract=fast'] + (['-mfma'] if X86 else [])
-            code, last, out = selftest(cc, work, ['mk_fpenv.c', 'test_fpenv.c'], ['-O2'] + fma)
-            first = out.splitlines()[0] if out else last
+            # The run-time canary is built in a GNU dialect: in ISO C, GCC announces -ffp-contract=fast by setting
+            # __GCC_IEC_559 to 0, and the header then refuses the build (the next row).
+            gnu = ['-std=gnu99' if f == '-std=c99' else f for f in STRICT]
+            code, last, out = selftest(cc, work, ['mk_fpenv.c', 'test_fpenv.c'], ['-O2'] + fma, base=gnu)
+            first = out.splitlines()[0] if code is not None and out else last
             row(code == 1 and first.startswith('[FAIL] the admitted state') and 'contraction' in first,
-                'plant %s %s: contraction is reported' % (cc, ' '.join(fma)), first[:90])
+                'plant %s -std=gnu99 %s: the run-time canary reports contraction' % (cc, ' '.join(fma)), first[:90])
+            code, last, out = selftest(cc, work, ['mk_fpenv.c', 'test_fpenv.c'], ['-O2'] + fma)
+            if code is None:
+                ok = 'mk_fpenv:' in out
+                how = 'refused at compile time' if ok else last
+            else:
+                first = out.splitlines()[0] if out else last
+                ok = code == 1 and first.startswith('[FAIL] the admitted state') and 'contraction' in first
+                how = 'reported at run time' if ok else first[:90]
+            row(ok, 'plant %s -std=c99 %s: refused or reported' % (cc, ' '.join(fma)), how)
             for label, old, new, flags, plant in MUTANTS:
                 name = 'mutant %s, %s' % (cc, label)
                 if old not in src:
                     row(False, name, 'the text to disable is not in mk_fpenv.c')
+                    continue
+                if not ran:
+                    row(False, name, 'not judged: the self-test with the register reads did not hold at -O0 or -O2')
                     continue
                 if plant is None:
                     skip(name, 'equivalent mutant: fegetround and the probes report the same rounding plants')
@@ -142,14 +161,22 @@ def main(argv):
                 row(code == 1 and c and c[0] < c[1], '%s: the self-test fails' % name, last or 'did not build')
             for flag in NOTE_FLAGS:
                 code, out = run([cc, '-std=c99'] + flag.split() + ['-c', 'mk_fpenv.c', '-o', 'x.o'], work)
-                print('  note %s %s: %s' % (cc, flag, 'refused at compile time' if code != 0 and 'mk_fpenv:' in out
-                                            else 'NOT refused: this compiler does not announce it'))
+                if code != 0 and 'mk_fpenv:' in out:
+                    said = 'refused at compile time'
+                elif code != 0:
+                    said = 'not judged: this compiler does not accept the option'
+                else:
+                    said = 'NOT refused: this compiler does not announce it'
+                print('  note %s %s: %s' % (cc, flag, said))
     finally:
         shutil.rmtree(work, ignore_errors=True)
     n, k = len(rows), sum(rows)
     tail = ' (%d skipped: %s)' % (len(skipped), '; '.join(skipped)) if skipped else ''
-    print('FPENV CHECK %s: %d of %d rows%s' % ('HELD' if k == n and n else 'FAILED', k, n, tail))
-    return 0 if k == n and n else 1
+    if k == n and n:
+        print('FPENV CHECK HELD: %d of %d rows%s' % (k, n, tail))
+        return 0
+    print('FPENV CHECK FAILED: %d of %d rows failed%s' % (n - k, n, tail))
+    return 1
 
 
 if __name__ == '__main__':

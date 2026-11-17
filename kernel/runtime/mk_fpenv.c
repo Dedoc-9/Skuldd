@@ -3,8 +3,10 @@
  *   clang -std=c99 -O2 -ffp-contract=off -fno-fast-math -c mk_fpenv.c
  * Every probe reads its operands through volatile objects, so the compiler cannot fold it at build time; that is why
  * this unit needs neither #pragma STDC FENV_ACCESS nor -frounding-math. It must have neither, nor an FP_CONTRACT
- * pragma: the contraction canary has to see what the library's flags do, and clang (22.1.8, measured) does not fuse
- * under FENV_ACCESS ON or -frounding-math, so either would hide a contraction the library's own units would have.
+ * pragma: the contraction canary has to see what the library's flags do, and either can change whether this unit
+ * fuses (clang 22.1.8, measured: on x86-64 with -ffp-contract=fast it does not fuse under either; on AArch64, and
+ * under -ffp-contract=on, it does), so either could make this unit differ from the library's own units.
+ * On glibc systems, link with -lm (fegetround and fesetround are in libm).
  */
 #include "mk_fpenv.h"
 
@@ -77,6 +79,7 @@ unsigned mk_fpenv_check(void)
         __asm__ volatile("mrs %0, fpcr" : "=r"(fpcr));
         if (fpcr & (3ul << 22)) p |= MK_FPENV_ROUNDING;          /* RMode, bits 22-23: 00 is to nearest */
         if (fpcr & (1ul << 24)) p |= MK_FPENV_FTZ;               /* FZ, bit 24 */
+        if (fpcr & 1ul) p |= MK_FPENV_DAZ;                       /* FIZ, bit 0 (FEAT_AFP): inputs flushed */
         if (fpcr & 0x9F00ul) p |= MK_FPENV_TRAPS;                /* IOE DZE OFE UFE IXE, bits 8-12; IDE, bit 15 */
     }
 #endif

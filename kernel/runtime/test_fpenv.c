@@ -1,7 +1,10 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
 /* test_fpenv.c: mk_fpenv's self-test. The admitted state must read 0; each plant switches one mode on through the
- * C library or the processor's own register, must be reported as exactly that problem, and is then put back.
- *   clang -std=c99 -O2 -ffp-contract=off -fno-fast-math mk_fpenv.c test_fpenv.c -o test_fpenv
+ * C library or the processor's own register, must be reported as exactly that problem, and is then put back. The
+ * exception is AArch64's FPCR.FZ, which flushes inputs as well as results: its row requires flush-to-zero and allows
+ * denormals-are-zero beside it.
+ *   clang -std=c99 -O2 -ffp-contract=off -fno-fast-math mk_fpenv.c test_fpenv.c -o test_fpenv -lm
+ * (-lm on glibc systems, where fegetround and fesetround are in libm; not on Windows.)
  * Built with -DMK_FPENV_PROBES_ONLY, the check reads neither fegetround nor a register: the rows then test the probes.
  * Last line: "FPENV SELFTEST n/n" (exit 0) or "FPENV SELFTEST k/n" (exit 1).
  */
