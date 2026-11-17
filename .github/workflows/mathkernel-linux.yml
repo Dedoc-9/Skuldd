@@ -1,0 +1,155 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# MathKernel on Linux: the thirteen folder gates, each its own job, on GitHub-hosted Ubuntu 24.04, in a container built
+# from ci/mathkernel/Dockerfile (OCaml 4.14.2, Coq 8.20.1, Flocq 4.2.1 from opam), --network none. Each gate is given
+# its folder's anchor from a repository Actions variable that the owner sets from the owner's own sha256 of the folder's
+# FROZEN4.txt; a missing or malformed anchor fails that job before its gate starts (never a hash taken from this
+# checkout). What a green run shows and does not show: docs/engineering/MATHKERNEL-LINUX-CI.md.
+name: MathKernel on Linux
+
+on:
+  push:
+    paths:
+      - "kernel/**"
+      - "ci/mathkernel/**"
+      - "tools/check_manifests.py"
+      - "MANIFEST.*.txt"
+      - "PROVENANCE.md"
+      - "CHANGES-AFTER-IMPORT.md"
+      - ".github/workflows/mathkernel-linux.yml"
+  pull_request:
+    paths:
+      - "kernel/**"
+      - "ci/mathkernel/**"
+      - "tools/check_manifests.py"
+      - "MANIFEST.*.txt"
+      - "PROVENANCE.md"
+      - "CHANGES-AFTER-IMPORT.md"
+      - ".github/workflows/mathkernel-linux.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mathkernel-linux-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONUTF8: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  IMAGE: skuldd-mathkernel-ci:local
+
+jobs:
+  integrity:
+    name: Manifests and feature rows (no Coq)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: The import's manifests reconciled with CHANGES-AFTER-IMPORT.md
+        run: python3 -B tools/check_manifests.py .
+      - name: The feature row on each of the thirteen freeze lists
+        run: |
+          set -euo pipefail
+          for f in f32 p32 p32r exp32 exp32r ieee64 sin32 cos32 sincos32 log32 sincos32i sincos32z compose; do
+            echo "== $f"
+            python3 -B kernel/hardening/features/feature_row3.py kernel/coq --list "kernel/coq/$f/FROZEN4.txt"
+          done
+
+  fpenv:
+    name: Floating-point state guard (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@v4
+      - name: mk_fpenv's self-test, plants and mutants with GCC and clang
+        run: |
+          set -euo pipefail
+          for cc in gcc clang; do command -v "$cc" >/dev/null || { echo "REFUSED: $cc is not on this runner" >&2; exit 2; }; done
+          python3 -B kernel/runtime/check_fpenv.py --cc gcc --cc clang
+
+  image:
+    name: Build the Coq/Flocq image once
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore the image from GitHub's cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/mk-image
+          key: mk-image-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
+      - name: Build and save the image (only when the cache has none for this Dockerfile)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          docker build --pull -f ci/mathkernel/Dockerfile -t "$IMAGE" ci/mathkernel
+          mkdir -p /tmp/mk-image
+          docker save -o /tmp/mk-image/image.tar "$IMAGE"
+      - name: Say what the image holds
+        run: |
+          set -euo pipefail
+          docker load -i /tmp/mk-image/image.tar
+          docker run --rm --network none "$IMAGE" sh -c \
+            'coqc --version; ocaml -version; opam list --installed --columns=name,version coq coq-core coq-stdlib coq-flocq 2>/dev/null; sha256sum "$(command -v coqc)" "$(command -v coqchk)" "$(command -v python3)"'
+
+  gate:
+    name: Gate ${{ matrix.folder }}
+    needs: [image]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { folder: f32, anchor: MK_ANCHOR_F32 }
+          - { folder: p32, anchor: MK_ANCHOR_P32 }
+          - { folder: p32r, anchor: MK_ANCHOR_P32R }
+          - { folder: exp32, anchor: MK_ANCHOR_EXP32 }
+          - { folder: exp32r, anchor: MK_ANCHOR_EXP32R }
+          - { folder: ieee64, anchor: MK_ANCHOR_IEEE64 }
+          - { folder: sin32, anchor: MK_ANCHOR_SIN32 }
+          - { folder: cos32, anchor: MK_ANCHOR_COS32 }
+          - { folder: sincos32, anchor: MK_ANCHOR_SINCOS32 }
+          - { folder: log32, anchor: MK_ANCHOR_LOG32 }
+          - { folder: sincos32i, anchor: MK_ANCHOR_SINCOS32I }
+          - { folder: sincos32z, anchor: MK_ANCHOR_SINCOS32Z }
+          - { folder: compose, anchor: MK_ANCHOR_COMPOSE }
+    env:
+      FOLDER: ${{ matrix.folder }}
+      ANCHOR_NAME: ${{ matrix.anchor }}
+      ANCHOR: ${{ vars[matrix.anchor] }}
+    steps:
+      - name: The anchor is the owner's, set outside this checkout (fail closed)
+        run: |
+          set -euo pipefail
+          if ! printf '%s' "$ANCHOR" | grep -Eq '^[0-9a-f]{64}$'; then
+            echo "REFUSED: the repository Actions variable $ANCHOR_NAME is missing or is not 64 lower-case hex digits." >&2
+            echo "It must hold the owner's own sha256 of kernel/coq/$FOLDER/FROZEN4.txt (docs/engineering/MATHKERNEL-LINUX-CI.md)." >&2
+            exit 2
+          fi
+          echo "anchor $ANCHOR_NAME = ${ANCHOR:0:16}..."
+      - uses: actions/checkout@v4
+      - name: Load the image built once for this run
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/mk-image
+          key: mk-image-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
+          fail-on-cache-miss: true
+      - run: docker load -i /tmp/mk-image/image.tar
+      - name: Feature row on the folder's freeze list
+        run: |
+          docker run --rm --network none -e FOLDER -e PYTHONHASHSEED -e PYTHONUTF8 -e PYTHONDONTWRITEBYTECODE \
+            -v "$GITHUB_WORKSPACE:/work" -w /work "$IMAGE" \
+            python3 -B kernel/hardening/features/feature_row3.py kernel/coq --list "kernel/coq/$FOLDER/FROZEN4.txt"
+      - name: The folder's gate, with its anchor, every library rechecked
+        run: |
+          docker run --rm --network none -e ANCHOR -e PYTHONHASHSEED -e PYTHONUTF8 -e PYTHONDONTWRITEBYTECODE \
+            -v "$GITHUB_WORKSPACE/kernel/coq:/work" -w /work "$IMAGE" \
+            python3 -B gate/gate4.py "$FOLDER" --recheck
