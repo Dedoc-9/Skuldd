@@ -147,7 +147,7 @@ running the gate.
       an art file (a model writes it) + W + C ──► dress.py ──► one scene: C as play geometry, dressing, light, air
                                                                  │  check.py: collision is C; no dressing where a player can be
                                                                  ▼
-                                                 Unreal 5.8: verdandi_import.py ──► the level ──► play, critique, revise
+                                              future engine: verdandi_import.py ──► the level ──► play, critique, revise
 ```
 
 **The invariants.** Each is a property a part owes, the mechanism that holds it, and a row that goes red.
@@ -183,7 +183,7 @@ Each folder's README is its own blueprint: the contract, the parts, the invarian
 | [`verify/`](verify/README.md) | the gate: every claim above as a row that can redden; two runs byte-identical or nothing landed. Beside it the registry of methods and the off-gate sealers. |
 | [`design/`](design/README.md) | content time: the design tool, a client of the shell's compiler and admission. It holds no authority and computes no change set; no row holds it. |
 | [`graybox/`](graybox/README.md) | the playable first-person slice (FPS-GRAYBOX-0, FPS-VISUAL-0), beside the certified tree: a converter, map checks, a local server and a browser runtime, each with its own checks; no row reads it. |
-| [`art/`](art/README.md) | prompted art over the playable world (ART-GENERATION-0), beside the certified tree: an art file in its own small language, an exporter to one engine scene whose collision is the graybox's, checks that keep the art from deciding play, an Unreal 5.8 importer, and DIRECTOR-0: candidates checked against the head they meet, admitted by a person, kept in an append-only ledger; no row reads it. |
+| [`art/`](art/README.md) | prompted art over the playable world (ART-GENERATION-0), beside the certified tree: an art file in its own small language, an exporter to one engine scene whose collision is the graybox's, checks that keep the art from deciding play, an importer for a future engine integration, and DIRECTOR-0: candidates checked against the head they meet, admitted by a person, kept in an append-only ledger; no row reads it. |
 | [`docs/`](docs/CORE.md) | the program, the roadmap, the ghosts, the dev notes, the boundaries, and since the audit of 2026-10-09 the core map, the formats, the audit itself and its research. |
 
 ## The sequence, as built
@@ -289,9 +289,9 @@ rows, grade, limits and falsifier; this is the order and the state.
          │          draw and readback 1.4 to 1.5 times the first's, under 2 ms at 1280 × 720; pushed, 3dc15ec..222f856)
          │
     THE ART         ART-GENERATION-0, the owner's pivot (2026-10-10): the verification serves the art; prompt to
-         │          playable art, Unreal 5.8 to render it, Verðandi keeping layout, collision and lineage. The first
+         │          playable art, a future engine integration to render it, Verðandi keeping layout, collision and lineage. The first
          │          brief, a rain-soaked brutalist plaza at night, dressed onto the tactical graybox; its checks,
-         │          a look and a layout revision (built, `art/`; its Unreal import not yet run on an engine)
+         │          a look and a layout revision (built, `art/`; its import into a future engine not yet run)
          ⋮
     declared        EVIDENCE-LINK-0, each copied claim about a recorded event traced to its source (accepted as
                     the next slice, then put after ART-GENERATION-0 by the owner's pivot of 2026-10-10);
@@ -350,7 +350,7 @@ one route only. Which, is decided when such a rung is seated.
     python graybox/serve.py tactical --selftest              # the graybox runtime's self-test in your browser (23 checks; the witness level, 20)
     python graybox/serve.py                                  # play it; --renderer flat for the first renderer, --bench to time both
     python art/check.py                                      # ART-GENERATION-0: the art held to the playable world, planted defects refused, two revisions
-    python art/dress.py plaza-night                          # the scene for Unreal: art/build/plaza-night/scene.json (the import: art/README.md)
+    python art/dress.py plaza-night                          # the scene for a future engine: art/build/plaza-night/scene.json (the import: art/README.md)
     python art/director.py selftest                          # DIRECTOR-0: the conformance vectors and the whole candidate lifecycle, in a scratch copy
 
 Landing condition, for a rung of the gate: two consecutive gate runs byte-identical and `GATE PASSED`. Since the
@@ -423,7 +423,7 @@ What the gate does not prove is stated, graded and given the measurement that wo
 | [`docs/REPOSITORY-TRUTH.md`](docs/REPOSITORY-TRUTH.md) | the audit of 2026-10-09: what the documents said against what the code does, each finding's disposition |
 | [`docs/RESEARCH-FINDINGS.md`](docs/RESEARCH-FINDINGS.md) | outside sources set against the repository: what they establish, what they do not, experiments |
 | [`graybox/README.md`](graybox/README.md) | the playable slice: how to run it, test it and time it; its map format; what runs and what does not |
-| [`art/README.md`](art/README.md) | prompted art: the loop, the four worlds and the one rule, the art file's language, the checks, the Unreal steps, what is shown and what is not |
+| [`art/README.md`](art/README.md) | prompted art: the loop, the four worlds and the one rule, the art file's language, the checks, the engine-import steps, what is shown and what is not |
 | [`AGENTS.md`](AGENTS.md) | the brief for a coding agent: the rules a change must keep, the checks to run, where things are |
 | [`verify/RUNGS.md`](verify/RUNGS.md) | the ledger: every seated rung, its rows, its grade, its limits, its falsifier |
 | [`design/README.md`](design/README.md) | the design surface, content time: the five verbs, the design text, what is authority and what is a view, its limits |

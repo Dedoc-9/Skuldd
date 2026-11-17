@@ -42,7 +42,7 @@ When two sources disagree, trust them in this order:
 | `verify/` | the gate, the envelope, the registers, the sealers | is the gate |
 | `design/` | the design tool: a client of the shell, no authority | `design/test_design.py`; no row |
 | `graybox/` | the FPS slice: converter, map checks, server, browser runtime | its own checks; no row |
-| `art/` | prompted art: the art file, the exporter, the native plaza (`play.py`, a WebGL 2 renderer), the Unreal importer (an optional path), DIRECTOR-0 (scope, ledger, vectors) | `art/check.py`, `art/director.py selftest`, `conform.rs`; no row |
+| `art/` | prompted art: the art file, the exporter, the native plaza (`play.py`, a WebGL 2 renderer), the importer for a future engine integration (an optional path), DIRECTOR-0 (scope, ledger, vectors) | `art/check.py`, `art/director.py selftest`, `conform.rs`; no row |
 | `docs/` | the documents above | — |
 
 ## 3. Never, without the owner's word

@@ -79,3 +79,20 @@ the change, also where it falls inside quoted words.
 | `verdandi/docs/RESEARCH-FINDINGS.md` | 2 | b5ba19c29e0f018137cec4b850e21d1767833d52e8e70f550326c7825030c142 | 22c4b6ab617e53a6fc2160cb9e88ebbd4d52bc371edde445cbbe05f45fc6639c |
 | `verdandi/docs/ROADMAP.md` | 9 | dfbbad4bc79a2e101e11b4eb79ed977c561111fe1250283d96ad81ca9e5eda27 | 2702339d36f1f4aafa2310f968e6d5aa810802d1e60cbb0927a3e91f6e1c67d0 |
 | `verdandi/docs/STUDIO-APP.md` | 7 | fb7ab399cd1c3d5d729794930e102b59630900516d64431b387eb8485f41bbda | d9ea819deff1d77847cf68b907918b010f0edde8c01e22632ee0f6d79f0cbdd0 |
+
+## Ruling S2 (b): the engine's name in seven lines of Verdandi's README and brief
+
+In seven lines the engine's name is replaced by future-engine-integration wording; every other file of
+`verdandi/` keeps its bytes, apart from the changes listed in this file. The words that replace it:
+
+| File | Line | Now reads |
+|---|---|---|
+| `verdandi/README.md` | 150 | `future engine: verdandi_import.py` |
+| `verdandi/README.md` | 186 | `an importer for a future engine integration` |
+| `verdandi/README.md` | 292 | `playable art, a future engine integration to render it,` |
+| `verdandi/README.md` | 294 | `its import into a future engine not yet run)` |
+| `verdandi/README.md` | 353 | `# the scene for a future engine: art/build/plaza-night/scene.json` |
+| `verdandi/README.md` | 426 | `the engine-import steps` |
+| `verdandi/AGENTS.md` | 45 | `the importer for a future engine integration (an optional path)` |
+
+sha256 before and after: `verdandi/AGENTS.md` 823e7962c7ddebfde830d64c4230b30ad145e4af3bf82ca806cb11a24e1eae47, 63ad624f8496d7414b4ddae562ca7491a7d00311842982a6a25e6165671bcfce; `verdandi/README.md` 3a10c7f033d22367739b808650ab8ee5aae0cf5bd0903802cc5cd784e1dd0015, a1e6ccecbf5301d22ea15f574f3d0c6a718eda30f591183c165b3d1ac9721449.
