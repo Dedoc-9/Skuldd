@@ -68,3 +68,14 @@ In `verdandi/art/README.md` the engine's name and version are replaced by "futur
 in the owner's quoted words the change is marked with square brackets. File paths, a file name and a
 module name that contain the word are kept (7 occurrences), since they name files and code. The art
 briefs' licence references are unchanged, as the ruling says. sha256 before ec63c93d7be8bfa9ecb0eab9dcfdb2adc6c549af4fbeac6ab33a06bf3e915857, after c541568f4078fb17c638b855b7d23699236994420ecf6babf16fe71da543f191.
+
+## The owner's ruling on private goals: one name withheld
+
+One external tool's name is replaced by `[withheld]` in 18 places of 3 documents; the square brackets mark
+the change, also where it falls inside quoted words.
+
+| File | Occurrences | sha256 before | sha256 after |
+|---|---|---|---|
+| `verdandi/docs/RESEARCH-FINDINGS.md` | 2 | b5ba19c29e0f018137cec4b850e21d1767833d52e8e70f550326c7825030c142 | 22c4b6ab617e53a6fc2160cb9e88ebbd4d52bc371edde445cbbe05f45fc6639c |
+| `verdandi/docs/ROADMAP.md` | 9 | dfbbad4bc79a2e101e11b4eb79ed977c561111fe1250283d96ad81ca9e5eda27 | 2702339d36f1f4aafa2310f968e6d5aa810802d1e60cbb0927a3e91f6e1c67d0 |
+| `verdandi/docs/STUDIO-APP.md` | 7 | fb7ab399cd1c3d5d729794930e102b59630900516d64431b387eb8485f41bbda | d9ea819deff1d77847cf68b907918b010f0edde8c01e22632ee0f6d79f0cbdd0 |

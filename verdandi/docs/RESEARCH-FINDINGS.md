@@ -343,7 +343,7 @@ Read on 2026-10-11, after the owner tried STUDIO-0 and asked how to name an obje
     ([pdf](https://proceedings.neurips.cc/paper_files/paper/2024/file/cebbd24f1e50bcb63d015611fe0fe767-Paper-Conference.pdf)).
     Each object of a scene gets an identifier token (`<OBJ013>`); a question names objects by it and the model answers
     by naming identifiers, instead of describing objects in words, which is cumbersome and ambiguous.
-  - "SceneCraft: An LLM Agent for Synthesizing 3D Scene as Blender Code", 2024
+  - "SceneCraft: An LLM Agent for Synthesizing 3D Scene as [withheld] Code", 2024
     ([arXiv 2403.01248](https://arxiv.org/html/2403.01248v1)). A scene is a graph of assets and relations (proximity,
     alignment, parallelism); each relation becomes a scoring function and a solver places the assets; a vision model
     reviews a render against the request and the script is revised. Reported: a constraint passing score of 88.9
@@ -381,7 +381,7 @@ document, with its status (VERIFIED from the page, or INFERRED). The primary pag
   `nixos-rebuild`; OSTree's deployment model; systemd's `AUTOMATIC_BOOT_ASSESSMENT`; Pillai et al., ALICE (OSDI
   2014); Mohan et al., ARIES (1992); Fowler, Event Sourcing.
 - **Editors.** Godot's docs source (version control, TSCN, `UndoRedo`, running code in the editor, debugging tools)
-  and issue #40366; Blender's undo system, autosave and compatibility handbook, extension guidelines; Unreal's
+  and issue #40366; [withheld]'s undo system, autosave and compatibility handbook, extension guidelines; Unreal's
   directory structure, `FScopedTransaction`, Recovery Hub, Play In Editor, Live Coding, asset versioning; Unity's
   directories, undo, domain reloading, 6.6 notes; Unity Assistant's modes.
 - **Theory.** Goguen and Meseguer 1982; Rushby 1992; Murray et al. 2013 (seL4); Hoare 1969; Reynolds 2002; O'Hearn

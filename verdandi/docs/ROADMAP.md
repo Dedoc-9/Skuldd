@@ -5676,7 +5676,7 @@ and all seven are repaired:
 
 **Not done.** DASHBOARD-0, held by this harness, is now 0248: it was 0247 in the agreed order, the numbers shift and
 the order does not. Then the candidate's binding (F-3, F-4: his rulings), the inverse's repair (his ruling), plants
-completeness, and BLENDER-VIEW-0 where he places it.
+completeness, and [withheld]-VIEW-0 where he places it.
 
 NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
 PAGE-0 row), art/STUDIO.md, docs/CORE.md (art 27,701 lines), this entry.
@@ -5691,7 +5691,7 @@ PAGE-0 row), art/STUDIO.md, docs/CORE.md (art 27,701 lines), this entry.
 - pushed 603ae63..e51e7ef.
 
 MEASURED on his machine, by him. He also brought a text agreeing to the order: *"I agree: apply 0247, then do 0248
-DASHBOARD-0 before BLENDER-VIEW-0."* It sets five acceptance conditions for the dashboard:
+DASHBOARD-0 before [withheld]-VIEW-0."* It sets five acceptance conditions for the dashboard:
 - *"The host owns truth."*
 - *"Every panel is revision-bound."*
 - *"Admission is a host decision."*
@@ -5699,7 +5699,7 @@ DASHBOARD-0 before BLENDER-VIEW-0."* It sets five acceptance conditions for the 
 - *"Import is transactional."*
 
 It also sets seven adversarial cases for its page test and one invariant: *"At the time a panel claims to represent host
-revision H, its displayed facts must be derivable from H—or the panel must identify itself as stale."* Of the Blender
+revision H, its displayed facts must be derivable from H—or the panel must identify itself as stale."* Of the [withheld]
 rulings it says to resolve them *"explicitly rather than inferred from the recommended defaults."* The dashboard's
 entry will quote the text whole. That patch is now 0249, because this repair took 0248; the order is unchanged.
 
@@ -5774,7 +5774,7 @@ commit message, which none of them reads; the classifier's rung was taken again 
 - DASHBOARD-0, now 0249. Its design is settled, read from the tree and critiqued, but nothing of it is built: it waits
   on his rulings.
 - Then the candidate's binding (F-3, F-4) and the inverse's repair, their numbers after the dashboard's.
-- BLENDER-VIEW-0 after the dashboard, by the text he brought, with its rulings made explicitly.
+- [withheld]-VIEW-0 after the dashboard, by the text he brought, with its rulings made explicitly.
 
 NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
 PAGE-0 row), art/STUDIO.md, docs/CORE.md (art 27,723 lines), this entry.
@@ -6016,7 +6016,7 @@ at the read and the press, as his nuance asks.
 
 **Not done.**
 - 0250: the worlds, the outliner and transactional import, with its own worlds-mode rig (PAGE-WORLDS), as he ordered.
-- Then the binding (0251) and the inverse's repair (0252); BLENDER-VIEW-0 after, its rulings made explicitly.
+- Then the binding (0251) and the inverse's repair (0252); [withheld]-VIEW-0 after, its rulings made explicitly.
 
 NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
 native plaza's, the studio's and PAGE-0's rows, and a DASHBOARD-0 row), art/STUDIO.md (a section, and notes on the cards and PAGE's stale
@@ -7151,7 +7151,7 @@ under %TEMP%, never the checkout):
 
 **Not done.** His ruling on the design's fallback for browser suites under load (§4.6: run them one at a time), which
 the full check above measures; the binding (0251: the still's, the preview's and the undo's, refused on if he so rules:
-the design's R8) and the inverse's repair (0252); BLENDER-VIEW-0 after, its rulings made explicitly. His act after this patch: importing a brief into his
+the design's R8) and the inverse's repair (0252); [withheld]-VIEW-0 after, its rulings made explicitly. His act after this patch: importing a brief into his
 desktop studio through the page (OBSERVED, never a test).
 
 NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
@@ -7169,7 +7169,7 @@ remedy, blanket serialization, broad process killing, invented runner paths, and
 cross-platform claims, root-cause claims about Edge process ownership, and broader scheduler redesign unless
 measurements make them necessary."*) His word with it: *"prepare to give me the push sincew last"*. Built on 0250
 (c24ea8d; his runs of 0249 and 0250 not seen), so 0249, 0250 and 0251 are one sequence for him to apply. The binding is
-now 0252 and the inverse's repair 0253; BLENDER-VIEW-0 after.
+now 0252 and the inverse's repair 0253; [withheld]-VIEW-0 after.
 
 **Measured before it was built.**
 - The full check's one scheduler is `run_all` in `art/selftests.py`: one process, `--jobs` worker threads (the machine's
@@ -7367,7 +7367,7 @@ under %TEMP%, never the checkout; Edge headless):
 - tools/rung.py's R5 reads four suites' plants, and SCHEDULE's is not one of them.
 
 **Not done.** The binding (0252: the still's, the preview's and the undo's, refused on if he so rules) and the inverse's
-repair (0253); BLENDER-VIEW-0 after, its rulings made explicitly. His acts: apply 0249, 0250 and 0251 in that order, run
+repair (0253); [withheld]-VIEW-0 after, its rulings made explicitly. His acts: apply 0249, 0250 and 0251 in that order, run
 the full check and the gate in his checkout, push.
 
 NOT_MEASURED: the full check and the gate in his checkout. No row, rung, pinned source or oracle file changed. Docs:
@@ -7481,7 +7481,7 @@ registered before the code it governs.
 
 **Not done.** 0253, the enforcement (the five cases and the order states through the host, the plants the contract
 lists, the decision records, PREVIEW-0's row and art/STUDIO.md brought into agreement with his ruling); 0254, the
-inverse's repair against the same contract; BLENDER-VIEW-0 after, its rulings made explicitly.
+inverse's repair against the same contract; [withheld]-VIEW-0 after, its rulings made explicitly.
 
 NOT_MEASURED: the full check and the gate in his checkout. No row, rung, pinned source or oracle file changed. Docs:
 AGENTS.md (a row for BINDING-0, the studio's count), art/director/README.md (§8), docs/CAPABILITY-MATRIX.md (two dated

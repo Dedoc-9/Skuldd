@@ -155,16 +155,16 @@ Microsoft-authored loader DLL): no ruling exists. Whether his machine's Edge is 
 
 ### 2.3 Editors
 
-Godot, Blender, Unreal and Unity agree on four things (all VERIFIED from their documentation; sources in the research
+Godot, [withheld], Unreal and Unity agree on four things (all VERIFIED from their documentation; sources in the research
 notes): the only authoritative state is text (or self-describing versioned binary) under version control, and the
 derived cache (`.godot/`, `Library/`, `Intermediate/`, `Saved/`) is disposable; undo and crash recovery share one
 transaction stream (Godot's do/undo pairs, Unreal's `FScopedTransaction` and its Recovery Hub that replays
-transactions after a crash, Unity's deltas, Blender's memfile snapshots); backups are written beside the source,
+transactions after a crash, Unity's deltas, [withheld]'s memfile snapshots); backups are written beside the source,
 never over it, and even "safe save by rename" fails on Windows when antivirus or debuggers hold locks (Godot
 #40366), so renames must retry on sharing violations; a newer file is refused by an older editor rather than
-reinterpreted (Unreal's package versions; Blender's minimum-reader version). The only shipped in-editor agent, Unity
+reinterpreted (Unreal's package versions; [withheld]'s minimum-reader version). The only shipped in-editor agent, Unity
 Assistant, has an Ask mode that changes nothing, a Plan mode that changes nothing "until approved", and an Agent mode
-gated by permissions (VERIFIED). Blender's extension rule — sending data to a third party is "an explicit user
+gated by permissions (VERIFIED). [withheld]'s extension rule — sending data to a third party is "an explicit user
 action" — applies to sending a rendered view to a model. Verðandi already has the text-authority shape (the brief,
 the ledger, gitignored `art/build/`), the transaction stream (intents and their inverses), and the proposal-until-
 admitted boundary; what it lacks is the persisted tag vocabulary and the crash-safe write.
@@ -325,7 +325,7 @@ tree has), 0–3 each.
 | T4 | **Intransitive admission**: `candidate ⇝ gate ⇝ admitted`, never `candidate ⇝ admitted`; the candidate holds no capability to the pointer, the ledger writer or the stub | Rushby 1992, Miller 2006 | 3 | 3 | 2 | the process layer of "the model proposes; Verðandi admits" |
 | T5 | **Supervisor independence**: no transaction replaces the supervisor that runs it; a new supervisor is qualified by the old; the stub is replaced out of band and bounded restarts fall back to the previous blessed generation | Thompson, Wheeler's DDC, Erlang, the Chromium updater, Firefox's CVE | 3 | 3 | 2 | the owner's own caveat: "if the update supervisor itself can be replaced by the candidate it supervises, the protocol loses its independent enforcement point" |
 | T6 | **Crash refinement with explicit persistence axioms**: the recovered state after any crash is one of an enumerated set; the axioms (write-through rename, per-record fsync, a pre-created journal) are stated and tested at death points | ARIES, FSCQ, Yggdrasil, ALICE; the shell's journal and `admit-crash` | 3 | 3 | 3 | the harness exists in the gate for the shell; the studio needs the same off the gate |
-| T7 | **Semantic preservation of user data**: `Dₙ₊₁ ≡ Dₙ` means the ledger replays to the same files (`director.py verify`); a migration is a logged event with a minimum-reader version, and an older generation refuses a newer ledger rather than reinterpreting it | Unreal's package versions, Blender's compatibility rule, DIRECTOR-0's replay | 3 | 3 | 3 | the oracle for ≡ already exists |
+| T7 | **Semantic preservation of user data**: `Dₙ₊₁ ≡ Dₙ` means the ledger replays to the same files (`director.py verify`); a migration is a logged event with a minimum-reader version, and an older generation refuses a newer ledger rather than reinterpreting it | Unreal's package versions, [withheld]'s compatibility rule, DIRECTOR-0's replay | 3 | 3 | 3 | the oracle for ≡ already exists |
 | T8 | **Liveness of the last admitted world**: when a request, a provider or a candidate fails, the world served stays the last admitted one and stays playable | STUDIO-0's acceptance test ("keep the world playable when the model is unavailable") | 2 | 3 | 3 | measured 10/10; generalized to generations |
 | T9 | **Footprint as frame**: a change declares its modifies-set; what it realizes outside the closure of that set is a leak; namespaces outside any grant are reserved | the separation-logic frame rule; `check_scope`'s declared/realized/affected/unclaimed | 3 | 3 | 3 | built for content; the source analogue is file globs |
 
@@ -698,7 +698,7 @@ constraint checked against the scene before it is shown; prompt caching measured
 `art/providers/*` (image content blocks: the API's `image` source; the CLI's `--input-format stream-json`),
 `art/studio_refs.py` (the outliner's listing), `art/STUDIO.md`. **Prerequisites.** B1; B2 for trying the batch's own
 candidates. **Steps.** Outliner and details first (no model involved; measured data only); the strip and stills;
-projects; the critic last, with its egress rule: the first still sent in a session asks the designer once (Blender's
+projects; the critic last, with its egress rule: the first still sent in a session asks the designer once ([withheld]'s
 rule). **Acceptance.** The owner can find an object by name, select it from the list, read its geometry, compare
 three candidates side by side, save a project, reopen it in a fresh start with its tags and heads, and ask the critic
 for a ranking that names only tags that exist and constraints that the scene confirms; `probe --references` and a
@@ -912,7 +912,7 @@ day; the table says what was found and what the plan now does.
 | Verify the manifest and content before launch, at "microseconds per launch" (third review) | the cost claim is **unsupported**: hashing a generation is proportional to its size and the disk | adopted: `Integrity(G)` before activation and recovery, its time measured and reported |
 | `tries = 3` as a theorem clause (third review) | a policy | adopted as policy: the clause is that a counter exists and is decremented by rename |
 | A flipped verdict is a changed decision boundary, not automatically a regression (second review) | a semantic point | adopted for the verdict-drift probe: old verdicts and their inputs kept; flips classified, not failed |
-| A rendered view can reveal private project content; disclose what leaves the machine and to whom (second review) | agrees with Blender's rule (§2.3) | adopted for B3's critic: per-session consent naming the provider and what is sent |
+| A rendered view can reveal private project content; disclose what leaves the machine and to whom (second review) | agrees with [withheld]'s rule (§2.3) | adopted for B3's critic: per-session consent naming the provider and what is sent |
 
 The rulings the reviews recommended (a packaging-time tool as an optional path; tags persisted and shown; the
 default model configurable; session-scoped consent for stills; the three probes accepted off the gate) are
