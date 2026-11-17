@@ -61,3 +61,10 @@ Removed (40 records; the host's name in each path is written `<host>` here):
 | `verdandi/shell/attest/presentscale-confirm-<host>.json` | d749c0e49e9bdd510e117e7cb83a4c61a37077f4dfef0d00e83a8c05675e183e |
 | `verdandi/shell/attest/presentstretch-<host>.json` | 68462613641dee9288dff428e5a8629d6e8555100380e7a3771bed1dc4d06187 |
 | `verdandi/shell/attest/presentstretch-confirm-<host>.json` | ca89362b18a92c315341dc34cb0f0c11b506bfc5b6747c4f3dd14e4aa8f4fc9b |
+
+## Ruling C3 (a): the engine name in Verdandi's art README
+
+In `verdandi/art/README.md` the engine's name and version are replaced by "future engine integration" wording in 10 places;
+in the owner's quoted words the change is marked with square brackets. File paths, a file name and a
+module name that contain the word are kept (7 occurrences), since they name files and code. The art
+briefs' licence references are unchanged, as the ruling says. sha256 before ec63c93d7be8bfa9ecb0eab9dcfdb2adc6c549af4fbeac6ab33a06bf3e915857, after c541568f4078fb17c638b855b7d23699236994420ecf6babf16fe71da543f191.

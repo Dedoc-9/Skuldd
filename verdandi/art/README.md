@@ -3,7 +3,7 @@
 
 The owner's pivot (2026-10-10): *"the verification should exist only to guarantee the purity of the art. we want to
 move from verification to enabling the user to prompt art through llm and i mean at the quality of aaa games."* His
-finite decision: *"Unreal; curated modular assets + CC0 + selective AI props; separate `graybox/` project. Keep
+finite decision: *"[future engine integration]; curated modular assets + CC0 + selective AI props; separate `graybox/` project. Keep
 verification subordinate to artistic intent and gameplay integrity."* This folder is that project. It is named `art/`
 because `graybox/` is the browser slice it dresses. It stands beside the certified tree, as the graybox does: no row
 of the gate reads it, and it changes nothing the gate holds.
@@ -17,7 +17,7 @@ of the gate reads it, and it changes nothing the gate holds.
   art/dress.py:     W, C + the art file ──► one scene (scene.json), its lineage, a plan view
   art/check.py:     the scene held to C and the player; planted defects refused; two revisions
   art/quality.py:   the scene's bytes exact (finite, one byte form, known and bounded, in budget); frozen references; detectors on stills
-  Unreal 5.8:       art/unreal/verdandi_import.py ──► the level: play geometry, dressing, light, air, views
+  future engine:    art/unreal/verdandi_import.py ──► the level: play geometry, dressing, light, air, views
   play ──► critique in plain words ──► a look revision (the art file) or a layout revision (the design tool) ──► again
 ```
 
@@ -122,7 +122,7 @@ spacing, a percentage or an `every` is a whole number (`3` or `3.0`, never `2.7`
 |---|---|
 | `map NAME` | the graybox map to dress (required, once) |
 | `title TEXT` · `seed WORD` | a name; the word every choice is hashed with |
-| `time night\|dusk\|day` · `moon AZ EL LUX R,G,B` (or `sun`) | the sky; the one directional light, from azimuth AZ (0 north, 90 east) and elevation EL. The native renderer reads LUX on a linear scale of its own, set on the night plaza's moon (0.35) and with no exposure of its own: a midday sun there is about 2.5 (`harbor-day`); a real sun's 100,000 lux, as Unreal takes it, is drawn white |
+| `time night\|dusk\|day` · `moon AZ EL LUX R,G,B` (or `sun`) | the sky; the one directional light, from azimuth AZ (0 north, 90 east) and elevation EL. The native renderer reads LUX on a linear scale of its own, set on the night plaza's moon (0.35) and with no exposure of its own: a midday sun there is about 2.5 (`harbor-day`); a real sun's 100,000 lux, as the future engine integration takes it, is drawn white |
 | `fog DENSITY R,G,B [volumetric]` · `exposure EV` · `bloom N` · `rain 0..1` | the air and the camera |
 | `asset NAME PATH SOURCE LICENCE…` | a mesh, its engine path, its source (`engine`, `cc0`, `fab`, `generated`, `own`) and its licence; a mesh without both is refused |
 | `material NAME R,G,B ROUGH METAL [emissive R,G,B STRENGTH]` | a surface |
@@ -154,7 +154,7 @@ python art/preview.py plaza-night        # art/build/plaza-night/preview.html: a
 
 **The preview is PROVISIONAL_PREVIEW.** It shows the scene's boxes in their materials' colours, the moon, every lamp
 and neon as a point light, and fog, from the brief's views (keys 1–9) or walking. It is a sketch for judging
-composition and height between admissions, before Unreal is installed. It is not the Unreal look, it decides nothing,
+composition and height between admissions, before the future engine integration is installed. It is not that engine's look, it decides nothing,
 and nothing hashes its pixels.
 
 `art/check.py` exports each brief twice (the bytes must agree), then holds the scene to the world it dresses:
@@ -242,7 +242,7 @@ python art/selftests.py --repeat 2                       # THROUGHPUT-0: every s
 
 ## The native plaza: `art/play.py`
 
-By the owner's ruling (2026-10-10): *"Make Verðandi-native the primary architecture. Keep UE5.8 as a secondary
+By the owner's ruling (2026-10-10): *"Make Verðandi-native the primary architecture. Keep [the future engine integration] as a secondary
 interoperability path."* And (2026-10-11): *"Choose the art-owned launcher (`art/play.py`) and WebGL2 in the browser.
 Keep `serve.py` and the existing `graybox/` boundary unchanged."*
 
@@ -321,13 +321,13 @@ python art/play.py --selftest            # the live loop without a browser: LIVE
   (`python art/studio.py records`). The desktop icon's window asks what to open first: the worlds, each read back,
   and the views, one manifest each in `web/views/`.
 
-## In Unreal Engine 5.8, on the host (an optional path)
+## In the future engine integration, on the host (an optional path)
 
-Since the owner's ruling of 2026-10-10, Unreal is a secondary interoperability path, not the critical one.
+Since the owner's ruling of 2026-10-10, the future engine integration is a secondary interoperability path, not the critical one.
 
 First, the smallest end-to-end scene on the machine you will build on, before any kit or toolchain is bought:
 
-1. Install Unreal Engine 5.8 from the Epic Games Launcher.
+1. Install the engine of the future engine integration, as its vendor distributes it.
 2. Create a project: Games → **First Person**, Blueprint, Desktop, Maximum quality. Starter content is optional. Name
    it `VerdandiArt` and put it in this folder (`art\unreal\`). Git ignores `art/unreal/*/`: the project's inputs are
    here, and the project itself is made from them.
@@ -354,7 +354,7 @@ Movement. Otherwise the reach ceiling the checks compute is not the one you play
 |---|---|---|
 | the scene's collision is C; no dressing where a player can be; the revisions stay local; each planted defect refused | MEASURED, here | `python art/check.py` (the build container, 2026-10-10) |
 | the importer's logic: a first import, a second that keeps every actor, a look revision that remakes none, a layout revision that remakes 5 and removes 4, the in-engine self-check passing | OBSERVED against a stand-in for the `unreal` module, not an engine | the build container; the stand-in is not in the repository |
-| the importer runs in Unreal 5.8 | NOT_MEASURED | the host's first run; its report |
+| the importer runs in the future engine integration's engine | NOT_MEASURED | the host's first run; its report |
 | the scene's bytes are exact: finite, one byte form, every field known and bounded, inside the native renderer's budgets; each brief its frozen reference | MEASURED, here | `python art/quality.py selftest` (58 rows, each check against its planted defect) and `python art/check.py` (the build container, 2026-10-13) |
 | REACH-1's pair test is the tick's (0257) | MEASURED against graybox/tick_ref.py tick3: 41,160 height differences on the 1/256 m grid from platforms at 0, 3.8125, 50 and 100 m, 0 disagreements but at the exact ties (8,126, all counted; the tick landed at 7,783); a search, as 0229's, of the four briefs and the witness, 150,048 tries each, no head above the ceiling less its margin, the closest 0.029167 m | his machine, 2026-10-21; the differential and the search are in the agent's scratch, not the repository |
 | the reach ceiling (REACH-1) is above every head the graybox's rules 3 raise | MEASURED, here, as a search and not a proof: a breadth-first search of rules 3's simulation over landings (24 yaws, jumps at once, after 3 or 8 ticks, or none; with movers, after waiting 0, 60 or 150 ticks), every tick's head over the cells under the body: the tactical map, 308,352 tries, no head above REACH-1's ceiling less its margin, the closest 0.029 m under it, 334 cells above the old one; harbor-lift with its movers, 400,032 tries, none above, the closest 0.029 m | the build container (node v22), 2026-10-14; the search is not in the repository |
@@ -399,7 +399,7 @@ block a player is cover, and goes into the graybox map.
 | `briefs/foundry-yard.art` | 0241 (Phase I's B5a): the fourth world, an industrial district at dusk on the same graybox: brick warehouses and corrugated-steel sheds (FACADE-0's buildings and bays) along both side lanes, nothing of the layout moved; the flagship's warehouse is `building:10,2-17,2` |
 | `briefs/plaza-night.revise-look` | its look revision: the wet surfaces less reflective |
 | `briefs/plaza-night.revise-layout.design` | its layout revision: the south flank one cell narrower (the north flank until B was admitted) |
-| `unreal/verdandi_import.py` | the Unreal 5.8 importer, run inside the editor |
+| `unreal/verdandi_import.py` | the future engine integration's importer, run inside the editor |
 | `director.py`, `director/` | DIRECTOR-0: the canonical form, the scope protocol, the ledger, the conformance vectors, the second implementation |
 | `rounds/plaza-mass/`, `rounds/plaza-cantilevers/` | the second and third rounds, evaluated, not yet chosen |
 | `rounds/plaza-imposing/` | the first round's candidate intents |
