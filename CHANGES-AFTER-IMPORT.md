@@ -229,3 +229,23 @@ inside a text are shown here as spaces):
 </details>
 
 sha256 before and after: `AGENTS.md` 4841da869d8a6e2c1f34804f1411cb5ae3995bbfe9afac282830535979d960f5, e965393a41aa54e11245372ec6babcfea4c29ddccdf755ab746c08336278c285; `LICENSING.txt` de1d9e8a47cc3fca1735a8707d4909c4a04dd22997c16aa809393b28e9780105, 4abc58d6db5c687e09971a09ba102a50afb86134402cb5bd44214967c69b7928; `PROVENANCE.md` 5826f61ec34d536371794f7fb176d3499a5df582c5894237aed90a789322837e, 237cf33ec55b7a4a0346aa64fd3c5d22344bdbec014a34d279bb47c58652fafa; `README.md` f3bad9d5a2f5f2f7fd7cd49fcb116eece8caa3cc7e1d1f76cbe53404b65ce5bd, 200987c9cbc99e405fdac52310d770801fb2950bbe610d8f84c7313274a47e20; `THEOREMS.md` 27f6c7234907817d43455fed54d56eb4cfca21b48e7a68762dd49dc8481734ed, e15b0ca9934d8053a56776233b465dcc527a54b7d4cdc9252061bfb8bc26b27c; `THIRD-PARTY.md` cda96fe9f23186d1c0f1b5ba37bd6f9baea4a940125bab9e0eca0e737c2cb746, d97c68d41e79695de1b9e8522481212a507ac399e92b6a4e41f695194b3e731f; `docs/paper/SYSTEM-GUARANTEES.md` 673db8c5fde881d0c4f731c1595be8e2a8eed3237e2b8d1c7c57f95b96eb99ae, cd1b3466adace9a078e9b1ff73e7eceda884d489cdf4c2b628487096ddb1b003; `kernel/hardening/big106/BIG106-NOTE-2026-11-17.md` a0602341d5d4f6ffe97e9ed928fb1dfa73d717d67a7b5efd1cd0bfe7c0c22c27, ffc917b666342f54e806fa9a45c49b19a1c2d5554daa1195edd412e737522dc1; `kernel/hardening/plants/PLANT-LABELS.md` 9976cefa12fb9e481a20120ec490e5c0ba9cf75e6f3093ed50f453f3cc5b0b53, 7389613de51a1c08fd382013e60585272820487c1626d9429a0e3b9d6563c09f; `kernel/notes/CORRECTIONS-2026-11-16.md` 8ed9773c3fd173e361728573827e63bfd0044ca26c8dcbd296c1fe988e4b7b48, 73a0e236eec7a8ea1910c546aac3ea8b7669d6dd834bbbf1603d9f443ea6c5ba; `kernel/notes/LIMITATIONS.md` 460cab4a0bf52230d538387a59b8ee96d90c9e32634638684952dbb29efa107a, b97da394d1287ff1a53f642bca9033730c803bdfad8d5465b88e346c5d13acd4.
+
+## The Linux CI, the floating-point state guard and the guarantees ledger (2026-11-17)
+
+Added by the pull request `linux-ci`, prepared by the assistant at the owner's request of 2026-11-17; it is
+part of this tree only if the owner merges it. No file of the import is changed by it, and no proof source,
+statement, freeze list or gate: a Linux workflow and its image, a guarantees ledger, the manifest check, and
+a prototype floating-point state guard with its gate.
+
+| File | sha256 |
+|---|---|
+| `.github/workflows/mathkernel-linux.yml` | ccdb18335443011ebc9f183ecfd3cd8c9e1732d44ec535bb8d7ea2a06fab1082 |
+| `ci/mathkernel/Dockerfile` | 0dc712cbafab7dbba07684a229cf35b73241106ef6db437eb1a1e7783fbcf593 |
+| `docs/GUARANTEES-LEDGER.md` | a16ad9cafde68092b6d82ab9edd2a709ad546e747afb984dd5b17b3f1aab5f31 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | 737bb1a98093f6de7cf5bf3ccb00a166a954df4568488aac2f7da5ea2ba26252 |
+| `kernel/runtime/README.md` | b1000e7ca5822cf7e06092e6a31511ecdbd6b5ce3cd1d523b703a470137bccfe |
+| `kernel/runtime/check_fpenv.py` | e3b0959ce742fd9e37ea056143ac7ec0138ba3c4527a1b5ab8020798aee2ead5 |
+| `kernel/runtime/mk_fpenv.c` | f3abea02ccf388b85ddb5116b07774a629d28beab693daf83a7f2101c4e74555 |
+| `kernel/runtime/mk_fpenv.h` | 1f82a206b0c2043248cd4ad8b9ac2707e2f814a8fe4deb063478e79c4715bbd6 |
+| `kernel/runtime/test_fpenv.c` | 15c521b0fd7f9030654a87b63483fe7a9740af3571387a90dcc32ee403d1b814 |
+| `tools/check_manifests.py` | 6fa83222e8104b3e59a73e2d94c7435da6605f5929efd63e2bdf32b54770de01 |
