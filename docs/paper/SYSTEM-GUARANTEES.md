@@ -80,7 +80,7 @@ a design tool, and rendered deterministically (READ, its own brief).
 | G3 | Every backend (C99, Rust, Python; one for Ørlǫg planned, not yet designed) gives the same bytes as the proved program on every input | DESIGNED | none yet | — |
 | G4 | The admitted floating-point state is checked at entry; conversions on integer bits make the turns kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; immunity ARGUED from G2's measured ranges | T2's measured intermediate ranges | the check itself, which is not built |
 | G5 | Every file of the tree is accounted for: two parts were blob-exact copies of pinned commits at the import, with every later change listed in `CHANGES-AFTER-IMPORT.md`, and the kernel's freeze lists match | MEASURED | the assembler's manifests; 665 of 665 freeze entries | who wrote each file's content |
-| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | process, NOT MET yet | — | — |
+| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | MET at statement level for the 13 statement files: one model outside the authors' family (ChatGPT, OpenAI), administered by the owner, 2026-11-17 | the review's findings, verified against the files (docs/GUARANTEES-LEDGER.md §1) | that a human outside the authors has read them; that the statements say what their owner meant; the law (G2), which was not in the review |
 
 **G1 in plain words.** The thirteen statements are candidates: proved, not adopted. A proof shows that a
 statement follows from four axioms; it does not show that the statement says what its owner meant. That second

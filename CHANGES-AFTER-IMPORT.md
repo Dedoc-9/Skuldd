@@ -249,3 +249,11 @@ a prototype floating-point state guard with its gate.
 | `kernel/runtime/mk_fpenv.h` | 1f82a206b0c2043248cd4ad8b9ac2707e2f814a8fe4deb063478e79c4715bbd6 |
 | `kernel/runtime/test_fpenv.c` | 15c521b0fd7f9030654a87b63483fe7a9740af3571387a90dcc32ee403d1b814 |
 | `tools/check_manifests.py` | 6fa83222e8104b3e59a73e2d94c7435da6605f5929efd63e2bdf32b54770de01 |
+
+## Ruling D1 (a): G6's row
+
+Carries out the owner's ruling D1 (a) of 2026-11-17.
+
+- `docs/paper/SYSTEM-GUARANTEES.md`, line 83: was "| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | process, NOT MET yet | — | — |"; now "| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | MET at statement level for the 13 statement files: one model outside the authors' family (ChatGPT, OpenAI), administered by the owner, 2026-11-17 | the review's findings, verified against the files (docs/GUARANTEES-LEDGER.md §1) | that a human outside the authors has read them; that the statements say what their owner meant; the law (G2), which was not in the review |"
+
+sha256 before and after: `docs/paper/SYSTEM-GUARANTEES.md` cd1b3466adace9a078e9b1ff73e7eceda884d489cdf4c2b628487096ddb1b003, 2cfadd0d4bd544aab5f73158b2db508821f6e8d21f360fdb22c87d785df85047
