@@ -1,0 +1,13 @@
+# Build products of the Coq tier and of its gates; the gates recreate them on every run.
+*.vo
+*.vos
+*.vok
+*.glob
+.*.aux
+.lia.cache
+.nia.cache
+__pycache__/
+kernel/coq/libcache/
+kernel/coq/*/out4/
+
+# orlog/ and verdandi/ carry their own .gitignore, which apply inside them.

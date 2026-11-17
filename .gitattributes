@@ -1,0 +1,15 @@
+# Line endings: every text file is stored with LF.
+* text=auto eol=lf
+
+# Evidence is kept byte for byte. Consoles and records are hashed as captured, and some were written with CR LF line
+# ends by the Windows tools that produced them; git must never convert them, or their recorded sha256 would break.
+kernel/**/*-console.txt -text
+kernel/hardening/**/runs/** -text
+kernel/hardening/**/runs2/** -text
+kernel/hardening/harness/canaries/** -text
+kernel/hardening/plants/stage3/labels-refuted.json -text
+kernel/evidence/** -text
+kernel/law/sincos32law-candidate/printed-terms.txt -text
+MANIFEST.*.txt -text
+
+# orlog/ and verdandi/ carry their own .gitattributes, which apply inside them.

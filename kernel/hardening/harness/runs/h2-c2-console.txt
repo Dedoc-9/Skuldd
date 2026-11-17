@@ -1,0 +1,13 @@
+harness 47df8e8b58eca2d7f8e6183d49440d24b14b9f190f22a4d0150a76247dbb8fb1 (author-written; graded as the author's)
+coqc: The Coq Proof Assistant, version 8.20.1 | coqchk binary sha256 575eba6327098bea9cb524cbb810fca87b12e461303e859810498b445126c41e | coqc binary sha256 39729d7e2aa4ef71fcdbb336282b460f52fc67abb90c5ca62abad54f403d1bfa
+  1 freeze list is the owner's anchor                                ok  list a55d1c08a6929a0e4ce46a05c83537be48901b0d5adadd0b05bdcf1da4531172, given a55d1c08a6929a0e
+  2 every line readable, no path twice                               ok  96 entries
+  3 every listed file present with its listed sha256                 FAIL  1 differ: sincos32z/Zero.v
+  4 the list covers the closure                                      ok  54 sources, imports all listed; statement, theorem module, Identity, Closed, axioms listed
+  5 fresh root holds exactly the listed sources                      FAIL  missing []; extra []; different ['sincos32z/Zero.v']
+  6 every source compiles, in import order                           ok  54 files, 57 s
+  7 own check file: type and Print Assumptions exactly the axioms    ok  4 axioms
+  8 recursive coqchk, summary read strictly                          ok  exit 0, 39 s, axioms Coq.Logic.Classical_Prop.classic, Coq.Logic.FunctionalExtensionality.functional_extensionality_dep, Coq.Reals.ClassicalDedekindReals.sig_forall_dec, Coq.Reals.ClassicalDedekindReals.sig_not_dec
+  compiled .vo files: 55; digest of their sorted "sha256  path" lines 976c6a65f961373596fcf9d3eb33af3852d998987b168e452f9d612c3ac9739e
+  outside libraries loaded: 309 (309 located); digest of their sorted "library sha256" lines e7007831c6ec64dbbc80737f8b8b440b8efde732cb6f6d8334898ca6752b7301
+HARNESS sincos32z FAILED: 6 of 8 rows  [anchor a55d1c08a6929a0e]

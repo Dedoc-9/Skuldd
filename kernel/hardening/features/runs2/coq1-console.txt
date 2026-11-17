@@ -1,0 +1,59 @@
+coqc decoy_split_string.v exit 0
+coqc decoy_string_in_comment.v exit 0
+coqc evade_hidden_fixpoint.v exit 0
+coqc evade_split_definitional_uip.v exit 0
+coqc evade_split_unset_guard.v exit 0
+coqc evade_string_in_comment.v exit 0
+plants compiled: 6 of 6
+== probe of evade_hidden_fixpoint.v: coqc exit 0; its output:
+File "/b/probe_evade_hidden_fixpoint.v", line 1, characters 0-0:
+Warning: Not interpreting "*)" as the end of current non-terminated comment
+because it occurs in a non-terminated string of the comment.
+[comment-terminator-in-string,parsing,default]
+File "/b/probe_evade_hidden_fixpoint.v", line 5, characters -1--1:
+Warning: Not interpreting "*)" as the end of current non-terminated comment
+because it occurs in a non-terminated string of the comment.
+[comment-terminator-in-string,parsing,default]
+Guard Checking is on
+Definitional UIP is off
+
+== probe of evade_split_definitional_uip.v: coqc exit 0; its output:
+Guard Checking is on
+Definitional UIP is on
+
+== probe of evade_split_unset_guard.v: coqc exit 0; its output:
+Guard Checking is off
+Definitional UIP is off
+
+== probe of evade_string_in_comment.v: coqc exit 0; its output:
+File "/b/probe_evade_string_in_comment.v", line 1, characters 0-0:
+Warning: Not interpreting "*)" as the end of current non-terminated comment
+because it occurs in a non-terminated string of the comment.
+[comment-terminator-in-string,parsing,default]
+File "/b/probe_evade_string_in_comment.v", line 3, characters -1--1:
+Warning: Not interpreting "*)" as the end of current non-terminated comment
+because it occurs in a non-terminated string of the comment.
+[comment-terminator-in-string,parsing,default]
+Guard Checking is off
+Definitional UIP is off
+
+== recursive coqchk P2.evade_hidden_fixpoint exit 0; output from its summary:
+CONTEXT SUMMARY
+===============
+
+* Theory: Set is predicative
+  
+* Theory: Rewrite rules are not allowed
+  
+* Axioms: <none>
+  
+* Constants/Inductives relying on type-in-type: <none>
+  
+* Constants/Inductives relying on unsafe (co)fixpoints:
+    P2.evade_hidden_fixpoint.loop
+  
+* Inductives whose positivity is assumed: <none>
+  
+== the harness's reader (harness.py read_chk) on that output:
+REFUSED
+['unknown section: * Axioms: <none>', 'unsafe section not empty: * Constants/Inductives relying on unsafe (co)fixpoints:', 'unsafe entry: P2.evade_hidden_fixpoint.loop', 'section absent: * Axioms:', "axioms differ: extra [], absent ['Coq.Logic.Classical_Prop.classic', 'Coq.Logic.FunctionalExtensionality.functional_extensionality_dep', 'Coq.Reals.ClassicalDedekindReals.sig_forall_dec', 'Coq.Reals.ClassicalDedekindReals.sig_not_dec']"]

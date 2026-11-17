@@ -1,0 +1,44 @@
+ebe0da2cef1d7c648d878149470162aa5d31ae770afa58ce111fea5bde456d77  /b/root/sincos32i/SINCOS32_IEEE_Statement.v
+0a2662b8ea5743faeddb35fcaf5499738e0d67a357c7cd88f8225683dcc66b1a  /b/root/sincos32z/SINCOS32_IEEE_Zero_Statement.v
+a9a62578ca5c6ca3b4399a176a91541daeeffd09d2f6449f3c4b0391ca6fadbf  /b/root/r4ex/Examples.v
+coqc f32/F32_Statement.v exit 0 (2 s)
+coqc p32/Graphs.v exit 0 (1 s)
+coqc p32/P32_Statement.v exit 0 (0 s)
+coqc p32r/P32R_Statement.v exit 0 (0 s)
+coqc exp32/Graph.v exit 0 (1 s)
+coqc exp32/EXP32_Statement.v exit 0 (0 s)
+coqc ieee64/IEEE64_Statement.v exit 0 (13 s)
+coqc sin32/Graph.v exit 0 (0 s)
+coqc cos32/Graph.v exit 0 (1 s)
+coqc sincos32/Graph.v exit 0 (0 s)
+coqc sincos32i/SINCOS32_IEEE_Statement.v exit 0 (1 s)
+coqc sincos32z/SINCOS32_IEEE_Zero_Statement.v exit 0 (1 s)
+coqc r4ex/Examples.v exit 0 (1 s)
+28
+Print Assumptions run exit 0
+Print Assumptions: 1 closed, 24 with axioms; the axiom names that occur:
+     24 ClassicalDedekindReals.sig_forall_dec
+     24 ClassicalDedekindReals.sig_not_dec
+     24 Classical_Prop.classic
+     24 FunctionalExtensionality.functional_extensionality_dep
+recursive coqchk MKF.r4ex.Examples exit 0 (23 s); its summary:
+CONTEXT SUMMARY
+===============
+
+* Theory: Set is predicative
+  
+* Theory: Rewrite rules are not allowed
+  
+* Axioms:
+    Coq.Logic.FunctionalExtensionality.functional_extensionality_dep
+    Coq.Reals.ClassicalDedekindReals.sig_not_dec
+    Coq.Reals.ClassicalDedekindReals.sig_forall_dec
+    Coq.Logic.Classical_Prop.classic
+  
+* Constants/Inductives relying on type-in-type: <none>
+  
+* Constants/Inductives relying on unsafe (co)fixpoints: <none>
+  
+* Inductives whose positivity is assumed: <none>
+  
+R4 EXAMPLES CHECKED

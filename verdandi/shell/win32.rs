@@ -1,0 +1,2746 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (C) 2026 Daniel J. Dillberg
+//
+// shell/win32.rs — the window, the blit, and DWM's composition barrier. COMPILED ONLY WHEN
+// `--cfg shell_window` is set AND target_os = "windows" (see main.rs), so no gate build on any host sees this
+// file; it is compiled and run on the owner's host. Zero crates: the Win32 surface is declared here as raw
+// `extern "system"` against user32/gdi32/kernel32 (dwmapi is loaded at run time), the charter's "hand-rolled
+// Win32."
+//
+// What it does: register a class, create a window, and — when --measure N is given — run N frames of
+//   1. blit the kernel's composite (as `to_blit` bytes: 24-bit BGR, top-down) with StretchDIBits,
+//   2. read the QPC the moment StretchDIBits returns (frame-ready),
+//   3. call DwmFlush(), which BLOCKS until the next DWM composition, and read the QPC when it returns
+//      (composited) — no fragile DWM_TIMING_INFO struct is read,
+// recording frame-ready -> composited in microseconds, p50/p95/p99/max, with the refresh period (median idle
+// DwmFlush interval) beside it, into a raw record that verify/seal_present.py seals under the RECORD-0 envelope
+// and stamps with SHELL-0's preregistration hash.
+//
+// THE BLIT-HASH LAW, at the boundary: the shell hashes the exact bytes it hands StretchDIBits and refuses to
+// present a frame whose blit witness is not the one the kernel's composite produces — so a picture that reached
+// the screen without passing through the kernel is refused, not shown. (The law itself is proven headless in
+// present.rs and the gate; here it guards the real present.)
+//
+// frame-ready -> composited is NOT input-to-photon: input transport, the present wait beyond composition and
+// the panel need capture hardware (latchain's boundary). No number here is a latency claim.
+
+use std::ffi::c_void;
+use std::time::{SystemTime, UNIX_EPOCH};
+
+use crate::formats::{facing_letter, Camera};
+use crate::present::{blit_roundtrip_ok, blit_witness, to_blit, Composed};
+use crate::mantle::{H, W};
+
+type Bool = i32;
+type Word = u16;
+type Dword = u32;
+type Long = i32;
+type Uint = u32;
+type Wparam = usize;
+type Lparam = isize;
+type Lresult = isize;
+type Hwnd = *mut c_void;
+type Hdc = *mut c_void;
+type Hinstance = *mut c_void;
+type Hicon = *mut c_void;
+type Hcursor = *mut c_void;
+type Hbrush = *mut c_void;
+type Hmenu = *mut c_void;
+type WndProc = extern "system" fn(Hwnd, Uint, Wparam, Lparam) -> Lresult;
+
+#[repr(C)]
+struct WndClassW {
+    style: Uint,
+    lpfn_wnd_proc: Option<WndProc>,
+    cb_cls_extra: i32,
+    cb_wnd_extra: i32,
+    h_instance: Hinstance,
+    h_icon: Hicon,
+    h_cursor: Hcursor,
+    hbr_background: Hbrush,
+    lpsz_menu_name: *const u16,
+    lpsz_class_name: *const u16,
+}
+
+#[repr(C)]
+struct Point {
+    x: Long,
+    y: Long,
+}
+#[repr(C)]
+struct Msg {
+    hwnd: Hwnd,
+    message: Uint,
+    w_param: Wparam,
+    l_param: Lparam,
+    time: Dword,
+    pt: Point,
+}
+
+#[repr(C)]
+struct BitmapInfoHeader {
+    bi_size: Dword,
+    bi_width: Long,
+    bi_height: Long,
+    bi_planes: Word,
+    bi_bit_count: Word,
+    bi_compression: Dword,
+    bi_size_image: Dword,
+    bi_x_pels_per_meter: Long,
+    bi_y_pels_per_meter: Long,
+    bi_clr_used: Dword,
+    bi_clr_important: Dword,
+}
+
+// The composited time is measured with DwmFlush() (which blocks until the next DWM composition) plus QPC — NOT
+// by reading DWM_TIMING_INFO, whose 40-plus mixed-width fields are too fragile to hand-lay-out correctly (an
+// earlier attempt read qpcFrameDisplayed from the wrong offset and never advanced). frame-ready is the QPC the
+// instant StretchDIBits returns; composited is the QPC the instant the following DwmFlush() returns.
+
+const WS_OVERLAPPEDWINDOW: Dword = 0x00CF_0000;
+const WS_VISIBLE: Dword = 0x1000_0000;
+const CW_USEDEFAULT: i32 = -2147483648;
+const WM_DESTROY: Uint = 0x0002;
+const WM_CLOSE: Uint = 0x0010;
+const WM_PAINT: Uint = 0x000F;
+const PM_REMOVE: Uint = 0x0001;
+const SRCCOPY: Dword = 0x00CC_0020;
+const BI_RGB: Dword = 0;
+const DIB_RGB_COLORS: Uint = 0;
+
+#[link(name = "user32")]
+extern "system" {
+    fn RegisterClassW(class: *const WndClassW) -> Word;
+    fn CreateWindowExW(ex_style: Dword, class_name: *const u16, window_name: *const u16, style: Dword, x: i32, y: i32, w: i32, h: i32, parent: Hwnd, menu: Hmenu, instance: Hinstance, param: *mut c_void) -> Hwnd;
+    fn DefWindowProcW(hwnd: Hwnd, msg: Uint, wp: Wparam, lp: Lparam) -> Lresult;
+    fn GetDC(hwnd: Hwnd) -> Hdc;
+    fn ReleaseDC(hwnd: Hwnd, hdc: Hdc) -> i32;
+    fn PeekMessageW(msg: *mut Msg, hwnd: Hwnd, min: Uint, max: Uint, remove: Uint) -> Bool;
+    fn TranslateMessage(msg: *const Msg) -> Bool;
+    fn DispatchMessageW(msg: *const Msg) -> Lresult;
+    fn PostQuitMessage(code: i32);
+    fn DestroyWindow(hwnd: Hwnd) -> Bool;
+}
+
+#[link(name = "gdi32")]
+extern "system" {
+    fn StretchDIBits(hdc: Hdc, x_dest: i32, y_dest: i32, w_dest: i32, h_dest: i32, x_src: i32, y_src: i32, w_src: i32, h_src: i32, bits: *const c_void, info: *const BitmapInfoHeader, usage: Uint, rop: Dword) -> i32;
+}
+
+#[link(name = "kernel32")]
+extern "system" {
+    fn QueryPerformanceCounter(count: *mut i64) -> Bool;
+    fn QueryPerformanceFrequency(freq: *mut i64) -> Bool;
+    fn GetModuleHandleW(name: *const u16) -> Hinstance;
+    fn LoadLibraryW(name: *const u16) -> *mut c_void;
+    fn GetProcAddress(module: *mut c_void, name: *const u8) -> *mut c_void;
+}
+
+// dwmapi is loaded at RUNTIME (its import library is absent from some mingw toolchains, which fails the link);
+// user32/gdi32/kernel32 are core and always present, so they stay `#[link]`. We need only DwmFlush (the
+// composition barrier). If dwmapi.dll or DwmFlush is missing at run time, `run` refuses SHELL-NO-DWM.
+type DwmFlushFn = extern "system" fn() -> i32;
+
+struct Dwm {
+    flush: DwmFlushFn,
+}
+
+fn load_dwm() -> Option<Dwm> {
+    unsafe {
+        let lib = LoadLibraryW(wide("dwmapi.dll").as_ptr());
+        if lib.is_null() {
+            return None;
+        }
+        let f = GetProcAddress(lib, b"DwmFlush\0".as_ptr());
+        if f.is_null() {
+            return None;
+        }
+        Some(Dwm { flush: std::mem::transmute::<*mut c_void, DwmFlushFn>(f) })
+    }
+}
+
+fn wide(s: &str) -> Vec<u16> {
+    s.encode_utf16().chain(std::iter::once(0)).collect()
+}
+
+extern "system" fn wnd_proc(hwnd: Hwnd, msg: Uint, wp: Wparam, lp: Lparam) -> Lresult {
+    unsafe {
+        match msg {
+            WM_CLOSE => {
+                DestroyWindow(hwnd);
+                0
+            }
+            WM_DESTROY => {
+                PostQuitMessage(0);
+                0
+            }
+            _ => DefWindowProcW(hwnd, msg, wp, lp),
+        }
+    }
+}
+
+fn qpc() -> i64 {
+    let mut c = 0i64;
+    unsafe { QueryPerformanceCounter(&mut c) };
+    c
+}
+
+fn percentiles(mut xs: Vec<u128>) -> (u128, u128, u128, u128) {
+    xs.sort_unstable();
+    let n = xs.len();
+    let at = |p: f64| xs[(((n as f64) * p).ceil() as usize).saturating_sub(1).min(n - 1)];
+    (at(0.50), at(0.95), at(0.99), xs[n - 1])
+}
+
+fn json_escape(s: &str) -> String {
+    let mut out = String::from("\"");
+    for ch in s.chars() {
+        match ch {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
+}
+
+/// Open a window, present the composite, and (with measure > 0) record frame-ready -> composited on the host.
+pub fn run(c: Composed, measure: usize, host: &str, cam: Camera) {
+    // the blit-hash guard: the bytes we are about to hand the OS carry the kernel's composite, or we refuse
+    let blit = to_blit(&c.composite);
+    let bw = blit_witness(&blit);
+    let want = blit_witness(&to_blit(&c.composite));
+    if bw != want {
+        eprintln!("SHELL-BLIT-REFUSE: the blit buffer is not the kernel's composite; not presenting");
+        std::process::exit(2);
+    }
+
+    let dwm = match load_dwm() {
+        Some(d) => d,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or its composition-timing entry point is unavailable; cannot measure frame->composited");
+            std::process::exit(2);
+        }
+    };
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide("VerdandiShell");
+    let title = wide("Verðandi — SHELL-0");
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    let hwnd = unsafe {
+        CreateWindowExW(0, class_name.as_ptr(), title.as_ptr(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+            CW_USEDEFAULT, CW_USEDEFAULT, (W as i32) / 2 + 16, (H as i32) / 2 + 39,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    };
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+
+    // a top-down 24-bit DIB (negative height): the rows are in the same order as the composite
+    let header = BitmapInfoHeader {
+        bi_size: std::mem::size_of::<BitmapInfoHeader>() as Dword,
+        bi_width: W as Long,
+        bi_height: -(H as Long),
+        bi_planes: 1,
+        bi_bit_count: 24,
+        bi_compression: BI_RGB,
+        bi_size_image: (W * H * 3) as Dword,
+        bi_x_pels_per_meter: 0,
+        bi_y_pels_per_meter: 0,
+        bi_clr_used: 0,
+        bi_clr_important: 0,
+    };
+
+    let mut freq = 0i64;
+    unsafe { QueryPerformanceFrequency(&mut freq) };
+    if freq <= 0 {
+        freq = 1;
+    }
+    let mut samples: Vec<u128> = Vec::with_capacity(measure.max(1));
+
+    // refresh period: the median of a few idle DwmFlush intervals (each blocks ~one composition)
+    let mut refresh: Vec<u128> = Vec::with_capacity(8);
+    for _ in 0..8 {
+        let a = qpc();
+        (dwm.flush)();
+        let b = qpc();
+        refresh.push((b - a).max(0) as u128 * 1_000_000 / freq as u128);
+    }
+    refresh.sort_unstable();
+    let refresh_us = refresh[refresh.len() / 2];
+
+    // one present: frame-ready (QPC after StretchDIBits) -> composited (QPC after the following DwmFlush)
+    let present_once = |hwnd: Hwnd, dwm: &Dwm| -> Option<u128> {
+        let hdc = unsafe { GetDC(hwnd) };
+        if hdc.is_null() {
+            return None;
+        }
+        let ok = unsafe {
+            StretchDIBits(hdc, 0, 0, (W as i32) / 2, (H as i32) / 2, 0, 0, W as i32, H as i32,
+                blit.as_ptr() as *const c_void, &header, DIB_RGB_COLORS, SRCCOPY)
+        };
+        let ready = qpc();
+        let composited = if ok != 0 {
+            (dwm.flush)();
+            Some(qpc())
+        } else {
+            None
+        };
+        unsafe { ReleaseDC(hwnd, hdc) };
+        composited.map(|t| (t - ready).max(0) as u128 * 1_000_000 / freq as u128)
+    };
+
+    // pump + present loop
+    let mut msg: Msg = unsafe { std::mem::zeroed() };
+    let mut done = 0usize;
+    let want = if measure == 0 { usize::MAX } else { measure };
+    loop {
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                // WM_QUIT
+                emit(host, &samples, refresh_us, &c, cam, &bw);
+                return;
+            }
+        }
+        if done < want {
+            if let Some(us) = present_once(hwnd, &dwm) {
+                if measure > 0 {
+                    samples.push(us);
+                }
+                done += 1;
+            }
+        }
+        if measure > 0 && done >= measure {
+            emit(host, &samples, refresh_us, &c, cam, &bw);
+            unsafe { DestroyWindow(hwnd) };
+            return;
+        }
+        let _ = WM_PAINT;
+    }
+}
+
+/// SHELL-PLAYBACK-b: play a sealed session's frames IN the window (host-run). Every frame is guarded by the
+/// blit-hash law before it reaches the OS; the sequence plays once at a visible dwell, then holds the last frame
+/// until the window is closed. This is the on-screen counterpart of the headless bridge the gate certifies; it
+/// carries no authority and mints no record — it only displays the composites `shell/playback.rs` produced.
+pub fn playback_window(frames: Vec<Composed>, measure: usize, host: &str) {
+    if frames.is_empty() {
+        eprintln!("SHELL-PLAYBACK-EMPTY: the sealed session has no move frames to show");
+        std::process::exit(2);
+    }
+    // guard every frame: hand the OS only bytes that carried the kernel's composite intact
+    let blits: Vec<Vec<u8>> = frames.iter().map(|c| to_blit(&c.composite)).collect();
+    for (i, c) in frames.iter().enumerate() {
+        if !blit_roundtrip_ok(&c.composite) {
+            eprintln!("SHELL-BLIT-REFUSE: playback frame {} did not round-trip; not presenting", i);
+            std::process::exit(2);
+        }
+    }
+
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide("VerdandiPlayback");
+    let title = wide("Verðandi — SHELL-PLAYBACK");
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    let hwnd = unsafe {
+        CreateWindowExW(0, class_name.as_ptr(), title.as_ptr(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+            CW_USEDEFAULT, CW_USEDEFAULT, (W as i32) / 2 + 16, (H as i32) / 2 + 39,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    };
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+
+    let header = BitmapInfoHeader {
+        bi_size: std::mem::size_of::<BitmapInfoHeader>() as Dword,
+        bi_width: W as Long,
+        bi_height: -(H as Long),
+        bi_planes: 1,
+        bi_bit_count: 24,
+        bi_compression: BI_RGB,
+        bi_size_image: (W * H * 3) as Dword,
+        bi_x_pels_per_meter: 0,
+        bi_y_pels_per_meter: 0,
+        bi_clr_used: 0,
+        bi_clr_important: 0,
+    };
+
+    // pace with DwmFlush when available (each blocks ~one composition), else a small sleep; presentation timing
+    // only — never authority. DWELL compositions per frame keeps the walk watchable.
+    let dwm = load_dwm();
+
+    // LATENCY-0 (off-gate, host): measure frame-ready -> composited across the sealed sequence and emit a raw
+    // record. The window path is the instrument; the number is the host's, sealed by verify/seal_latency.py.
+    if measure > 0 {
+        latency_measure(hwnd, &blits, &header, frames.len(), measure, host, dwm);
+        unsafe { DestroyWindow(hwnd) };
+        return;
+    }
+
+    const DWELL: u32 = 24;
+
+    let mut msg: Msg = unsafe { std::mem::zeroed() };
+    let mut idx = 0usize;
+    let mut dwell = 0u32;
+    println!("[playback] {} frames; close the window to stop", frames.len());
+    println!("[playback] frame 1 of {}", frames.len());
+    loop {
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                // WM_QUIT
+                return;
+            }
+        }
+        let hdc = unsafe { GetDC(hwnd) };
+        if !hdc.is_null() {
+            unsafe {
+                StretchDIBits(hdc, 0, 0, (W as i32) / 2, (H as i32) / 2, 0, 0, W as i32, H as i32,
+                    blits[idx].as_ptr() as *const c_void, &header, DIB_RGB_COLORS, SRCCOPY);
+            }
+            unsafe { ReleaseDC(hwnd, hdc) };
+        }
+        match &dwm {
+            Some(d) => {
+                (d.flush)();
+            }
+            None => std::thread::sleep(std::time::Duration::from_millis(13)),
+        }
+        dwell += 1;
+        if dwell >= DWELL {
+            dwell = 0;
+            if idx + 1 < frames.len() {
+                idx += 1;
+                println!("[playback] frame {} of {}", idx + 1, frames.len());
+            }
+            // else: hold the last frame until the window is closed
+        }
+    }
+}
+
+/// LATENCY-0's instrument: replay the sealed sequence in the window, timing frame-ready -> composited per frame
+/// (QPC after StretchDIBits -> QPC after the following DwmFlush), until `measure` samples are collected; the
+/// refresh period is the median idle DwmFlush interval. Emits a raw record; sealing is Python's.
+fn latency_measure(hwnd: Hwnd, blits: &[Vec<u8>], header: &BitmapInfoHeader, frame_count: usize, measure: usize, host: &str, dwm: Option<Dwm>) {
+    let dwm = match dwm {
+        Some(d) => d,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or its composition-timing entry point is unavailable; cannot measure frame->composited");
+            std::process::exit(2);
+        }
+    };
+    let mut freq = 0i64;
+    unsafe { QueryPerformanceFrequency(&mut freq) };
+    if freq <= 0 {
+        freq = 1;
+    }
+    // refresh: the median of a few idle DwmFlush intervals (each blocks ~one composition)
+    let mut refresh: Vec<u128> = Vec::with_capacity(8);
+    for _ in 0..8 {
+        let a = qpc();
+        (dwm.flush)();
+        let b = qpc();
+        refresh.push((b - a).max(0) as u128 * 1_000_000 / freq as u128);
+    }
+    refresh.sort_unstable();
+    let refresh_us = refresh[refresh.len() / 2];
+
+    // one present: frame-ready (QPC after StretchDIBits) -> composited (QPC after the following DwmFlush)
+    let present_once = |blit: &[u8]| -> Option<u128> {
+        let hdc = unsafe { GetDC(hwnd) };
+        if hdc.is_null() {
+            return None;
+        }
+        let ok = unsafe {
+            StretchDIBits(hdc, 0, 0, (W as i32) / 2, (H as i32) / 2, 0, 0, W as i32, H as i32,
+                blit.as_ptr() as *const c_void, header, DIB_RGB_COLORS, SRCCOPY)
+        };
+        let ready = qpc();
+        let composited = if ok != 0 {
+            (dwm.flush)();
+            Some(qpc())
+        } else {
+            None
+        };
+        unsafe { ReleaseDC(hwnd, hdc) };
+        composited.map(|t| (t - ready).max(0) as u128 * 1_000_000 / freq as u128)
+    };
+
+    let mut samples: Vec<u128> = Vec::with_capacity(measure);
+    let mut msg: Msg = unsafe { std::mem::zeroed() };
+    let mut idx = 0usize;
+    while samples.len() < measure {
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                // WM_QUIT — the user closed the window before N samples; emit what we have
+                break;
+            }
+        }
+        if let Some(us) = present_once(&blits[idx]) {
+            samples.push(us);
+        }
+        idx = (idx + 1) % frame_count;
+    }
+    emit_latency(host, &samples, refresh_us, frame_count);
+}
+
+fn emit_latency(host: &str, samples: &[u128], refresh_us: u128, frame_count: usize) {
+    if samples.is_empty() {
+        println!("SHELL-PLAYBACK: no samples measured");
+        return;
+    }
+    let (p50, p95, p99, max) = percentiles(samples.to_vec());
+    // the two conditions and their conjunction are READINGS (printed), never verdict-shaped keys inside the record
+    let software = p99 <= 6944;
+    let hardware = refresh_us <= 6944;
+    println!("present frame-ready->composited us  p50={} p95={} p99={} max={}", p50, p95, p99, max);
+    println!("refresh_period_us={}  (~{} Hz)  samples={}  sequence_frames={}", refresh_us, if refresh_us > 0 { 1_000_000 / refresh_us } else { 0 }, samples.len(), frame_count);
+    println!("SOFTWARE-144-BUDGET: {}  (p99 {} us vs 6944 us)", if software { "PASS" } else { "FAIL" }, p99);
+    println!("HARDWARE-144: {}  (refresh {} us vs 6944 us)", if hardware { "PASS" } else { "FAIL" }, refresh_us);
+    println!("SUSTAINED-144Hz: {}  (SOFTWARE-144-BUDGET AND HARDWARE-144)", if software && hardware { "PASS" } else { "FAIL" });
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+    // data holds ONLY measurements and the declared thresholds — no verdict-shaped key (the firewall forbids them)
+    let data = format!(
+        "{{\"present_us\":{{\"p50\":{},\"p95\":{},\"p99\":{},\"max\":{}}},\"refresh_period_us\":{},\"samples\":{},\"sequence_frames\":{},\"software_144_budget_us\":6944,\"hardware_144_target_hz\":144}}",
+        p50, p95, p99, max, refresh_us, samples.len(), frame_count);
+    let prov = format!(
+        "{{\"tool\":\"shell/win32.rs playback_window --measure\",\"host\":{},\"preregistered\":{{\"rung\":\"LATENCY-0\",\"chain_hash\":\"PASTE_LATENCY0_HASH\"}},\"unix_seconds\":{}}}",
+        json_escape(host), now);
+    let scope = format!("frame-ready -> composited time of the GDI present path replaying the sealed reference session on host {}, {} samples over {} frames", host, samples.len(), frame_count);
+    let raw = format!(
+        "{{\"name\":\"verdandi-latency\",\"version\":1,\"claim_class\":\"measured\",\"provenance\":{},\"validity_scope\":{{\"certifies\":{},\"host\":{}}},\"data\":{},\"reading\":\"SOFTWARE-144-BUDGET is p99<=6944us; HARDWARE-144 is refresh<=6944us (>=144Hz); SUSTAINED-144Hz is their conjunction; frame-ready->composited only, NOT input-to-photon\"}}",
+        prov, json_escape(&scope), json_escape(host), data);
+    let out = format!("shell/attest/latency-{}.json", host);
+    if std::fs::create_dir_all("shell/attest").is_ok() && std::fs::write(&out, raw.as_bytes()).is_ok() {
+        println!("[shell] wrote raw {} — seal it with: python verify/seal_latency.py --record {}", out, out);
+    } else {
+        eprintln!("SHELL-CANNOT-WRITE: {}", out);
+    }
+}
+
+fn emit(host: &str, samples: &[u128], refresh_us: u128, c: &Composed, cam: Camera, blit_w: &str) {
+    if samples.is_empty() {
+        println!("SHELL presented; no measurement requested (--measure N to record)");
+        return;
+    }
+    let (p50, p95, p99, max) = percentiles(samples.to_vec());
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+    // a record under RECORD-0's envelope, written by hand here to keep the shell std-only and crate-free
+    let data = format!(
+        "{{\"present_us\":{{\"p50\":{},\"p95\":{},\"p99\":{},\"max\":{}}},\"refresh_period_us\":{},\"samples\":{},\"budgets_us\":{{\"60hz\":16667,\"144hz\":6944,\"240hz\":4167}},\"blit_witness\":{},\"composite\":{}}}",
+        p50, p95, p99, max, refresh_us, samples.len(), json_escape(blit_w), json_escape(&c.composite_sha));
+    let prov = format!(
+        "{{\"tool\":\"shell/win32.rs run --measure\",\"host\":{},\"camera\":[{},{},{}],\"preregistered\":{{\"rung\":\"SHELL-0\",\"chain_hash\":\"PASTE_SHELL0_HASH\"}},\"unix_seconds\":{}}}",
+        json_escape(host), cam.x, cam.z, json_escape(facing_letter(cam.facing)), now);
+    let scope = format!("frame-ready -> composited time of the GDI present path on host {}, {} frames, for this scene", host, samples.len());
+    // NOTE: the chain hash is left to `verify/seal_present.py --record <this file>` on the host, which reads the
+    // envelope, fills forbidden_interpretations and the chain hash, and re-writes it sealed. The shell prints
+    // the raw measurement; sealing is Python's, so the two firewalls stay one implementation.
+    let raw = format!(
+        "{{\"name\":\"verdandi-present\",\"version\":1,\"claim_class\":\"measured\",\"provenance\":{},\"validity_scope\":{{\"certifies\":{},\"host\":{}}},\"data\":{},\"reading\":\"frame-ready -> composited on the host; renderer time excluded (that is the bench); NOT input-to-photon\"}}",
+        prov, json_escape(&scope), json_escape(host), data);
+    let out = format!("shell/attest/present-{}.json", host);
+    if std::fs::create_dir_all("shell/attest").is_ok() && std::fs::write(&out, raw.as_bytes()).is_ok() {
+        println!("present p50={} p95={} p99={} max={} us  refresh={} us  samples={}", p50, p95, p99, max, refresh_us, samples.len());
+        println!("[shell] wrote raw {} — seal it with: python verify/seal_present.py --record {}", out, out);
+    } else {
+        eprintln!("SHELL-CANNOT-WRITE: {}", out);
+    }
+}
+
+// ================================================================== LATENCY-1R (appended)
+// Everything above this line is LATENCY-0's instrument, byte for byte (gate row latency1r-fence pins it as a prefix
+// of this file). LATENCY-1R adds a second, render-inclusive observable here without touching it: a GDI surface for
+// the platform-agnostic court in shell/latency1r.rs. Its present mirrors LATENCY-0's `present_once` exactly —
+// GetDC, StretchDIBits, frame-ready = QPC, DwmFlush, composited = QPC, ReleaseDC — and the court puts the render
+// in front of it, inside the clock.
+
+use crate::latency1r::{self, FrameInput, Surface};
+
+#[link(name = "user32")]
+extern "system" {
+    fn IsWindow(hwnd: Hwnd) -> Bool;
+}
+
+struct GdiSurface {
+    hwnd: Hwnd,
+    header: BitmapInfoHeader,
+    flush_fn: DwmFlushFn,
+    freq: i64,
+    last_input: Uint, // the last keyboard / mouse / system-command message the pump saw (0 = none)
+    inputs_seen: usize,
+}
+
+impl Surface for GdiSurface {
+    fn ticks(&mut self) -> i64 {
+        qpc()
+    }
+    fn freq(&self) -> i64 {
+        self.freq
+    }
+    fn present(&mut self, bgr: &[u8]) -> Option<(i64, i64)> {
+        let hdc = unsafe { GetDC(self.hwnd) };
+        if hdc.is_null() {
+            return None;
+        }
+        let ok = unsafe {
+            StretchDIBits(hdc, 0, 0, (W as i32) / 2, (H as i32) / 2, 0, 0, W as i32, H as i32,
+                bgr.as_ptr() as *const c_void, &self.header, DIB_RGB_COLORS, SRCCOPY)
+        };
+        let ready = qpc();
+        let composited = if ok != 0 {
+            (self.flush_fn)();
+            Some(qpc())
+        } else {
+            None
+        };
+        unsafe { ReleaseDC(self.hwnd, hdc) };
+        composited.map(|t| (ready, t))
+    }
+    fn flush(&mut self) {
+        (self.flush_fn)();
+    }
+    fn pump(&mut self) -> bool {
+        let mut msg: Msg = unsafe { std::mem::zeroed() };
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            let m = msg.message;
+            // keyboard (0x0100-0x0109), non-client mouse (0x00A0-0x00AD), client mouse (0x0200-0x020E), WM_SYSCOMMAND
+            if (0x0100..=0x0109).contains(&m) || (0x00A0..=0x00AD).contains(&m) || (0x0200..=0x020E).contains(&m) || m == 0x0112 {
+                self.last_input = m;
+                self.inputs_seen += 1;
+            }
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                // WM_QUIT — the window was closed; the court refuses rather than writing a partial record
+                return false;
+            }
+        }
+        true
+    }
+    fn progress(&mut self, done: usize, total: usize) {
+        if done % 100 == 0 || done == total {
+            println!("[court] {} of {} samples", done, total);
+        }
+    }
+}
+
+/// LATENCY-1R's host instrument: open a window the size of SHELL-PLAYBACK-b's, run the court over the GDI surface,
+/// and write the raw record (sealed afterwards by verify/latency1r.py). Refuses SHELL-NO-DWM without the barrier.
+pub fn latency1r_window(inputs: Vec<FrameInput>, per_cell: usize, host: &str, out: Option<String>) {
+    let flush_fn = match load_dwm() {
+        Some(d) => d.flush,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or its composition-timing entry point is unavailable; cannot run LATENCY-1R");
+            std::process::exit(2);
+        }
+    };
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide("VerdandiLatency1R");
+    let title = wide("Verðandi — LATENCY-1R");
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    let hwnd = unsafe {
+        CreateWindowExW(0, class_name.as_ptr(), title.as_ptr(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+            CW_USEDEFAULT, CW_USEDEFAULT, (W as i32) / 2 + 16, (H as i32) / 2 + 39,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    };
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    let header = BitmapInfoHeader {
+        bi_size: std::mem::size_of::<BitmapInfoHeader>() as Dword,
+        bi_width: W as Long,
+        bi_height: -(H as Long),
+        bi_planes: 1,
+        bi_bit_count: 24,
+        bi_compression: BI_RGB,
+        bi_size_image: (W * H * 3) as Dword,
+        bi_x_pels_per_meter: 0,
+        bi_y_pels_per_meter: 0,
+        bi_clr_used: 0,
+        bi_clr_important: 0,
+    };
+    let mut freq = 0i64;
+    unsafe { QueryPerformanceFrequency(&mut freq) };
+    if freq <= 0 {
+        freq = 1;
+    }
+    let mut surf = GdiSurface { hwnd, header, flush_fn, freq, last_input: 0, inputs_seen: 0 };
+    println!("[latency1r] window open — leave it alone until it closes ({} samples)", per_cell * 4);
+    let result = latency1r::court(&mut surf, &inputs, per_cell);
+    let alive = unsafe { IsWindow(hwnd) } != 0;
+    if alive {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(c) => {
+            for ln in latency1r::summary(&c) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = latency1r::raw_record(host, "GDI window (StretchDIBits + DwmFlush, QPC)", &c, now);
+            let path = out.unwrap_or_else(|| format!("verify/build/latency1r-raw-{}.json", host));
+            if let Some(dir) = std::path::Path::new(&path).parent() {
+                let _ = std::fs::create_dir_all(dir);
+            }
+            if std::fs::write(&path, raw.as_bytes()).is_ok() {
+                println!("[shell] wrote raw {} — seal it with: python verify/latency1r.py (it runs this court and seals)", path);
+            } else {
+                eprintln!("SHELL-CANNOT-WRITE: {}", path);
+                std::process::exit(2);
+            }
+        }
+        Err(m) => {
+            eprintln!("SHELL-{}", m);
+            // where a close came from: a window destroyed by a click/Alt+F4 shows input before it; a stray quit does not
+            eprintln!("SHELL-LATENCY1R-DIAG: window_still_existed={} input_messages_seen={} last_input_msg=0x{:04X}",
+                      alive, surf.inputs_seen, surf.last_input);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== FRAME-SPLIT-0 (appended)
+// The same GDI surface as LATENCY-1R (its present mirrors LATENCY-0's present_once), driving the platform-agnostic
+// split court in shell/framesplit.rs. LATENCY-0's instrument above stays a byte-exact prefix of this file.
+
+pub fn framesplit_window(inputs: Vec<FrameInput>, per_cell: usize, host: &str, out: Option<String>) {
+    let flush_fn = match load_dwm() {
+        Some(d) => d.flush,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or its composition-timing entry point is unavailable; cannot run FRAME-SPLIT-0");
+            std::process::exit(2);
+        }
+    };
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide("VerdandiFrameSplit0");
+    let title = wide("Verðandi — FRAME-SPLIT-0");
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    let hwnd = unsafe {
+        CreateWindowExW(0, class_name.as_ptr(), title.as_ptr(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+            CW_USEDEFAULT, CW_USEDEFAULT, (W as i32) / 2 + 16, (H as i32) / 2 + 39,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    };
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    let header = BitmapInfoHeader {
+        bi_size: std::mem::size_of::<BitmapInfoHeader>() as Dword,
+        bi_width: W as Long,
+        bi_height: -(H as Long),
+        bi_planes: 1,
+        bi_bit_count: 24,
+        bi_compression: BI_RGB,
+        bi_size_image: (W * H * 3) as Dword,
+        bi_x_pels_per_meter: 0,
+        bi_y_pels_per_meter: 0,
+        bi_clr_used: 0,
+        bi_clr_important: 0,
+    };
+    let mut freq = 0i64;
+    unsafe { QueryPerformanceFrequency(&mut freq) };
+    if freq <= 0 {
+        freq = 1;
+    }
+    let mut surf = GdiSurface { hwnd, header, flush_fn, freq, last_input: 0, inputs_seen: 0 };
+    println!("[framesplit] window open — leave it alone until it closes ({} samples + {} warm-up rounds)",
+             per_cell * 4, crate::framesplit::WARM_ROUNDS);
+    let result = crate::framesplit::court(&mut surf, &inputs, per_cell);
+    let alive = unsafe { IsWindow(hwnd) } != 0;
+    if alive {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(sp) => {
+            for ln in crate::framesplit::summary(&sp) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = crate::framesplit::raw_record(host, "GDI window (StretchDIBits + DwmFlush, QPC)", &sp, now);
+            let path = out.unwrap_or_else(|| format!("verify/build/framesplit-raw-{}.json", host));
+            if let Some(dir) = std::path::Path::new(&path).parent() {
+                let _ = std::fs::create_dir_all(dir);
+            }
+            if std::fs::write(&path, raw.as_bytes()).is_ok() {
+                println!("[shell] wrote raw {} — sealed by python verify/framesplit.py", path);
+            } else {
+                eprintln!("SHELL-CANNOT-WRITE: {}", path);
+                std::process::exit(2);
+            }
+        }
+        Err(m) => {
+            eprintln!("SHELL-{}", m);
+            eprintln!("SHELL-FRAMESPLIT-DIAG: window_still_existed={} input_messages_seen={} last_input_msg=0x{:04X}",
+                      alive, surf.inputs_seen, surf.last_input);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== PRESENT-SCALE-0 (appended)
+// A GDI surface whose DESTINATION is settable: the client area is sized (never the outer window) with
+// AdjustWindowRect + SetWindowPos, read back with GetClientRect, and StretchDIBits draws into exactly that client
+// rectangle. Its present otherwise mirrors LATENCY-0's present_once (GetDC, StretchDIBits, frame-ready, DwmFlush,
+// composited, ReleaseDC). Its window procedure is LATENCY-0's plus one message: WM_GETMINMAXINFO raises the maximum
+// tracking size so a full 1920x1080 client area is not clamped to the screen. LATENCY-0's instrument above stays a
+// byte-exact prefix of this file.
+
+#[repr(C)]
+struct Rect {
+    left: Long,
+    top: Long,
+    right: Long,
+    bottom: Long,
+}
+
+#[repr(C)]
+struct MinMaxInfo {
+    pt_reserved: Point,
+    pt_max_size: Point,
+    pt_max_position: Point,
+    pt_min_track_size: Point,
+    pt_max_track_size: Point,
+}
+
+#[link(name = "user32")]
+extern "system" {
+    fn AdjustWindowRect(rect: *mut Rect, style: Dword, menu: Bool) -> Bool;
+    fn SetWindowPos(hwnd: Hwnd, after: Hwnd, x: i32, y: i32, cx: i32, cy: i32, flags: Uint) -> Bool;
+    fn GetClientRect(hwnd: Hwnd, rect: *mut Rect) -> Bool;
+}
+
+#[link(name = "gdi32")]
+extern "system" {
+    fn GetDeviceCaps(hdc: Hdc, index: i32) -> i32;
+    fn GetStretchBltMode(hdc: Hdc) -> i32;
+}
+
+const WM_GETMINMAXINFO: Uint = 0x0024;
+const SWP_NOZORDER: Uint = 0x0004;
+const SWP_NOACTIVATE: Uint = 0x0010;
+
+extern "system" fn wnd_proc_geom(hwnd: Hwnd, msg: Uint, wp: Wparam, lp: Lparam) -> Lresult {
+    if msg == WM_GETMINMAXINFO {
+        let mmi = lp as *mut MinMaxInfo;
+        if !mmi.is_null() {
+            unsafe {
+                (*mmi).pt_max_track_size.x = 8192;
+                (*mmi).pt_max_track_size.y = 8192;
+            }
+        }
+        return 0;
+    }
+    wnd_proc(hwnd, msg, wp, lp)
+}
+
+struct GeomGdiSurface {
+    hwnd: Hwnd,
+    header: BitmapInfoHeader,
+    flush_fn: DwmFlushFn,
+    freq: i64,
+    dst_w: i32,
+    dst_h: i32,
+    last_input: Uint,
+    inputs_seen: usize,
+}
+
+impl Surface for GeomGdiSurface {
+    fn ticks(&mut self) -> i64 {
+        qpc()
+    }
+    fn freq(&self) -> i64 {
+        self.freq
+    }
+    fn present(&mut self, bgr: &[u8]) -> Option<(i64, i64)> {
+        let hdc = unsafe { GetDC(self.hwnd) };
+        if hdc.is_null() {
+            return None;
+        }
+        let ok = unsafe {
+            StretchDIBits(hdc, 0, 0, self.dst_w, self.dst_h, 0, 0, W as i32, H as i32,
+                bgr.as_ptr() as *const c_void, &self.header, DIB_RGB_COLORS, SRCCOPY)
+        };
+        let ready = qpc();
+        let composited = if ok != 0 {
+            (self.flush_fn)();
+            Some(qpc())
+        } else {
+            None
+        };
+        unsafe { ReleaseDC(self.hwnd, hdc) };
+        composited.map(|t| (ready, t))
+    }
+    fn flush(&mut self) {
+        (self.flush_fn)();
+    }
+    fn pump(&mut self) -> bool {
+        let mut msg: Msg = unsafe { std::mem::zeroed() };
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            let m = msg.message;
+            if (0x0100..=0x0109).contains(&m) || (0x00A0..=0x00AD).contains(&m) || (0x0200..=0x020E).contains(&m) || m == 0x0112 {
+                self.last_input = m;
+                self.inputs_seen += 1;
+            }
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                return false;
+            }
+        }
+        true
+    }
+    fn progress(&mut self, done: usize, total: usize) {
+        if done % 100 == 0 || done == total {
+            println!("[court] {} of {} samples", done, total);
+        }
+    }
+}
+
+impl crate::presentscale::GeomSurface for GeomGdiSurface {
+    fn set_destination(&mut self, w: u32, h: u32) -> Result<(u32, u32), String> {
+        let mut r = Rect { left: 0, top: 0, right: w as Long, bottom: h as Long };
+        if unsafe { AdjustWindowRect(&mut r, WS_OVERLAPPEDWINDOW, 0) } == 0 {
+            return Err("PRESENTSCALE-GEOMETRY: AdjustWindowRect failed".to_string());
+        }
+        let (ow, oh) = (r.right - r.left, r.bottom - r.top);
+        // the same outer position for both geometries (the primary monitor's top-left); only the size changes
+        if unsafe { SetWindowPos(self.hwnd, std::ptr::null_mut(), 0, 0, ow, oh, SWP_NOZORDER | SWP_NOACTIVATE) } == 0 {
+            return Err("PRESENTSCALE-GEOMETRY: SetWindowPos failed".to_string());
+        }
+        let _ = self.pump();
+        let mut c = Rect { left: 0, top: 0, right: 0, bottom: 0 };
+        if unsafe { GetClientRect(self.hwnd, &mut c) } == 0 {
+            return Err("PRESENTSCALE-GEOMETRY: GetClientRect failed".to_string());
+        }
+        self.dst_w = w as i32;
+        self.dst_h = h as i32;
+        Ok(((c.right - c.left).max(0) as u32, (c.bottom - c.top).max(0) as u32))
+    }
+    fn environment(&mut self) -> (i32, i32, i32, i32, i32) {
+        // HORZRES/VERTRES (8/10) are the logical screen this DPI-unaware process sees; DESKTOPHORZRES/DESKTOPVERTRES
+        // (118/117) the physical desktop; a difference means the compositor scales this window again on the way out
+        let screen = unsafe { GetDC(std::ptr::null_mut()) };
+        let (lw, lh, dw, dh) = if screen.is_null() {
+            (0, 0, 0, 0)
+        } else {
+            let v = unsafe { (GetDeviceCaps(screen, 8), GetDeviceCaps(screen, 10), GetDeviceCaps(screen, 118), GetDeviceCaps(screen, 117)) };
+            unsafe { ReleaseDC(std::ptr::null_mut(), screen) };
+            v
+        };
+        let hdc = unsafe { GetDC(self.hwnd) };
+        let sm = if hdc.is_null() { 0 } else {
+            let m = unsafe { GetStretchBltMode(hdc) };
+            unsafe { ReleaseDC(self.hwnd, hdc) };
+            m
+        };
+        (lw, lh, dw, dh, sm)
+    }
+}
+
+pub fn presentscale_window(inputs: Vec<FrameInput>, per_cell: usize, host: &str, out: Option<String>) {
+    let flush_fn = match load_dwm() {
+        Some(d) => d.flush,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or its composition-timing entry point is unavailable; cannot run PRESENT-SCALE-0");
+            std::process::exit(2);
+        }
+    };
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide("VerdandiPresentScale0");
+    let title = wide("Verðandi — PRESENT-SCALE-0");
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc_geom),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    let hwnd = unsafe {
+        CreateWindowExW(0, class_name.as_ptr(), title.as_ptr(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+            0, 0, (W as i32) / 2 + 16, (H as i32) / 2 + 39,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    };
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    let header = BitmapInfoHeader {
+        bi_size: std::mem::size_of::<BitmapInfoHeader>() as Dword,
+        bi_width: W as Long,
+        bi_height: -(H as Long),
+        bi_planes: 1,
+        bi_bit_count: 24,
+        bi_compression: BI_RGB,
+        bi_size_image: (W * H * 3) as Dword,
+        bi_x_pels_per_meter: 0,
+        bi_y_pels_per_meter: 0,
+        bi_clr_used: 0,
+        bi_clr_important: 0,
+    };
+    let mut freq = 0i64;
+    unsafe { QueryPerformanceFrequency(&mut freq) };
+    if freq <= 0 {
+        freq = 1;
+    }
+    let mut surf = GeomGdiSurface { hwnd, header, flush_fn, freq, dst_w: (W as i32) / 2, dst_h: (H as i32) / 2,
+                                    last_input: 0, inputs_seen: 0 };
+    println!("[presentscale] window open — it will resize between half and full size; leave it alone until it closes ({} samples)",
+             per_cell * 4);
+    let result = crate::presentscale::court(&mut surf, &inputs, per_cell);
+    let alive = unsafe { IsWindow(hwnd) } != 0;
+    if alive {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(sc) => {
+            for ln in crate::presentscale::summary(&sc) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = crate::presentscale::raw_record(host, "GDI window with a settable client area (StretchDIBits + DwmFlush, QPC)", &sc, now);
+            let path = out.unwrap_or_else(|| format!("verify/build/presentscale-raw-{}.json", host));
+            if let Some(dir) = std::path::Path::new(&path).parent() {
+                let _ = std::fs::create_dir_all(dir);
+            }
+            if std::fs::write(&path, raw.as_bytes()).is_ok() {
+                println!("[shell] wrote raw {} — sealed by python verify/presentscale.py", path);
+            } else {
+                eprintln!("SHELL-CANNOT-WRITE: {}", path);
+                std::process::exit(2);
+            }
+        }
+        Err(m) => {
+            eprintln!("SHELL-{}", m);
+            eprintln!("SHELL-PRESENTSCALE-DIAG: window_still_existed={} input_messages_seen={} last_input_msg=0x{:04X}",
+                      alive, surf.inputs_seen, surf.last_input);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== PRESENT-STRETCH-0 and ALLOC-REUSE-0 (appended)
+// PRESENT-STRETCH-0: a half-size GDI surface whose present sets the stretch mode and the brush origin before the blit
+// (a common DC resets both on every GetDC; the brush origin is what HALFTONE requires), identically for every mode —
+// only the mode's value differs; otherwise it mirrors LATENCY-0's present_once. ALLOC-REUSE-0 runs over LATENCY-1R's
+// GDI surface in FRAME-SPLIT-0's window, unchanged. LATENCY-0's instrument above stays a byte-exact prefix.
+
+#[link(name = "gdi32")]
+extern "system" {
+    fn SetStretchBltMode(hdc: Hdc, mode: i32) -> i32;
+    fn SetBrushOrgEx(hdc: Hdc, x: i32, y: i32, old: *mut Point) -> Bool;
+}
+
+struct StretchGdiSurface {
+    hwnd: Hwnd,
+    header: BitmapInfoHeader,
+    flush_fn: DwmFlushFn,
+    freq: i64,
+    mode: i32,
+    last_input: Uint,
+    inputs_seen: usize,
+}
+
+impl Surface for StretchGdiSurface {
+    fn ticks(&mut self) -> i64 {
+        qpc()
+    }
+    fn freq(&self) -> i64 {
+        self.freq
+    }
+    fn present(&mut self, bgr: &[u8]) -> Option<(i64, i64)> {
+        let hdc = unsafe { GetDC(self.hwnd) };
+        if hdc.is_null() {
+            return None;
+        }
+        unsafe {
+            SetStretchBltMode(hdc, self.mode);
+            SetBrushOrgEx(hdc, 0, 0, std::ptr::null_mut());
+        }
+        let ok = unsafe {
+            StretchDIBits(hdc, 0, 0, (W as i32) / 2, (H as i32) / 2, 0, 0, W as i32, H as i32,
+                bgr.as_ptr() as *const c_void, &self.header, DIB_RGB_COLORS, SRCCOPY)
+        };
+        let ready = qpc();
+        let composited = if ok != 0 {
+            (self.flush_fn)();
+            Some(qpc())
+        } else {
+            None
+        };
+        unsafe { ReleaseDC(self.hwnd, hdc) };
+        composited.map(|t| (ready, t))
+    }
+    fn flush(&mut self) {
+        (self.flush_fn)();
+    }
+    fn pump(&mut self) -> bool {
+        let mut msg: Msg = unsafe { std::mem::zeroed() };
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            let m = msg.message;
+            if (0x0100..=0x0109).contains(&m) || (0x00A0..=0x00AD).contains(&m) || (0x0200..=0x020E).contains(&m) || m == 0x0112 {
+                self.last_input = m;
+                self.inputs_seen += 1;
+            }
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                return false;
+            }
+        }
+        true
+    }
+    fn progress(&mut self, done: usize, total: usize) {
+        if done % 100 == 0 || done == total {
+            println!("[court] {} of {} samples", done, total);
+        }
+    }
+}
+
+impl crate::presentstretch::StretchSurface for StretchGdiSurface {
+    fn set_mode(&mut self, mode: i32) -> i32 {
+        self.mode = mode;
+        let hdc = unsafe { GetDC(self.hwnd) };
+        if hdc.is_null() {
+            return 0;
+        }
+        let eff = unsafe {
+            SetStretchBltMode(hdc, mode);
+            GetStretchBltMode(hdc)
+        };
+        unsafe { ReleaseDC(self.hwnd, hdc) };
+        eff
+    }
+    fn client(&mut self) -> (u32, u32) {
+        let mut c = Rect { left: 0, top: 0, right: 0, bottom: 0 };
+        if unsafe { GetClientRect(self.hwnd, &mut c) } == 0 {
+            return (0, 0);
+        }
+        ((c.right - c.left).max(0) as u32, (c.bottom - c.top).max(0) as u32)
+    }
+}
+
+fn court_header() -> BitmapInfoHeader {
+    BitmapInfoHeader {
+        bi_size: std::mem::size_of::<BitmapInfoHeader>() as Dword,
+        bi_width: W as Long,
+        bi_height: -(H as Long),
+        bi_planes: 1,
+        bi_bit_count: 24,
+        bi_compression: BI_RGB,
+        bi_size_image: (W * H * 3) as Dword,
+        bi_x_pels_per_meter: 0,
+        bi_y_pels_per_meter: 0,
+        bi_clr_used: 0,
+        bi_clr_important: 0,
+    }
+}
+
+fn court_window(class: &str, title: &str, x: i32, y: i32, ow: i32, oh: i32) -> Hwnd {
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide(class);
+    let title_w = wide(title);
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    unsafe {
+        CreateWindowExW(0, class_name.as_ptr(), title_w.as_ptr(), WS_OVERLAPPEDWINDOW | WS_VISIBLE, x, y, ow, oh,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    }
+}
+
+fn court_prelude(name: &str) -> (DwmFlushFn, i64) {
+    let flush_fn = match load_dwm() {
+        Some(d) => d.flush,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or its composition-timing entry point is unavailable; cannot run {}", name);
+            std::process::exit(2);
+        }
+    };
+    let mut freq = 0i64;
+    unsafe { QueryPerformanceFrequency(&mut freq) };
+    (flush_fn, if freq <= 0 { 1 } else { freq })
+}
+
+fn write_raw(path: String, raw: String, sealer: &str) {
+    if let Some(dir) = std::path::Path::new(&path).parent() {
+        let _ = std::fs::create_dir_all(dir);
+    }
+    if std::fs::write(&path, raw.as_bytes()).is_ok() {
+        println!("[shell] wrote raw {} — sealed by python verify/{}", path, sealer);
+    } else {
+        eprintln!("SHELL-CANNOT-WRITE: {}", path);
+        std::process::exit(2);
+    }
+}
+
+pub fn presentstretch_window(inputs: Vec<FrameInput>, per_cell: usize, host: &str, out: Option<String>) {
+    let (flush_fn, freq) = court_prelude("PRESENT-STRETCH-0");
+    // the half-size client area, set exactly (as PRESENT-SCALE-0's half cell) and read back by the court
+    let mut r = Rect { left: 0, top: 0, right: (W as Long) / 2, bottom: (H as Long) / 2 };
+    unsafe { AdjustWindowRect(&mut r, WS_OVERLAPPEDWINDOW, 0) };
+    let hwnd = court_window("VerdandiPresentStretch0", "Verðandi — PRESENT-STRETCH-0", 0, 0, r.right - r.left, r.bottom - r.top);
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    let mut surf = StretchGdiSurface { hwnd, header: court_header(), flush_fn, freq, mode: 1, last_input: 0, inputs_seen: 0 };
+    let _ = surf.pump();
+    println!("[presentstretch] window open — leave it alone until it closes ({} samples)", per_cell * 6);
+    let result = crate::presentstretch::court(&mut surf, &inputs, per_cell);
+    let alive = unsafe { IsWindow(hwnd) } != 0;
+    if alive {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(st) => {
+            for ln in crate::presentstretch::summary(&st) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = crate::presentstretch::raw_record(host, "half-size GDI window with a set stretch mode (StretchDIBits + DwmFlush, QPC)", &st, now);
+            write_raw(out.unwrap_or_else(|| format!("verify/build/presentstretch-raw-{}.json", host)), raw, "presentstretch.py");
+        }
+        Err(m) => {
+            eprintln!("SHELL-{}", m);
+            eprintln!("SHELL-PRESENTSTRETCH-DIAG: window_still_existed={} input_messages_seen={} last_input_msg=0x{:04X}",
+                      alive, surf.inputs_seen, surf.last_input);
+            std::process::exit(2);
+        }
+    }
+}
+
+pub fn allocreuse_window(inputs: Vec<FrameInput>, per_cell: usize, host: &str, out: Option<String>) {
+    let (flush_fn, freq) = court_prelude("ALLOC-REUSE-0");
+    // FRAME-SPLIT-0's window, unchanged: the same outer size and default placement, LATENCY-1R's GDI surface
+    let hwnd = court_window("VerdandiAllocReuse0", "Verðandi — ALLOC-REUSE-0", CW_USEDEFAULT, CW_USEDEFAULT,
+                            (W as i32) / 2 + 16, (H as i32) / 2 + 39);
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    let mut surf = GdiSurface { hwnd, header: court_header(), flush_fn, freq, last_input: 0, inputs_seen: 0 };
+    println!("[allocreuse] window open — leave it alone until it closes ({} samples + {} warm-up rounds)",
+             per_cell * 4, crate::allocreuse::WARM_ROUNDS);
+    let result = crate::allocreuse::court(&mut surf, &inputs, per_cell);
+    let alive = unsafe { IsWindow(hwnd) } != 0;
+    if alive {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(al) => {
+            for ln in crate::allocreuse::summary(&al) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = crate::allocreuse::raw_record(host, "GDI window (StretchDIBits + DwmFlush, QPC)", &al, now);
+            write_raw(out.unwrap_or_else(|| format!("verify/build/allocreuse-raw-{}.json", host)), raw, "allocreuse.py");
+        }
+        Err(m) => {
+            eprintln!("SHELL-{}", m);
+            eprintln!("SHELL-ALLOCREUSE-DIAG: window_still_existed={} input_messages_seen={} last_input_msg=0x{:04X}",
+                      alive, surf.inputs_seen, surf.last_input);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== ALLOC-REUSE-1 (appended)
+// ALLOC-REUSE-1's adoption court runs in FRAME-SPLIT-0's window over LATENCY-1R's GDI surface, unchanged (as
+// ALLOC-REUSE-0 did): the fresh reference and the persistent-buffer render-loop entry, envelopes only. No shipped
+// window renders through the loop entry. LATENCY-0's instrument above stays a byte-exact prefix.
+
+pub fn allocreuse1_window(inputs: Vec<FrameInput>, per_cell: usize, host: &str, out: Option<String>) {
+    let (flush_fn, freq) = court_prelude("ALLOC-REUSE-1");
+    // FRAME-SPLIT-0's window, unchanged: the same outer size and default placement, LATENCY-1R's GDI surface
+    let hwnd = court_window("VerdandiAllocReuse1", "Verðandi — ALLOC-REUSE-1", CW_USEDEFAULT, CW_USEDEFAULT,
+                            (W as i32) / 2 + 16, (H as i32) / 2 + 39);
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    let mut surf = GdiSurface { hwnd, header: court_header(), flush_fn, freq, last_input: 0, inputs_seen: 0 };
+    println!("[allocreuse1] window open — leave it alone until it closes ({} samples + {} warm-up rounds)",
+             per_cell * 2, crate::allocreuse1::WARM_ROUNDS);
+    let result = crate::allocreuse1::court(&mut surf, &inputs, per_cell, false);
+    let alive = unsafe { IsWindow(hwnd) } != 0;
+    if alive {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(ad) => {
+            for ln in crate::allocreuse1::summary(&ad) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = crate::allocreuse1::raw_record(host, "GDI window (StretchDIBits + DwmFlush, QPC)", &ad, now);
+            write_raw(out.unwrap_or_else(|| format!("verify/build/allocreuse1-raw-{}.json", host)), raw, "allocreuse1.py");
+        }
+        Err(m) => {
+            eprintln!("SHELL-{}", m);
+            eprintln!("SHELL-ALLOCREUSE1-DIAG: window_still_existed={} input_messages_seen={} last_input_msg=0x{:04X}",
+                      alive, surf.inputs_seen, surf.last_input);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== PRESENT-EXACT-0 (appended)
+// PRESENTATION-CHOICE-0's target: the certified composite 1:1 in a borderless window covering the 1920x1080 screen at
+// (0,0), the process DPI-aware so nothing rescales it. Two presents, identical but for the call: StretchDIBits at 1:1
+// (destination = source) and SetDIBitsToDevice. The witness reads the COMPOSED SCREEN back under the window (the
+// screen DC, BitBlt into a 24-bit top-down DIB section), after clearing the window to white through PatBlt, a path
+// that is neither call. Frames render through the adopted LoopRenderer. LATENCY-0's instrument stays a byte-exact
+// prefix of this file.
+
+#[link(name = "user32")]
+extern "system" {
+    fn SetProcessDPIAware() -> Bool;
+    fn ClientToScreen(hwnd: Hwnd, point: *mut Point) -> Bool;
+    fn SetForegroundWindow(hwnd: Hwnd) -> Bool;
+}
+
+#[link(name = "gdi32")]
+extern "system" {
+    fn SetDIBitsToDevice(hdc: Hdc, x_dest: i32, y_dest: i32, w: Dword, h: Dword, x_src: i32, y_src: i32, start_scan: Uint, lines: Uint, bits: *const c_void, info: *const BitmapInfoHeader, usage: Uint) -> i32;
+    fn PatBlt(hdc: Hdc, x: i32, y: i32, w: i32, h: i32, rop: Dword) -> Bool;
+    fn CreateCompatibleDC(hdc: Hdc) -> Hdc;
+    fn CreateDIBSection(hdc: Hdc, info: *const BitmapInfoHeader, usage: Uint, bits: *mut *mut c_void, section: *mut c_void, offset: Dword) -> *mut c_void;
+    fn SelectObject(hdc: Hdc, obj: *mut c_void) -> *mut c_void;
+    fn BitBlt(hdc: Hdc, x: i32, y: i32, w: i32, h: i32, src: Hdc, x_src: i32, y_src: i32, rop: Dword) -> Bool;
+    fn DeleteObject(obj: *mut c_void) -> Bool;
+    fn DeleteDC(hdc: Hdc) -> Bool;
+    fn GdiFlush() -> Bool;
+}
+
+const WS_POPUP: Dword = 0x8000_0000;
+const WS_EX_TOPMOST: Dword = 0x0000_0008;
+const WHITENESS: Dword = 0x00FF_0062;
+
+struct ExactGdiSurface {
+    hwnd: Hwnd,
+    header: BitmapInfoHeader,
+    flush_fn: DwmFlushFn,
+    freq: i64,
+    call: usize,
+    last_input: Uint,
+    inputs_seen: usize,
+}
+
+impl Surface for ExactGdiSurface {
+    fn ticks(&mut self) -> i64 {
+        qpc()
+    }
+    fn freq(&self) -> i64 {
+        self.freq
+    }
+    fn present(&mut self, bgr: &[u8]) -> Option<(i64, i64)> {
+        let hdc = unsafe { GetDC(self.hwnd) };
+        if hdc.is_null() {
+            return None;
+        }
+        let ok = if self.call == 0 {
+            unsafe {
+                StretchDIBits(hdc, 0, 0, W as i32, H as i32, 0, 0, W as i32, H as i32,
+                    bgr.as_ptr() as *const c_void, &self.header, DIB_RGB_COLORS, SRCCOPY)
+            }
+        } else {
+            unsafe {
+                SetDIBitsToDevice(hdc, 0, 0, W as Dword, H as Dword, 0, 0, 0, H as Uint,
+                    bgr.as_ptr() as *const c_void, &self.header, DIB_RGB_COLORS)
+            }
+        };
+        let ready = qpc();
+        let composited = if ok != 0 {
+            (self.flush_fn)();
+            Some(qpc())
+        } else {
+            None
+        };
+        unsafe { ReleaseDC(self.hwnd, hdc) };
+        composited.map(|t| (ready, t))
+    }
+    fn flush(&mut self) {
+        (self.flush_fn)();
+    }
+    fn pump(&mut self) -> bool {
+        let mut msg: Msg = unsafe { std::mem::zeroed() };
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            let m = msg.message;
+            if (0x0100..=0x0109).contains(&m) || (0x00A0..=0x00AD).contains(&m) || (0x0200..=0x020E).contains(&m) || m == 0x0112 {
+                self.last_input = m;
+                self.inputs_seen += 1;
+            }
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                return false;
+            }
+        }
+        true
+    }
+    fn progress(&mut self, done: usize, total: usize) {
+        if done % 100 == 0 || done == total {
+            println!("[court] {} of {} samples", done, total);
+        }
+    }
+}
+
+impl crate::presentexact::ExactSurface for ExactGdiSurface {
+    fn set_call(&mut self, call: usize) {
+        self.call = call;
+    }
+    fn clear(&mut self) -> bool {
+        let hdc = unsafe { GetDC(self.hwnd) };
+        if hdc.is_null() {
+            return false;
+        }
+        let ok = unsafe { PatBlt(hdc, 0, 0, W as i32, H as i32, WHITENESS) };
+        unsafe {
+            GdiFlush();
+            ReleaseDC(self.hwnd, hdc);
+        }
+        ok != 0
+    }
+    fn readback(&mut self) -> Option<Vec<u8>> {
+        let mut org = Point { x: 0, y: 0 };
+        if unsafe { ClientToScreen(self.hwnd, &mut org) } == 0 {
+            return None;
+        }
+        let screen = unsafe { GetDC(std::ptr::null_mut()) };
+        if screen.is_null() {
+            return None;
+        }
+        let mem = unsafe { CreateCompatibleDC(screen) };
+        let hdr = court_header();
+        let mut bits: *mut c_void = std::ptr::null_mut();
+        let dib = if mem.is_null() {
+            std::ptr::null_mut()
+        } else {
+            unsafe { CreateDIBSection(screen, &hdr, DIB_RGB_COLORS, &mut bits, std::ptr::null_mut(), 0) }
+        };
+        let mut out = None;
+        if !dib.is_null() && !bits.is_null() {
+            let old = unsafe { SelectObject(mem, dib) };
+            let ok = unsafe { BitBlt(mem, 0, 0, W as i32, H as i32, screen, org.x, org.y, SRCCOPY) };
+            unsafe { GdiFlush() };
+            if ok != 0 {
+                out = Some(unsafe { std::slice::from_raw_parts(bits as *const u8, W * H * 3) }.to_vec());
+            }
+            unsafe { SelectObject(mem, old) };
+        }
+        unsafe {
+            if !dib.is_null() {
+                DeleteObject(dib);
+            }
+            if !mem.is_null() {
+                DeleteDC(mem);
+            }
+            ReleaseDC(std::ptr::null_mut(), screen);
+        }
+        out
+    }
+    fn geometry(&mut self) -> [i32; 8] {
+        let mut c = Rect { left: 0, top: 0, right: 0, bottom: 0 };
+        let mut org = Point { x: 0, y: 0 };
+        unsafe {
+            GetClientRect(self.hwnd, &mut c);
+            ClientToScreen(self.hwnd, &mut org);
+        }
+        let screen = unsafe { GetDC(std::ptr::null_mut()) };
+        let (lw, lh, pw, ph) = if screen.is_null() {
+            (0, 0, 0, 0)
+        } else {
+            let v = unsafe { (GetDeviceCaps(screen, 8), GetDeviceCaps(screen, 10), GetDeviceCaps(screen, 118), GetDeviceCaps(screen, 117)) };
+            unsafe { ReleaseDC(std::ptr::null_mut(), screen) };
+            v
+        };
+        [c.right - c.left, c.bottom - c.top, org.x, org.y, lw, lh, pw, ph]
+    }
+    fn attribute(&mut self, b: [usize; 4]) -> crate::presentexact::Attribution {
+        // REFUSAL-WHY-0/1: one walk, the console's words and the log's fields
+        let w = covering(self.hwnd, b);
+        crate::presentexact::Attribution { text: crate::presentexact::seen_text(&w), context: crate::presentexact::seen_context(&w) }
+    }
+}
+
+fn exact_window(class: &str, title: &str) -> Hwnd {
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide(class);
+    let title_w = wide(title);
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    unsafe {
+        CreateWindowExW(WS_EX_TOPMOST, class_name.as_ptr(), title_w.as_ptr(), WS_POPUP | WS_VISIBLE, 0, 0, W as i32, H as i32,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    }
+}
+
+pub fn presentexact_window(inputs: Vec<FrameInput>, per_cell: usize, host: &str, out: Option<String>) {
+    // DPI-aware first, so the 1920x1080 window is 1920x1080 device pixels and nothing rescales it
+    unsafe { SetProcessDPIAware() };
+    let (flush_fn, freq) = court_prelude("PRESENT-EXACT-0");
+    let hwnd = exact_window("VerdandiPresentExact0", "Verðandi — PRESENT-EXACT-0");
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    unsafe { SetForegroundWindow(hwnd) };
+    let mut surf = ExactGdiSurface { hwnd, header: court_header(), flush_fn, freq, call: 0, last_input: 0, inputs_seen: 0 };
+    let _ = surf.pump();
+    (surf.flush_fn)();
+    println!("[presentexact] borderless window over the whole screen — leave it alone until it closes ({} samples + {} warm-up rounds; Alt+F4 aborts)",
+             per_cell * 2, crate::presentexact::WARM_ROUNDS);
+    crate::runledger::begin("presentexact.court", "gdi"); // RUN-LEDGER-0: the court run begins
+    let result = crate::presentexact::court(&mut surf, &inputs, per_cell);
+    let alive = unsafe { IsWindow(hwnd) } != 0;
+    if alive {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(ex) => {
+            crate::runledger::end(0);
+            for ln in crate::presentexact::summary(&ex) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = crate::presentexact::raw_record(host, "borderless 1:1 GDI window with screen readback (DwmFlush, QPC)", &ex, now);
+            write_raw(out.unwrap_or_else(|| format!("verify/build/presentexact-raw-{}.json", host)), raw, "presentexact.py");
+        }
+        Err(r) => {
+            // REFUSAL-LOG-0: the court's refusal is logged where it is emitted, then printed as before
+            let (ev, m) = r.into_event("gdi");
+            crate::refusallog::refuse(&ev, &format!("SHELL-{}", m));
+            crate::runledger::end(2);
+            eprintln!("SHELL-PRESENTEXACT-DIAG: window_still_existed={} input_messages_seen={} last_input_msg=0x{:04X}",
+                      alive, surf.inputs_seen, surf.last_input);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== PRESENT-EXACT-0 probe (appended)
+// A diagnostic, not a court: PRESENT-EXACT-0's first host run refused PRESENTEXACT-READBACK-STALE (the white clear did
+// not read back as white). The probe opens the same borderless window, repeats the court's clear-and-read-back, then
+// varies one suspect at a time — a longer wait, the z-order and foreground re-asserted, the cursor hidden — and reads
+// back both the composed screen and the window's own surface each time, saying where the pixels differ. It then
+// presents sealed frame 0 under each call. It takes no clock, runs no court and writes no record; with --out it saves
+// the read-back images as top-down 24-bit BMPs for inspection.
+
+#[link(name = "user32")]
+extern "system" {
+    fn GetForegroundWindow() -> Hwnd;
+    fn BringWindowToTop(hwnd: Hwnd) -> Bool;
+    fn ShowCursor(show: Bool) -> i32;
+    fn IsWindowVisible(hwnd: Hwnd) -> Bool;
+    fn GetCursorInfo(info: *mut CursorInfo) -> Bool;
+}
+
+#[repr(C)]
+struct CursorInfo {
+    cb_size: Dword,
+    flags: Dword,
+    h_cursor: *mut c_void,
+    pt_screen_pos: Point,
+}
+
+const SWP_SHOWWINDOW: Uint = 0x0040;
+
+fn probe_read_dc(owner: Hwnd, x: i32, y: i32) -> Option<Vec<u8>> {
+    let src = unsafe { GetDC(owner) };
+    if src.is_null() {
+        return None;
+    }
+    let mem = unsafe { CreateCompatibleDC(src) };
+    let hdr = court_header();
+    let mut bits: *mut c_void = std::ptr::null_mut();
+    let dib = if mem.is_null() {
+        std::ptr::null_mut()
+    } else {
+        unsafe { CreateDIBSection(src, &hdr, DIB_RGB_COLORS, &mut bits, std::ptr::null_mut(), 0) }
+    };
+    let mut out = None;
+    if !dib.is_null() && !bits.is_null() {
+        let old = unsafe { SelectObject(mem, dib) };
+        let ok = unsafe { BitBlt(mem, 0, 0, W as i32, H as i32, src, x, y, SRCCOPY) };
+        unsafe { GdiFlush() };
+        if ok != 0 {
+            out = Some(unsafe { std::slice::from_raw_parts(bits as *const u8, W * H * 3) }.to_vec());
+        }
+        unsafe { SelectObject(mem, old) };
+    }
+    unsafe {
+        if !dib.is_null() {
+            DeleteObject(dib);
+        }
+        if !mem.is_null() {
+            DeleteDC(mem);
+        }
+        ReleaseDC(owner, src);
+    }
+    out
+}
+
+fn probe_state(hwnd: Hwnd) -> String {
+    let fg = unsafe { GetForegroundWindow() } == hwnd;
+    let vis = unsafe { IsWindowVisible(hwnd) } != 0;
+    let mut ci = CursorInfo { cb_size: std::mem::size_of::<CursorInfo>() as Dword, flags: 0, h_cursor: std::ptr::null_mut(),
+                              pt_screen_pos: Point { x: 0, y: 0 } };
+    let got = unsafe { GetCursorInfo(&mut ci) } != 0;
+    format!("foreground={} visible={} cursor={} at ({},{}) flags=0x{:x}", if fg { "yes" } else { "no" }, if vis { "yes" } else { "no" },
+            if !got { "unknown" } else if ci.flags & 1 != 0 { "showing" } else { "hidden" }, ci.pt_screen_pos.x, ci.pt_screen_pos.y, ci.flags)
+}
+
+fn probe_save(prefix: &Option<String>, name: &str, v: &Option<Vec<u8>>) {
+    let (Some(p), Some(v)) = (prefix, v) else { return };
+    let row = W * 3;
+    let size = 54 + row * H;
+    let mut b: Vec<u8> = Vec::with_capacity(size);
+    b.extend_from_slice(b"BM");
+    b.extend_from_slice(&(size as u32).to_le_bytes());
+    b.extend_from_slice(&0u32.to_le_bytes());
+    b.extend_from_slice(&54u32.to_le_bytes());
+    b.extend_from_slice(&40u32.to_le_bytes());
+    b.extend_from_slice(&(W as i32).to_le_bytes());
+    b.extend_from_slice(&(-(H as i32)).to_le_bytes());
+    b.extend_from_slice(&1u16.to_le_bytes());
+    b.extend_from_slice(&24u16.to_le_bytes());
+    b.extend_from_slice(&0u32.to_le_bytes());
+    b.extend_from_slice(&((row * H) as u32).to_le_bytes());
+    b.extend_from_slice(&2835i32.to_le_bytes());
+    b.extend_from_slice(&2835i32.to_le_bytes());
+    b.extend_from_slice(&0u32.to_le_bytes());
+    b.extend_from_slice(&0u32.to_le_bytes());
+    b.extend_from_slice(v);
+    let path = format!("{}-{}.bmp", p, name);
+    match std::fs::write(&path, &b) {
+        Ok(_) => println!("[probe] saved {}", path),
+        Err(e) => eprintln!("[probe] could not save {}: {}", path, e),
+    }
+}
+
+fn probe_report(label: &str, hwnd: Hwnd, want: &dyn Fn(usize) -> u8, prefix: &Option<String>, save: bool) {
+    let screen = probe_read_dc(std::ptr::null_mut(), 0, 0);
+    let window = probe_read_dc(hwnd, 0, 0);
+    let d = |v: &Option<Vec<u8>>| match v {
+        Some(v) => crate::presentexact::describe(v, want),
+        None => "could not be read".to_string(),
+    };
+    println!("[probe] {}: screen: {}", label, d(&screen));
+    if let Some(v) = &screen {
+        if let Some(b) = crate::presentexact::diff_bbox(v, want) {
+            println!("[probe] {}: {}", label, covering_windows(hwnd, b));
+        }
+    }
+    println!("[probe] {}: window: {}", label, d(&window));
+    if save {
+        probe_save(prefix, &format!("{}-screen", label.split_whitespace().next().unwrap_or("step")), &screen);
+    }
+}
+
+pub fn presentexact_probe(inputs: Vec<FrameInput>, out: Option<String>) {
+    unsafe { SetProcessDPIAware() };
+    let (flush_fn, freq) = court_prelude("the PRESENT-EXACT-0 probe");
+    let hwnd = exact_window("VerdandiPresentExactProbe", "Verðandi — PRESENT-EXACT-0 probe");
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    unsafe { SetForegroundWindow(hwnd) };
+    let mut surf = ExactGdiSurface { hwnd, header: court_header(), flush_fn, freq, call: 0, last_input: 0, inputs_seen: 0 };
+    use crate::presentexact::ExactSurface;
+    let _ = surf.pump();
+    (surf.flush_fn)();
+    println!("[probe] borderless window over the whole screen for a few seconds — leave it alone (no clock, no record)");
+    let g = surf.geometry();
+    println!("[probe] geometry: client {}x{} at ({},{}); screen logical {}x{} physical {}x{}", g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7]);
+    println!("[probe] state: {}", probe_state(hwnd));
+    let white = |_: usize| 0xFFu8;
+    // 1. exactly the court's sequence
+    surf.clear();
+    surf.flush();
+    surf.flush();
+    probe_report("1-court clear, 2 flushes", hwnd, &white, &out, true);
+    // 2. the same clear after about half a second of composition
+    for _ in 0..30 {
+        let _ = surf.pump();
+        surf.flush();
+    }
+    probe_report("2-after 30 more compositions", hwnd, &white, &out, false);
+    // 3. z-order and foreground re-asserted, then the clear again
+    unsafe {
+        SetWindowPos(hwnd, -1isize as Hwnd, 0, 0, W as i32, H as i32, SWP_SHOWWINDOW);
+        BringWindowToTop(hwnd);
+        SetForegroundWindow(hwnd);
+    }
+    for _ in 0..5 {
+        let _ = surf.pump();
+        surf.flush();
+    }
+    println!("[probe] state after re-asserting topmost and foreground: {}", probe_state(hwnd));
+    surf.clear();
+    surf.flush();
+    surf.flush();
+    probe_report("3-topmost and foreground re-asserted", hwnd, &white, &out, true);
+    // 4. the cursor hidden over the window
+    let mut hidden = 0;
+    while unsafe { ShowCursor(0) } >= 0 && hidden < 16 {
+        hidden += 1;
+    }
+    for _ in 0..5 {
+        let _ = surf.pump();
+        surf.flush();
+    }
+    println!("[probe] state with the cursor hidden: {}", probe_state(hwnd));
+    surf.clear();
+    surf.flush();
+    surf.flush();
+    probe_report("4-cursor hidden", hwnd, &white, &out, true);
+    // 5. sealed frame 0 under each call, through the adopted render entry
+    if let Some(f) = inputs.first() {
+        let mut lr = crate::present::LoopRenderer::new();
+        lr.render(&f.scene);
+        let digest_ok = crate::mantle::frame_digest(lr.index_frame()) == f.witness;
+        let bgr = lr.blit().to_vec();
+        println!("[probe] sealed frame 0 rendered; its frame digest {} the sealed witness", if digest_ok { "equals" } else { "DIFFERS FROM" });
+        for call in 0..2 {
+            surf.clear();
+            surf.flush();
+            surf.set_call(call);
+            let _ = surf.present(&bgr);
+            surf.flush();
+            probe_report(&format!("5{}-frame 0 under {}", if call == 0 { "a" } else { "b" }, crate::presentexact::CALLS[call]),
+                         hwnd, &|i| bgr[i], &out, call == 0);
+        }
+    }
+    for _ in 0..hidden {
+        unsafe { ShowCursor(1) };
+    }
+    if unsafe { IsWindow(hwnd) } != 0 {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    println!("[probe] done");
+}
+
+// ================================================================== PRESENT-EXACT-0 LOCK: the conforming presenter (appended)
+// PRESENTATION-CHOICE-0's presenter, locked to the call PRESENT-EXACT-0 adopted: SetDIBitsToDevice (both runs read NO
+// MATERIAL DIFFERENCE, so the simpler call). It shows certified composites rendered before its window opens — one frame
+// for `shell show`, a sealed session's frames for `shell show-playback` — each guarded by the blit-hash law first, 1:1
+// in a borderless, topmost, DPI-aware 1920x1080 window at (0,0), through the same surface the court witnessed with the
+// call fixed. It reads the composed screen back after every frame it shows and about once a second while a frame is
+// held, says whenever the match changes, keeps showing (the owner's choice), and exits 3 if any readback differed
+// (0 if all were exact, 2 on a refusal). Esc or Alt+F4 closes it. It takes no clock and writes no record. LATENCY-0's
+// instrument stays a byte-exact prefix of this file, and `run` / `playback-window` stay the frozen half-size windows.
+// REFUSAL-LOG-0: each of its refusals prints through the logging primitive, and each differing readback, once counted,
+// leaves one line in the unsealed refusal log (shell/refusallog.rs) — an observation, not a record. RUN-LEDGER-0: the
+// run begins on entry and every exit ends it with one line in the run ledger (shell/runledger.rs), refused or not.
+
+const WM_KEYDOWN: Uint = 0x0100;
+const VK_ESCAPE: Wparam = 0x1B;
+const SHOW_DWELL: u32 = 24; // compositions per frame of a played session, as SHELL-PLAYBACK-b's window
+const SHOW_RECHECK: u32 = 75; // compositions between readbacks of a held frame (about a second at 75 Hz)
+
+extern "system" fn wnd_proc_show(hwnd: Hwnd, msg: Uint, wp: Wparam, lp: Lparam) -> Lresult {
+    if msg == WM_KEYDOWN && wp == VK_ESCAPE {
+        unsafe { DestroyWindow(hwnd) };
+        return 0;
+    }
+    wnd_proc(hwnd, msg, wp, lp)
+}
+
+fn show_window(class: &str, title: &str) -> Hwnd {
+    let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+    let class_name = wide(class);
+    let title_w = wide(title);
+    let wc = WndClassW {
+        style: 0,
+        lpfn_wnd_proc: Some(wnd_proc_show),
+        cb_cls_extra: 0,
+        cb_wnd_extra: 0,
+        h_instance: hinstance,
+        h_icon: std::ptr::null_mut(),
+        h_cursor: std::ptr::null_mut(),
+        hbr_background: std::ptr::null_mut(),
+        lpsz_menu_name: std::ptr::null(),
+        lpsz_class_name: class_name.as_ptr(),
+    };
+    unsafe { RegisterClassW(&wc) };
+    unsafe {
+        CreateWindowExW(WS_EX_TOPMOST, class_name.as_ptr(), title_w.as_ptr(), WS_POPUP | WS_VISIBLE, 0, 0, W as i32, H as i32,
+            std::ptr::null_mut(), std::ptr::null_mut(), hinstance, std::ptr::null_mut())
+    }
+}
+
+struct ShowState {
+    checks: u64,
+    differed: u64,
+    last: Option<bool>,
+}
+
+/// Read the composed screen back after a present and compare it with the certified blit bytes. A new frame is always
+/// reported; a held frame's re-check is reported only when the match changes.
+fn show_witness(surf: &mut ExactGdiSurface, bgr: &[u8], k: usize, n: usize, fresh: bool, st: &mut ShowState) {
+    use crate::presentexact::ExactSurface;
+    surf.flush();
+    let screen = surf.readback();
+    let exact = matches!(&screen, Some(v) if v[..] == bgr[..]);
+    st.checks += 1;
+    crate::runledger::readback(!exact); // RUN-LEDGER-0: counted where the presenter counts its own
+    let mut seen: Option<crate::presentexact::Seeing> = None;
+    if !exact {
+        st.differed += 1;
+        // REFUSAL-WHY-1: one walk per differing readback, after it is counted — its fields go into the record, its
+        // words into the printed line
+        if let Some(v) = &screen {
+            seen = crate::presentexact::diff_bbox(v, &|i| bgr[i]).map(|b| covering(surf.hwnd, b));
+        }
+        // REFUSAL-LOG-0: every differing readback is one refusal-class event, one record (decided and counted above)
+        crate::refusallog::record(&show_event(match &screen {
+            Some(v) => ("SHELL-SHOW-SCREEN-DIFFERS", "present.readback", show_ctx(k, n, fresh, Some((v, bgr)), seen.as_ref())),
+            None => ("SHELL-SHOW-SCREEN-UNREADABLE", "surface.readback", show_ctx(k, n, fresh, None, None)),
+        }));
+    }
+    if fresh || st.last != Some(exact) {
+        let how = match &screen {
+            Some(_) if exact => "the screen is the certified picture".to_string(),
+            Some(v) => {
+                // REFUSAL-WHY-0: the verdict is already decided and counted; the attribution (the same walk) only explains it
+                let who = seen.as_ref().map(crate::presentexact::seen_text).unwrap_or_default();
+                format!("{}; {}", crate::presentexact::describe(v, &|i| bgr[i]), who)
+            }
+            None => "the screen could not be read back".to_string(),
+        };
+        println!("[show] frame {}/{}: {}{}", k + 1, n, if exact { "" } else { "SCREEN DIFFERS — " }, how);
+    }
+    st.last = Some(exact);
+}
+
+/// Present one certified frame. A failed present refuses (exit 2): a readback of the previous screen must never stand
+/// in for a frame that was not presented.
+fn show_present(surf: &mut ExactGdiSurface, bgr: &[u8], k: usize, n: usize) {
+    if surf.present(bgr).is_none() {
+        crate::refusallog::refuse(&show_event(("SHELL-SHOW-NO-PRESENT", "surface.present", show_ctx(k, n, true, None, None))),
+                                  &format!("SHELL-SHOW-NO-PRESENT: SetDIBitsToDevice or the composition barrier failed on frame {}/{}; nothing was read back for it",
+                                           k + 1, n));
+        if unsafe { IsWindow(surf.hwnd) } != 0 {
+            unsafe { DestroyWindow(surf.hwnd) };
+        }
+        crate::runledger::end(2);
+        std::process::exit(2);
+    }
+}
+
+/// REFUSAL-LOG-0: the presenter's events — `show` and `show-playback` are one operation, the presenter; the context's
+/// `of` gives the frame count.
+fn show_event((reason, attribution, context): (&'static str, &'static str, Vec<(&'static str, crate::refusallog::V)>)) -> crate::refusallog::Event {
+    crate::refusallog::Event { operation: "show", surface: "gdi", reason: reason.to_string(), attribution, context }
+}
+
+/// The frame (1-based), the frame count, whether it was a new frame or a held re-check, and, for a differing screen,
+/// how many bytes differ and their box.
+fn show_ctx(k: usize, n: usize, fresh: bool, diff: Option<(&Vec<u8>, &[u8])>, seen: Option<&crate::presentexact::Seeing>)
+            -> Vec<(&'static str, crate::refusallog::V)> {
+    use crate::refusallog::V;
+    let mut c = vec![("frame", V::N(k as u64 + 1)), ("of", V::N(n as u64)), ("check", V::S(if fresh { "new" } else { "held" }.to_string()))];
+    if let Some((v, bgr)) = diff {
+        let bytes = if v.len() == bgr.len() { v.iter().zip(bgr.iter()).filter(|(a, b)| a != b).count() } else { v.len().max(bgr.len()) };
+        c.push(("differing_bytes", V::N(bytes as u64)));
+        if let Some(b) = crate::presentexact::diff_bbox(v, &|i| bgr[i]) {
+            c.push(("box", V::S(format!("{},{},{},{}", b[0], b[1], b[2], b[3]))));
+        }
+    }
+    if let Some(w) = seen {
+        c.extend(crate::presentexact::seen_context(w)); // REFUSAL-WHY-1: no title, no pid
+    }
+    c
+}
+
+fn show_setup(reason: &'static str, attribution: &'static str) -> crate::refusallog::Event {
+    show_event((reason, attribution, Vec::new()))
+}
+
+pub fn show(frames: Vec<Composed>, label: &str) {
+    crate::runledger::begin("show", "gdi"); // RUN-LEDGER-0: the presenter run begins; every exit below ends it
+    if frames.is_empty() {
+        crate::refusallog::refuse(&show_setup("SHELL-SHOW-EMPTY", "show.input"), "SHELL-SHOW-EMPTY: there is nothing to show");
+        crate::runledger::end(2);
+        std::process::exit(2);
+    }
+    // the blit-hash law on every frame, before any window: hand the OS only bytes that carry the kernel's composite
+    let blits: Vec<Vec<u8>> = frames.iter().map(|c| to_blit(&c.composite)).collect();
+    for (i, c) in frames.iter().enumerate() {
+        if !blit_roundtrip_ok(&c.composite) {
+            crate::refusallog::refuse(&show_event(("SHELL-BLIT-REFUSE", "render.blit-law", vec![("frame", crate::refusallog::V::N(i as u64))])),
+                                      &format!("SHELL-BLIT-REFUSE: frame {} did not round-trip; not presenting", i));
+            crate::runledger::end(2);
+            std::process::exit(2);
+        }
+    }
+    unsafe { SetProcessDPIAware() };
+    let dwm = match load_dwm() {
+        Some(d) => d,
+        None => {
+            crate::refusallog::refuse(&show_setup("SHELL-NO-DWM", "surface.compositor"),
+                                      "SHELL-NO-DWM: dwmapi.dll or DwmFlush is unavailable; cannot compose and read back");
+            crate::runledger::end(2);
+            std::process::exit(2);
+        }
+    };
+    let hwnd = show_window("VerdandiShow", &format!("Verðandi — {}", label));
+    if hwnd.is_null() {
+        crate::refusallog::refuse(&show_setup("SHELL-NO-WINDOW", "window.create"), "SHELL-NO-WINDOW: CreateWindowExW failed");
+        crate::runledger::end(2);
+        std::process::exit(2);
+    }
+    unsafe { SetForegroundWindow(hwnd) };
+    // the surface PRESENT-EXACT-0 witnessed, the call fixed at SetDIBitsToDevice (1)
+    let mut surf = ExactGdiSurface { hwnd, header: court_header(), flush_fn: dwm.flush, freq: 1, call: 1, last_input: 0, inputs_seen: 0 };
+    use crate::presentexact::ExactSurface;
+    let _ = surf.pump();
+    surf.flush();
+    let g = surf.geometry();
+    if g != [W as i32, H as i32, 0, 0, W as i32, H as i32, W as i32, H as i32] {
+        crate::refusallog::refuse(&show_event(("SHELL-SHOW-GEOMETRY", "window.geometry", vec![("geometry", crate::refusallog::V::S(format!("{:?}", g)))])),
+                                  &format!("SHELL-SHOW-GEOMETRY: client {}x{} at ({},{}), screen logical {}x{} physical {}x{}; PRESENTATION-CHOICE-0 needs the whole 1920x1080 frame at (0,0) on a 1920x1080 screen at 100%",
+                                           g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7]));
+        unsafe { DestroyWindow(hwnd) };
+        crate::runledger::end(2);
+        std::process::exit(2);
+    }
+    let n = frames.len();
+    println!("[show] {}: {} certified frame(s), 1:1, borderless, SetDIBitsToDevice; the screen is read back after each; Esc closes",
+             label, n);
+    let mut st = ShowState { checks: 0, differed: 0, last: None };
+    let mut k = 0usize;
+    show_present(&mut surf, &blits[k], k, n);
+    show_witness(&mut surf, &blits[k], k, n, true, &mut st);
+    let (mut dwell, mut held) = (0u32, 0u32);
+    loop {
+        if !surf.pump() {
+            break; // closed (Esc, Alt+F4)
+        }
+        surf.flush();
+        if k + 1 < n {
+            dwell += 1;
+            if dwell >= SHOW_DWELL {
+                dwell = 0;
+                k += 1;
+                show_present(&mut surf, &blits[k], k, n);
+                show_witness(&mut surf, &blits[k], k, n, true, &mut st);
+            }
+        } else {
+            held += 1;
+            if held >= SHOW_RECHECK {
+                held = 0;
+                show_present(&mut surf, &blits[k], k, n);
+                show_witness(&mut surf, &blits[k], k, n, false, &mut st);
+            }
+        }
+    }
+    if unsafe { IsWindow(hwnd) } != 0 {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    println!("[show] closed: {} screen readbacks, {} differed{}", st.checks, st.differed,
+             if st.differed > 0 { " — the certified picture was not what the screen showed throughout" } else { "" });
+    crate::runledger::end(if st.differed > 0 { 3 } else { 0 });
+    std::process::exit(if st.differed > 0 { 3 } else { 0 });
+}
+
+// ================================================================== REFUSAL-WHY-0 (appended)
+// Explanatory apparatus, never a correctness dependency: when a screen readback differs, name what lies above our
+// window over the differing box. It walks the top-level windows in the Z order (GetTopWindow, then GetWindow
+// GW_HWNDNEXT: top first) until it reaches ours, and for every visible, uncloaked window whose rectangle meets the box
+// it reports the owning program, the class, the title and the extended styles an overlay usually carries (topmost,
+// layered, click-through, tool window). It is read-only: it moves, activates and closes nothing. A verdict is decided
+// before it runs and is never changed by it. If nothing above ours meets the box, it says so: the cause is then below
+// the window layer (a compositor-level overlay, a colour transform, or pixels drawn outside any window).
+
+#[link(name = "user32")]
+extern "system" {
+    fn GetTopWindow(hwnd: Hwnd) -> Hwnd;
+    fn GetWindow(hwnd: Hwnd, cmd: Uint) -> Hwnd;
+    fn GetWindowRect(hwnd: Hwnd, rect: *mut Rect) -> Bool;
+    fn GetWindowTextW(hwnd: Hwnd, text: *mut u16, max: i32) -> i32;
+    fn GetClassNameW(hwnd: Hwnd, name: *mut u16, max: i32) -> i32;
+    fn GetWindowThreadProcessId(hwnd: Hwnd, pid: *mut Dword) -> Dword;
+    fn GetWindowLongW(hwnd: Hwnd, index: i32) -> i32;
+}
+
+#[link(name = "kernel32")]
+extern "system" {
+    fn OpenProcess(access: Dword, inherit: Bool, pid: Dword) -> *mut c_void;
+    fn QueryFullProcessImageNameW(process: *mut c_void, flags: Dword, name: *mut u16, size: *mut Dword) -> Bool;
+    fn CloseHandle(handle: *mut c_void) -> Bool;
+}
+
+const GW_HWNDNEXT: Uint = 2;
+const GWL_EXSTYLE: i32 = -20;
+const PROCESS_QUERY_LIMITED_INFORMATION: Dword = 0x1000;
+const DWMWA_CLOAKED: Dword = 14;
+type DwmGetWindowAttributeFn = extern "system" fn(Hwnd, Dword, *mut c_void, Dword) -> i32;
+
+fn why_text(buf: &[u16], n: i32) -> String {
+    let n = n.max(0) as usize;
+    String::from_utf16_lossy(&buf[..n.min(buf.len())]).replace(['"', '\n', '\r'], " ").chars().take(60).collect()
+}
+
+fn why_image(pid: Dword) -> String {
+    let h = unsafe { OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, pid) };
+    if h.is_null() {
+        return "(program unreadable)".to_string();
+    }
+    let mut buf = [0u16; 520];
+    let mut len: Dword = buf.len() as Dword;
+    let ok = unsafe { QueryFullProcessImageNameW(h, 0, buf.as_mut_ptr(), &mut len) };
+    unsafe { CloseHandle(h) };
+    if ok == 0 {
+        return "(program unreadable)".to_string();
+    }
+    let full = String::from_utf16_lossy(&buf[..(len as usize).min(buf.len())]);
+    full.rsplit(['\\', '/']).next().unwrap_or("").to_string()
+}
+
+/// DwmGetWindowAttribute, resolved once per attribution (dwmapi is already mapped in a composited session).
+fn why_dwm() -> Option<DwmGetWindowAttributeFn> {
+    unsafe {
+        let lib = LoadLibraryW(wide("dwmapi.dll").as_ptr());
+        if lib.is_null() {
+            return None;
+        }
+        let p = GetProcAddress(lib, b"DwmGetWindowAttribute\0".as_ptr());
+        if p.is_null() {
+            return None;
+        }
+        Some(std::mem::transmute::<*mut c_void, DwmGetWindowAttributeFn>(p))
+    }
+}
+
+/// A cloaked window (another virtual desktop, a suspended app) is not composed, so it cannot be what the screen shows.
+fn why_cloaked(dwm: Option<DwmGetWindowAttributeFn>, h: Hwnd) -> bool {
+    let Some(f) = dwm else { return false };
+    let mut cloaked: Dword = 0;
+    f(h, DWMWA_CLOAKED, &mut cloaked as *mut Dword as *mut c_void, std::mem::size_of::<Dword>() as Dword) == 0 && cloaked != 0
+}
+
+/// REFUSAL-WHY-0's console words for what lies above `own` over the box (the probe's line). Read-only.
+pub(crate) fn covering_windows(own: Hwnd, b: [usize; 4]) -> String {
+    crate::presentexact::seen_text(&covering(own, b))
+}
+
+/// The one walk: what lies above `own` over the box (x0, y0, x1, y1), inclusive, in screen pixels. Read-only.
+pub(crate) fn covering(own: Hwnd, b: [usize; 4]) -> crate::presentexact::Seeing {
+    let dwm = why_dwm();
+    let mut found: Vec<crate::presentexact::Seen> = Vec::new();
+    let mut reached_own = false;
+    let mut h = unsafe { GetTopWindow(std::ptr::null_mut()) };
+    let mut steps = 0;
+    while !h.is_null() && steps < 4096 {
+        steps += 1;
+        if h == own {
+            reached_own = true;
+            break;
+        }
+        let mut r = Rect { left: 0, top: 0, right: 0, bottom: 0 };
+        let meets = unsafe { IsWindowVisible(h) } != 0
+            && unsafe { GetWindowRect(h, &mut r) } != 0
+            && r.left <= b[2] as i32 && r.right > b[0] as i32 && r.top <= b[3] as i32 && r.bottom > b[1] as i32
+            && !why_cloaked(dwm, h);
+        if meets && found.len() < 6 {
+            let mut t = [0u16; 256];
+            let tn = unsafe { GetWindowTextW(h, t.as_mut_ptr(), t.len() as i32) };
+            let mut c = [0u16; 256];
+            let cn = unsafe { GetClassNameW(h, c.as_mut_ptr(), c.len() as i32) };
+            let mut pid: Dword = 0;
+            unsafe { GetWindowThreadProcessId(h, &mut pid) };
+            let ex = unsafe { GetWindowLongW(h, GWL_EXSTYLE) } as u32;
+            let mut flags = Vec::new();
+            for (bit, name) in [(0x0000_0008u32, "topmost"), (0x0008_0000, "layered"), (0x0000_0020, "click-through"), (0x0000_0080, "tool window"), (0x0800_0000, "no-activate")] {
+                if ex & bit != 0 {
+                    flags.push(name);
+                }
+            }
+            found.push(crate::presentexact::Seen { program: why_image(pid), pid, class: why_text(&c, cn), title: why_text(&t, tn),
+                                                   rect: [r.left, r.top, r.right, r.bottom], flags });
+        }
+        h = unsafe { GetWindow(h, GW_HWNDNEXT) };
+    }
+    crate::presentexact::Seeing { reached: reached_own, steps, windows: found }
+}
+
+// ================================================================== LIVE-LOOP-0 (appended)
+// The first per-frame loop in the shipped shell: the sealed session walked live in the presenter's borderless, topmost,
+// DPI-aware 1920x1080 window at (0,0), through the exact surface with the call fixed at SetDIBitsToDevice. The loop is
+// shell/liveloop.rs (the gate runs the same loop over the mock); this is only its host window. Esc or Alt+F4 closes it
+// (a refusal: the walk did not finish). It takes no clock. It writes the loop's raw counts for verify/liveloop.py to
+// seal, and the session file's hash before and after the run.
+
+pub fn liveloop_window(inputs: Vec<FrameInput>, host: &str, out: Option<String>, session: &str, before: &str) {
+    unsafe { SetProcessDPIAware() };
+    let dwm = match load_dwm() {
+        Some(d) => d,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or DwmFlush is unavailable; cannot compose and read back");
+            std::process::exit(2);
+        }
+    };
+    let hwnd = show_window("VerdandiLiveLoop0", "Verðandi — LIVE-LOOP-0");
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    unsafe { SetForegroundWindow(hwnd) };
+    let mut surf = ExactGdiSurface { hwnd, header: court_header(), flush_fn: dwm.flush, freq: 1, call: 1, last_input: 0, inputs_seen: 0 };
+    println!("[liveloop] the sealed session walked live, {} steps x {} compositions + {} held; the screen is read back at every step; Esc aborts",
+             inputs.len(), crate::liveloop::DWELL, crate::liveloop::HOLD);
+    crate::runledger::begin("liveloop", "gdi"); // RUN-LEDGER-0: the live-loop run begins
+    let result = crate::liveloop::run(&mut surf, &inputs, "gdi");
+    if unsafe { IsWindow(hwnd) } != 0 {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(live) => {
+            crate::runledger::end(0);
+            let after = crate::mantle::hex(&crate::mantle::sha256(&std::fs::read(session).unwrap_or_default()));
+            for ln in crate::liveloop::summary(&live) {
+                println!("{}", ln);
+            }
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+            let raw = crate::liveloop::raw_record(host, "borderless 1:1 GDI window, SetDIBitsToDevice, screen readback", &live, session, before, &after, now);
+            write_raw(out.unwrap_or_else(|| format!("verify/build/liveloop-raw-{}.json", host)), raw, "liveloop.py");
+        }
+        Err(r) => {
+            // REFUSAL-LOG-0: the loop's refusal is logged where it is emitted, then printed
+            let (ev, m) = r.into_event("gdi");
+            crate::refusallog::refuse(&ev, &format!("SHELL-{}", m));
+            crate::runledger::end(2);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== LIVE-INPUT-0 (appended)
+// The live session's host window: the presenter's borderless, topmost, DPI-aware 1920x1080 window at (0,0), through the
+// exact surface with the call fixed at SetDIBitsToDevice, and the keyboard. The loop is shell/liveinput.rs (the gate
+// runs the same loop over the mock with a key script); this is only its host window and its key source: the pump reads
+// each key press (WM_KEYDOWN, its auto-repeat bit) from the message queue before dispatching it. Esc or Alt+F4 ends the
+// session (exit 0). It takes no clock and writes no file: the session lives in memory and is printed, never saved.
+
+const WM_KEYDOWN_LIVE: Uint = 0x0100;
+
+struct LiveKeysGdi {
+    surf: ExactGdiSurface,
+    pending: Vec<(u32, bool)>,
+}
+
+impl Surface for LiveKeysGdi {
+    fn ticks(&mut self) -> i64 {
+        self.surf.ticks()
+    }
+    fn freq(&self) -> i64 {
+        self.surf.freq()
+    }
+    fn present(&mut self, bgr: &[u8]) -> Option<(i64, i64)> {
+        self.surf.present(bgr)
+    }
+    fn flush(&mut self) {
+        self.surf.flush()
+    }
+    fn pump(&mut self) -> bool {
+        let mut msg: Msg = unsafe { std::mem::zeroed() };
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            if msg.message == WM_KEYDOWN_LIVE {
+                // bit 30 of lParam: the key was already down (an auto-repeat)
+                self.pending.push((msg.w_param as u32, (msg.l_param >> 30) & 1 == 1));
+            }
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+impl crate::presentexact::ExactSurface for LiveKeysGdi {
+    fn set_call(&mut self, call: usize) {
+        crate::presentexact::ExactSurface::set_call(&mut self.surf, call)
+    }
+    fn clear(&mut self) -> bool {
+        crate::presentexact::ExactSurface::clear(&mut self.surf)
+    }
+    fn readback(&mut self) -> Option<Vec<u8>> {
+        crate::presentexact::ExactSurface::readback(&mut self.surf)
+    }
+    fn geometry(&mut self) -> [i32; 8] {
+        crate::presentexact::ExactSurface::geometry(&mut self.surf)
+    }
+    fn attribute(&mut self, b: [usize; 4]) -> crate::presentexact::Attribution {
+        crate::presentexact::ExactSurface::attribute(&mut self.surf, b)
+    }
+}
+
+impl crate::liveinput::Keys for LiveKeysGdi {
+    fn keys(&mut self) -> Vec<(u32, bool)> {
+        std::mem::take(&mut self.pending)
+    }
+}
+
+pub fn liveinput_window(mut session: crate::playback::LiveSession) {
+    unsafe { SetProcessDPIAware() };
+    let dwm = match load_dwm() {
+        Some(d) => d,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or DwmFlush is unavailable; cannot compose and read back");
+            std::process::exit(2);
+        }
+    };
+    let hwnd = show_window("VerdandiLiveInput0", "Verðandi — LIVE-INPUT-0");
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        std::process::exit(2);
+    }
+    unsafe { SetForegroundWindow(hwnd) };
+    let surf = ExactGdiSurface { hwnd, header: court_header(), flush_fn: dwm.flush, freq: 1, call: 1, last_input: 0, inputs_seen: 0 };
+    let mut keys = LiveKeysGdi { surf, pending: Vec::new() };
+    let c = session.camera();
+    println!("[liveinput] a live session from {},{},{}: arrows or WASD walk and turn, Q/E strafe, Space opens or closes the cell ahead, Esc ends; nothing is saved",
+             c.x, c.z, facing_letter(c.facing));
+    crate::runledger::begin("liveinput", "gdi"); // RUN-LEDGER-0: the live-input run begins
+    let result = crate::liveinput::run(&mut keys, &mut session, "gdi");
+    if unsafe { IsWindow(hwnd) } != 0 {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    match result {
+        Ok(live) => {
+            crate::runledger::end(0);
+            for ln in crate::liveinput::summary(&live, &session) {
+                println!("{}", ln);
+            }
+        }
+        Err(r) => {
+            // REFUSAL-LOG-0: the loop's refusal is logged where it is emitted, then printed
+            let (ev, m) = r.into_event("gdi");
+            crate::refusallog::refuse(&ev, &format!("SHELL-{}", m));
+            crate::runledger::end(2);
+            std::process::exit(2);
+        }
+    }
+}
+
+// ================================================================== LIVE-SESSION-0 (appended)
+// The durable live session's host window: LIVE-INPUT-0's window and keys unchanged, with the keyboard-focus observation
+// added — whether the foreground request succeeded, whether the window held the foreground at the start, and how many
+// compositions it did and did not hold it. The observation is recorded in the saved session, never ruled on. The run
+// is shell/livesession.rs (the gate runs the same code over the mock): the journal, LIVE-INPUT-0's loop, the seal and
+// the saved file's verification. The session is loaded (or made) before the window opens.
+
+struct FocusKeysGdi {
+    inner: LiveKeysGdi,
+    hwnd: Hwnd,
+    request: i32,
+    at_start: bool,
+    with: u64,
+    without: u64,
+    changes: u64,
+    last: Option<bool>,
+}
+
+impl Surface for FocusKeysGdi {
+    fn ticks(&mut self) -> i64 {
+        self.inner.ticks()
+    }
+    fn freq(&self) -> i64 {
+        self.inner.freq()
+    }
+    fn present(&mut self, bgr: &[u8]) -> Option<(i64, i64)> {
+        self.inner.present(bgr)
+    }
+    fn flush(&mut self) {
+        self.inner.flush()
+    }
+    fn pump(&mut self) -> bool {
+        let open = self.inner.pump();
+        let held = unsafe { GetForegroundWindow() } == self.hwnd;
+        if held {
+            self.with += 1;
+        } else {
+            self.without += 1;
+        }
+        if self.last.is_some() && self.last != Some(held) {
+            self.changes += 1;
+        }
+        self.last = Some(held);
+        open
+    }
+}
+
+impl crate::presentexact::ExactSurface for FocusKeysGdi {
+    fn set_call(&mut self, call: usize) {
+        crate::presentexact::ExactSurface::set_call(&mut self.inner, call)
+    }
+    fn clear(&mut self) -> bool {
+        crate::presentexact::ExactSurface::clear(&mut self.inner)
+    }
+    fn readback(&mut self) -> Option<Vec<u8>> {
+        crate::presentexact::ExactSurface::readback(&mut self.inner)
+    }
+    fn geometry(&mut self) -> [i32; 8] {
+        crate::presentexact::ExactSurface::geometry(&mut self.inner)
+    }
+    fn attribute(&mut self, b: [usize; 4]) -> crate::presentexact::Attribution {
+        crate::presentexact::ExactSurface::attribute(&mut self.inner, b)
+    }
+}
+
+impl crate::liveinput::Keys for FocusKeysGdi {
+    fn keys(&mut self) -> Vec<(u32, bool)> {
+        crate::liveinput::Keys::keys(&mut self.inner)
+    }
+}
+
+impl crate::livesession::Focus for FocusKeysGdi {
+    fn focus(&self) -> String {
+        format!("{{\"source\":\"window\",\"foreground_request\":{},\"foreground_at_start\":{},\"compositions_with\":{},\"compositions_without\":{},\"changes\":{}}}",
+                self.request, self.at_start as u8, self.with, self.without, self.changes)
+    }
+}
+
+pub fn livesession_window(plan: crate::livesession::Plan) {
+    session_window(plan, crate::liveinput::bind, None)
+}
+
+/// LIVE-SESSION-0's window under a binding and held set (LIVE-AUTHOR-0's live editor passes its binding and HOLD-WALK-0's
+/// held set; LIVE-SESSION-0's passes none; nothing else differs).
+fn session_window(plan: crate::livesession::Plan, binding: fn(u32) -> crate::liveinput::Action, hold: Option<fn(u32) -> bool>) {
+    unsafe { SetProcessDPIAware() };
+    let prepared = match crate::livesession::prepare(plan) {
+        Ok(p) => p,
+        Err(code) => std::process::exit(code),
+    };
+    let dwm = match load_dwm() {
+        Some(d) => d,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or DwmFlush is unavailable; cannot compose and read back");
+            crate::runledger::end(2);
+            std::process::exit(2);
+        }
+    };
+    let hwnd = show_window("VerdandiLiveSession0", "Verðandi — LIVE-SESSION-0");
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        crate::runledger::end(2);
+        std::process::exit(2);
+    }
+    let request = unsafe { SetForegroundWindow(hwnd) };
+    let at_start = unsafe { GetForegroundWindow() } == hwnd;
+    let surf = ExactGdiSurface { hwnd, header: court_header(), flush_fn: dwm.flush, freq: 1, call: 1, last_input: 0, inputs_seen: 0 };
+    let mut keys = FocusKeysGdi { inner: LiveKeysGdi { surf, pending: Vec::new() }, hwnd, request, at_start, with: 0, without: 0, changes: 0, last: None };
+    println!("[livesession] the window {} the keyboard at the start (click it if keys do nothing); arrows or WASD walk and turn, Q/E strafe, Space opens or closes the cell ahead, Esc ends and saves",
+             if at_start { "holds" } else { "does NOT hold" });
+    let (code, _live) = crate::livesession::go_with(&mut keys, prepared, binding, hold);
+    if unsafe { IsWindow(hwnd) } != 0 {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    std::process::exit(code);
+}
+
+// ================================================================== LIVE-AUTHOR-0 (appended)
+// The live editor's host window: LIVE-SESSION-0's window, keys and focus observation, under the authoring binding
+// (LIVE-INPUT-0's keys, plus 1-5 for the tile classes) and HOLD-WALK-0's held set (a held W/A/S/D or arrow walks).
+// Esc seals; the saved session is verified before it counts.
+
+pub fn live_window(plan: crate::livesession::Plan) {
+    println!("[live] the live editor: 1-4 paint wall0-wall3 and 5 the floor with the next palette colour; hold W/A/S/D or an arrow to keep walking or turning; every edit and step is a saved session event");
+    session_window(plan, crate::liveauthor::bind, Some(crate::holdwalk::held))
+}
+
+// ================================================================== MOUSE-LOOK-0 (appended)
+// The live editor's host window with the mouse: LIVE-SESSION-0's window and focus observation, with the three things a
+// tick source needs and nothing else —
+//   the clock     QueryPerformanceCounter, in microseconds since the loop's first composition;
+//   the mouse     Windows raw input: each WM_INPUT message's relative horizontal count, as the device reports it.
+//                 Nothing else of the mouse is read: no pointer position, no vertical motion, no button, no wheel;
+//   the capture   while this window is the foreground window the cursor is hidden and confined to it and what arrives is
+//                 admitted; when it is not, the cursor is released and what arrives is dropped (and counted).
+// MOUSE-LOOK-0a: the section also counts what arrives before that point — every raw input message, every one it could
+// not read as a mouse report, every report with no horizontal count — and the run prints the observation when it ends.
+// Counting is all it does with them: only a captured, relative, horizontal count is ever handed to the loop. Esc is
+// read as a key press like any other; the presenter's window procedure, shared here, destroys the window on it.
+// CAPTURE IS SHELL STATE. This section decides only whether a count or a key press is handed to the loop at all. It
+// calls no method of the session and reaches no renderer: a focus or capture change makes no event of any kind — the
+// loop simply receives nothing while the window is out of the foreground. Esc ends the run: the loop returns, the mouse
+// is released, and only then is the session certified and saved (shell/livesession.rs).
+// The loop is shell/liveinput.rs under a tick source (shell/mouselook.rs); the gate runs that same loop over the mock.
+// This section first runs on the owner's host.
+
+const WM_INPUT_LOOK: Uint = 0x00FF;
+const RID_INPUT_LOOK: Uint = 0x1000_0003;
+const RIM_TYPEMOUSE_LOOK: Dword = 0;
+const MOUSE_MOVE_ABSOLUTE_LOOK: u16 = 0x0001;
+const HID_PAGE_GENERIC_LOOK: u16 = 0x01;
+const HID_USAGE_MOUSE_LOOK: u16 = 0x02;
+
+#[repr(C)]
+struct RawInputDevice {
+    usage_page: u16,
+    usage: u16,
+    flags: Dword,
+    target: Hwnd,
+}
+
+#[repr(C)]
+struct RawInputHeader {
+    kind: Dword,
+    size: Dword,
+    device: *mut c_void,
+    w_param: Wparam,
+}
+
+// RAWMOUSE: the button union is one 32-bit field here (never read); lLastX is the signed relative horizontal count
+#[repr(C)]
+struct RawMouse {
+    flags: u16,
+    buttons: u32,
+    raw_buttons: u32,
+    last_x: i32,
+    last_y: i32,
+    extra: u32,
+}
+
+#[repr(C)]
+struct RawInputMouse {
+    header: RawInputHeader,
+    mouse: RawMouse,
+}
+
+#[link(name = "user32")]
+extern "system" {
+    fn RegisterRawInputDevices(devices: *const RawInputDevice, count: Uint, size: Uint) -> Bool;
+    fn GetRawInputData(raw: *mut c_void, command: Uint, data: *mut c_void, size: *mut Uint, header_size: Uint) -> Uint;
+    fn ClipCursor(rect: *const Rect) -> Bool;
+}
+
+struct LookGdi {
+    surf: ExactGdiSurface,
+    hwnd: Hwnd,
+    pressed: Vec<(u32, bool)>,
+    counts: Vec<i64>,
+    captured: bool,
+    released: bool,
+    started: Option<i64>,
+    freq: i64,
+    // the observation: recorded in the saved session's live block, never ruled on, never an event
+    request: i32,
+    at_start: bool,
+    with: u64,
+    without: u64,
+    changes: u64,
+    last: Option<bool>,
+    captures: u64,
+    releases: u64,
+    reports: u64,
+    dropped: u64,
+    dropped_keys: u64,
+    absolute: u64,
+    // MOUSE-LOOK-0a: what arrived before the point of admission — every raw input message, every one that could not be
+    // read as a mouse report (and the size the last such read returned), every relative report with no horizontal count
+    raw_messages: u64,
+    unread: u64,
+    unread_size: i64,
+    still: u64,
+}
+
+impl LookGdi {
+    /// Take or give up the mouse: the cursor hidden and confined to the window, or shown and free. Shell state only.
+    fn capture(&mut self, want: bool) {
+        if want == self.captured {
+            return;
+        }
+        if want {
+            let mut r: Rect = unsafe { std::mem::zeroed() };
+            unsafe {
+                GetWindowRect(self.hwnd, &mut r);
+                ClipCursor(&r);
+                ShowCursor(0);
+            }
+            self.captures += 1;
+        } else {
+            unsafe {
+                ClipCursor(std::ptr::null());
+                ShowCursor(1);
+            }
+            self.releases += 1;
+        }
+        self.captured = want;
+    }
+}
+
+impl Surface for LookGdi {
+    fn ticks(&mut self) -> i64 {
+        self.surf.ticks()
+    }
+    fn freq(&self) -> i64 {
+        self.surf.freq()
+    }
+    fn present(&mut self, bgr: &[u8]) -> Option<(i64, i64)> {
+        self.surf.present(bgr)
+    }
+    fn flush(&mut self) {
+        self.surf.flush()
+    }
+    fn pump(&mut self) -> bool {
+        // the foreground decides the capture, and the capture decides what this pump admits
+        let held = unsafe { GetForegroundWindow() } == self.hwnd;
+        if held {
+            self.with += 1;
+        } else {
+            self.without += 1;
+        }
+        if self.last.is_some() && self.last != Some(held) {
+            self.changes += 1;
+        }
+        self.last = Some(held);
+        if !self.released {
+            self.capture(held);
+        }
+        let mut msg: Msg = unsafe { std::mem::zeroed() };
+        while unsafe { PeekMessageW(&mut msg, std::ptr::null_mut(), 0, 0, PM_REMOVE) } != 0 {
+            if msg.message == WM_KEYDOWN_LIVE {
+                if self.captured {
+                    // bit 30 of lParam: the key was already down (an auto-repeat)
+                    self.pressed.push((msg.w_param as u32, (msg.l_param >> 30) & 1 == 1));
+                } else {
+                    self.dropped_keys += 1;
+                }
+            } else if msg.message == WM_INPUT_LOOK {
+                // MOUSE-LOOK-0a: the message is counted before it is read, so a run can say whether raw input arrived
+                self.raw_messages += 1;
+                let mut buf = [0u64; 8]; // 64 bytes, aligned as the structure is: room beyond the mouse report
+                let mut size = std::mem::size_of_val(&buf) as Uint;
+                let got = unsafe {
+                    GetRawInputData(msg.l_param as *mut c_void, RID_INPUT_LOOK, buf.as_mut_ptr() as *mut c_void, &mut size,
+                                    std::mem::size_of::<RawInputHeader>() as Uint)
+                };
+                // a mouse report: the read succeeded, holds at least the mouse structure, and names the mouse type
+                let raw: &RawInputMouse = unsafe { &*(buf.as_ptr() as *const RawInputMouse) };
+                if got == Uint::MAX || (got as usize) < std::mem::size_of::<RawInputMouse>() || raw.header.kind != RIM_TYPEMOUSE_LOOK {
+                    self.unread += 1;
+                    self.unread_size = got as i32 as i64; // -1: the read failed
+                } else if raw.mouse.flags & MOUSE_MOVE_ABSOLUTE_LOOK != 0 {
+                    self.absolute += 1; // an absolute device (a tablet, a remote session): not counts, never used
+                } else if raw.mouse.last_x == 0 {
+                    self.still += 1; // no horizontal count (a vertical movement, a button, the wheel): nothing to hand on
+                } else if self.captured {
+                    self.reports += 1;
+                    self.counts.push(raw.mouse.last_x as i64);
+                } else {
+                    self.dropped += 1;
+                }
+            }
+            unsafe {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+            if msg.message == 0x0012 {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+impl crate::presentexact::ExactSurface for LookGdi {
+    fn set_call(&mut self, call: usize) {
+        crate::presentexact::ExactSurface::set_call(&mut self.surf, call)
+    }
+    fn clear(&mut self) -> bool {
+        crate::presentexact::ExactSurface::clear(&mut self.surf)
+    }
+    fn readback(&mut self) -> Option<Vec<u8>> {
+        crate::presentexact::ExactSurface::readback(&mut self.surf)
+    }
+    fn geometry(&mut self) -> [i32; 8] {
+        crate::presentexact::ExactSurface::geometry(&mut self.surf)
+    }
+    fn attribute(&mut self, b: [usize; 4]) -> crate::presentexact::Attribution {
+        crate::presentexact::ExactSurface::attribute(&mut self.surf, b)
+    }
+}
+
+impl crate::liveinput::Keys for LookGdi {
+    fn keys(&mut self) -> Vec<(u32, bool)> {
+        std::mem::take(&mut self.pressed)
+    }
+}
+
+impl crate::mouselook::Look for LookGdi {
+    fn now_us(&mut self) -> u64 {
+        // microseconds since the first read (the loop's first composition)
+        let now = qpc();
+        let start = *self.started.get_or_insert(now);
+        ((now - start).max(0) as u128 * 1_000_000 / self.freq.max(1) as u128) as u64
+    }
+    fn reports(&mut self) -> Vec<i64> {
+        std::mem::take(&mut self.counts)
+    }
+    fn release(&mut self) {
+        self.capture(false);
+        self.released = true;
+    }
+}
+
+impl crate::livesession::Focus for LookGdi {
+    fn focus(&self) -> String {
+        format!("{{\"source\":\"window\",\"foreground_request\":{},\"foreground_at_start\":{},\"compositions_with\":{},\"compositions_without\":{},\"changes\":{},\"mouse\":{{\"captures\":{},\"releases\":{},\"raw_messages\":{},\"unread\":{},\"unread_size\":{},\"still\":{},\"absolute\":{},\"reports\":{},\"dropped\":{},\"dropped_keys\":{},\"released\":{}}}}}",
+                self.request, self.at_start as u8, self.with, self.without, self.changes, self.captures, self.releases, self.raw_messages,
+                self.unread, self.unread_size, self.still, self.absolute, self.reports, self.dropped, self.dropped_keys, self.released)
+    }
+}
+
+pub fn look_window(plan: crate::livesession::Plan) {
+    unsafe { SetProcessDPIAware() };
+    let prepared = match crate::livesession::prepare(plan) {
+        Ok(p) => p,
+        Err(code) => std::process::exit(code),
+    };
+    let dwm = match load_dwm() {
+        Some(d) => d,
+        None => {
+            eprintln!("SHELL-NO-DWM: dwmapi.dll or DwmFlush is unavailable; cannot compose and read back");
+            crate::runledger::end(2);
+            std::process::exit(2);
+        }
+    };
+    let hwnd = show_window("VerdandiMouseLook0", "Verðandi — MOUSE-LOOK-0");
+    if hwnd.is_null() {
+        eprintln!("SHELL-NO-WINDOW: CreateWindowExW failed");
+        crate::runledger::end(2);
+        std::process::exit(2);
+    }
+    let request = unsafe { SetForegroundWindow(hwnd) };
+    let at_start = unsafe { GetForegroundWindow() } == hwnd;
+    // raw input from the mouse, delivered to this window while it is in the foreground (no flags: no background input)
+    let device = RawInputDevice { usage_page: HID_PAGE_GENERIC_LOOK, usage: HID_USAGE_MOUSE_LOOK, flags: 0, target: hwnd };
+    if unsafe { RegisterRawInputDevices(&device, 1, std::mem::size_of::<RawInputDevice>() as Uint) } == 0 {
+        eprintln!("SHELL-NO-RAWINPUT: RegisterRawInputDevices failed; the mouse's counts cannot be read");
+        crate::runledger::end(2);
+        std::process::exit(2);
+    }
+    let mut freq = 0i64;
+    unsafe { QueryPerformanceFrequency(&mut freq) };
+    let surf = ExactGdiSurface { hwnd, header: court_header(), flush_fn: dwm.flush, freq: 1, call: 1, last_input: 0, inputs_seen: 0 };
+    let mut look = LookGdi { surf, hwnd, pressed: Vec::new(), counts: Vec::new(), captured: false, released: false, started: None, freq,
+                             request, at_start, with: 0, without: 0, changes: 0, last: None, captures: 0, releases: 0, reports: 0,
+                             dropped: 0, dropped_keys: 0, absolute: 0, raw_messages: 0, unread: 0, unread_size: 0, still: 0 };
+    println!("[look] the live editor with the mouse: move the mouse to turn; W/S walk, A/D strafe, arrows turn a quarter, Space opens or closes the cell ahead, 1-5 paint; PgUp/PgDn change the multiplier, Tab the step; Esc ends and saves");
+    println!("[look] the window {} the foreground at the start (click it if nothing answers); the mouse is captured while it does and released when it does not",
+             if at_start { "holds" } else { "does NOT hold" });
+    let (code, _raw) = crate::livesession::go_look(&mut look, prepared);
+    if unsafe { IsWindow(hwnd) } != 0 {
+        unsafe { DestroyWindow(hwnd) };
+    }
+    std::process::exit(code);
+}

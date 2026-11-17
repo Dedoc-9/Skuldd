@@ -1,0 +1,26 @@
+== the closure of sincos32z (its FROZEN4 list, plants excluded) plus the law statement draft M
+  reported, not refused (lines): inductive type 2
+FEATURE ROW HELD: 54 file(s), no recursive definition and no checking-flag change
+exit 0
+  reported, not refused (lines): none
+FEATURE ROW HELD: 1 file(s), no recursive definition and no checking-flag change
+exit 0
+== every .v of mkf-ext outside plants/ and out4/
+  reported, not refused (lines): inductive type 2
+FEATURE ROW HELD: 62 file(s), no recursive definition and no checking-flag change
+exit 0
+== plants (each REFUSE must fail, each DECOY must hold)
+  ok  decoy_comment.v  exit 0  
+  ok  decoy_identifier.v  exit 0  
+  ok  decoy_string.v  exit 0  
+  ok  refuse_anonymous_fix.v  exit 1  REFUSED refuse_anonymous_fix.v line 1: recursive term or tactic (fix)
+  ok  refuse_bypass_check.v  exit 1  REFUSED refuse_bypass_check.v line 1: checking flag (bypass_check)
+  ok  refuse_cofixpoint.v  exit 1  REFUSED refuse_cofixpoint.v line 2: recursive definition (CoFixpoint)
+  ok  refuse_definitional_uip.v  exit 1  REFUSED refuse_definitional_uip.v line 1: checking flag (Set Definitional UIP)
+  ok  refuse_fix_tactic.v  exit 1  REFUSED refuse_fix_tactic.v line 2: recursive term or tactic (fix)
+  ok  refuse_fixpoint.v  exit 1  REFUSED refuse_fixpoint.v line 1: recursive definition (Fixpoint)
+  ok  refuse_local_unset_pos.v  exit 1  REFUSED refuse_local_unset_pos.v line 1: checking flag (Unset Positivity Checking)
+  ok  refuse_program.v  exit 1  REFUSED refuse_program.v line 1: recursive definition (Program)
+  ok  refuse_scheme.v  exit 1  REFUSED refuse_scheme.v line 2: recursive definition (Scheme)
+  ok  refuse_unset_guard.v  exit 1  REFUSED refuse_unset_guard.v line 1: checking flag (Unset Guard Checking)
+  ok  refuse_unset_universe.v  exit 1  REFUSED refuse_unset_universe.v line 1: checking flag (Unset Universe Checking)

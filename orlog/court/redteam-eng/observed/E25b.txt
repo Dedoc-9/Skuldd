@@ -1,0 +1,2372 @@
+$ -B orl.py check court/redteam-eng/E25b_parser_recursion_and.orl
+Traceback (most recent call last):
+  File "{session}\scratchpad\orlog\orl.py", line 193, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "{session}\scratchpad\orlog\orl.py", line 188, in main
+    return {"check": cmd_check, "run": cmd_run, "court": cmd_court, "stamp": cmd_stamp, "ratify": cmd_ratify,
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            "ratify-theorem": cmd_ratify_theorem}[a.cmd](a)
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "{session}\scratchpad\orlog\orl.py", line 32, in cmd_check
+    comp = compile_bytes(read(a.file))
+  File "{session}\scratchpad\orlog\src\orlog\front.py", line 43, in compile_bytes
+    return Compiled(raw)
+  File "{session}\scratchpad\orlog\src\orlog\front.py", line 25, in __init__
+    self.prog = parse_program(self.text)
+                ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 230, in parse_program
+    c.stmt = StmtParser(c, prog, procs).statement()
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 366, in statement
+    st = self.stmt_head(top=True)
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 392, in stmt_head
+    return self.mk(Say(self.expr()))
+                       ~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 643, in and_expr
+    a = self.mk(Bin("and", a, self.not_expr()))
+                              ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 781, in atom
+    e = self.expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 630, in expr
+    return self.or_expr()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 633, in or_expr
+    a = self.and_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 640, in and_expr
+    a = self.not_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 653, in not_expr
+    return self.cmp_expr()
+           ~~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 658, in cmp_expr
+    a = self.cat_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 702, in cat_expr
+    a = self.sum_expr()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 710, in sum_expr
+    a = self.term()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 722, in term
+    a = self.unary()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 743, in unary
+    return self.postfix()
+           ~~~~~~~~~~~~^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 746, in postfix
+    a = self.atom()
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 779, in atom
+    if self.op("("):
+       ~~~~~~~^^^^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 329, in op
+    return self.at("@" + o)
+           ~~~~~~~^^^^^^^^^
+  File "{session}\scratchpad\orlog\src\orlog\syntax.py", line 311, in at
+    tok = self.peek(k)
+RecursionError: maximum recursion depth exceeded
+[exit 1]

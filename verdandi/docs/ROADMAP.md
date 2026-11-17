@@ -1,0 +1,8939 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- Copyright (C) 2026 Daniel J. Dillberg -->
+
+# Roadmap — toward a live, authorable world
+
+*Where the program stands, what "a live authorable world" means for it, and the sequenced, falsifiable path to get
+there. This roadmap names rungs that are already public in [`verify/RUNGS.md`](../verify/RUNGS.md), and — since the
+owner published it — the route to walking in a live, authorable world, whose rungs were named before they were built (most are built now). The
+general techniques it points at are cited prior art, not commitments. Other candidate rungs are under private
+consideration pending the owner's consensus and are not enumerated here.*
+
+---
+
+## Where we are
+
+Two halves of the studio are built and sealed. The **render** half is fast and honest: the emit is ~3.3× faster than
+the certified baseline (a stable ~2,355 µs p99 at eight threads), byte-identical to the frozen oracle at every step,
+and the shell now renders through that parallel fast path. The **authoring** half already exists in skeleton:
+`WORKSHOP-0/1` turn an edit into a new authority with a hash-chained consequence record; `INPUT-0` turns shell input
+into a typed command and a new camera that replays headless; `SESSION-WALK` interleaves moving and authoring into one
+sealed chain; and `SHELL-PLAYBACK` proves the window shows *exactly* that sealed becoming. And since `GAME-0`, Urðr's
+**game layer** — seventeen discrete vertical slices, from level generation through the input membrane, with their
+corpora and suites — sits in `oracle/game/` as frozen evidence from the same tag, passing its own 411 tests in place.
+
+The loop between the two halves is now joined (this paragraph read otherwise until 2026-10-04, and the route below
+is how it was closed). The **live editor** renders every composition from a session being written as it runs: a key
+or a mouse report becomes a typed event, the event is journaled, the world is the log's replay, and the session is
+saved, verified and resumable (`LIVE-LOOP-0` through `MOUSE-LOOK-0a`, each measured on the owner's host). The camera
+turns to any registered heading, on a renderer held byte for byte to a reference carried from `urdr-oracle-2`. And
+the first **admission** seam is built and measured: `ADMIT-0` recognizes a proposal in a line language or refuses
+it, and admits it as one ordinary edit.
+
+And everything the tree's registered writers save and read back is now one bounded language with one verdict from
+every reader (`READER-COURT-0`, built; the gate passes on the host, 226 rows, and is pushed). The refusal log, the run
+ledger and the files of `design/` and `graybox/` are plain JSON outside it.
+
+And every refusal the gate requires is now held to a registered reason (`REASON-COURT-0`, `337ab021`, built: six
+rows), and every refusal raised inside the gate's own process is claimed by a row, a class, a site and a count
+(`MINT-WATCH-0`, `cd1472ec`, built: four rows). The gate was then 236 rows.
+
+With that the owner ruled the engineering seam frozen (2026-10-06): no further gate unless a real invariant is
+found, and the work is the design environment. Its first piece is built off the gate: `design/`, five verbs over
+the certified admission seam.
+
+One invariant was found there, by measuring, and it is built: a design is admitted as one batch or refused whole
+(`DESIGN-EVENT-0`, `ae7cbb36`, built: six rows). With it the gate was 242 rows and passed here and on the host. By the
+owner's word with that push no theorem was added at once. When the host's gate was FULL×2 by his own predicate, his
+word was *take next* (2026-10-07).
+
+That next rung is built: the step from a design to its change set, which was the one uncertified link between the
+design tool and the admission (`DESIGN-IR/DIFF-0`, `2baa42f3`, five rows). Behind it, built at his word: the meaning
+of the design language as the owner's own rulings, literal targets and laws, which neither program computes, and to
+which both are held (`HERMENEUTICS-0`, `22d52d02`, four rows, under his amendment `HERMENEUTICS-0a`). The gate is 251
+rows and passes here and on the host, FULL×2 there by the witness, and is pushed. Then, by his ruling of 2026-10-09,
+the gate stops growing: it is a release instrument, and the daily objective is a playable first-person graybox
+(`FPS-GRAYBOX-0`, below).
+
+What is *not* yet done: design objects that outlive admission, constraints, and a model at the seam
+(declared, not registered); any measurement of the live loop's timing; richer edits than a cell and a tile class;
+and semantics the frozen oracle never certified.
+
+---
+
+## What "live authorable world" means here
+
+Not a general game engine. Specifically: **a running window in which an author changes the world, the change becomes
+a new authority through the sealed workshop path, the projection updates live, and every frame on the screen is
+provably the consequence of that authored history** — with new kinds of world content (skybox, filtering semantics,
+physics beyond what the tag carries) admitted only when they *earn* an authority, either carried or re-frozen from Urðr
+or pinned by a Verðandi-local reference. The bar is the one the program already holds itself to: `built ≠ adopted`, `declared ≠ verified`, and no
+semantics reaches the screen without passing through a gate.
+
+---
+
+## The gap, in four questions
+
+1. **Does the render headroom reach the screen?** Measured twice (`LATENCY-1R`): yes for work arriving at a random
+   phase (composited output 3.2–3.6 ms earlier at the median), no for a loop that renders right after it presents
+   (under 1% gets through the refresh-coupled GDI present). The shell's whole render-start → frame-ready interval is
+   14.8–15.7 ms at p50, longer than one refresh on the owner's host, and FRAME-SPLIT-0 found, twice, no single phase
+   dominating it (blit largest at 427–434‰). Renderer latency: materially improved. End-to-end presentation latency:
+   phase-dependent, no low-latency or competitive claim. The largest phase, the blit, is mostly the 2:1 reduction here:
+   at 1:1 it drops ~5.3–5.6 ms (PRESENT-SCALE-0, confirmed on this host). At half size, `COLORONCOLOR`'s blit was
+   materially cheaper than the default `BLACKONWHITE`'s in both runs (392‰ and 449‰; `HALFTONE`'s reading did not
+   reproduce) (PRESENT-STRETCH-0). Reusing the frame's buffers instead of allocating them every frame took 1.6–1.8 ms
+   off the envelope (ALLOC-REUSE-0, confirmed). In this loop most of each saving waits at the composition instead. *(G7 — measured; G8 —
+   confirmed, NO SEAT; G11 — confirmed.)*
+2. **Can an author edit the live window?** Yes, since the live rungs: keys walk and edit, a mouse turns the
+   camera, tile classes are painted, and each is a typed event in one saved, verified session (`LIVE-INPUT-0`,
+   `LIVE-SESSION-0`, `LIVE-AUTHOR-0`, `MOUSE-LOOK-0`, each measured on the host). The vocabulary is small on
+   purpose: a cell opened or closed, a tile class painted. What it costs in time is not measured.
+3. **Can the world hold semantics the oracle never certified?** The skybox and filtered VIEW semantics live *beyond*
+   the frozen oracle and need the new-semantics route. Physics is different: much of it is already in the tag (see
+   below), so the question there is what to carry, not what to invent.
+4. **Can independent edits combine?** Two authored branches of a world need a deterministic, consensus-free merge.
+
+---
+
+## The route to walking in a live, authorable world (the owner's order)
+
+The substrate is built: a deterministic world, deterministic materials, a deterministic renderer, an exact presenter,
+workshop authority and the session walk. What is missing is the **closed live cycle**: input → authoring authority →
+render → present → observe → next input. It is mostly not a renderer problem any more. It is the live loop, live
+input and authoring, and making the live chain recoverable. The order:
+
+```text
+REFUSAL-LOG-0 → RUN-LEDGER-0 → REFUSAL-WHY / DRIFT-0      the diagnostic foundation (DRIFT-0: sitting 1 of 3 complete)
+      ↓
+LIVE-LOOP-0      the shipped per-frame loop — walked on the host: 246 compositions live, every readback exact
+      ↓
+LIVE-INPUT-0     physical input → typed editor action → the workshop/session → a new W, M → the next frame — walked and edited on the host by key presses, every readback exact
+      ↓
+LIVE-SESSION-0   live events → append-only session → save → restart → replay → the same world — a host walk saved, resumed into a new file, both replayed here
+      ↓
+LIVE-AUTHOR-0    the thing authored is the same authority the next frame renders — painted live on the host by class keys, saved, resumed there with the painting intact
+      ↓
+HOLD-WALK-0      held keys walk the grid: the input continuous, the world discrete — measured on the host; not the free movement the owner wants
+      ↓
+(Urðr)           VIEW-YAW-0: the turning camera earned in Urðr and frozen as urdr-oracle-2 — any heading, the eye still at a cell centre
+      ↓
+BEARING-0        the bearing camera carried and its reference kernel placed: all 104 witnesses of urdr-oracle-2 bit for bit — built; the gate passes on the host
+      ↓
+BEARING-FAST-0   the production candidate, held byte for byte to the reference — measured on the host: exact stepping in eight row bands, worst-camera p99 3,716 us (target 6,667); the sweep 622,440 of 622,440 equal
+      ↓
+SIM-TICK-0       the mouse-look rules as integer law, windowless: the 64 Hz tick, one command per tick, the look event in the one session, reference certification at save — built; the gate passes on the host with the same 197 rows
+      ↓
+SIM-TICK-0a      two rulings of MOUSE-LOOK-0's court that are rules of the tick, still windowless: a sensitivity change is a typed configuration event in the session, never folded; a held key walks once a tick — built; the gate passes on the host with the same 201 rows
+      ↓
+MOUSE-LOOK-0     a real mouse on those rules: captured until Esc (shell state, never session state), raw counts into the 64 Hz accumulator, the command into the existing live loop, the picture alone at a free heading, every 64th free-heading frame recomputed off the loop — built; the gate passes on the host; the first window run walked on keys with no mouse report; on the second, under MOUSE-LOOK-0a, a real mouse turned the camera
+      ↓
+MOUSE-LOOK-0a    an amendment from the owner's review and the first host run: a composition applies at most one closed tick command and span counts tick boundaries between compositions; a run its Esc ended is recorded as escape; the window counts the raw input it receives before it reads it — built; the gate passes on the host with the same 209 rows; the second host run is the execution witness: 13,931 raw reports, 1,761 looks, 1,775 of 1,775 free-heading frames the reference's, a focus loss with no session event
+      ↓
+the presentation and latency measurement      input to photon in separate segments; frame rate alone is no competitive claim
+      ↓
+richer edits     vocabulary on the one live editor, not new pathways
+      ↓
+walking in a live, authorable world
+      ⋮
+LLM-BUILDER-0    a declared goal beyond the route: a model proposes typed, anchored changes against the sealed session; only the verifier admits them — nothing built, and the route above is built in respect of it. Declared with it (2026-10-03), and by the owner's ruling what the route builds towards: the gate certifies the program and content is admitted, not gated; conversation edits the world through a stream of admitted design events
+ADMIT-0          the first rung towards it, chosen in court (2026-10-03) and by the owner's order next after MOUSE-LOOK-0: the admission seam. One strict recognizer for a line language whose accepted bytes are canonical (VRDNP1), an anchor refused when stale, a scope the admitter grants, an admitted proposal an ordinary session event. The gate certifies the machine; ADMIT admits the world's changes — registered (`bdd38593`), built, and measured on the host: the gate passes there and the first admission is sealed
+      ↓
+READER-COURT-0   next by the owner's order, its courts held (2026-10-04): the saved form is the writers' language and nothing wider; one Rust reader shared by path; an independent Python reader held against it, the same code and byte offset on every hostile file — registered (`f53017cd`) and built: eight rows, 226 in the gate; on the host 225 of 226 on the first run, 226 of 226 with the fix, pushed
+      ↓
+REASON-COURT-0   the owner's ruling (2026-10-04): next after READER-COURT-0 and before DESIGN-EVENT-0. Every refusal check in the gate is held to an expected reason, an exact code or a deliberately open REFUSE(any). Its census is taken (145 refusal checks in 78 rows; 103 hold a code), its courts are held, and its register is in the tree: codes only from a requirement that already exists, a watch over every child that does not end 0 reading only the code head, the sealers under one registered mutation — registered (`337ab021`) and pushed; in three configurations here and on the host every registered group held — built: six rows, 232 in the gate; on the host 232 of 232, pushed
+      ↓
+MINT-WATCH-0     the owner's ruling (2026-10-05): a separate slice, registered now and built after REASON-COURT-0's build, before any rung that gives a refusal a code or makes it a datum. Every refusal-class raise inside the gate's own process is attributable to a registered row, class, site and count, or is a registered plant of the gate. Sites from source (164 in 15 files), counts measured (142,082 mints, four configurations agreeing); a site is its file, its function and the text of its raise — registered (`cd1472ec`) and pushed — built: four rows, 236 in the gate; on the host 236 of 236
+      ↓
+the adjustment   the owner's ruling (2026-10-06): the engineering seam is frozen; a new gate only for a new engineering invariant; the work is the design environment. Built off the gate, content time: design/ — inspect, propose, preview, admit, undo over the certified seam, driven the same way by a person, a script or a model
+      ↓
+DESIGN-EVENT-0   locked as the next rung by the owner (2026-10-06), seven properties in one court: a canonical batch of one to 4,096 typed operations is refused whole or admitted by one admission as that many ordinary edits, equal to the same operations admitted one at a time. N edits and one admission; VRDNP2, a net change set with one byte form; full replay with an exact memo; a dry run bound to its admission — registered (`ae7cbb36`), pushed, and built: six rows, 242 in the gate; the 60 operations admitted one at a time before the seam existed reach the same head as one batch; on the host 242 of 242 on every run and FULL×2 by the owner's predicate; pushed
+      ↓
+DESIGN-IR/DIFF-0 the owner's word *take next* (2026-10-07), given when the host's gate was FULL×2 on DESIGN-EVENT-0; his court the same day, four answers locked: the compiler first, in the certified shell with an independent reference in the gate, the proposal id the SHA-256 of the exact design bytes, readings and constraints out by name. The current design text is the source language, and its compile to the canonical VRDNP2 change set against a parent world is one tree-owned function — registered (`2baa42f3`); read and locked by him the same day, and the round around it named before the build as subcourts and no new claim (`DESIGN-IR/DIFF-0a`, `c414587d`); both pushed (`83b0261..5c8ad19`); built (2026-10-07): the compiler in the shell, five rows, 247 in the gate, every registered value reproduced; two rows of DESIGN-EVENT-0 changed in their text by his ruling, the amendment chain named a law and its origin registered (`REASON-COURT-0b`, `d51b4d20`; `DESIGN-IR/DIFF-0b`, `42ac51f5`); the design tool a client of the compiler; on the host 247 of 247 twice on one tree, FULL×2 by his predicate, pushed (`11afebf..c8b6a1f`); his rulings of 2026-10-08 registered and built into two existing rows (`DESIGN-IR/DIFF-0c`, `38b51bed`): the layout relation and the origin as a projection
+      ↓
+INPUT-0a         the owner's ruling (2026-10-08): the small semantic fix first, before the next rung. G31 repaired — a walk's path is the rest of its line, one existing row carries a space, the pin moved by the chain's third link (`REASON-COURT-0c`, `94f3de68`) — registered (`2f0426d6`) and built, 247 rows; the perturbed pass that found it, run again as predicted, 247 / 0; the host's clone with a space, 247 / 0 twice, FULL×2; pushed (`59edc01..a16d663`). G33 investigated after it: the contract the owner's to rule
+      ↓
+INPUT-0b         G33 for the walk's rung (2026-10-09), by the owner's instruction to find the most elegant path and carry it through: the rows ask for the kernel and the walk program where they use them (Lazy Setup; a brittle's fix, after iFixFlakies), held by `input-demo` — registered (`a167c308`) and built, 247 rows; each walk row passes run alone; FULL×2 on the host by the witness, pushed (`89d082e..b386b85`); CLOSED by his ruling (2026-10-09), the witness's read order deferred
+      ↓
+HERMENEUTICS-0   named by the owner (2026-10-07) for the gap DESIGN-IR/DIFF-0's own amendment states: the meaning of the design language, apart from either program that compiles it. The concept locked, its build deferred until after DIFF-0, folding it into DIFF-0 rejected. Semiotics, one level earlier, is a vocabulary audit and not a rung, declared. His court the same day: one reading ratified, six cases locked, four laws ratified as theorems, a corpus of ten designs with literal targets — registered (`22d52d02`) and pushed (`5c8ad19..11afebf`); not built; built after DIFF-0 is built, courted and FULL×2; PROCEED, his word (2026-10-09); read for the build, two rules of DESIGN-IR/DIFF-0's rows stood in the way of its registered instrument, and he ruled (A): HERMENEUTICS-0a widens each by the least — the eleven plants first, the three the shell lacks after them, `first-wins` and `entrance-dropped` given twins in the reference; the reference's users DIFF-0's rows and these four — with REASON-COURT-0d for the moved pin; BUILT (2026-10-09) under HERMENEUTICS-0a and REASON-COURT-0d: four rows, 251 in the gate; both programs give each registered outcome on the registered parent, the four laws hold on their instances, and the five plants, planted alike so that a comparison of the programs is blind, are each caught by a case or a law — and by DIFF-0's own registered values, all five, as the entry expected; on the host FULL×2 by the witness, pushed (`b386b85..3dc15ec`); then frozen
+      ↓
+FPS-GRAYBOX-0    the owner's sprint (2026-10-09): stop expanding the gate; a playable first-person graybox on the canonical level — a tactical layout with three routes, cover, spawns and an objective; mouse look, WASD, jump, collision, a weapon placeholder; one weapon, hits, target feedback, reset. The design compiler keeps the layout; the smallest runtime layer carries height, collision and play. His amendment: the conversion certified, not the mesh — a canonical world from which collision and the render mesh are derived, a manifest, independent conformance checks and defect-directed mutations, a smoke suite, replay determinism on one platform; boundaries in docs/BOUNDARIES.md. The full gate at release checkpoints only; BUILT the same day, beside the certified tree: `python graybox/serve.py` — the tactical map's walls and floor admitted through the design tool, an overlay for the rest, three routes walked by a bot through the real movement, seven planted conversion defects refused
+      ↓
+FPS-VISUAL-0     the owner's visual pass (2026-10-09), outside the gate: a sky and a sun, floor materials (the 1 m grid a hidden debug mode), wall panels and trim, varied cover, one weapon model whose transform stays apart from the shot; movement, collision, source hashes and replay kept; screenshots and timings before and after, and no improvement claimed unmeasured. His rule: the canonical world says what the map means, the collision world what blocks, the render world how it looks, and the render world decides nothing that blocks; BUILT the same day: a sky and a traced sun, floor modules, panelled walls, dressed cover, a 22-part weapon apart from the shot; the first renderer kept beside it; a self-test that holds the drawn solids to the collision world face by face and keeps decoration out of play, seven planted renderer defects refused; timed in SwiftShader, then on the host (0179: the lit renderer's median draw and readback 1.36–1.53 times the first's)
+      ↓
+ART-GENERATION-0 the owner's pivot (2026-10-10), ahead of EVIDENCE-LINK-0: verification serves the art; prompt to playable art at AAA ambition, Unreal 5.8 to render it, Verðandi keeping layout, collision and lineage. Its first slice built beside the certified tree (`art/`): one brief dressed onto the tactical graybox, its checks, a look and a layout revision; the Unreal import written, not yet run on an engine
+      ↓
+DIRECTOR-0       the owner's ruling (2026-10-10): the operator loop for prompted art — candidates checked against the head they meet, admitted or refused by a person, every step in an append-only ledger; a canonical form and conformance vectors a second implementation reproduces (built beside the tree: art/director.py, art/director/; a std-only Rust second implementation reproduces all 62 vectors)
+      ↓
+NATIVE-PLAZA-0   the owner's rulings (2026-10-10, 2026-10-11): Verðandi-native the primary architecture, Unreal 5.8 a secondary path; the plaza played in the browser through an art-owned launcher (art/play.py) and a WebGL 2 renderer, the graybox's simulation moving against C; two rounds evaluated, not yet chosen; live edits (2026-10-11): an edit to the brief or to a candidate intent drawn in the running page, the game untouched, a refused edit leaving the scene before it
+      ↓
+DET-MATH-0       the owner's ruling (2026-10-11), outside the gate: the simulation's rules made portable. Every function whose last bits the language leaves to the engine and that reached the authoritative state (sin, cos, hypot, atan2) replaced by fdlibm's algorithms and exact square roots, built from operations ECMA-262 fixes; the rules versioned (1), rules 0 kept as the baseline; held by rules-arithmetic and math-fence in the self-test and by graybox/rules_ref.py; the same bits measured in two V8 engines and CPython; ACCEPTED by the owner (2026-10-11), cross-browser equivalence NOT ESTABLISHED until Firefox and Chromium are compared on one machine; compared on his machine the same day: Firefox 157 and Edge 155 on the same recorded inputs, every rules-1 snapshot the same at every tick of the tactical map's three runs; by his ruling of the same day, cross-browser equivalence on the tactical map advanced from NOT ESTABLISHED to MEASURED once
+      ↓
+TICK-REF-0       the owner's ruling (2026-10-11), "NEXT": a second, independent implementation of the full tick, in Python, from a written specification (graybox/RULES-1.md), verifying a browser's trace tick by tick and naming the first differing field; the same bytes as Chromium 141 and node 22 at every tick of both maps' runs, and as Firefox 157's and Edge 155's on his machine (the tactical map, each verified directly); accepted provisionally by the owner (2026-10-11); outside the gate
+      ↓
+BOT-REF-0        the owner's ruling (2026-10-11), "the next vertical slice": the walk made in Python from the map alone, by a policy written down (graybox/WALK-1.md, walk-1) and advanced by tick_ref.py (graybox/bot_ref.py), so that no browser originates the reference walk; on the tactical map its start and 1,787 inputs the same bytes as the browsers' own bot's, and Chromium 141, node 22, and on his machine Firefox 157 and Edge 155, playing them reach the Python tick's state at every tick; ACCEPTED provisionally by the owner (2026-10-11); the witness level next; outside the gate
+      ↓
+INPUT-CONTRACT-0 the owner's ruling (2026-10-11): the tick's input admitted or refused, whole, before anything is touched — a written domain (RULES-1.md, The input), one category for each fault, a shared table of 70 hostile and admitted cases (graybox/web/input_cases.json); sim.js and tick_ref.py agree on every step, outcome and state, in node 22 and Chromium 141, and on his machine in Firefox 157 and Edge 155; nothing admitted changed; outside the gate
+      ↓
+STUDIO-0         the owner's direction and ruling (2026-10-11): a director summoned into the running plaza — E selects, Enter summons, a prompt answered by at most three candidates drawn in place with the game untouched, admit, reject and undo through the director's ledger; "the model proposes changes—it never directly mutates the live world"; a gateway (art/studio.py) between the page and a provider command (a scripted provider; Claude through the Anthropic Messages API), its contract in art/STUDIO.md; his acceptance test met in Chromium 141 in the build container; on his machine (Windows) its self-test 29 / 29, and the scripted provider tried from the page; outside the gate
+      ↓
+STUDIO-1         the owner's rulings (2026-10-11), after trying STUDIO-0: two real model paths, "Both, CLI first" (Claude Code's CLI as a provider, the Anthropic API kept), compared on the same prompts; and references — visible tags, a target and up to four pinned pieces, their geometry in metres and the relations between them measured, each reference bound to a piece and a scene revision and never silently redirected; no new art vocabulary in this slice (an image of the view next, connecting pieces after); the CLI provider built, and a real model reached through it in the build container (its probe SHOWN); the references built: tags E and R make, bound to an object's id and never moved, the request's geometry and relations measured from the scene's boxes, and what each candidate touches; a real model, asked four prompts about three tagged canopies, changed exactly the objects each prompt named in 15 of 15 candidates; on his machine, through Claude Code on his Claude plan (claude-opus-5-5), the same in all 23 candidates the director drew, and in the page a canopy matched to another by its tag and admitted; outside the gate
+      ↓
+STUDIO-APP-0     the owner's direction (2026-10-12): "The next objective should be a runnable Verðandi Studio, not another narrowly scoped rung" — a desktop icon, a live world with the director, a studio that proposes, builds, tests and offers changes to itself, promoted by explicit admission with rollback, "Keep the studio that is running separate from the studio being built"; researched and planned in docs/STUDIO-APP.md (the architecture decision: the page in Edge's application mode under a std-only stub and a std-lib supervisor; VCT-0, one change transaction with domain validators, ACCT among its parents; five batches); its interfaces and transaction frozen in docs/STUDIO-CONTRACT.md (the commit point the durable blessed record; Recover(J, P, F) in sixteen rules, its reference art/studio_txn.py checked over every enumerated crash point); B1's first part built (crash-safe admissions, tags kept and shown, the API provider on structured outputs with Opus 5.5, play.py's health and shutdown, the five probes); outside the gate
+      ↓
+EVIDENCE-LINK-0  accepted by the owner (2026-10-09) as the next qualifying slice: each claim a commit message or a document copies about a recorded event — ids, push ranges, row counts, hashes, prediction outcomes — traced to its authoritative source, never only to another copy; an instrument outside the repository that reads and reports; declared, defined and registered after HERMENEUTICS-0 is advanced and not bundled into it; by his final ruling of the same day, the next verification pivot
+      ↓
+LIVE-AI-EDIT-0 → GUI      the owner's order after it (2026-10-06); none registered. Design objects that outlive admission, and constraints, are each a court of their own and are not seated. A competitive arena — a map that matches are played on — is declared (a text he brought, 2026-10-08): it gives those two courts their content, and is not placed in the order. Environmental independence, a court that would hold a row's verdict against what its surroundings were not declared to change, is accepted as a future audit mechanism and deferred (his ruling, 2026-10-08). PERSPECTIVE-0, observation stratified from action, reconstruction and claim, is declared (three texts he brought, the same day). REFLEX, a ladder of nine declared steps from perspective types to a reflexive certificate, gathers both (two texts, the same day). None is placed in the order
+      ↓
+PRESENT-1 (its screen witness settled first), the live-loop re-breakdown, BANDWIDTH-0 / POOL-0; DRIFT-0 continues alongside
+```
+
+The owner swapped LIVE-SESSION-0 ahead of LIVE-AUTHOR-0 after LIVE-INPUT-0's host runs. The live loop worked, but its
+evidence was still console text that had to be replayed by hand. Durability first means every later host walk,
+including LIVE-AUTHOR-0's, is a saved file the workshop verifies, not a transcript.
+
+After LIVE-AUTHOR-0 the owner stops adding bespoke input cases. LIVE-AUTHOR-0 is the last authoring-primitive slice.
+From then on the rule is general: every accepted live edit is a typed SESSION-WALK event, the event changes the
+authoritative W or M, the next frame is derived from the resulting authority, and the event is durable through
+LIVE-SESSION-0. Free continuous movement and richer edits are vocabulary and navigation semantics added to the one live
+editor (`shell live-window`), gated in its binding table, not new pathways or rungs. HOLD-WALK-0, registered under its
+own name but on the same pathway, made held keys keep walking cell by cell over the same discrete world, because the
+frozen renderer draws the eye only at a cell centre facing N, E, S or W. After walking it on his host, the owner judged
+that this is not the free movement he wants, and ruled what it becomes: shooter-style mouse-look, taken in rungs. The
+turning camera was earned in Urðr first (VIEW-YAW-0, frozen as `urdr-oracle-2`), because no frozen oracle existed to
+hold a renderer to outside the four cardinals; here it is carried and placed as a reference (BEARING-0), made fast
+against that reference (BEARING-FAST-0), given its rules with no window in the proof (SIM-TICK-0), and only then driven
+by a real mouse (MOUSE-LOOK-0). The owner ruled those two are never combined.
+Cursor authoring, preview sliders, gizmos and an editor-pane interaction model are deliberately not on the route yet:
+those are where a shell starts accumulating an alternate authority.
+
+- **The diagnostic foundation** is not on the critical path to walking. It gives the live loop an instrumented refusal
+  surface instead of console archaeology. REFUSAL-LOG-0, RUN-LEDGER-0 and REFUSAL-WHY-1 have landed. REFUSAL-WHY-1
+  writes the covering windows into the refusal log as program, class, rectangle and overlay flags. Titles stay
+  console-only and are never persisted, and the rectangle is diagnostic geometry, not identity. DRIFT-0 (preregistered)
+  repeats the locked PRESENT-EXACT-0 court unchanged, 3 sittings of 4 runs, and is observational first: it counts
+  recurrence and cross-run drift from the two files and the host state, with no intervention.
+- **LIVE-LOOP-0** is the gate that matters: the current (W, M, C) state → `LoopRenderer` on its persistent buffers →
+  one frame rendered from that state → SetDIBitsToDevice → the screen witness → the next frame. It includes window
+  events, clean shutdown, refusals logged and runs ledgered. The shell mutates nothing canonical. Its first court is
+  narrow: no authoring input, no flip model, no persistent workers, no latency claim.
+- **LIVE-INPUT-0** turns physical input into authoring operations through the authority boundary already built
+  (Urðr's input membrane `cue`, frozen in `oracle/game/`, the workshop and the session model). The shell never mutates the world directly. The first
+  vocabulary is tiny: move the camera, select a cell, open or close a cell, change a tile or material. It is named
+  LIVE-INPUT-0 because `INPUT-0` is already seat 9. As ratified and built, the first slice is narrower still: the six
+  moves and opening or closing the faced cell, with no cursor and no tile or material keys (those wait for
+  LIVE-AUTHOR-0). The authority boundary it goes through is the session model: every press becomes an event in an
+  in-memory SESSION-WALK log, and W and M are that log's replay.
+- **LIVE-AUTHOR-0** proves the mutation/render bridge. One interaction must demonstrably go input → typed edit →
+  session event → authoritative W, M change → next render → changed pixels. The control must hold too: a camera-only
+  input may change pixels, and W and M stay unchanged. That preserves the W / M / C boundary the workshop already
+  enforces. The test is not "I can click something" but **the thing I author is the same authority that the next frame
+  renders**.
+- **LIVE-SESSION-0** makes the live chain recoverable by connecting the live loop to the session walk's existing
+  authority and deterministic replay, rather than inventing a second live-state system: live events → append-only
+  session → checkpoint or save → restart → replay → the same world. It now comes before LIVE-AUTHOR-0.
+- **Afterwards:** PRESENT-1, the live-loop re-breakdown, and BANDWIDTH-0 / POOL-0 are optimization and latency work
+  measured on the real loop. They are not prerequisites for walking. PRESENT-1 starts with how the screen is witnessed
+  once presentation moves off GDI: the GDI readback cannot be assumed to remain a valid witness under flip-model
+  presentation, and whatever replaces it is measured before it is trusted.
+
+Each of these rungs is ratified, preregistered and built in turn; none is claimed until its gate stands.
+
+---
+
+## After BEARING-FAST-0: what evidence is worth buying (the owner's ruling, 2026-10-01)
+
+BEARING-FAST-0 is built and measured, and at the time of this ruling no live path used it; MOUSE-LOOK-0 has since
+wired it into the live editor. The owner ruled that the next work is chosen by what evidence is worth buying, not by
+which optimization can be imagined next. The order:
+
+| # | Work | Why | Where it stands |
+|---|---|---|---|
+| 1 | BEARING-FAST-0's host speed court | Establish whether the 6,667 µs target is met. | Run: met, 3,716 µs. |
+| 2 | Production promotion, only if the target is met | Do not optimize a kernel that is already sufficient. | Met: eight row bands of exact stepping is the production candidate. MOUSE-LOOK-0 wires it into a live path, not before. |
+| 3 | SIM-TICK-0, mouse sensitivity and live mouse-look | The actual interaction seam, now that the renderer can support it. | SIM-TICK-0 (the rules and the sensitivity, windowless) is built, and its gate passes on the host. SIM-TICK-0a (the court's two tick rulings, windowless) is built, and its gate passes on the host. MOUSE-LOOK-0 (the real mouse and the window) is built and its gate passes on the host. `shell look-window` ran there once: the keys walked on the tick and the save verified, but no mouse report reached the loop, so the look itself is still to be shown. MOUSE-LOOK-0a (the owner's correction of a registered limit, the run's end, and the window's observation of raw input) is built and its gate passes on the host. On the second run a real mouse turned the camera: 1,761 looks on the tick, the focus lost and regained with no session event, the session's picture on the screen, and every free-heading frame equal under the reference. |
+| 4 | PRESENT-1, the flip-model presentation | Renderer speed is not input-to-photon speed; LATENCY-0's evidence makes this the next presentation boundary. | After mouse-look. |
+| 5 | A cross-host correctness witness for the fast path | Portability evidence, not worth delaying the interactive path unless a cross-host failure appears. | The gate's court already runs on two hosts (Linux here, the owner's Windows). A further host is deferred. |
+| 6 | Benchmark regression recording | Protects a production fast path against performance regressions. | Once the fast path is in a live path. |
+| 7 | A persistent worker pool (tread D) | Only if a host court shows thread creation is material. | Its trigger did not fire. |
+| 8 | SIMD, structure-of-arrays and cache experiments | Candidate optimization courts: measure first. | Deferred; no gain is claimed. |
+| 9 | GPU | A separate architectural branch, not the next CPU optimization. | Deferred. |
+| 10 | Lean or SMT formalization | Assurance research, not a prerequisite for the renderer. | Deferred; see below. |
+| 11+ | Homotopy type theory, category theory, quantum-inspired work | A research track, not the production roadmap. | Not on the route. |
+
+The sequence is therefore BEARING-FAST-0's host court → promote or defer → SIM-TICK-0 → mouse-look → PRESENT-1 → drift
+and regression evidence. The optimization staircase reopens only if a court misses its target. The trap to avoid is
+optimizing a renderer that has already crossed its threshold while the actual experience (mouse timing, simulation
+ticks, presentation, input to photon) stays unmeasured.
+
+Three rulings on how claims are made:
+
+- **No scalar scorecard.** A letter grade collapses things this repository keeps apart: deterministic correctness,
+  mutation resistance, portability, host performance, presentation latency, maintainability and research maturity.
+  Each claim keeps its own grade from the existing vocabulary (MEASURED, ESTABLISHED, DECLARED, DEFERRED) and its own
+  `does_not_show`.
+- **Outside estimates are not Verðandi's claims.** Projected gains from outside analyses, such as a "3–5× ceiling",
+  "SIMD 25–50%", "GPU 10–100×" or "world-class", are hypotheses attributed to their sources until measured here. Those
+  analyses are not carried in this repository.
+- **Formal methods, if opened, start narrow.** A months-long mechanization of the whole studio is a research
+  investment, not the next rung. The existing court (1,972 cameras, checked bounds, 14 mutations, the host speed court,
+  and the live differential check to come) finishes its job first. The natural first theorem is the seam BEARING-FAST-0
+  created: for every admissible row, camera and scene, the exact walker produces the same pixel inputs as the reference
+  kernel.
+
+---
+
+## The sequenced path (named rungs only)
+
+### LATENCY-1 — does the headroom survive the present path · **measured and confirmed** (`8e93118e`, amended `b32d226f`)
+Re-run the sealed reference session through the present path *now that the render is fast*, and compare frame-ready →
+composited against `LATENCY-0`'s immutable baseline. This is a **measurement, not an optimization** — it was meant to
+answer question 1; the amendment below records why it cannot, and LATENCY-1R does. Off-gate, host, witnesses first, no refresh claim.
+The method is hash-locked (`latency1-preregistered`): the comparator is `LATENCY-0`'s sealed **frame-ready →
+composited** p99 — the *same observable*, inherited never re-derived — and **never** an emit p99 (the GAUNTLET-2
+7,734 µs baseline is a different observable; mixing them is a category error). The delta reads as
+headroom-propagates / presentation-dominant / shell-contention, and none of it proves input-to-photon.
+
+**Amended before the number (LATENCY-1a, `b32d226f`).** LATENCY-0's instrument renders every frame before its window
+opens and times only blit → composited, so LATENCY-1 cannot see the renderer; its delta is now read as a statement
+about the presentation interval only (a 50‰ materiality bound, declared), never as render headroom or contention.
+
+**Measured.** On the owner's host LATENCY-1's first run read DEGRADATION on a three-sample p99 tail; its confirmation
+read NO MATERIAL CHANGE (p99 7,339 vs 7,318 µs). The presentation interval reproduces LATENCY-0, and the first run's
+category did not reproduce (`GHOSTS.md` G10).
+
+### LATENCY-1R — the render inside the clock · **measured twice** (`5cfb3ece`)
+The question LATENCY-1 cannot answer, as its own observable: render-start → composited on the same sealed session
+and GDI present, for the production render (T=8) against the single-thread reference, in a locked and a uniform
+phase regime. On the owner's host, two runs: **uniform PROPAGATES** both times (composited output 3.2–3.6 ms earlier
+at the median; 1,341‰ and 1,182‰), and the **locked** regime absorbed in both (0‰ and 8‰ of a ~2.7 ms render saving
+got through) — its preregistered label flipped from ABSORBED to PARTIALLY ABSORBED across a zero-margin boundary, which
+the confirmation record states (`GHOSTS.md` G10). The production render-start → frame-ready interval itself is
+14.8–15.7 ms at p50, longer than the 13.1–13.9 ms refresh.
+
+### FRAME-SPLIT-0 — where the ~15 ms goes · **measured and confirmed** (`739dc807`): NO SEAT, multi-component
+The production render-start → frame-ready interval split into seven contiguous phases on LATENCY-1R's apparatus, the
+uninstrumented envelope beside it. On the owner's host (envelope p50 15.7 ms): blit 434‰ of the envelope p99, emit
+272‰, frame 251‰, bgr 139‰, the rest under 10‰ each. No phase reaches 500‰, so **no single optimization is promoted**
+— the frame is multi-component after GAUNTLET-2 (`GHOSTS.md` G8). The blit (`StretchDIBits` into the half-size window,
+~7.1 ms p50) is the largest component, not a seated bottleneck; how much of it is the 2:1 scaling is unmeasured
+(`GHOSTS.md` G11). The confirmation reproduced the reading (blit 427‰, every share within 8‰). Any further step is a
+narrower, separately preregistered measurement of a named component, not an optimization.
+
+### PRESENT-SCALE-0 — how much of the blit is the 2:1 scaling · **measured and confirmed** (`64b263da`): SCALING MATERIAL
+A diagnostic, not an optimization court: the same frame presented into a half-size (960×540) and a full-size
+(1920×1080) client area, the destination the only variable. On the owner's host the blit's p50 fell from 7.76 ms to
+2.19 ms at 1:1 (717‰, net of the larger copy), the non-blit phases inside the confound bound (48‰), and the envelope's
+p50 from 17.1 to 11.4 ms — below the refresh at full size, above it at half. The default stretch mode is
+`BLACKONWHITE`, a Boolean-AND reduction (`GHOSTS.md` G11). It names no winner: what the shell should present is a
+separate court, because it changes what the window shows. The confirmation reproduced it (705‰; non-blit 33‰), on
+this host and apparatus. `PRESENT-1` below stays a hypothesis for the locked regime.
+
+### PRESENT-STRETCH-0 — does the half-size blit's cost depend on the stretch mode · **measured twice** (`f5372890`): `COLORONCOLOR` MODE MATERIAL reproduced; `HALFTONE` not reproduced
+A diagnostic over the same half-size frame, with the stretch mode the only variable: `BLACKONWHITE` (the default, now
+set explicitly), `COLORONCOLOR` and `HALFTONE`, in 12 blocks with the effective mode read back. Per mode against the
+default it reads MODE MATERIAL or IMMATERIAL (100‰ of the default's blit), unless the court is VOID or that mode is
+CONFOUNDED. It adopts no mode: each draws different pixels, so choosing one is a separate court. On the owner's host
+the blit's p50 was 7.27 ms under the default, 4.42 ms under `COLORONCOLOR` (392‰ cheaper) and 4.93 ms under
+`HALFTONE` (322‰ cheaper), with the non-blit phases inside the confound bound (16‰, 15‰). The confirmation, in a run
+that was slower across the board (the default's blit 11.59 ms), read `COLORONCOLOR` MODE MATERIAL again (449‰) and
+`HALFTONE` CONFOUNDED (non-blit 53‰). So `COLORONCOLOR` reproduced per mode, `HALFTONE` is unresolved, and the combined
+label did not reproduce, which the confirmation record states. No millisecond saving is carried as confirmed.
+frame-ready → composited rose by most of the saving in the first run (G7), so this is not an end-to-end result.
+
+### ALLOC-REUSE-0 — how much of the frame is per-frame buffer allocation · **measured and confirmed** (`aaaada37`): ALLOCATION MATERIAL (reuse cheaper)
+A diagnostic over FRAME-SPLIT-0's apparatus with the buffers' lifetime the only variable: allocated every frame (the
+production path) or once and overwritten, the same calls and marks, the reused bytes proven equal first. On the
+envelope it reads ALLOCATION MATERIAL or IMMATERIAL (50‰ of the fresh envelope), with the per-phase deltas beside and
+never ruled on. The production path is unchanged by it. On the owner's host the envelope p50 fell 1.59 ms (17.29 →
+15.71 ms, 91‰), with the unchanged phases at 10‰. The confirmation reproduced it (17.36 → 15.53 ms, 105‰; unchanged
+phases 2‰). In both runs the saving sat mostly in bgr and emit, which is reported and not ruled on. Adopting reuse in
+the production path would be its own court.
+
+### ALLOC-REUSE-1 — the render-loop entry's adoption court · **measured twice** (`dc904a6c`): PERFORMANCE PASS in both runs, ADOPT — **LOCKED** (seat 24)
+The shipped shell has no per-frame render loop (`run` renders once, `playback-window` pre-renders owned frames;
+G12), so what can be adopted is an **entry contract**: the persistent-buffer `LoopRenderer` as the production entry for
+any loop that renders once per presented frame. The fresh path stays the frozen reference. Correctness first, on every
+gate: byte identity with the fresh path over the corpus (goldens), the adversarial cameras and the sealed session, in
+three orders from poisoned buffers, with no buffer replaced. Then performance, on the host: same-run ABBA, 1000 samples
+per cell, PERFORMANCE PASS iff p99(reused) ≤ 950‰ of p99(fresh) (an adoption margin). ADOPT only when the run and
+`--confirm` both pass. No shipped window changes either way; a later live loop enters through the adopted entry. On
+the owner's host reuse's envelope p99 was 886‰ and then 929‰ of fresh's (−2.0 and −1.8 ms), with correctness holding on
+every sample, so the reading is **ADOPT**. The second run was 41% slower as a whole (G13), and in both runs the frame
+waited longer at the composition by about what it saved (G7). **ALLOC-REUSE-1 LOCK** carries out the ADOPT:
+`LoopRenderer` is the production entry for in-loop rendering, and every fresh render entry's call site in the shell is
+pinned (`allocreuse1-lock`), so the live loop renders through it. Nothing that ships today changes.
+
+### HOST-STATE-0 — the host's state beside a court · **landed** (`58250382`)
+Record, don't control: what the OS reports about the CPU, power plan, load, memory, process, display and uptime, one
+snapshot just before and one just after a court's window run. Every value is an integer or a string, a field that
+fails is recorded as unavailable, and recording can never block a court or feed a rule. ALLOC-REUSE-1 is the first court
+to carry it. It exists to make the next cross-run drift explainable (the +59% in PRESENT-STRETCH-0's confirmation had
+nothing to be set beside), never to explain it by itself. Its first snapshots put memory pressure (96% load, 359 MB
+free) beside ALLOC-REUSE-1's slower second run, with the same reported clock state and plan in both runs: an
+association (G13), not a cause.
+
+### PRESENTATION-CHOICE-0 — what the shell shows · **declared** (`4a7a32d9`)
+The owner's decision: the certified picture, 1:1 (the kernel's 1920×1080 composite, pixel for pixel), in a borderless
+window covering the 1920×1080 screen at (0,0). No reduction by GDI or the kernel, and no new VIEW law. The half-size
+windows stay as LATENCY-0's frozen instrument, and a conforming presenter is locked after PRESENT-EXACT-0.
+
+### PRESENT-EXACT-0 — which GDI call presents it, with the screen read back · **measured twice** (`bc910e2f`): screen exact, SetDIBitsToDevice adopted
+StretchDIBits at 1:1 against SetDIBitsToDevice, the call the only variable, frames through the adopted
+`LoopRenderer`. The composed screen under the window is read back and must equal the certified picture byte for byte,
+after a white clear that is also read back, as a hard gate. The first check of what reaches the screen rather than
+what is handed to GDI (G11). Then same-run ABBA at 1000 per cell. StretchDIBits is adopted only if its p99 is ≤ 950‰ of
+SetDIBitsToDevice's in both runs; otherwise SetDIBitsToDevice, the simpler semantics. The first host attempt refused
+at the readback. A probe traced it to the host's performance overlay, a translucent bar drawn over every window.
+Outside that bar, frame 0 read back exact under both calls. With the overlay off, both runs read the composed screen
+back exact on all checked frames (20 checks, 0 differing bytes) and read NO MATERIAL DIFFERENCE between the calls
+(StretchDIBits at 1,006‰ and 1,013‰ of SetDIBitsToDevice's p99). So SetDIBitsToDevice, the simpler call, is adopted. At
+1:1 the call costs about 1.8 ms, and the frame's envelope (about 10 ms at p50) sits below the refresh.
+**PRESENT-EXACT-0 LOCK** (seat 25) ships it: `shell show` and `shell show-playback` present the certified frames 1:1
+through SetDIBitsToDevice, read the screen back after every present, report any mismatch, keep showing, and exit 3 if
+the screen ever differed.
+
+### REFUSAL-WHY-0 — why a readback refused · **landed** (`15701718`)
+When the screen read back differs, the refusal now names what lies above the window over the differing box: each
+visible, uncloaked top-level window above ours that meets it, with its program, process, class, title and overlay
+styles, or "below the window layer" when none does. It is appended after the verdict is decided, it reads and never
+acts, and it cannot change a verdict. The first host refusal needed a separate probe run and the owner's knowledge to
+be traced to an overlay. The next one names its candidates itself. A candidate is not a cause.
+
+### HOST-STATE-1 — the reported clock and paging · **landed** (`b992d9dd`); first host look taken; recorded beside each run of DRIFT-0's sitting 1
+Version 2 of the host snapshot: HOST-STATE-0's fields unchanged, then the clock the OS computes (% Processor Performance
+and % Processor Utility, uncapped, with the nominal × performance estimate) and the system's paging rates, each over a
+1000 ms window. Version 1 stays the default, so no existing court's records change. It fills the two gaps G13 left: a
+reported MHz that cannot show boost, and memory pressure with no paging witness. A court records it only by its own
+preregistered entry. Still association, never cause. The first host look read every counter, with performance at
+118.5% of nominal (boost now visible) and 1 hard fault/s at 94% memory load. Processor Frequency read 1,658 against a
+2,000 maximum, so the entry's "nominal" gloss is not established, and neither is the meaning of the estimate built on it.
+
+### REFUSAL-LOG-0 — refusals that accumulate · **landed** (`424b7c9a`)
+Every refusal on the present path (the PRESENT-EXACT-0 court's and the locked presenter's, and every differing screen
+readback in `show`) appends one unsealed JSON line to `build/refusals.log`: run, sequence, operation, reason code,
+attribution token and context. A console line reports a refusal once. The log turns a recurring refusal into a count
+across runs (`python verify/refusallog.py`). It is an observation, never evidence: not sealed, not committed, read by
+no rule. The gate proves on the mock court that each refusal leaves exactly one record and each record one refusal.
+Since REFUSAL-WHY-1, a screen-readback record also carries what covered the screen (below).
+
+### RUN-LEDGER-0 — the runs, refused or not · **landed** (`ecf3fdb9`)
+The refusal log's denominator: one unsealed line per court or presenter run, whatever its outcome, in its own file
+(`build/runs.log`), with the run's readback counts, its refusal count and its exit code, joined to the refusal log on
+`run_id`. A clean run is counted too, so a recurrence can be stated as "refused in N of M runs". It is an observation,
+not evidence, and it is kept out of the refusal log, which holds only refusals.
+
+### REFUSAL-WHY-1 — what covered the screen, accumulated · **landed** (`ac75db51`)
+A screen-readback refusal record now carries the covering layer and, for each window above ours over the differing
+box, its program, class, overlay flags and rectangle. Titles and process ids are never written, and the rectangle is
+geometry, not identity, so recurrence is counted by program, class and flags. The console and the log come from one
+walk. A recurring program over the screen is a candidate, never a cause.
+
+### LIVE-LOOP-0 — the first per-frame loop · **measured on the host** (`65550cc0`): the first live walk exact
+The sealed session walked live: 24 compositions per step and 150 held, every composition rendered through the
+`LoopRenderer` from the current step, checked against that step's verified bytes and presented by SetDIBitsToDevice in
+the presenter's borderless window. The screen is read back at every step and twice in the hold, and a differing screen
+is counted and logged, never hidden. There is no input, no camera, no clock: counts only. The gate executes the loop
+itself over the mock. On the owner's host, the first live walk rendered and presented 246 compositions, and all 6 screen
+readbacks were exact. It is the first gate on the route; the authoring input that changes the state is LIVE-INPUT-0's.
+
+### MOUSE-LOOK-0 — a real mouse on the locked tick rules · **built** (`60870497`): the gate passes on the host; a real mouse turns the camera there (the second run, under MOUSE-LOOK-0a)
+The fourth rung of the owner's ladder: real mouse → 64 Hz accumulator → command → the existing live loop. By the
+owner's ruling it is a new entry, `shell look-window` (and `shell look-selftest` on the mock), on the same loop
+function, session, journal and seal; `shell live-window` and every earlier command stay as they were and are given no
+tick source. The rules are SIM-TICK-0's and SIM-TICK-0a's and are not touched. What this rung adds is the clock (an
+input's tick is the tick of the composition that drained it), the mouse (Windows raw input, the relative horizontal
+count and nothing else), the capture (the cursor hidden and confined while the window is in the foreground, released
+when it is not, and never an event in the session), and the loop presenting a free heading: the session's own render,
+the one its witness came from, with no overlay and no second render. The screen is read back one composition in 75,
+and the reference recomputes one free-heading frame in 64 on a worker thread, a difference refusing the run; the save
+still recomputes every one. The gate runs the loop over a mock mouse, keyboard, focus and clock: the saved data is
+byte-identical to the windowless tick run's on the same inputs at their drain times; a window out of the foreground
+changes nothing in the session; the picture handed to the call is the kernel executable's; a defective fast path is
+refused by its first sample. No latency is claimed anywhere. 64 ticks against 75 compositions repeats about 11
+compositions in 75, and they are counted in every saved session.
+
+On the owner's host the gate passed with the same 207 rows and rowset, the window build compiled, and
+`shell look-window` ran once. The window held the foreground throughout, the mouse was captured and released once, 48
+key presses were stamped by the window's clock and applied on the tick (47 events), 1,826 compositions of the
+composite were byte-checked with 25 screen readbacks exact, and the session saved and verified. What the run did not
+show is a look: no mouse report reached the loop, the heading never left north, and so no free-heading picture, no
+sample and no free-heading certification happened on the host. The record cannot say why, because the window section
+counted nothing before the point where it admits a report. The run also found that Esc destroys the window in the
+pump that reads it, so the saved file labelled the run's end `closed` where the tick run says `escape`; the session
+itself is right. The owner ruled that a registered limit's wording be corrected by an amendment (MOUSE-LOOK-0a), that
+the one check with no row stays a sanity check, and that nothing is optimized from this run.
+
+### MOUSE-LOOK-0a — the timing limit corrected; a run's end and the window's observation · **built** (`3778b592`): the gate passes on the host; the second host run is the execution witness
+An amendment to MOUSE-LOOK-0, whose entry is not edited, registered after the first host run and reading none of its
+counts. By the owner's ruling the registered timing limit is corrected: a composition applies at most one closed tick
+command, `span` records the largest number of tick boundaries between consecutive compositions, and a span above 1
+means the loop fell behind the tick schedule, not that several commands were applied. From the host run: Esc destroys
+the window in the pump that reads it, so the loop ends there, the tick still open is applied, and the run is recorded
+as ended by escape; the mock now closes its window at an Esc as the host's does. And the window section counts every
+raw input message before it reads it, every read that was not a mouse report and every report with no horizontal
+count, and the run prints that observation, because the first run could not say whether raw input had arrived at all.
+The read itself no longer requires an exact size. Nothing is optimized from the first run.
+
+On the owner's host the gate passed with the same 209 rows and rowset, the first run's session was sealed (holding no
+look), and `shell look-window` ran a second time. The observation adds up: 14,867 raw input messages, 13,931 of them
+relative reports with a horizontal count and all admitted, none unread. They became 1,761 looks, at most one a tick;
+with them 14 moves, 57 sensitivity changes across multipliers 1 to 14 and both steps, and a held W walking once a
+tick. The window left the foreground once and came back, the mouse released and recaptured, and the session holds no
+event of any kind for it. Of 4,649 compositions 4,541 presented the session's own picture; 62 screen readbacks, none
+differing. The reference agreed at all 27 samples during the run and at all 1,775 free-heading frames at the save,
+and the workshop built in the container recomputes those 1,775 frames from the saved file and reaches the same head:
+the production tread on Windows, the reference kernel on Linux. Esc ended the run, recorded as `escape`. The owner
+sealed the session on his host (`livesession-DANIELDILLBERG-b28e42be62c4.json`). Counted and
+not interpreted: 4,649 compositions against 5,470 ticks, 2,852 repeating the picture before them, a span of 6. The
+run does not decide why the first run had no mouse report. No latency is claimed. The owner's report of the run: the
+look worked, and only horizontally. That is the registered scope (the carried camera turns in heading alone, and the
+936 raw reports with no horizontal part were counted and not used); a camera that looks up and down has no frozen
+oracle yet and is not on the route until the owner rules it there.
+
+### SIM-TICK-0a — sensitivity as a typed configuration event; held keys by the tick · **built** (`471f4d72`): the gate passes on the host
+MOUSE-LOOK-0's court (2026-10-02) gave four rulings. Two are about the window and wait for it: the mouse is captured
+until Esc, and that capture is shell state that never enters the session, so a focus change makes no event; and every
+64th free-heading frame is recomputed by the reference off the loop. The other two are rules of the tick, and the
+owner's own separation (rules first, with no window in the proof) puts them here, in an amendment to SIM-TICK-0 whose
+entry stays unedited. First, a sensitivity change is a typed configuration event: PgUp, PgDn and Tab are the physical
+binding, their effect is what the session records, and it takes effect at the next tick. The event carries the
+configuration after it and its tick, has no witness and is not folded, because the head is the worldline's and a
+setting is not part of the world; the session replays the configuration by one legal transition at a time, and a
+look's inputs must carry the configuration in force. Second, HOLD-WALK-0's law takes the tick as its unit: a fresh
+press always acts, the first repeat of a held key in a tick walks, later ones are coalesced and counted, and a repeat
+of any other key is ignored. The gate drives both with scripts: the owner's own sequence (PgUp, mouse, Tab, mouse,
+PgDn), eight forgeries each refused by both verifiers, a crashed run whose configuration comes back from its journal,
+and a held walk whose saved data is byte-identical to the same walk pressed. Mutation testing found the configuration
+row's first form unable to catch one removed check, and the row was strengthened before it counted. On the owner's
+host the gate passed with the same 201 rows and rowset as here. One informal timing was taken there to size
+MOUSE-LOOK-0: a windowless run of 640 looks took 13.26 s in all, 20.7 ms per look summed over the live render and
+journal, the reference's recomputation at save and the saved file's replay. It bounds each of those and separates
+none of them; it is an observation of one run, not a record.
+
+### SIM-TICK-0 — the mouse-look rules as integer law, windowless · **built** (`dc1dddf2`): the gate passes on the host
+The third rung of the owner's ladder, and deliberately half of the work: the owner ruled that the rules are locked with
+no window in the proof, and that the real mouse comes after, as its own rung. The boundary is raw input → tick command
+→ SESSION-WALK → authority. A tick is exactly 15,625 µs (64 Hz). A tick's mouse reports are summed and applied once, as
+one look; then its keys apply in arrival order. The look's delta is counts × multiplier × step, in integers: the
+multiplier a whole number from 1 to 64, the step 88 heading ids or 1. W, A, S and D step toward the heading's nearest
+cardinal, ((k + 45000) div 90000) mod 4 with the tie clockwise, and never turn. The one live session gains one event, a
+look, witnessed by the frame at the new heading: the facing kernel's at one of the four anchors, as before, and the
+bearing kernel's anywhere else. A tick run saves each event's tick and each look's inputs beside the event; the tick
+is recorded and is never authority. Live, a frame at a free heading is rendered once by BEARING-FAST-0's production
+tread; at save every such frame is recomputed by the reference across threads, and a session is saved
+reference-certified or not saved. The gate drives it all with scripted inputs and integer times: the laws are checked
+exhaustively over the 360,000 heading ids against a Python re-derivation, one script exercises the boundaries and the
+refusals, the saved session's frames are checked against the kernel executable and by the workshop's verifier, and a
+shell with a planted defect in its fast path is refused at the save. One thing was found while building: an index
+frame can be the same at two neighbouring headings, so a look folds its camera token together with its witness; the
+registration was revised for that before it left the build machine. On the owner's host the gate passed with the same
+197 rows and rowset as here. The window build, which the build container could only type-check, compiled there, and a
+walk of 46 moves in the live editor rendered, presented and byte-checked 1,034 compositions with 50 screen readbacks,
+none differing, and saved and verified as before. That walk held no look: nothing here reads a mouse, a clock or a
+window, and nothing here says how it feels.
+
+### BEARING-FAST-0 — the bearing camera made fast, held to the reference · **measured on the host** (`f0a9a57d`): the target met, the sweep exact
+One rung with its staircase inside, as the owner ruled. The reference spent its time in per-pixel 128-bit division;
+the fast path, `kernel/bearingfast.rs`, keeps the reference's traversal and walks the floor and the walls exactly in
+64-bit integers instead: along a row the floor point moves by a fixed exact step per column at any heading (scanline
+floor casting, made exact), and down a wall column the texture moves by a fixed step per row, with one 128-bit setup
+per row or column. The frame and the picture are written in one row-major pass (tread A); tread B reads the floor from
+the blocked layout LOCALITY-0 locked; tread C runs eight row bands on threads. Every tread is the reference byte for
+byte at 1,972 registered cameras on every gate, also in a build with overflow checks on, and every narrowing from 128
+to 64 bits is checked and bounded. On the owner's host a speed court keeps a tread only by its margin and names the
+production candidate against the target, a p99 of at most 6,667 µs (half the 75 Hz refresh), and a sweep checks it
+against the reference at every walkable cell at every whole degree. On the owner's host the gate passed with the same 189
+rows. The speed court promoted A (7,042 µs worst-camera p99 against the reference's 59,901) and did not keep B (the
+blocked floor did not pay single-threaded). It kept C over A's layout: eight row bands at 3,716 µs, under the 6,667 µs
+target, so the staircase stopped there with D never needed. The sweep then checked that production tread against the
+reference at all 622,440 frames, and every one was equal. Renderer time only; the next measurement on the route is the
+present and the input path.
+
+### BEARING-0 — the bearing camera carried, its reference kernel placed · **built** (`de19660f`): the gate passes on the host
+The first rung of the owner's mouse-look ladder on this side. Urðr earned the turning camera as VIEW-YAW-0 and froze it
+as `urdr-oracle-2`: a heading is an integer id in [0, 360000), millidegrees clockwise from north, naming one primitive
+Pythagorean triple, so the renderer consumes exact rational directions and never an angle; the four cardinals are
+anchors equal to the frozen frames. BEARING-0 carries the record and its table verbatim (`oracle/urdr-oracle-2.json`,
+`oracle/bearing_octant.txt`) and places the reference kernel, `kernel/bearing.rs`, the tag's Rust placement with only
+its visibility changed. The camera is (cell_x, cell_z, heading id), the id authoritative and never normalized; the table
+is compiled in and refused if it does not match its pin. The gate recomputes every digest the record states from the
+record alone, and the reference reproduces all 104 witnesses of urdr-oracle-2 bit for bit. At the four anchors it is
+the facing kernel, and dropping the hypotenuse from the depth moves every non-anchor frame. It is the correctness court
+for BEARING-FAST-0 and drives no window: the shell, `mantle.rs` and `fast.rs` are unchanged. Its speed (about twice the
+facing kernel's single-thread time, measured off the gate here) is why mouse-look waits for the fast path. The owner's
+rulings for the rungs after it, recorded in RUNGS.md, are a 64 Hz tick, W/A/S/D toward the nearest cardinal (ties
+clockwise, never changing the heading), and an integer sensitivity multiplier on a step of 88 or 1 ids, saved in the
+session. On the owner's host the gate passes with the same 183 rows and rowset as here. Its first run there failed one
+row, `oracle2-frozen`, on a working copy of `urdr-oracle-1.json` checked out with Windows line endings before
+`.gitattributes` existed. That hash was pinned in the docs and enforced by no row until this one. The file was
+re-checked out and the row kept strict.
+
+### HOLD-WALK-0 — holding a key walks the live editor; the world stays discrete · **measured on the host** (`c03260a2`): a held walk saved and verified
+The live editor, `shell live-window`, now walks while a key is held. W, A, S, D and the arrows are the held keys: the
+steps and the quarter turns, so holding A or D looks around. A held key's auto-repeat is bound as its move and appends an
+ordinary move event, at most one per composition. Later repeats in the same composition are coalesced: counted, never
+an event. A fresh press is never coalesced, and holding Space, Q, E or a class key acts once. The keyboard's repeat is
+the only speed source: the shell keeps no clock, reads no key-up and carries no key state between compositions. The
+gate proves the held set, the one-per-composition cap with its coalesced count, and that a held walk saves exactly the
+data the same walk pressed would. LIVE-INPUT-0's and LIVE-SESSION-0's commands still bind no repeat. On the owner's
+host the gate passes with the same 174 rows, and a held walk (31 repeats, each walked, every readback exact) was saved
+and verified; pressed instead, the same walk reaches the same head. The owner judged held keys over the grid not to be
+the free movement he wants, so that route item is open.
+
+### LIVE-AUTHOR-0 — the thing authored is what the next frame renders · **measured on the host** (`9a3e4521`): tile classes painted live, saved, and resumed
+The one live editor, `shell live-window`: LIVE-SESSION-0's durable loop under the authoring binding, which is
+LIVE-INPUT-0's keys plus 1–5 for the tile classes wall0–wall3 and floor. A class key paints its class with the next
+colour of a registered 8-colour palette, read from the session's own M, as one `tile:CLASS,R,G,B` session event. It is
+commit-only: nothing is shown before the edit is appended, and the shell holds no colour of its own. The frame witness
+does not see colour, so the picture is witnessed per state by the reference composite's sha256. The gate proves the
+camera control condition (a turn changes the pixels while W and M stay the same) and its converse (a tile edit changes
+M, leaves W alone, and changes the pixels exactly when its class is on screen). It also proves the painted world
+persists: a resumed session's first picture is its parent's last. On the owner's host the live editor walked, resumed a
+saved session and saved a verified continuation. A later walk painted all five classes live: 28 tile edits by class
+keys, each the palette's next colour, every one of 62 readbacks exact. It was saved and verified there, and here its
+file verifies unchanged. The same presses replayed here reach the same head, and the level's bytes are unchanged by
+the edits. The painted session was then resumed on the host as LOAD, walked and painted further (two more edits),
+and saved as a verified child whose lineage names it, every readback exact.
+
+### LIVE-SESSION-0 — the live session made durable and recoverable · **measured on the host** (`70086a72`): a saved walk and its resumed continuation
+LIVE-INPUT-0's loop, unchanged, over a session whose every appended event is journaled: one record per line with its
+length and sha256, each flushed before it counts. Esc seals the session in the workshop's own session-walk format by an
+atomic replace. The shell then reads the file back and verifies it before the run counts as saved; a seal that fails is
+a refusal, never a quiet exit. `--resume` continues a saved session, or recovers a crashed run from its journal, into a
+new file whose log begins with its parent's. Loading checks integrity, then the renderer identity (a hash of the render
+sources), then replays and classifies: an identity mismatch alone is never corruption, and only replay decides. Saved
+sessions live in `build/sessions/` (gitignored). `verify/livesession.py` seals one as a committed record that shell
+playback and the workshop both replay. The keyboard-focus observation is recorded, never ruled on. On the owner's host
+the first saved walk (37 events, 4 of them edits, every one of 99 readbacks exact) was saved and verified there. Its bytes
+verify unchanged on another machine through the workshop's own sessionwalk, with the same renderer identity. It was
+then resumed and walked on (197 more events, ended by Esc) into a new file whose lineage lies on its own chain, and the
+parent was untouched. A crash recovery on the host is still to come.
+
+### LIVE-INPUT-0 — key presses feed the session the live loop renders · **measured on the host** (`f81c2cf1`): the live session walked and edited by key presses
+Walking plus open/close. Arrows or WASD walk and turn, Q and E strafe, Space opens or closes the cell one step ahead of
+the camera (rock to floor, floor to rock; a stair is not toggled), Esc ends; an auto-repeat is never bound and any
+other key is ignored. Every press becomes an event in an in-memory SESSION-WALK log, validated as the workshop
+validates it. W, M, the camera and the head are that log's replay, private to the session, so the shell never writes
+the world. Every composition is rendered through the `LoopRenderer` from the session's current state and presented,
+and the screen is read back after every change. The gate proves the binding on two key scripts and replays each
+script's log through the workshop's own SESSION-WALK to the state and head the loop reached. Nothing is saved; that is
+LIVE-SESSION-0's. On the owner's host, key presses walked the live session and opened and closed cells in it. An
+opened cell was walked through and a closed one blocked, Esc ended the session, and every screen readback was exact.
+Each walked log, replayed through the workshop's own SESSION-WALK, reached the head the loop printed. The deciding walk
+was fixed beforehand as the gate's script A. It diverged at one press (S typed for Space), so its predicted head was not
+reached; the walk as typed replays exactly. A refused edit was not exercised on the host. In the first run no key press
+arrived, and why is not established.
+
+### DRIFT-0 — variation within and between runs of the same workload · **preregistered** (`d445dcf9`); sitting 1 of 3 complete (4 of 12 runs)
+Observational: the locked PRESENT-EXACT-0 court repeated without modification, 3 sittings of 4 completed runs (60 s
+between runs, 4 h between sittings), with the owner's declared overlay state and HOST-STATE-1 before and after each
+run. Refused runs are sealed and kept. The report is a panel: each run's p50, p95 and p99 per call, its within-run
+spread and host state, and the between-run spread within and across sittings, with the two earlier PRESENT-EXACT-0
+runs beside it as history. No verdict, no threshold, association never cause. It gives the next decision an empirical
+basis for G13's drift.
+
+### PRESENT-1 — decouple present from refresh (LATENCY-1R measured the coupling absorbing the render headroom in phase)
+`LATENCY-0` *established* only that the composed-GDI present is coupled to the refresh: frame-ready to composited
+waits for the next DWM composition, a wait bounded by the refresh period (p50 5,921 µs against a 13,298 µs refresh on
+the host). An earlier wording here read that bound as a floor; corrected by the owner's ruling (2026-10-09). `PRESENT-1`'s
+falsifiable hypothesis — to be measured, never assumed — is that a **flip-model / waitable-swapchain** present can
+decouple present latency from refresh. The prior art is well documented: the DXGI flip model shares frames directly
+with the compositor with minimal copies, a frame-latency waitable object reaches ~1 frame of latency in Independent
+Flip (and lets the DWM sleep), and `ALLOW_TEARING` with multi-plane overlay goes lower still. Built std-only against
+raw Win32/COM (as `win32.rs` already hand-rolls GDI); off-gate; `HARDWARE-144` additionally needs a ≥144 Hz panel.
+
+**Ordered after the live loop, and held as hypotheses until measured here.** The flip model's benefit is for a loop
+that renders every frame, so PRESENT-1 comes after the live loop below and is measured on it, not on the pre-rendered
+presenter. Until then, four things stay hypotheses for this shell. The borderless 1:1 geometry makes Independent Flip
+*eligible*, which is not proof that Windows will use it. A waitable swapchain's latency is documented behaviour, not
+evidence about this shell. A flip swapchain takes only 32-bit formats, so the blit-hash law needs a 32-bit carrier
+first. And the screen witness must be re-established under the new path: the GDI readback is established only for the
+GDI presentation it was measured on, and whether another capture path (for example Desktop Duplication) gives an
+exact witness there is itself to be measured.
+
+### Interactive capture — the inverse of SHELL-PLAYBACK
+Raw window/device event → binding → typed action/edit → `SESSION-WALK` append → the *same* sealed representation that
+headless authoring produces. `SHELL-PLAYBACK` already proves a sealed session replays to the exact window frames;
+interactive capture closes the loop so a *live* edit produces a sealed session that would replay identically. A
+shell/input problem, not a new authority — measured against the existing session machinery, never modifying it. The
+industry pattern to borrow is the **authoring-data / runtime-data split** (e.g. Unity DOTS), with deterministic step
+and reload atomicity — which is exactly the workshop's edit → authority → record shape. The live loop this needs is its
+own rung (timing, cadence, ownership, input). ALLOC-REUSE-1 read ADOPT and is locked, so that loop renders through
+`LoopRenderer` rather than deciding its allocation again. It presents through the locked 1:1 presenter's call and
+reads the screen back as that presenter does. It is LIVE-LOOP-0 in the route above, ahead of PRESENT-1, and its first
+court is kept narrow: the loop itself, without live editing, input, the flip model or latency claims. After it, and
+after any change of presentation path, the frame's breakdown is re-measured rather than carried forward. Interactive
+capture itself is LIVE-INPUT-0 through LIVE-SESSION-0.
+
+### SEMANTIC-0 — a float-free, geometry-bound semantic layer
+New VIEW semantics the studio did not inherit (filtering, variety) earned by a Verðandi-local reference pinned by
+rows here, as the HUD's pins are — CORE semantics have one route only (Urðr, re-frozen). This is the rung that lets
+the world mean *more* than the frozen oracle certified, without ever letting the shell mint that meaning.
+
+### MERGE-0 — deterministic, consensus-free merge of non-conflicting edits
+Combine two authored branches of a world with a merge that is commutative, associative and idempotent, **stripped of
+consensus and wall-clock** — the join-semilattice discipline of conflict-free replicated data types, but applied to
+an authored, hash-chained edit history rather than a live distributed store. The prior art (state-based and
+delta-state CRDTs; deterministic lockstep simulation) supplies the convergence theory; the Verðandi constraint is
+that the merge must produce a *sealed, replayable* history whose result is byte-identical regardless of merge order.
+
+### LLM-BUILDER-0 — the living proposal machine · **declared** (the owner's goal, 2026-10-02); not registered, nothing built
+The owner's stated goal for what a language model may be in this studio. It is recorded here before any of it exists,
+so that the rungs built before it are built in respect of it. The law:
+
+> **The model may propose becoming; only the verifier may admit it.**
+
+The model is not a programmer inside the runtime. It is a proposal engine working against a sealed worldline, and it
+stays outside canonical authority. Four things are kept apart:
+
+```text
+IMAGINATION    the model                  "what could change?"                 untrusted
+ADMISSIBILITY  the verifier               can refuse; never proposes
+AUTHORITY      the session, the workshop  the admitted event, in order
+CONSEQUENCE    the kernel, the reference  the frame and the digest it produces
+```
+
+```text
+model ──► PROPOSAL (typed, bounded, anchored) ──► VERIFIER ──► refuse
+                                                      │
+                                                  admissible
+                                                      ▼
+                         SESSION EVENT ──► ordered replay ──► candidate W, M
+                                                      │
+                                              reference witnesses
+                                                      ▼
+                                                   COMMIT ──► the new worldline
+```
+
+- **A proposer, not an authority.** The model's output is a typed proposal: a target, an operation, its parameters, the
+  session head and the authority digest it was made against, and its provenance. It may say "at this exact worldline,
+  open cell (28,27)", and later "create a corridor generator with these declared parameters". It may never say "here
+  is some code; run it inside the renderer". Arbitrary live code is not the primitive. That distinction is what keeps a
+  second authority out.
+- **The worldline anchor.** A proposal is born at a session head, an authority digest, a renderer identity and its own
+  digest. It proposes what, from exactly here. If the live session has moved on before the proposal is admitted, the
+  verifier does not guess whether it still applies: the proposal is rebased explicitly or it is refused. There is no
+  silent merge across time. A proposal has no authority until its ancestry is proven.
+- **Speculation is an object.** A preview is not a hot swap. It is a speculative worldline: a candidate authority
+  replayed from the proposal's anchor, rendered as much as is needed, and never touching the live world. One preview
+  frame serves interaction and certifies nothing. Certification asks for the witness set the proposal's kind calls
+  for: the authority's validity, targeted falsifiers, the reference's frames, replay from the anchor, exact digests
+  where they apply. Only then does the branch become history.
+- **The prefix is sacred.** The model appends becoming. It never rewrites what has become. The sealed history is a
+  prefix of every continuation; a stream of events is concatenated, never permuted.
+- **The commit envelope.** An admitted proposal is recorded with more than an action: its id, the parent head, the
+  base authority digest, the proposal's digest, the operation and parameters, the provenance, the verifier's identity,
+  the verification witnesses, and the resulting head and authority digest. The model's text is provenance, not
+  authority. The authority is the verified typed event, so the session replays the same with the model gone.
+- **How it grows.** From "turn this cell into a door" to "generate a corridor", to "author a new material", to
+  "propose a new deterministic gameplay mechanism". Each step asks for stronger verifier laws. None gives the model
+  more privilege in the runtime.
+
+The sentence the owner would put in the charter: **Verðandi does not execute what the model writes; it records what
+the verifier admits.** It stands beside the charter in the README as a declared goal. The ratified charter block is not
+edited.
+
+### LLM-BUILDER-0, continued — program time and content time; the design-event stream · **declared** (the owner's, 2026-10-03), and by his ruling what the route builds towards; not registered, nothing built
+Two design texts the owner brought on 2026-10-03 and asked to have recorded. Both are replies to his own description
+of what he is after, so their wording is quoted where it states the rule and summarized elsewhere. They extend
+LLM-BUILDER-0 above and change nothing in it. Nothing here is built, and no rung is seated by it.
+
+**The owner's ruling (2026-10-03): this is what the studio builds towards.** He brought the two texts again with
+those words. That makes them the route's destination and not only a record. It seats nothing by itself: each rung
+towards it is still chosen in its own court, registered before it is built, and held by rows. The four rules listed
+at the end of this section still want their rulings first.
+
+**1. The gate certifies the program. Content is admitted, not gated.**
+
+> **The engineering gate certifies the program. The content admission layer certifies that an artifact conforms to
+> the already-certified program. Content generation does not invoke the engineering gate.**
+
+```text
+PROGRAM TIME    source ──► GATE ──► certified build            runs when the program changes
+─────────────────────────────────────────────────────────────────────────────────────────────
+CONTENT TIME    prompt ──► proposal ──► CONTENT CHECK ──► admitted artifact ──► the certified runtime
+                                                                        runs when the world changes
+```
+
+- **`GATE`: engineering certification.** It answers questions about the program: is the kernel deterministic, does
+  replay reproduce, does authority stay apart from presentation, does the fast renderer equal the reference, do the
+  seams hold. It runs when the kernel, the renderer, the authority, the session's semantics, the workshop's
+  semantics, an optimization or the shell's architecture changes: a targeted gate, then the full gate, then a
+  certified build.
+- **`CONTENT CHECK`: artifact admission.** It answers questions about one piece of content: is its form valid, are
+  its coordinates in bounds, do the things it refers to exist, are its constraints satisfied, does it load without
+  breaking the runtime's contracts. It runs when the world changes: a new landscape, a building, a material set, a
+  generated scene. It is meant to be fast, and it does not rerun the architectural certification.
+- **What a model may do.** In the text's words: *AI may generate content freely, but it may not redefine the laws
+  under which content executes.* A model asked for a landscape produces a bounded content description. It does not
+  write kernel code. A change to the laws is a new program build, and that is the gate's business, not content
+  generation.
+- **Why it is written down now.** Without the line, new features leak content generation back into the expensive
+  certification loop, and the verification architecture becomes the bottleneck of creation. The text's phrase: the
+  engineering gate is *the constitution of the design environment, not the toll booth every time someone creates a
+  mountain.*
+
+**2. Conversation as the editor, over a semantic world-edit stream.**
+
+> **Language can propose. The verifier admits. The session records. The kernel renders.**
+
+```text
+human ──► LLM designer ──► intent ──► design IR (a bounded world diff) ──┬──► speculative branch ──► fast preview
+              ▲                                                           └──► verifier ──► admitted DESIGN EVENT
+              │                                                                                   │
+        world context (queried, bounded)  ◄──────────────  world authority  ◄──  SESSION  ◄───────┘
+```
+
+- **Intent, not code.** The model translates "make the valley narrower, raise the cliffs, put a road through the
+  bottom" into typed operations on named targets. It designs transformations. It is not the authority that executes
+  them, and it never edits files or reloads a renderer.
+- **A spatial vocabulary.** The model does not think in files or pixel coordinates. The world offers regions,
+  features, materials and structures by name, and an instruction becomes a relationship between them (above, facing,
+  within a distance), which the verifier resolves.
+- **Persistent identity.** Every generated object has a stable name, so "move the tower I added earlier" names one
+  thing, across hours of conversation.
+- **Every action a reversible transaction.** An edit carries its parent world, the intent, the proposed diff, the
+  objects it touches, the resulting world and a preview frame. Undo is another event, a semantic inverse or a
+  compensating edit; nothing is rewritten.
+- **Preview before authority.** A proposal's first result is a speculative branch, fast and disposable. Only "keep
+  it" appends it to the authoritative session. Preview is not authority.
+- **Three speeds.** The fast path (prompt, proposal, diff, speculative projection, render), the commit path (accept,
+  typed session event, authoritative world, save), and the engineering path (source change, gate, certified
+  program), which is rare. Hundreds of accepted edits never invoke the gate.
+- **A world microscope.** The model can query bounded context (the camera, a region, an object, a material, its
+  neighbours, recent edits), so a proposal is made from the world's actual state and not from the words alone.
+- **Why did you change that.** Every edit keeps its intent, its proposal, the operations accepted and refused, the
+  objects affected, the parent and resulting digests and the model's provenance. The answer comes from that record.
+  The world's provenance is authoritative; the model only reads it.
+- **The design event.** An `AI_PROPOSAL` never mutates authority. It goes to the verifier, and what the verifier
+  admits is a design event in the session, beside edits, moves and looks.
+- **Branches.** "Three versions of this coastline" are three branches of one world, each previewed. "The cliffs from
+  B, the vegetation from C, the road from A" is an explicit merge of typed events.
+
+The endpoint the text describes is a creator who says what a place should be and watches it change, and never thinks
+about source files, compilation, hashes, verification scripts or restarts, while every accepted change underneath is
+typed, bounded, provenanced, reversible, deterministic and replayable. Its last line: *a world can be continuously
+invented without continuously rebuilding the machine that knows how worlds work.*
+
+**What already stands on each side of the line.**
+
+- **Program time.** The gate is `verify/verify.py`. It runs when a patch lands in the repository. No session event has
+  ever invoked it.
+- **Content time, as far as it exists.** A live session is content: typed events over W and M, appended by keys and
+  a mouse. On the owner's host one run appended 1,832 events with no gate between them. A saved session is admitted
+  by checks on the artifact alone: its seal, its base, the fold of its witnesses, and its replay by the shell, the
+  workshop and the sealer. That is the studio's content check today, for the one kind of content it has.
+- **What LLM-BUILDER-0 already declares.** The typed, anchored proposal; the speculative worldline; the sacred
+  prefix; the commit envelope; no silent merge across time.
+
+**What does not exist.** A model in the tree. A proposal format. A verifier for proposals. An intent compiler or a
+design IR. Regions, features, structures, vegetation, heights or any named object: the world is a grid of cells (W)
+and five tile classes (M), and the renderer draws exactly that. Object identity. Branches, previews or merges. A
+content package, or a check for one. The examples in the texts (a valley, cliffs, a coastline, a village) are far
+beyond what the frozen oracle certifies.
+
+**Where it meets rules already in force.** Each of these wants the owner's ruling before a rung is seated.
+
+- **Commit-only.** LIVE-AUTHOR-0 forbids showing a change before it is appended, and this roadmap keeps previews and
+  gizmos off the route because that is where a shell starts to hold an alternate authority. A preview is admissible
+  only in the form LLM-BUILDER-0 gives it: a speculative worldline, itself a typed log replayed from an anchored
+  head, never state the shell holds.
+- **Earn the authority.** Terrain, heights, vegetation and structures are new CORE semantics. By the rule below they
+  come only from Urðr, carried or earned there and re-frozen. A content vocabulary cannot be minted here.
+- **How light a content check may be.** Today a session at a free heading is saved only after the reference has
+  recomputed every one of its frames. A lighter check for new content kinds has to say which witnesses that kind
+  needs, as LLM-BUILDER-0 already asks, and may not become a second, weaker verifier beside replay.
+- **Merging branches.** A merge is an explicit, typed, anchored event, or it is refused. There is no silent merge.
+- **The charter.** The first text says this boundary should become a charter-level rule. The ratified charter block
+  is not edited. The rule stands beside it in the README as declared, and ratifying it is the owner's to do.
+
+**What it would stand on, already built.** Each of these is a rung with rows, and none was built for a model.
+WORKSHOP-1's session has `propose` and `commit`: a proposal is validated against the current authority and writes
+nothing, and a refused one leaves the log and the head unchanged. WORKSHOP-0 refuses a record whose projection is
+stale under a moved authority. SESSION-WALK is one ordered log of typed events folded to a head, verified by replay
+without its author. LIVE-SESSION-0 seals a continuation as a new file whose log begins with the parent's events, never
+modifies the parent, and refuses a lineage that is not on the session's own chain; it also names the renderer
+identity a session was made under. SIM-TICK-0 keeps what is recorded about an event beside it and out of the head (the
+tick, the inputs), which is where provenance would sit, and it certifies a session with the reference before it saves.
+The carried game layer's input membrane (GAME-0, `cue`) proves its binding is a homomorphism over concatenation, with
+refusal atomic for a batch: appended streams compose, and nothing there licenses reordering.
+
+**What does not exist.** No model is anywhere in this tree, and none is a dependency. There is no proposal envelope,
+no proposal digest, no anchor check against a live head, no rebase, no speculative worldline as an object, no verifier
+law beyond the validation each edit already gets, and no vocabulary above a cell edit, a tile edit, a move and a look.
+MERGE-0, above, is still unbuilt, and an explicit rebase would lean on it.
+
+**What it asks of the rungs before it.** These are constraints on the route as it continues, not new work. Every new
+event kind stays typed, validated by the session before it is appended, and replayable without whatever produced it.
+What is recorded about where an event came from sits beside the event and is never folded into the head. Nothing but
+the session's own replay writes W or M. No rung adds a path that executes text.
+
+**Grade.** DECLARED: all of it. Nothing here is established or measured. **does_not_show.** That a model can author
+anything useful here; that any verifier law beyond today's edit validation exists; that speculation, rebase or the
+commit envelope work; any safety property of a system that includes a model. When it is seated it registers its own
+hypothesis, failure condition and limits, like every rung.
+
+### ADMIT-0 — the admission seam · **measured on the host** (`bdd38593`): the gate passes there, and the first admission is sealed
+The first rung towards the design-event stream above. It was chosen in court, then researched, then reviewed by the
+owner, then taken to a second and a third court on the questions the review left, and then registered. This section
+records the first court, what the research found, one observation made here while checking it, the review, the
+second and third courts, the registration and the owner's acceptance of it. It has since been built: what was
+built, the nine rows that hold it and what they do not show are in [`verify/RUNGS.md`](../verify/RUNGS.md). On the
+owner's host the gate passes with those rows (218 in all, rowset `0b423b279a40c85c`), and one proposal was admitted
+to the session of the second `look-window` run: a wall cell opened, the head the one computed in the build container
+beforehand, the saved data block byte-identical to the one saved there, the same bytes refused as stale when offered
+to the child. The child is sealed as `livesession-DANIELDILLBERG-a0861e0e837b.json`. By the owner's order the next
+rung is `READER-COURT-0`.
+
+**The court (2026-10-03).** Three rulings.
+
+- **The first rung is the admission seam.** Windowless. A typed, anchored proposal read from a file is refused or
+  admitted by a verifier, and an admitted one becomes an ordinary session event with its envelope beside it. Only
+  today's vocabulary: open or close a cell, repaint a tile class. No model in the tree. No gate at content time.
+- **A stale anchor is refused, always.** The refusal names both heads. Rebase is a later rung. LLM-BUILDER-0 says a
+  stale anchor is "rebased explicitly or refused"; this rung takes the second half only.
+- **The charter: beside it for now.** The ratified block is not edited.
+
+**What the research found.** The owner asked for a varied search for hardenings. These are outside sources and
+attributed hypotheses, not claims of this repository; the links are under Sources below.
+
+- **Recognition.** LangSec's rule is that input is a formal language, recognized completely before anything acts on
+  it, kept as simple as the job allows, and read by equivalent recognizers at every endpoint. Bishop Fox's survey of
+  JSON parsers found them disagreeing on duplicate keys, on invalid Unicode (two different keys collapsing into one),
+  and on numbers too large to represent, and advises a fatal error for each and never re-serializing input that was
+  already validated. RFC 8259 itself only says names should be unique and calls behaviour unpredictable otherwise
+  (section 4), and says the same of unpaired surrogates (section 8.2).
+- **Binding.** A 2026 preprint on canonicalization failures (Brömme) names the class: a digest binds bytes while the
+  system compares meanings, so one meaning with two encodings, or one encoding with two meanings, breaks the binding.
+  Its rule is one accepted form, with the others refused and not normalized. Trail of Bits adds that hashed fields
+  must be encoded unambiguously and that digests with different purposes carry different tags. RFC 8785 (JCS) gets a
+  canonical JSON only by first requiring unique names and bounded numbers.
+- **Authority.** The agent design-patterns paper (IBM, Invariant Labs, ETH Zurich, Google, Microsoft) and CaMeL
+  (Google DeepMind) both constrain the system and not the model: what a model emits selects among actions a
+  deterministic layer already permits, and never decides them. The de Bruijn criterion from proof checking is the
+  same shape: anything may propose, and a checker small enough to inspect decides. JSONSchemaBench found
+  schema-constrained decoding enforced unevenly across frameworks, and conformance to a schema is not validity
+  against a world.
+- **Agreement between implementations.** Fluffy (OSDI '21) found consensus bugs in Ethereum's most used client by
+  running independent clients on the same adversarial inputs and comparing results. Independent implementations are
+  an oracle when they are actually run against each other.
+- **Anchors.** EventStoreDB appends against an expected version and refuses a mismatch, and its documentation says
+  idempotence is not guaranteed when the expected version is waived. An event-store survey gives the same advice on
+  conflict: refuse, and let the caller decide again from the new state.
+- **Crashes.** ALICE (OSDI '14) found 60 crash vulnerabilities in 11 applications, among them Git, Mercurial and
+  LevelDB. The recurring mistakes were assuming an append is atomic, assuming operations persist in order, and not
+  flushing the directory. On Windows, Microsoft documents `MOVEFILE_WRITE_THROUGH` as a flush promise for a move
+  performed as a copy and delete, says nothing there about atomicity, and marks `ReplaceFile`'s write-through flag
+  as not supported.
+- **Generated worlds.** A 2025 level-generation paper (Xu et al.) has the model write constraints in a small
+  description language and a solver place the level, and still reports that not every generated level is valid in
+  simulation. Agentic PCG shows its agents repeating failed edits before changing approach. Both separate proposing
+  from placing, and neither repairs its way to a guarantee.
+- **Not acted on.** Microsoft's raw-input documentation recommends buffered reads for high-frequency mice. The
+  owner's ruling stands that nothing is optimized from the first host runs; this belongs to the latency rung.
+
+**One observation made here (OBSERVED, outside the gate).** The saved form is read by a small JSON reader in
+`shell/playback.rs`, byte-identical in `workshop/sessionwalk.rs` and `workshop/session.rs`. The sealer,
+`verify/livesession.py`, reads the same files with Python's `json.loads`. The Rust reader was compiled alone from
+its source lines and both were given 19 hostile inputs.
+
+| input | the Rust reader | Python's `json.loads` |
+|---|---|---|
+| two equal keys | accepts, keeps the last | accepts, keeps the last |
+| bytes after the value | accepts | refuses |
+| a second object after the first | accepts the first | refuses |
+| a leading zero (`007`) | accepts as 7 | refuses |
+| a string ending at a backslash | panics | refuses |
+| a `\u` escape cut short | panics | refuses |
+| an escaped surrogate pair | accepts as two U+FFFD | accepts as one character |
+| two keys differing in a lone surrogate | accepts as one key | accepts as two keys |
+| a raw newline in a string | accepts | refuses |
+| `\b` and `\f` escapes | refuses | accepts |
+| an integer beyond 64 bits | refuses | accepts |
+| a fraction (`1.5`) | refuses | accepts |
+| `NaN` | refuses | accepts |
+| a lone minus | refuses | refuses |
+| empty input | refuses | refuses |
+| a byte-order mark | refuses | refuses |
+| a NUL byte in a string | accepts | refuses |
+| 20,000 nested arrays | accepts | raises a recursion error |
+| 2,000,000 open brackets | aborts on stack overflow | raises a recursion error |
+
+The two differ on 12 of the 19. They agree on four, and on one of those, the duplicate key, both accept silently.
+On the other three the Rust reader does not return a verdict at all: two panics and one abort.
+
+**does_not_show.** That any sealed record or saved session is wrong. The shell writes the saved form itself, both
+seal checks pin the file's last bytes, and the heads are recomputed by replay. The reader was run alone, not
+through any command of the shell, so how a panic surfaces there was not observed; no panic hook was found in
+`shell/`. The harness is not in the tree and no row holds any of this. It is where the reader court below starts.
+
+**The owner's review (2026-10-03).** A reply to the research, brought by the owner and recorded at his instruction.
+Its outside citations are its own and are attributed the same way. Its first line:
+
+> **ADMIT-0 is the right first rung, but its first hardening should be parser unification, not merely a stricter
+> JSON grammar.**
+
+```text
+proposal bytes ──► STRICT RECOGNIZER ──► typed proposal ──► ANCHOR CHECK ──► BOUNDED VERIFIER ──► DESIGN EVENT ──► SESSION
+                        │ refuse                                │ stale: refuse
+```
+
+1. **One recognizer.** *Don't make three independent components parse the proposal language.* One admission parser
+   turns the bytes into a typed proposal, and the verifier and the sealer receive that typed object and never the
+   text. Three parsers that must agree is a permanent differential-parsing problem; one parser is one recognition
+   boundary. Independent implementations stay as test oracles only.
+2. **A language smaller than JSON.** Not "a JSON parser with a lot of security rules" but *a tiny world-design
+   language with a formally bounded grammar*: an envelope and a bounded list of operations from a fixed vocabulary
+   with bounded fields. The model's prose is metadata. The operation is what bears authority. The printable-ASCII,
+   no-escape, no-leading-zero rules from the research are not locked as the architecture; the accepted representation
+   of a purpose-built language is already canonical. JCS is not made the heart of it: *You control the admission
+   language.*
+3. **The anchor binds more than the head.** Program identity, renderer identity, session head and proposal schema.
+   A proposal made against one head is never applied to another: no automatic rebase, no "close enough", no semantic
+   merge hidden inside admission.
+4. **Three identities.** `proposal_id` is this attempted admission. `proposal_digest` is these exact bytes. The
+   session head is the authority it was proposed against. An admission record carries the id, the digest, the
+   program and renderer identities, the parent head, the admitted event's digest and the resulting head.
+5. **Typed refusals.** Not one "refused" but a reason: parse, size, depth, duplicate, unknown field, schema, range,
+   anchor, program, capability, authority, duplicate proposal, I/O. A creator sees that an edit was not applied
+   because the world moved while the model was writing it, and not that "AI failed".
+6. **Proposal and admission are different objects.** The proposal is disposable. The design event is authoritative.
+   Once admitted, the model's prose is irrelevant to authority.
+7. **No filesystem capability for a model.** Not `write_file`, `execute`, `modify_source` or `shell`. A model gets
+   `world.query` and `world.propose`, and perhaps later `world.preview` and `world.branch`. It describes a
+   transformation, and only Verðandi turns one into an admitted event.
+8. **The preview branch comes after admission works.** The order: `ADMIT-0`, then `DESIGN-EVENT-0`, then
+   `LIVE-AI-EDIT-0`, then `BRANCH-0`. First prove prompt, proposal, admission, session, world, frame; then make that
+   path disposable.
+9. **Crash consistency belongs inside ADMIT-0.** After a death anywhere in an admission the session is exactly one
+   of NOT ADMITTED or ADMITTED, never a half-state.
+10. **Kill every boundary.** Proposal received, parsed, verified, anchor accepted, event materialized, event
+    durable, session head durable, admission acknowledged. The process is terminated at each, and a restart finds
+    the old head or the new head, never "I don't know".
+11. **Capability bounds.** A proposal carries or inherits a scope: an authority, a region, a set of operations. An
+    operation outside it is refused by the verifier however well formed it is. The enforcement sits below the model
+    and is not a sentence in a prompt.
+12. **Provenance attaches to the result.** An admitted event keeps its parent head, the proposal's digest, the
+    intent text's digest, the proposer, the scope, the operation's digest, the resulting authority's digest, the
+    renderer identity and a reference witness, so what changed, why, from which prompt and what the renderer showed
+    are answered from the record and not from a model's memory.
+
+**The courts the review registers with the rung.** They are part of ADMIT-0 and not rungs before it.
+
+- **A. Reader court.** A hostile corpus: duplicate keys, unknown keys, trailing data, malformed UTF-8, invalid
+  escapes, leading zeros, oversized numbers, excessive depth, oversized strings, an oversized proposal, truncated
+  input, empty input, wrong types. Every one ends in a coded refusal and never in a panic.
+- **B. Single-parser court.** The production parser produces the sole typed representation. Independent parsers
+  are test oracles.
+- **C. Anchor court.** The current head equals the proposal's parent head, or the proposal is refused. No rebase.
+- **D. Capability court.** Operations outside the permitted vocabulary or scope all refuse.
+- **E. Idempotency court.** The same proposal twice: the first is admitted, the second refused.
+- **F. Crash court.** Termination at every admission boundary; recovery yields the old head or the new one.
+- **G. Replay court.** The admitted event reproduces the exact resulting authority from the sealed parent.
+
+The sentence the review locks:
+
+> **The gate certifies the machine. ADMIT admits the world's changes.**
+
+One correction the review makes to the research as pasted: `ReplaceFile` with its write-through flag is not to be
+cited as the Windows durability mechanism, because Microsoft marks that flag unsupported. Checked here against
+Microsoft's page: it does. The tree never calls `ReplaceFile`. Its replace is `MoveFileExW` with
+`MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH` (`shell/livesession.rs`), which is the primitive the review
+names.
+
+**The second court (2026-10-03), for the registration.** Held after the review, on the four questions it left
+for the registration. The owner's rulings:
+
+1. **The proposal language is a line language, locked for ADMIT-0.** In his words, *the proposal itself becomes a
+   canonical byte artifact, rather than something that must be canonicalized after parsing.* The registration
+   freezes the field vocabulary, the order, the line count, the separators and the integer domains. No optional
+   lines, no arbitrary ordering, no nesting, no quoted strings, no escaping, no whitespace normalization, no
+   Unicode, no duplicate fields (a field occurs once, at its registered position), nothing before the first line and
+   nothing after the last, and LF (`0A`) the only line terminator. There is no parse, normalize, canonicalize and
+   hash; there is recognize or refuse, and
+
+   ```text
+   proposal_digest = SHA256(exact proposal bytes)
+   ```
+
+   - **Not a world language.** *ADMIT-0 should admit the admission envelope*, with a small registered vocabulary
+     for its operation, target and value. It does not try to encode the future landscape-edit language.
+   - **Versions.** The first language is `VRDNP1`, frozen. A later one is a new version (`VRDNP2`) with
+     deliberately different semantics, never a change to this one. That keeps the edit language from growing into
+     an unbounded small programming language.
+   - **The model writes the language and does not interpret it.** Natural language, then a line-language proposal,
+     then admission, then a design event, then the world; never natural language, then arbitrary JSON or code,
+     then an interpreter.
+   - **Why not the others.** A strict JSON subset brings duplicate keys, escapes, Unicode, numbers, nesting and
+     canonicalization back for no architectural gain. A binary record is a good storage form and the wrong proposal
+     form: it puts an encoder between the model and admission, which is another trust boundary in front of the
+     seam. Binary may still become an internal or session representation later.
+   - **What the registration must fix.** *The exact ABNF-like grammar, allowed tokens, integer ranges, byte/line
+     limits, and one worked canonical byte example.* Changing any of them afterwards is a new language version and
+     not an implementation change.
+   - **His sketch, recorded as a sketch.** `VRDNP1`, then `program=`, `renderer=`, `parent=`, `proposal=`,
+     `scope=`, `op=`, `target=`, `value=`, one per line. It is "something along these lines"; the registration
+     fixes the actual lines. Two things in it meet other rulings: its `program=` line meets ruling 4 below, which
+     mints no program identity, and its example operation (`TERRAIN_RAISE` on `west_cliff`) is beyond today's
+     vocabulary, which is a cell opened or closed and a tile class repainted.
+2. **The saved-form reader is hardened in its own rung, after ADMIT-0: `READER-COURT-0`.** The two are different
+   trust boundaries. ADMIT-0 establishes a new language and its recognition rules; the saved-form reader is old
+   infrastructure with an observed disagreement surface, and joining them would make the first admission rung carry
+   an unrelated migration. `READER-COURT-0` gives the shell's reader, the workshop's and the sealer's one coded
+   verdict on the hostile corpus and closes the observed cases by name: trailing bytes and a second object,
+   duplicate keys, malformed escapes, a `\u` cut short, a string ending at a backslash, excessive nesting and
+   stack exhaustion, the disagreement on accepted numbers and strings, and the surrogate collision. No panic and no
+   process abort. The affected reader files are re-pinned once, in that rung, and not dragged through ADMIT-0's
+   development. *First we create the new admission seam; then we harden the legacy persistence seam it must
+   coexist with.*
+   - **The order he locks.** MOUSE-LOOK-0, the LLM-BUILDER-0 declaration, `ADMIT-0`, `READER-COURT-0`,
+     `DESIGN-EVENT-0`, `LIVE-AI-EDIT-0`, then branch and preview. This puts ADMIT-0 next after MOUSE-LOOK-0. Where
+     the presentation and latency measurement, which the route above still lists, sits against this order was not
+     ruled in this court.
+3. **The admitter grants the scope.** The admit command takes the grant from whoever runs it. A proposal can only
+   do less. The grant is recorded in the envelope, and the capability court tries to exceed it.
+4. **The anchor's identity is what a session already records.** The renderer identity, the bearing identity, the
+   session head and the proposal language's version. Nothing new is minted. A proposal goes stale when the head
+   moves or the rendering sources change, and not when an unrelated file of the shell changes. The gate's rowset is
+   not an anchor: it would tie content time to the gate.
+
+**The third court (2026-10-03), on the frozen bytes.** The owner's sketch of the language had a `program=` line
+and a `scope=` line, and the second court's rulings 3 and 4 took both away. Two rulings settled the lines.
+
+1. **Eight lines, per the rulings.** `VRDNP1`, `renderer=`, `bearing=`, `parent=`, `proposal=`, `op=`, `target=`,
+   `value=`. No program line, because nothing is minted. No scope line, because the grant is the admitter's and one
+   operation per proposal leaves nothing narrower to ask for.
+2. **The proposal id is the proposer's 64-hex handle.** Chosen by the proposer, carried in the bytes, untrusted and
+   recorded. An id already in the session's admitted history is refused as a duplicate. The digest stays the SHA-256
+   of the exact bytes.
+
+**The registration (`bdd3859302f61b127c6df050cebf9ca521dc8bc2ca8a96e67b7f27150b39796d`).** Its own commit, with
+nothing built. What it freezes, in `verify/preregister.json`:
+
+- **The bytes.** Exactly eight lines, each ended by one LF, nothing before the first and nothing after the last.
+  `renderer=`, `bearing=`, `parent=` and `proposal=` carry 64 lower-case hex characters. `op=` is `open`, `close` or
+  `paint`. For open and close the target is `x,z` and the last line is exactly `value=0`; for paint the target is
+  one of the five tile classes and the value is one integer, R×65536 + G×256 + B. Coordinates lie in 0..65535 and a
+  colour in 0..16777215, with no leading zero. No other byte is legal. A proposal is therefore 327 to 337 bytes, each
+  typed proposal has one byte sequence, and its digest is the SHA-256 of those bytes. The entry carries a worked
+  example of 328 bytes and its digest.
+- **What a proposal is checked against.** The renderer and bearing identities of the admitting shell; the head of
+  the saved session as loaded (a stale parent refused, always, naming both heads); the ids already admitted in that
+  session; the grant given on the command line; and the session's own validation of the edit, with one law added:
+  a proposal that would leave W and M as they are is refused.
+- **What an admitted proposal becomes.** The edit a key would make, with the head that edit gives. Its envelope
+  (the language, the id, the digest, the two identities, the parent head, the resulting head, the grant) sits
+  beside the event in the journal record and the saved item, travels with it through later continuations, and is
+  never folded into the head.
+- **Typed refusals, in a fixed order.** `ADMIT-IO`, `ADMIT-SIZE`, `ADMIT-PARSE`, `ADMIT-RANGE`, `ADMIT-PROGRAM`, the
+  session loader's own, `ADMIT-SESSION`, `ADMIT-ANCHOR`, `ADMIT-DUPLICATE`, `ADMIT-CAPABILITY`, `ADMIT-AUTHORITY`. A
+  refused admission leaves no run directory, no journal and no file.
+- **The courts, as rows.** `admit-reader`, `admit-single`, `admit-anchor`, `admit-capability`, `admit-idempotent`,
+  `admit-crash`, `admit-replay`, `admit-fence`, with `admit-preregistered` locking the entry.
+
+Choices the registration makes beyond the rulings, each stated in the entry:
+
+- One operation per proposal and one proposal per run. There is no batch.
+- The review's parse, depth, duplicate-key, unknown-field and schema refusals are one refusal, `ADMIT-PARSE`, naming
+  the line and what was expected. In a language with fixed positions and no nesting those cases are not distinct.
+- Only a saved session can be admitted to. A crashed run's journal is refused `ADMIT-SESSION`.
+- The proposal's bytes are not kept. The envelope is a record written by the admitting shell, and the seal is a
+  hash and not a signature.
+- The seam is per saved session. The same bytes offered to the child are refused as stale; admitted again to the
+  untouched parent file, they make a second child with the same head.
+- The crash court ends the process at eight points and shows process death, not power loss.
+- `shell admit-anchor` prints the first four lines of a proposal for a saved session, and only reads.
+
+**On the owner's host (2026-10-03).** The registration was applied and the gate run with the entry in the
+registry: `GATE PASSED`, `RECONCILE  rowset a15345720a81009c  209 rows / 0 fail / 0 skipped`, the rowset and the
+count it had before. The host's `verify/preregister.json` is byte-identical to the one registered here, 37 entries.
+It was pushed as `0669ecf`. The registration reached the host before the docs commit that records the courts; the
+two touch different files, and either order gives the same tree.
+
+**The owner's acceptance (2026-10-03).** A review of the registration, brought by the owner and recorded at his
+instruction. He accepts it as the ADMIT-0 design, with the distinction that it is a preregistered specification
+and not an implementation result. In its words, the state is:
+
+> **ADMIT-0: REGISTERED / BUILD PENDING.**
+
+- **What the 209 rows show.** They are the gate as it stood plus the registration. They do not establish any of
+  the entry's success conditions; the eight courts' rows do not exist yet.
+- **The digest's limit, kept explicit.** The proposal's bytes are not kept, so the workshop and the sealer cannot
+  recompute the digest in an envelope. The claim is that *the admitting shell measured and recorded the digest of
+  the exact proposal bytes it received*. It is not that any later verifier can prove the recorded digest belongs to
+  the original bytes. He would not add persistence of the proposal's bytes to remove the limit: that would enlarge
+  the seam and bring the parser back into the downstream readers.
+- **One operation, one proposal.** It gives atomicity without inventing batch semantics, and it leaves the crash
+  court one possible new authority transition to interpret.
+- **A boring vocabulary on purpose.** Open, close, paint. ADMIT-0 proves admission, not whether Verðandi can
+  understand arbitrary landscape concepts.
+- **The route is not changed, and the saved-form reader stays out.** MOUSE-LOOK-0, ADMIT-0, `READER-COURT-0`,
+  `DESIGN-EVENT-0`, `LIVE-AI-EDIT-0`, then branch and preview. The saved-form JSON disagreement is not pulled back
+  into ADMIT-0.
+- **What comes next.** *The next work is therefore implementation against the frozen 0105 bytes—not another
+  design round.*
+
+**Where the review meets what stands.** Read against the tree as it stood at the review. The courts above have
+since ruled on these, and the registration settled the rest.
+
+- **There is no proposal boundary yet.** The review speaks of the current proposal boundary having shown parser
+  disagreement and crashes. What was observed is the saved-form reader, alone, on bytes no command was given. It is
+  the reason to build the proposal's recognizer new and strict. It is not a defect found in an admission path,
+  because none exists.
+- **The gate.** The review's "PowerShell gate" is `verify/verify.py`, which the owner runs from PowerShell.
+- **One recognizer, and the three verifiers of a saved session.** A saved session is verified today by three
+  programs that each read the saved form: the shell, the workshop and the sealer. The review's rule is about the
+  proposal language, and it holds only if nothing downstream ever needs the proposal's text again. So what is saved
+  beside the admitted event is typed values the shell writes in its own saved form, and the digest of the
+  proposal's bytes, which any verifier recomputes over bytes without parsing them. Embedding the proposal's text
+  for the other verifiers to parse again, which was the draft before the review, is dropped. The three readers of
+  the saved form remain, and their observed disagreement is closed in `READER-COURT-0`, after this rung (the second
+  court, ruling 2).
+- **The event ADMIT-0 admits.** By the court it is an ordinary session event in today's vocabulary: a cell edit or
+  a tile edit, with the same head the same edit made by a key would give. A design-event kind of its own is
+  `DESIGN-EVENT-0`'s business, not this rung's.
+- **Scope.** A scope the proposal writes for itself bounds nothing. It bounds something when whoever admits grants
+  it, and a proposal can only ask for less: ruled so (the second court, ruling 3). The world has no regions (see
+  the section above), so today a scope can name operation kinds, cells and tile classes and nothing larger.
+- **Identity.** The tree has a renderer identity (a digest over the render sources compiled into the shell) and a
+  bearing identity, both recorded in a session's live block. It has no single program identity; the gate's rowset
+  names a gate outcome, not a binary. Ruled (the second court, ruling 4): the anchor is what a session already
+  records, and no program identity is minted.
+- **`proposal_id`.** If the proposer chooses it, it is as untrusted as the rest of the proposal. Refuse-always
+  already makes a second admission of the same bytes stale. Ruled (the third court, ruling 2): the id is the
+  proposer's handle, and a duplicate refusal compares it with the ids already admitted in the session.
+- **What a crash court can show.** Terminating the process shows what a restart finds after the process dies. It
+  does not show a power loss: bytes written and not flushed survive a killed process in the system's cache.
+  Microsoft's page promises the write-through flush for a move performed as a copy and delete and is silent on
+  atomicity. The court's claim is worded as process death; durability under power loss stays DECLARED from the
+  platform's documentation and NOT_MEASURED.
+- **The names after ADMIT-0.** `DESIGN-EVENT-0`, `LIVE-AI-EDIT-0` and `BRANCH-0` are the review's order. Each is
+  still chosen in its own court. The four rules at the end of the section above stand: commit-only meets
+  `BRANCH-0`, and earn-the-authority meets every example the review uses (cliffs, a valley, terrain, materials,
+  populations), none of which the frozen oracle certifies.
+- **Refusal codes.** The review's list gives the reasons. The registration gives them codes in the tree's form and
+  says that a refused admission writes nothing to the session and is recorded like any other refusal.
+
+**Grade.** DECLARED: the three courts' rulings, the review and its seven courts, the registration's conditions,
+the owner's acceptance. MEASURED (on the host): the gate passes with the entry in the registry, 209 rows, the rowset
+unchanged. OBSERVED: the 19-input table, here, outside the gate. Attributed and not claimed: everything under "What
+the research found". Nothing about the seam itself is ESTABLISHED or MEASURED. **does_not_show.** That a strict
+recognizer exists; that any of the courts holds; that a model can write a proposal worth admitting; any safety
+property of a system that includes a model. The state is registered, build pending.
+
+### The design language — one design authority, many editors · **declared** (the owner's, 2026-10-03); its objects and constraints not registered and not built; a cell-level design text and its certified compiler built since (DESIGN-IR/DIFF-0)
+A design text the owner brought on 2026-10-03, after the registration, and asked to have recorded. Like the two
+texts above it is a reply to his own description of what he is after, so its wording is quoted where it states the
+rule and summarized elsewhere. It extends the design-event stream and seats nothing.
+
+> **Intent → constrained design operation → verified state transition → provenance → deterministic projection.**
+
+- **The design environment is itself a typed, deterministic, inspectable program.** In the text's phrase, *a CAD
+  for interactive worlds*, where every design operation has the properties the admission seam is establishing.
+- **Design objects and constraints, not tools.** The environment is not built around a wall tool, a terrain tool
+  and a mesh tool. It is built around a design state with five parts: geometry (surfaces, volumes, boundaries,
+  transforms), semantics (rooms, paths, cover, spawn zones, gameplay volumes, tags), relations (adjacent to,
+  contains, connects, blocks, visible from), constraints (dimensions, reachability, clearance, performance,
+  visibility, gameplay invariants) and provenance (author, operation, parent, constraint result, resulting
+  identity). A viewport is one projection of that state.
+- **Geometry is not the primitive.** Conventional CAD goes point, line, surface, solid. Here the order is *intent →
+  relation → constraint → realization*. A request is turned into a bounded design representation, and the system
+  asks whether the intent can be represented, whether its constraints can coexist, what authority it touches, what
+  changed and which constraints became invalid. The answer is a design diff.
+- **Constraints are first-class world objects.** Persistent objects with a kind, a subject, a value, a status and a
+  witness, and not validation code alone. A design change then has a consequence graph: the operation, the objects
+  it changed, the constraints it affected, each satisfied, violated or unknown. What that gives, in the text's
+  words: *a machine-readable explanation of why a world is still valid.*
+- **One authority, many projections.** The same object seen as geometry (walls, doors, materials), as gameplay
+  (cover, routes, spawns) and as runtime cost (draw cost, memory, streaming), with no editor copy of the object
+  beside a runtime copy. The text names five such environments over one authority: spatial, gameplay, simulation,
+  narrative and performance.
+- **A model gets a design language and nothing else.** A proposal goes through a compiler to a candidate diff, the
+  constraints are evaluated, a human sees a preview, and only then is it admitted. The model never writes
+  arbitrary files, executes arbitrary code or mutates authority. The renderer stays downstream, the model is not an
+  authority, and the interface is not the source of truth.
+- **Reversible design, as provenance.** Every object keeps its lineage: the event that created it, the events that
+  changed it, the constraints on it, the projection that shows it. "Why is this wall here?" is answered from that
+  record. The text calls it design provenance and not merely undo history.
+- **What the text would not do, and the rung it proposes instead.** It would not start *a giant "next-gen CAD
+  editor"*. It proposes a small rung, `DESIGN-IR-0`, proving only a typed design object, a typed relation, a typed
+  constraint, a bounded diff, a deterministic serialization and provenance: no viewport, no model, no mesh editor,
+  no giant schema. Its one vertical slice is *a rectangular room with doors, connectivity, clearance, and a gameplay
+  tag*, produced identically by a human-authored operation and by a hypothetical model's proposal, then mutated on
+  purpose to show the constraint's witness change deterministically.
+
+Its last lines:
+
+> **Don't build an AI level editor. Build a deterministic design language with many editors.**
+
+and: the thing that survives every editor is *the design authority + constraints + provenance*.
+
+**What already stands that it would rest on.** The admission seam is registered, with a vocabulary that is boring
+on purpose. A projection that never writes is the existing separation of workshop, kernel and shell, and the
+invariants below already forbid a view from holding authority. WORKSHOP-0 refuses a record whose projection is
+stale under a moved authority, which is one derived thing already tied to the authority it was derived from.
+SEMANTIC-0, above, is the named and unbuilt rung for meaning beyond what the oracle certifies. The HUD's pins are
+the one case so far of VIEW semantics earned here and held by rows.
+
+**What does not exist.** A design object of any kind. Rooms, doors as objects, paths, cover, spawn zones, volumes
+or tags. A relation. A constraint, a constraint's witness, or a solver. A compiler from intent to operations. A
+second projection of the world beside the frame and the HUD. Units: the world is a grid of cells and five tile
+classes, with no metre, no second and no height.
+
+**Where it meets rules already in force.** Each of these wants the owner's ruling before a rung is seated.
+
+- **Earn the authority.** Anything that decides W or M is CORE and comes only from Urðr, carried or earned there
+  and re-frozen. A layer that only names and reads what W already holds (a room as a set of cells, reachability as
+  a path over open cells) could instead be VIEW semantics by SEMANTIC-0's route: a reference here, pinned by rows,
+  never writing the world. Which route each kind of object takes is a ruling, object kind by object kind.
+- **A constraint's status is a witness, not a field.** The declaration of a constraint is authored content, and if
+  it is admitted it is an event. Its status is derived from the world. A saved `status = SATISFIED` that a reader
+  trusts is a second authority. In this tree the equivalent of a status is a witness: recomputed by replay, compared
+  and refused when it differs, never taken from the file.
+- **Float-free, and in the world's own units.** The examples speak in metres, seconds and percentages. The rules
+  here are integers of the world: cells, ticks, reduced rationals.
+- **A panel, not a score.** "14 satisfied, 1 degraded, 0 violated" is a count per status and is admissible as
+  that. It is not folded into one number, and "degraded" needs a definition before it is a status.
+- **Preview before admission.** The text's flow shows a human preview before the admit. Commit-only still holds: a
+  preview is a speculative worldline, a typed log replayed from an anchored head, and that is the branch rung's
+  business, after admission works.
+- **The compiler.** If it is code in this tree it is program and the gate certifies it. If it is a model it is
+  outside the tree. Either way its output is a proposal in a registered language, and the seam admits or refuses it.
+- **The order.** The owner's locked order is ADMIT-0, `READER-COURT-0`, `DESIGN-EVENT-0`, `LIVE-AI-EDIT-0`, then
+  branch and preview, and his acceptance of the registration says the next work is implementation and not another
+  design round. Where `DESIGN-IR-0` sits against `DESIGN-EVENT-0` was not ruled. It is recorded here as a declared
+  name and is not seated.
+
+**Grade.** DECLARED: all of it. Nothing here is established or measured. **does_not_show.** That a design object,
+a relation or a constraint can be defined over this world without new CORE semantics; that a constraint's witness
+can be computed deterministically for anything beyond what the grid already says; that a model can write in such a
+language. When a rung is seated from it, the rung registers its own hypothesis, failure condition and limits.
+
+
+### READER-COURT-0 — the saved form's readers brought to one verdict · **built** (`f53017cd`): the gate passes here; the first host run read 225 of 226 and the one red is fixed; the second host run passes and is pushed
+The rung after ADMIT-0, by the owner's order. ADMIT-0 made a new language with one reader. This rung hardens the old
+one: the JSON the tree saves and reads back. The disagreement it closes was observed on 2026-10-03 and is recorded in
+ADMIT-0's section above. This section records what was read from the code before the courts, the two courts, a
+review the owner asked for, the registration and the owner's review of it, and then the build.
+
+**What was read from the code, before the courts.**
+
+- **Four Rust parsers, not three.** One text is copied byte for byte into `shell/playback.rs`,
+  `workshop/sessionwalk.rs` and `workshop/session.rs`. `workshop/edit.rs` has a fourth parser, a different text,
+  for edit records.
+- **Four Python readers.** `verify/livesession.py` (the sealer), `verify/seal_sessionwalk.py`,
+  `verify/seal_session.py` and `verify/envelope.py`'s `read` each read saved-form documents with `json.load`.
+- **Three writers, three layouts.** The shell writes a saved session, a journal's record payloads and a checkpoint's
+  one line by format strings. The workshop writes an indented document from a parsed value. Python writes a sealed
+  record with `json.dump`, indented, not escaping non-ASCII, with one LF after it.
+- **The corpus is inside a small language.** The 24 session-walk files the Rust readers can meet (committed
+  records, the host's sealed records, the host's saved sessions) hold no escape, no fraction, no exponent and no
+  duplicate name; 14 hold raw UTF-8. Across all 39 record files of every kind there is no fraction or exponent, and
+  the only escapes are `\"` and `\\`. The deepest shape is 7 levels: sixteen of the host's sealed measurement
+  records (FRAME-SPLIT-0's is root, data, arms, production, split, phases_us, strips). *Corrected on 2026-10-04:
+  this line first said 6 levels, a sealed WORKSHOP-1 session record (root, data, log, item, edit, rgb). That is the
+  deepest among the session files; the count had missed the measurement records. The recount was made while the
+  registration was drafted, which is why the entry says seven.*
+- **The writers disagree on two characters.** The shell and Python write backspace and form feed as `\b` and
+  `\f`. The workshop writes `\u0008` and `\u000c`. The Rust reader refuses `\b` and `\f`, which the shell's own
+  writer can emit. No file has ever held either character.
+- **The integer bound is the reader's.** The shell holds ticks and counts as unsigned 64-bit and writes them
+  unchecked. The reader takes signed 64-bit. Only the shell's read-back after a save enforces it.
+
+**The first court (2026-10-04).** Four rulings.
+
+1. **The writers' language. LOCK.** Strict RFC 8259 is rejected: it would make the reader's language larger than
+   the saved-form authority and force a float on a system whose rules are integers. Canonical bytes are rejected:
+   the three writers share a data language, not one serialization. The owner's refinement of the ruling:
+
+   > **The accepted language is the bounded saved-form language that the tree's registered writers are permitted
+   > to emit.**
+
+   - *Corpus establishes coverage; the writer contract establishes the language.* The 24 files show the existing
+     corpus lies inside it. The court tests its boundary: a writer-valid integer and a float, a writer-valid escape
+     and another, valid and invalid UTF-8, the deepest nesting and one deeper, the final LF and a byte after it, a
+     unique name and a repeated one.
+   - **Bounds come from the writers, not from the files.** Depth is not 6 because the files stop at 6: the writer is
+     asked what it can emit. If a writer has no explicit bound, that is the seam to close before the grammar is
+     locked. The same for 64 bits: a semantic invariant, or an artifact of one parser.
+   - *The saved-form reader is not a general JSON reader. It is a reader for Verðandi's own persisted language.*
+2. **One file, shared by path. LOCK.** The copies are evidence that extraction is safe, not a reason to keep
+   them. *One persisted language → one reader → many consumers.* The shared module owns saved-form parsing and
+   decoding only. It knows nothing of the shell, the workshop's editing, admission, the renderer, session
+   mutation, authority or any interface. The rung pins the language and the reader's behaviour, not that the files
+   compile.
+3. **The sealer gets its own strict reader, held by the court. LOCK.** Two implementations at the verification
+   boundary are wanted, not tolerated: a sealer that deferred to the Rust reader would turn the observed
+   disagreement into a dependency nobody can see. `json.loads` is rejected as an authority on either side: the
+   Python reader implements the locked language itself, with no `json.loads` underneath as a fallback. Neither
+   reader is right because the other agrees. *Agreement demonstrates consistency; it does not by itself prove
+   correctness.* The end state: *one production implementation, two independent implementations at the
+   verification boundary.*
+4. **A hostile file gets the same code and the same byte offset from every reader.**
+
+**The review the owner asked for, of ruling 3.** Agreed, with what it obliges.
+
+- **The Python reader is production for the sealer.** With no `json.loads` underneath, the sealer reads a saved
+  session with the strict reader. The sealer also runs the workshop's verify on the same file, so a file is sealed
+  only if both readers accept it.
+- **Agreement cannot catch a mistake in the specification.** Both readers are written by one author from one
+  grammar. What stands against that: boundary cases with their expected verdicts written into the registration, and
+  the writers as a third witness, every writer's output required to be accepted.
+- **"The same typed value" needs one rendering both compute.** A digest of a canonical dump: names in byte order,
+  no whitespace, one escape spelling.
+- **"The same byte offset" needs a definition neither implementation owns.** The first byte at which the input
+  stops being a prefix of any document of the language, or its length if it is cut short. For a repeated name that
+  is its closing quote; for an integer, the digit that takes it out of range. Both readers validate UTF-8 by hand, so
+  that they stop at the same byte.
+- **Exhaustive mutation of real files is not affordable in Python.** The host's 376 KB session has about 190
+  million single-byte mutants.
+- **The gate's older rows read saved files with `json.loads`.** That is test code inspecting what the shell wrote.
+  They are left as they are, and this rung's rows use the court reader only.
+
+**The second court (2026-10-04).** Four rulings on what the code had turned up.
+
+1. **Every reader of the saved form.** All four Rust parsers become the one shared reader, `workshop/edit.rs`
+   included. Every Python tool that reads a saved-form document reads it through the court reader.
+2. **One spelling.** The two-character escapes where they exist (`\"`, `\\`, `\b`, `\f`, `\n`, `\r`, `\t`) and
+   `\u00XX` in lower-case hex for the other control characters only. The workshop's writer is aligned to it. Every
+   string then has one byte form.
+3. **Signed 64-bit is the law, and writers refuse beyond it.** An integer lies in -2^63 to 2^63-1, with no leading
+   zero and no minus zero. A writer refuses to write a value outside it, so the bound is the format's and not one
+   parser's. The court tests both edges.
+4. **Exhaustive on small documents, boundary mutations on real files.** Every single-byte mutant of a few small
+   registered documents that between them use every construct of the language. On each real file: acceptance, the
+   same typed value in both readers, and the registered boundary mutations at every place they fit.
+
+**Grade.** DECLARED: the two courts' eight rulings. OBSERVED: what was read from the code and counted in the files,
+here, outside the gate. **does_not_show.** That a shared reader exists; that the two readers agree on anything; that
+the writers' contract has been derived writer by writer. The registration does that derivation and fixes the
+grammar and its bounds before a line is built.
+
+**The registration (`f53017cd`).** The entry fixes the language, the verdict, the readers, the writers and the court
+before anything is built. Its terms are in [`verify/RUNGS.md`](../verify/RUNGS.md); in short:
+
+- **The language.** A document is one object and exactly one line feed. Between tokens, spaces and line feeds only.
+  No name twice in an object. Integers in signed 64 bits with no leading zero, no minus zero, no fraction and no
+  exponent. Strings in well-formed UTF-8 with one spelling. At most seven levels of objects and arrays, counting
+  those open at once with the root object as the first.
+- **The verdict.** Accepted with a typed value, or refused with one of seven codes and the offset of the first byte
+  at which the input stops being the beginning of any document. The offset belongs to the language, not to a reader.
+- **The court.** 45 boundary cases with their verdicts written into the entry; every single-byte substitution,
+  deletion and insertion of three small registered documents; the registered boundary mutations on every real file.
+- **The limits.** Both readers have one author; the exhaustive court covers three small documents; the raws, the
+  two logs, the registry and the frozen JSON under `oracle/` are not the saved form and are not covered.
+
+**The owner's review of the registration (2026-10-04), before it was pushed.** The entry was first drafted with hash
+`0ecbec22`, applied on the owner's host and gated there, and not pushed. His review locked it point by point: the
+depth of seven, provided the counting convention is explicit; the writers checking their own bytes, with the
+format's definition standing above both the reader and the writers; the reader in `kernel/` as a shared file that
+is no part of the renderer's identity; one string spelling; spaces and line feeds as the only whitespace; the first
+and the last place of each kind for large files; the raws, the logs and the registry left out; and ADMIT-0's pin of
+the old reader's text moving here (*historical pin ≠ current implementation*, and history is not rewritten). He
+asked that the prototype's result stay labelled a compatibility measurement taken outside the gate, and not be read
+as equivalence with Python. And he set one condition for the push: the depth convention explicit, and the court
+showing six levels accepted, seven accepted and eight refused at the exact offset. The convention and the seven and
+eight cases were in the draft. The six was not. The entry was amended while its commit was still unpushed, as the
+rules allow, and its hash is now `f53017cd`. *0110: LOCK / PUSH. No redesign.*
+
+**On the host (DANIELDILLBERG).** The unpushed draft was dropped (`git reset --hard f504829`), the registration and
+the documents were applied, and the gate passed there: GATE PASSED, rowset `0b423b279a40c85c`, 218 rows, 0 fail, 0
+skipped, the same as here. Pushed, `f504829..25b5c17`. The entry is public; from here it changes only by an
+amendment with its own hash.
+
+**The build.** On the owner's word, *take the next*. One Rust reader, `kernel/savedform.rs`, replaces the four
+parsers (about 840 lines removed) and is included by path by the shell and the workshop's three tools. An
+independent Python reader, `verify/savedform.py`, replaces `json.load` in the four Python tools. Every writer gives
+its bytes to the reader before it writes them. Eight rows, 226 in the gate (rowset `39e5874a7127cfa4`): the 45
+registered cases; 163,072 single-byte mutants of the three registered documents with the same verdict from both
+readers on every one; 43,925 boundary mutations of the committed records and of what the gate makes (181,376 with
+the host's 33 records present), each with the code and offset its place gives; the writers; a hostile document
+refused by seven real commands with the same code and offset; one reader by source; and the fence. Nine earlier
+rows' forgeries were rewritten inside the language, and one pin moved, both listed in the ledger. 55 planted
+defects are each caught. The details, the limits and the falsifier are in
+[`verify/RUNGS.md`](../verify/RUNGS.md).
+
+**The first host run.** 226 rows, one red: `readercourt-fence`, naming `shell-playback-sealed-input`. That row's
+planted file had been opened in text mode, so on Windows it ended in CR LF, which the language refuses before the
+row's own rule is reached. The row stayed green; the watch this rung added went red. The plant is now written as
+bytes. Every other row passed on the host, the corpus with the host's records among them.
+
+**The second host run (2026-10-05).** With the fix and its record applied the gate read `GATE PASSED`, rowset
+`39e5874a7127cfa4`, 226 rows / 0 fail / 0 skipped, and the owner pushed `b847810..b077eef`. READER-COURT-0 is
+landed on both machines.
+
+**The next question, reserved.** The owner asked whether DESIGN-EVENT-0 remains the next rung after this one, or
+whether a design representation, a design diff and constraints are promoted ahead of it, as the review of the
+development environment below would have it. His words: *I would not silently reorder that based on the 15-pivot
+review. That deserves its own ruling.* Nothing is reordered here. The locked order stands until he rules.
+
+*Ruled on 2026-10-06: DESIGN-EVENT-0 stays next, and the design representation follows it. See DESIGN-EVENT-0 below.*
+
+### The development environment — fifteen pivots · **declared** (the owner's, 2026-10-04); not registered, nothing built
+A review the owner brought on 2026-10-04 and asked to have recorded: Verðandi judged as a research-grade interactive
+development environment and not as a game editor. Like the texts above it is a reply to his own description, so its
+wording is quoted where it states a rule and summarized elsewhere. Its citations of the ACM literature are its own
+and were not opened here; they are attributed, not claimed. It seats nothing. Its verdict is its own too: a very
+high architectural score with fifteen product pivots. This repository keeps no scalar scorecard, and the verdict is
+recorded as the review's.
+
+**The risk it names.** *A beautifully rigorous engine with an underdeveloped development environment.* What it
+finds already strong is the path from intent to a typed bounded proposal, admission, session, authority and a
+deterministic projection, and the property that follows:
+
+> **The visual editor does not become the source of truth.**
+
+**The fifteen pivots.**
+
+1. **A design space as a first-class window.** A workspace over authority (world, scene, selection, tools,
+   constraints, layers, views, panels, bookmarks), several open at once, none a copy of the world.
+2. **A docking and window system, early.** Scene, viewport, inspector, and a bottom band for the timeline, the
+   session, diagnostics, a console and admissions. Every pane is *a projection of authority, never authority
+   itself*. Layouts are saved by role.
+3. **View modes, not only camera modes.** The same world as perspective, top, side, orthographic, wireframe,
+   collision, navigation, visibility, lighting, gameplay, network, streaming, performance. The geometry does not
+   change; the projection does.
+4. **Constraints as a visible subsystem.** A constraint with an id, a type, a subject, parameters, a status, a
+   witness and provenance, listed in the interface, a failure highlighting the geometry it is about. Verification as
+   design instrumentation and not a terminal event.
+5. **A design diff window.** What changed spatially, which semantic objects, which constraints, which performance
+   consequences, which provenance; then accept, reject, inspect, revert or branch.
+6. **A parameter rack.** An object's parameters as design intent: changing one generates a typed operation, so it
+   stays editable, undoable, replayable, provenance-bearing and addressable by a model.
+7. **Design recipes.** A parameterized design procedure and not a prefab. It produces a proposal and never mutates
+   authority. A model manipulates recipes instead of inventing geometry.
+8. **Preview unmistakably not the world.** The current world solid, the proposed one ghosted, with its counts and
+   its constraints, manipulable before it is admitted. Feedback at the design boundary and not everywhere.
+9. **A command palette over the whole architecture.** Every command resolves to a typed operation. It is another
+   frontend and not a second interface to the world.
+10. **Portable project bundles.** A manifest, the authority, sessions, the design representation, constraints,
+    provenance, assets, the renderer identity and compatibility metadata; opened on another machine by verifying,
+    reporting differences, then opening.
+11. **A compatibility inspector.** Each format and identity reported on opening, with open, open read-only, repair
+    and export as choices. *Never silently migrate authority.*
+12. **A capability and tool permission system.** ADMIT-0's grant grown into a platform primitive: a tool or a model
+    is given `world.query` and `world.propose` and not filesystem writes, process execution or authority mutation.
+13. **A plugin SDK around projections, not authority.** Read the model, analyze, propose, court, admit. A plugin
+    says "I propose these changes" and never "I modified the world".
+14. **Multi-representation editing.** The same object edited by dragging, by a number, by text and by a structured
+    form, all four compiling to the same design operation.
+15. **The design observatory.** A persistent window of the design's state: objects, constraints, violations and
+    unknowns; performance; gameplay; provenance; admission. Not another debugger. It answers *why does the system
+    believe this world is valid?*
+
+**Its order.** Five layers. A, the foundation: the shared reader and READER-COURT-0, then a design representation,
+the design diff, constraint objects. B, a real editor: docking windows, view modes, the parameter rack, the command
+palette. C, authoring: recipes, the proposal and preview workspace, multi-representation editing. D, the platform:
+capabilities, the plugin SDK, project bundles and the compatibility inspector. E, the differentiator: the
+observatory. If only three, it picks the design representation with constraints as first-class objects,
+multi-representation editing, and the observatory.
+
+**What it would not copy.** Not an existing engine's editor made deterministic, not a modelling tool for games, not
+an engine with a model attached. Its proposition:
+
+> **Verðandi is a design environment in which visual manipulation, text, AI proposals, procedural tools, simulation,
+> and verification are all different frontends to the same typed, provenance-bearing design authority.**
+
+**What already stands that it would rest on.**
+
+- **Two frontends already compile to one operation.** ADMIT-0's replay row holds that a proposal and a key give the
+  same event, the same witness and the same head. That is multi-representation editing for the two representations
+  the tree has.
+- **The grant is the first capability.** ADMIT-0 takes its scope from whoever runs it, and a proposal cannot widen
+  it.
+- **Opening a session already reports and never migrates.** The loader classifies a saved session as loading, as
+  loading under a different renderer, as tampered or as made by a different renderer, and refuses what it cannot
+  replay. The shared reader this rung is about gives the saved form a language that can be named.
+- **Some diagnostics already exist as text.** The refusal log and the run ledger, with their readers, are what an
+  admissions or diagnostics pane would show.
+- **A projection that never writes** is the existing separation of kernel, workshop and shell, and the invariants
+  below.
+
+**What does not exist.** Any window but one borderless picture and its overlay. A pane, a dock, a menu, a layout, a
+selection, a palette. A design space. A second view mode. A constraint, a recipe, a parameter of an object, or an
+object. A project bundle or a manifest. A plugin. Anything the observatory would count beyond events, refusals and
+runs.
+
+**Where it meets rules already in force.** Each wants the owner's ruling before a rung is seated.
+
+- **Floats, units and scores.** The examples use metres, fractions and a cover score of 0.71. The world's rules
+  are integers of the world, and a score is not kept: a panel of counts per status is.
+- **A constraint's status is a witness.** As recorded with the design language above: recomputed and compared,
+  never a saved field that a reader trusts.
+- **Numbers shown are measurements.** A frame time or a memory figure in an observatory is a claim, and a claim
+  here has a registered instrument behind it or is not made.
+- **Preview.** A proposed world that the user manipulates before admitting is state. Commit-only holds: it is a
+  speculative worldline, a typed log replayed from an anchored head, or it is a second authority in the shell.
+- **Recipes and batches.** A recipe yields many operations. VRDNP1 carries one, and ADMIT-0 registered that there
+  is no batch. A batch is a new language version with its own atomicity court.
+- **Plugins and the gate.** The gate certifies the program, and no path executes text. A plugin that runs inside
+  the program at content time is code the gate did not certify. A plugin that runs outside and hands over a
+  proposal is a proposer like any other.
+- **A window system.** The shell is hand-written Win32 with no dependency, and its presenter is held to showing the
+  certified picture exactly, read back from the screen. Docking, panes and menus are a large addition to that
+  surface, and every pane is a VIEW or an OBSERVER: with all of them open, replay stays byte-identical.
+- **The order.** The owner's locked order after READER-COURT-0 is `DESIGN-EVENT-0`, `LIVE-AI-EDIT-0`, then branch
+  and preview. This review's layer A puts a design representation, the design diff and constraint objects there
+  and does not name the other two. Which order stands was not ruled. READER-COURT-0 is first in both.
+
+**Grade.** DECLARED: all of it. Nothing here is established or measured. **does_not_show.** That any pane, view
+mode, constraint, recipe, bundle or plugin can be built under the rules above; that the fifteen are the right
+fifteen; anything about how a user would fare with them. Each rung seated from it registers its own hypothesis,
+failure condition and limits.
+
+### REASON-COURT-0 — every refusal held to its reason · **built** (`337ab021`): six rows, 232 in the gate; the gate passes here and on the host; pushed
+The rung after READER-COURT-0, by the owner's ruling. Its census is taken, three courts are held, and the method is
+registered with its register, `verify/reasons.json`. Nothing is built. The full record is in
+[`verify/RUNGS.md`](../verify/RUNGS.md); this section keeps the order of events.
+
+**Where it came from.** READER-COURT-0 made the gate watch every refusal by the saved form's reader. The watch
+showed a row, `shell-playback-sealed-input`, that had stayed green while its planted file was refused for its form
+and not for being what the row says it is. A row that asks only for a refusal passes whatever refused. That gap is
+not the reader's: READER-COURT-0 holds its own refusals to an exact code and a byte offset. It is in the rows of
+the rungs before it.
+
+**The owner's ruling on the idea.** *LOCK the idea, REGISTER the court.* A reason-code court, not a general proof of
+diagnostics. For each refusal row: the input, the expected verdict, the expected reason code, the observed verdict,
+the observed reason code; an acceptance must equal an acceptance, and a refusal's observed code must equal the
+expected one. Where the precise reason is intentionally unspecified the row keeps `REFUSE(any)`, because otherwise
+an incidental ordering inside the implementation is frozen as authority. Four things are told apart:
+
+| | |
+|---|---|
+| a semantic refusal code | locked contract |
+| an implementation's diagnostic text | not locked |
+| a byte offset | locked where a rung already specified it |
+| an internal exception, stack or branch | never authority |
+
+The most valuable cases are the same input failing for a different cause. Where a malformed input could fail at
+either of two boundaries, the registration says which boundary owns the failure; otherwise the court turns today's
+branch order into tomorrow's contract. And the expected reasons are registered before results are observed, so
+they are not fitted to what a program happens to emit.
+
+**The court (2026-10-04).** Three rulings.
+
+1. **Its own rung, REASON-COURT-0.** READER-COURT-0 is not amended. The red row on the host was a defect in
+   READER-COURT-0's build (a planted file written CR LF on Windows), and the reader's verdict on it was the correct
+   one; it is no evidence that the reader court's reason contract is wrong. The ladder as the owner wrote it:
+   ADMIT-0, READER-COURT-0, REASON-COURT-0, DESIGN-EVENT-0.
+2. **Every refusal check in the gate.** A court that covered only the codes already named would keep the blind spot
+   and not measure it. Each check is classed as an exact code or as `REFUSE(any)`. *`REFUSE(any)` is not a failure to
+   specify*: it is a registered decision that the court does not constrain that row's reason, with why. A check that
+   rests on a fragment of text or on the exit status alone is classed as that and is not silently promoted. A row
+   is not made exact merely because its reason can be named. Once a reason is promoted to an exact code, a later
+   change to it needs an explicit decision.
+3. **The expected code comes from the rung's registered text or its ledger entry.** Where neither names one, the
+   row is `REFUSE(any)` and is listed. Never from what the program emits today.
+
+**The census comes first, and it changes nothing.** The owner's boundary: old rows are not strengthened during the
+census. It records, for every refusal assertion in the gate, the row, the evidence it rests on and the strength of
+the assertion as it stands (an exact code, a fragment of text, the exit status alone, other evidence), and the
+rung whose text owns the reason. Only then is what REASON-COURT-0 will strengthen preregistered. Otherwise the
+census would be a way to rewrite history quietly.
+
+**What was counted so far (OBSERVED, crude, not the census).** A pattern search over the gate found about fifty
+checks of an exit status of 2. About half name a code. Three match a word of diagnostic text (`"alphabet"`,
+`"width"`, `"border"`), which a message could contain by accident. About ten rest on the exit status beside other
+evidence, such as a count of log records or a file that must not exist. The owner's note: do not assume that
+figure is the population.
+
+**What the first text left open, and how the court settled it.** It said both to register the court separately and
+to add it to READER-COURT-0 as a sub-court built with the reader. READER-COURT-0's entry was already pushed and
+its build delivered, so the second was no longer available as written; the court chose the first.
+
+**The census (2026-10-05), which replaced the crude count.** The gate as patch 0116 left it was read line by line
+in twelve windows, extracted a second time from its syntax tree, and netted a third time over its own failure
+texts. It changed nothing. 190 statements; 145 refusal checks in 78 of the 226 rows; 16 second witnesses; 4 planted
+deaths; and, apart, 7 detections, 6 of the gate's own checks, 1 agreement court and 63 places that trust a
+program's own court. Of the 145: 103 hold a code, 8 hold words, 12 hold other evidence, 22 hold only that the
+subject refused, and 21 of those 22 are the sealers, which refuse in prose. Of the codes, a ledger entry named 23
+and `RUNGS.md` 15; 45 were named only by the program that prints them and the row that asks for them. The crude
+count had said about fifty checks; the population was three times that.
+
+**A listening pass, off the gate.** One run of the whole gate with a listener on: 1,103 children ended non-zero and
+74 sealer refusals were raised, with no panic, a code on every refusal of this tree's programs, and every sealer
+refusal for the cause its row names. No wrong-reason pass was found among what it could hear. It is evidence about
+one run and never the source of an expected value.
+
+**The second court (2026-10-05): four rulings.**
+
+1. **The edge: refusals and deaths.** The 145, their 16 second witnesses and the 4 planted deaths are held. The
+   detections, the gate-self checks, the agreement court and the programs' own courts are registered as outside.
+2. **Register the codes here, each with a witness.** A requirement that already exists may be registered; a new one
+   may not be manufactured; the implementation establishes no expected code. `RUNGS.md`'s state is pinned.
+3. **The sealers: `REFUSE(any)` with a condition.** No sealer is given a code and none is changed.
+4. **A table and a watch.** The table is the authority; the watch claims every child that does not end 0; the old
+   statements are not rewritten.
+
+**The third court (2026-10-05): two tightenings.** The two rulings met at one point: the watch was to read "the
+boundary prefix and the full code as the first token", and the prefix is in no row and no registered text. The
+owner corrected his own wording: the watch reads the **code head**, the leading run of code tokens on a line; the
+prefix is observed framing and is not registered; the few codes that stand in prose are named exceptions. And the
+sealer condition is **one registered mutation with its recomputation closure**: 41 of 57 planted records meet it,
+and the 16 that do not are registered as debt, `NOT_MET`, owed a code or an accepted twin.
+
+**Registered (2026-10-05).** Entry `337ab021`. The register holds 83 codes with their sources, 165 statements with
+the gate's own text that requires each, 1,103 endings in 77 groups, the planted records beside their twins, and
+the statements outside the court. Four numbers moved between the court and the registration, each by the owner's
+own test, and are listed in `verify/RUNGS.md`. Six rows are registered for the build.
+
+**Pushed (2026-10-05).** On the host the gate read `GATE PASSED`, 226 rows / 0 fail, with the entry and the
+register in the tree, and the owner pushed `b077eef..c057da2`. The entry and the register are fixed from there.
+
+**The fourth court (2026-10-05): three rulings, after a review and two texts the owner brought.**
+
+1. **A loose name in the register's counts is held in the build, not amended.** One count,
+   `endings_with_one_code_in_prose: 3`, reads as a fifth part of a partition that has four. The entry's own
+   sentence gives the four (1,072 + 23 + 6 + 2 = 1,103), and the three sit inside the 1,072. The build's register
+   row asserts that, is planted with the misreading, and cites the entry's sentence as its witness.
+2. **The host is heard before the build.** The gate takes no input, so its endings depend on the platform and the
+   records present: three configurations, not endless runs. Two were heard here with one instrument kept outside
+   the repository, on two interpreters; in all three passes the 1,103 endings were heard and all 77 groups held.
+   The third is the host, with the same instrument byte for byte. A difference is a finding settled by amendment.
+3. **The in-process gap is lived with and measured; nothing is seated.** The watch cannot see a refusal judged
+   inside the gate's own process. The same instrument counted them at the place they are raised, from the
+   interpreter's own events and touching nothing: 142,083 refusal-type exceptions in 16 rows (74 the sealers', 32
+   the envelope's, the rest the Python reader's), every one but one claimed by a registered statement or by the
+   agreement court.
+
+**Declared in that court, each for a court of its own; neither is on the ladder.**
+
+- **An accounting of refusal sites.** Every comparison of an exit status and every handler of a refusal exception
+  in the gate is a registered statement or a named non-refusal. Decidable, because it claims and does not classify.
+  It does not see a refusal judged by another shape.
+- **A refusal as an emission, for the gate's own process.** The sealers would return a verdict where they raise, as
+  the readers return a verdict line and the children write a refusal record. It changes the sealers' interface,
+  so it is a rung of its own; its census is the count above.
+
+A formal semantics of the watch, proposed in one of the texts, is recorded as declared and is not on the route.
+
+**Heard on the host (2026-10-05).** 0119 was applied and pushed there (`c057da2..f145a8d`). The owner ran the
+listen-only pass with the same instrument, byte for byte, on win32 under Python 3.14.5: the gate inside it passed
+(226 rows, 0 failed); 1,103 endings heard and 1,103 registered; 77 of 77 groups holding; nothing outside the
+watch's scope; no finding. The fourth configuration reads as the three here did.
+
+**The fifth court (2026-10-05): the in-process gap becomes a slice of its own.** The owner took the count of mints
+as a real slice with a narrower claim than a reason court, and registered it separately as MINT-WATCH-0 (below).
+REASON-COURT-0 is not amended. Requiring an exception to carry a code stays deferred.
+
+**Built (2026-10-05).** One file changes, `verify/verify.py`; the entry, both registers, every program and every
+sealer are as they were. The watch READER-COURT-0 put on `subprocess.run` now also keeps every child that does not
+end 0, as its row, program, command, exit status and the code heads of its lines. A listener hears every call the
+eleven registered rows make of the fifteen sealer functions, through the interpreter's own events, wrapping
+nothing. Six rows judge: the entry and the register's bytes; the register whole, its counts divided as the entry's
+own sentence says; every registered requirement standing in the gate's text and in the cited texts; the 1,103
+endings seated in their 77 groups; the 73 planted records refused, 55 one mutation from an accepted twin and 18
+still owed; and a fence by source. Rowset `5b48184218214583`, 232 rows / 0 fail here.
+
+Off the gate: 37 planted defects, 36 caught and one equivalent. Four of them left every earlier row green: a code
+moved out of the head, a code grown longer, a plant dropped from a row, and a planted record changed in a second
+field. The
+listening instrument, run over the built gate, agrees with the gate's own row and hears no refusal raised by the six
+new rows, so MINT-WATCH-0's register needs no amendment for them.
+
+**On the host (2026-10-06): landed.** 0122 and 0123 were applied and the gate read `GATE PASSED`, rowset
+`5b48184218214583`, 232 rows / 0 fail / 0 skipped. The owner pushed `a02d82c..a1c0a65`. The register an instrument had
+heard there before the build is now held there by the gate's own rows, and the sealers' listener heard the
+registered calls on the host's interpreter.
+
+**Grade.** DECLARED: the idea, the rulings and the registration. OBSERVED (off the gate): the census, four
+listen-only passes before the build (three here, one on the host), one over the built gate, the count of mints, the
+mutation run. ESTABLISHED (gate, here): the six rows, 232 in the gate. MEASURED (host): the built gate, 232 of 232,
+one run.
+**does_not_show.** That a registered reason is the right reason: the court holds a refusal to its code, not to its
+cause.
+
+### MINT-WATCH-0 — every refusal raised inside the gate's own process, claimed · **built** (`cd1472ec`): four rows, 236 in the gate; the gate passes here and on the host
+A separate slice by the owner's ruling. The full record is in [`verify/RUNGS.md`](../verify/RUNGS.md).
+
+**What it is.** REASON-COURT-0's watch hears a child's ending. A refusal raised and caught inside the gate's own
+Python never reaches it. This rung listens to the interpreter's own raise event, wrapping nothing, and holds every
+refusal-class raise of a gate pass to a registered row, class, site and count. It adds visibility and no
+vocabulary: it never says what reason a raise means.
+
+**The rulings.** LOCK the listener as observation. REGISTER the watch. DEFER a reason code on an exception. REJECT
+an observed class or site as authority for a reason. Then, in the fifth court:
+
+1. **Sites from source, counts measured.** The inventory is read from the files' syntax: 8 refusal classes, 164
+   raise sites in 15 files. Which row reaches which site, and how often, is a registered measurement of four
+   configurations: 70 entries, 142,082 mints in 16 rows at 58 sites, all four agreeing. It is a baseline for drift
+   and never the source of a reason.
+2. **A site is its file, its function and the text of its raise**, under a pin of the file's hash. The line is a
+   locator.
+3. **Register now, build after**: this registration alone, then REASON-COURT-0's build, then this rung's.
+
+**What the registration says beyond the rulings.** One mint is the gate's own plant and is registered as one. 105
+sites were never reached and are registered as that. The rows measured are the 226 of today's gate: the rows
+REASON-COURT-0's build adds must mint no refusal, or their entries come by an amendment. The watch never takes an
+entry from its own run.
+
+**Pushed (2026-10-05).** On the host the gate read `GATE PASSED`, 226 rows / 0 fail, with the entry and the register
+in the tree, and the owner pushed `f145a8d..a02d82c`. With the push he ruled: the order stands and the registration
+is not reopened; the register is a frozen measurement, under REASON-COURT-0's vocabulary and not under its
+execution; the 105 sites never reached stay facts about reach and are not expectations; the scope stays as explicit
+as it was registered; and this rung's build judges a pass against the frozen register and regenerates nothing.
+
+**Built (2026-10-06).** One file changes, `verify/verify.py`; the entry, both registers, every program, every
+sealer and REASON-COURT-0's six rows are as they were. The tap subscribes to the interpreter's own raise event as
+the gate's file is read and keeps, of each refusal raised, a row, a class's name, a file, a line and a function.
+Four rows judge: the entry and the register's bytes; the inventory against the tree's syntax, with no program run;
+a fence by source; and last the watch, which holds every mint before it to the frozen register. It heard 142,083:
+the 70 measured entries, each its count, and the gate's plant. Nothing is regenerated from the run. Rowset
+`cb2f68e75e338768`, 236 rows / 0 fail here.
+
+Off the gate: 39 planted defects, each caught, and two runs with no defect that pass. Seven of the nine that change
+what is raised left every earlier row green. Two of those, a refusal raised and swallowed in a quiet row and a
+second planted failure in the gate's own file, pass REASON-COURT-0's rows as well. One, a planted record that trips
+another check of its sealer, is the drift the owner named: the same row, the same class, two counts moved.
+
+**On the host (2026-10-06): landed.** 0124 and 0125 were applied and the gate read `GATE PASSED`, rowset
+`cb2f68e75e338768`, 236 rows / 0 fail / 0 skipped. No push is in the output the owner gave. The refusals raised in
+the host's own gate process were the register's, entry by entry: the configuration an instrument had heard there is
+now held there by the gate.
+
+**Grade.** DECLARED: the registration and the rulings. OBSERVED: the measured layer, one run in each of four
+configurations, by an instrument outside the repository. ESTABLISHED (gate, here): the four rows, 236 in the gate.
+MEASURED (host): the built gate, 236 of 236, one run. **does_not_show.** That any refusal is right; that a raise is
+judged by anything; which input drew a mint; anything about a fifth configuration.
+
+### The adjustment — the gates are finished; the design environment is the work · **declared** (the owner's, 2026-10-06); its first piece is built, off the gate, and has run on the host
+With the host's 236 rows the owner brought two texts and the word *adjust*. Both speak to the assistant and not to
+the reader of this file, so their rules are quoted and the rest is summarized. They restate the two times already
+declared above (the gate certifies the program; content is admitted, not gated) and add an instruction: stop.
+
+**The rule.**
+
+> **The gate certifies the DESIGN PROGRAM. The user does NOT run engineering gates every time they design
+> content.**
+
+and its reason: *the purpose of finishing these gates is to earn the right to stop running them during design.*
+
+**Two phases, kept apart.** The first was to finish REASON-COURT-0 and MINT-WATCH-0 as registered, without widening
+either: no new cryptographic machinery, no general proof system, no reopened decision. That is done, on both
+machines. The second is to build the design environment, with the gate out of the creative loop.
+
+**The decision rule, for every gate proposed from here on.**
+
+| what it is | what happens to it |
+|---|---|
+| an engineering invariant | registered, built, gated, frozen |
+| a content or design operation | no full gate: it uses machinery already certified |
+| observability or a diagnostic | measured, and never made authority |
+| an experiment | kept off the ladder until recurrence justifies promotion |
+
+*Do not create gates merely to make the project look rigorous. The rigor is valuable because it allows the product
+to stop gating ordinary creative work.* The text asks that six words be kept apart: REGISTERED, MEASURED, BUILT,
+GATED, CERTIFIED, DEFERRED. A registration that is not built is not proved; a preview is not authority; a model's
+proposal is not truth.
+
+**The path, as the text draws it.** Human, model, script or interface; a design proposal; a typed design
+representation; a bounded verifier that admits; a session event; the world's authority; the renderer. *Language can
+propose. The verifier admits. The session records. The kernel renders.* A model never runs code, writes files,
+changes canonical state or bypasses the verifier. *Preview is state. Preview is NOT authority.*
+
+**The product test.** A person says: make this room larger and add two entrances. A model proposes a bounded
+design. It compiles to typed operations. The verifier checks bounds, capabilities and authority. The result is
+shown. The person accepts. The session records the admitted operations and the renderer shows the new world. *No
+full engineering gate runs here.*
+
+**The surfaces the text lists**, against what stands today.
+
+| surface | today |
+|---|---|
+| viewport, camera, mouse look | built: the live editor's window, on the host |
+| proposal and preview; current against proposed | built off the gate, as text from above: `design/`. Not in the window |
+| the same path for every editor | built: a key press and an admitted proposal make the same edit event (`admit-replay` holds it) |
+| capabilities | built: ADMIT-0's grant, on the admitter's command line |
+| command surface for a person or a model | built off the gate: `design/design.py`, five verbs |
+| undo | built off the gate: the project steps back to the session before; nothing is deleted |
+| inspector, parameter rack, design diff as objects | none: the world holds cells and five tile classes, and no objects |
+| constraints with witnesses | none. `design/` reports readings and says they are not constraints |
+| recipes | none beyond the design text's five statements |
+| view modes beyond the frame and the text top view | none |
+| portable project, compatibility inspector, plugins, observatory | none |
+
+**The second text: a skill as the first editor.** It proposes that the first consumer of the path be an assistant's
+skill, *a Verðandi editing operator, not a general coding skill*, with five capabilities: inspect, propose, preview,
+admit, undo or revise. Its rule: *Claude should never edit the world directly. Claude edits through Verðandi's
+design language*, so the skill need not be trusted as part of the kernel. It asks that the assistant query the
+environment instead of carrying the world in its context, and that the interface and the assistant be one editor:
+the same operations, the same admission. The owner's question with it: *maybe the move?*
+
+It is the move that was taken. `design/design.py` has those five verbs and nothing else of substance, and each of
+them rests on the certified shell. A skill is then a page of instructions for driving it, and a person at a
+terminal or a script drives it the same way. The skill is the owner's to keep in his own assistant: it is not a
+file of this tree.
+
+**What was measured in building it (off the gate, one run, the build container).** A design of 60 cell operations
+took about 20 s to preview and about 20 s to admit. One admission cost about 0.06 s on an empty session and about
+0.9 s on the session of 60 edits. ADMIT-0 admits one operation per proposal and one proposal per run, and verifies
+the whole session each time, so a design costs more than in proportion to its size. That is not interactive.
+
+**What stands against the tree, on reading the two texts (a review, not a ruling).**
+
+- **One engineering invariant is in sight, and it was found by measuring.** A proposal that carries a bounded list
+  of operations, admitted in one run as one design event or refused whole. It changes the certified program and
+  its language, so by the decision rule it is registered, built and gated. The ladder already names the place:
+  DESIGN-EVENT-0.
+- **A preview in the window is a program change too.** Showing the proposed world beside the current one in the
+  live editor, with accept and reject, is new code in the shell. It follows the batch, as LIVE-AI-EDIT-0 and the
+  branch were ordered.
+- **Objects and constraints are not there to be inspected.** The second text's example shows a room of 14 by 10
+  with one entrance and three ticked constraints. The world holds cells. By the rule already recorded, which kind
+  of object is authority and which is a view is ruled kind by kind, and a constraint's status is a witness and not
+  a stored field. Until then the tool says what it reads and calls it a reading.
+- **The first text's first part repeats work that was done.** It names the registration, the listen-only pass and
+  the two builds as still ahead. Its gate command is not this tree's: the gate is `python verify\verify.py`, and a
+  landing here is three passes with identical logs.
+- **Undo is a pointer.** A session is never modified, so stepping back means standing at the earlier file. The
+  later one stays on disk, sealed.
+
+**Grade.** DECLARED: the adjustment and both texts. ESTABLISHED (off the gate, by the tool's own ten checks): the
+five verbs over the certified seam. OBSERVED (one run): the cost above. **does_not_show.** That a model writes
+useful designs in this text; that the loop is fast enough to design in; anything about the window.
+
+### DESIGN-EVENT-0 — a design as one transition · **built** (`ae7cbb36`): six rows, 242 in the gate; the gate passes here and on the host; pushed
+The adjustment above ended with one engineering invariant in sight, found by measuring: a design of 60 operations
+cost about 40 s through a seam that admits one operation per run. This section records what happened next: the
+host ran the tool, the owner locked the rung, a court settled its shape, and it was registered. The rung's own
+record, with the language, the checks and the rows, is in [`verify/RUNGS.md`](../verify/RUNGS.md).
+
+**The host ran the design tool (2026-10-06).** With 0126 and 0127 applied the owner ran `new`, `grant`, `propose`,
+`preview` and `admit` on a room with two entrances and a painted floor. The tool compiled 60 operations, the
+shell admitted all of them in the scratch root and then for the project, and the session went from head
+`73571153c2fc` to head `c18a71f6af8d`. Those are the heads the build container had reached from the same text. The
+loop is the certified seam's on win32 as it is here. The output gives no time, and no push.
+
+**The owner's text, and his lock.** It speaks to the assistant, so its rules are quoted and the rest is summarized.
+
+> **Batch the next rung—but don't batch seven unrelated courts into `DESIGN-EVENT-0`.**
+
+The seven properties it names are faces of one claim, in its words: *a design is an atomic, deterministic,
+replayable, previewable transition rather than a pile of shell mutations.*
+
+| | the property | the text's rule for it |
+|---|---|---|
+| 1 | one proposal, one admission | the whole proposal becomes one design event, or nothing does |
+| 2 | a batch means its operations in order | *batching without creating a second semantic engine* |
+| 3 | what is admitted is the net change set | redundant operations may exist in proposal space; admission records the canonical set |
+| 4 | what was previewed is what is admitted | *No recomputation against a silently changed world.* A stale anchor is refused |
+| 5 | incremental verification: *verify the delta, not the whole history* | *Do not weaken the canonical session semantics merely for speed. The fast path must be equivalent to replay.* |
+| 6 | a preview is not a second world | the same batch projects into scratch state without touching authority |
+| 7 | every editor speaks the same event | mouse, buttons, text, a recipe and a model all produce the same design event |
+
+Three more rules from it. *The performance result is not itself the correctness theorem. The correctness theorem
+is equivalence; the speedup is the consequence you measure.* On the tool as built: *Don't let Claude optimize the
+current `design.py` by merely issuing fewer shell calls. Make **the event batch itself** the architectural object.*
+And the order after: `DESIGN-EVENT-0 → DESIGN-IR/DIFF → LIVE-AI-EDIT-0 → GUI`, with the fifteen pivots of the
+development environment left DECLARED and none of them made a gate.
+
+> **My ruling: LOCK DESIGN-EVENT-0 as the next rung, and batch these seven properties into that court.** Don't add
+> a separate gate for each theorem.
+
+This also answers the question he had reserved: whether a design representation is promoted ahead of
+DESIGN-EVENT-0. It is not. The event comes first and the representation follows it.
+
+**What the tree said before the court.** Five facts shaped the questions. A head is folded once per event, so one
+log item folded once cannot have the head of N edits. All three verifiers refuse a repeated proposal id and any
+language but VRDNP1, so a batch changes them whatever its shape. Every edit re-hashes the tiles' 983,048 bytes, a
+cell edit included, and that is the 4 ms an edit event costs on load. The kernel's lattice is 48, so no batch above
+2,121 operations can be admitted. And the two refusal rungs pin the files a batch has to change.
+
+**The court.**
+
+| the question | locked | the owner's refinement |
+|---|---|---|
+| what a design event is in the log | N ordinary edits appended by one admission | *"one design event" should not mean "one hash fold."* The batch is the transaction boundary. The N edits are N log items, and the registration says so |
+| what batches the language accepts | canonical batches only | the compiler canonicalises, never the authority. The normal form must be idempotent. An inverse pair is refused because a batch is a net change set, not because an inverse edit is illegal |
+| what "verify the delta" means in this rung | full replay of the parent, with an exact memo | the delta claim is deferred. The memo is not a checkpoint and adds no trust root |
+| what a preview is at the seam | a dry run of the admission, writing nothing | the dry run returns what binds it to the admission: parent head, digest, proposed head, language |
+
+The third answer corrects the fifth property. His text had asked that a design operation not re-verify the whole
+growing session *if the existing architecture can establish a checkpoint/parent invariant*. It cannot yet: a
+session's seal is a hash, and nothing in the tree makes an earlier verification something a later run may rely on.
+His court wording, registered as given: *Every admitted batch is replayed against a verified parent; unchanged
+witnesses may reuse their exact prior digest, but no historical computation is trusted merely because it was
+previously verified.*
+
+**What is registered.** A canonical batch of one to 4,096 typed operations is refused whole or admitted by one
+admission as that many ordinary edit events, equal in world, head, replay and saved events to the same operations
+admitted one at a time through ADMIT-0. The language is VRDNP2, beside VRDNP1 and not in place of it. The preview
+is `shell design --dry-run`, and an admission can be bound to it. One head is registered before the seam exists:
+the 60 operations the owner admitted one at a time on his host have to reach `c18a71f6af8d…1036` as one batch.
+
+**A prototype, before the registration was committed.** The seam was prototyped against the draft, outside the
+tree. It reached the registered head, which had been fixed beforehand. It also found a plant in the draft that could
+never have caught anything: a memo kept stale by a tile edit leaves the content unchanged, and the seam refuses an
+edit that changes nothing, so no file would ever have reached the workshop. The plant was rewritten before the
+commit. Run against the gate as it stands, it passed 229 of 236 rows, and the seven it reddened are each
+accounted for in the registration. One run, OBSERVED: the 60 operations previewed in about 0.03 s and admitted in
+about 0.08 s. That is a prototype's time on the build container and not a measurement of the build.
+
+**What it costs the gate.** Six rows, 236 becoming 242 with the build. Two amendment entries, because
+REASON-COURT-0 and MINT-WATCH-0 pin files this rung changes: that is the price the two watches named for
+themselves. And two fences re-pinned on purpose, LIVE-INPUT-0's and LIVE-AUTHOR-0's, because each holds by its
+text the statement the memo replaces; what they held there moves to a comparison of values in this rung's replay
+row. It is one rung with one court, as ruled.
+
+**Pushed, locked and built.** The owner applied the registration, the host's gate read 236 of 236, and he pushed
+(`a1c0a65..b975fc5`). His lock with it: *LOCK / PUSH registration*, and *Don't enlarge the rung. The build now has a
+very crisp job: prove the registered transition, especially the memo equality and whole-batch crash boundary.* The
+build did that and nothing more.
+
+| the claim | what holds it now |
+|---|---|
+| a batch is the same operations one at a time | five batches against ADMIT-0's own admissions; the 60 reach the head registered before the seam existed |
+| a batch is whole or nothing | twelve planted deaths; 28 forged files refused by the shell, the workshop and the sealer |
+| what was previewed is what is admitted | the dry run is the admission's own run, ended before anything is written; an admission bound to another digest or head is refused |
+| replay stays the authority | the memo beside the computation that keeps none, over 2,208 edits; a wrong memo, which the shell carrying it reads back as verified, found by the comparison and refused by the workshop |
+
+Two findings of the build are worth keeping. A registered case had been left out of the first rows, and a mutant
+showed it: an unenveloped event inside a batch was refused by its neighbours' places and never by its own rule.
+And the wrong memo fools the shell's read-back only where the parent's own history replays the same under it: a
+plant depends on what it is planted into.
+
+The design tool now sends one batch for one design. The owner's 60 operations, observed on the build container:
+preview 0.10 s and admit 0.13 s, where each had taken about 20 s. That is one machine and no row holds it.
+
+**Landed and pushed (2026-10-06).** The owner applied the two amendments, the build and its record. The host's gate
+read 242 of 242, rowset `aa94c886190510c7`, and he pushed (`b975fc5..7e1d997`). The output holds one run. His word:
+*push the build. Then don't immediately add another theorem. Let the full ×2 gate judge DESIGN-EVENT-0 as a complete
+engineering rung.* So the rung stands as a whole and nothing is stacked on it yet.
+
+Two more host runs followed, each after a patch of documents only (0133, then 0134). The gate read 242 of 242 both
+times and he pushed (`7e1d997..eba1951`, then `eba1951..5f8ab66`). The three outputs read the same, row for row, and
+so does the compact log here. All were the compact run, so what agrees is what was printed. The runs are listed, one
+line each, in [`verify/RUNGS.md`](../verify/RUNGS.md).
+
+That is agreement, and the owner then said exactly what it is not (2026-10-07). He replaced the phrase "full ×2"
+with a predicate: **FULL×2 iff `TreeID₁ == TreeID₂` AND `GateOut₁ == GateOut₂`**, with identity in three values,
+same-tree, different-tree and not established. *`==` earns the claim; `!=` defeats it; unknown withholds it.* Each
+of the first three host runs followed a patch, so no two were on one tree: three agreeing runs, and not FULL×2.
+Here two passes on one tree gave one log: FULL×2. The gate prints nothing of the tree, so a tree's identity is
+taken outside it.
+
+Then he ran the host's gate to the predicate (2026-10-07). With 0135 applied: Git's id of the tree and a status
+that lists nothing, the gate, the gate again, the same id and the same empty status. 242 of 242 both times, and the
+two outputs the same as printed. Same tree, same output: FULL×2 on the host. The identity is Git's, so the files
+Git ignores are outside it; the outputs were compared as he gave them. No push was in that output. It came with
+the next run, a sixth, on the tree with 0136: 242 of 242 again, pushed (`5f8ab66..83b0261`, carrying 0135 and 0136).
+
+His word after it: *take next.* By his order the rung after this one is DESIGN-IR/DIFF. It is not registered.
+
+Three things he fixed with it.
+
+The times stay what they are. *The one thing I would not do is turn the 0.10/0.13 s container timings into a row.
+Keep them as development measurements. The Windows journal-flush cost remains an explicit performance unknown.*
+
+The memo's account keeps its whole chain, as he drew it: a wrong memo; the shell's read-back, which can be fooled;
+the independent comparison, which catches it; the workshop, which catches it; an honest shell, which catches it.
+*It establishes why the memo comparison exists at all.* The second step holds only on a parent whose history has no
+cell edit after a paint, and the court plants it there on purpose.
+
+And one idea is deferred by name. It is not part of DESIGN-EVENT-0, and it is recorded in his words alone:
+
+> **DEFER — batch-proposal independent reconstruction.**
+> The verifier does not reconstruct VRDNP2 proposal bytes from admitted events or independently recompute the
+> proposal digest. Doing so would introduce a second VRDNP2 writer into the verification path and is outside the
+> present admission boundary. Reopen only if durable independent provenance of the original proposal bytes becomes
+> a requirement.
+
+**What stays declared.** LIVE-AI-EDIT-0 and a graphical editor, in that order. The fifteen pivots. (DESIGN-IR/DIFF-0
+was registered on 2026-10-07: the next section.)
+That every editor speaks the same event: one consumer exists, the design tool.
+
+**Grade.** DECLARED: the lock, the court and the registration. ESTABLISHED (gate, the build container): the six
+rows. MEASURED (host): the registration's gate, 236 of 236, pushed; the built gate, 242 of 242 on each of its
+runs, pushed, and FULL×2 by the owner's predicate on the two that ran on one tree.
+OBSERVED (the owner's host, one run, off the gate): the design tool's loop over ADMIT-0 and the two heads. OBSERVED
+(the build container): the times.
+**does_not_show.** What an admission costs on the host, that the design tool has sent a batch there, or that a
+model writes a useful design.
+
+### DESIGN-IR/DIFF-0 — the compiler, certified · **built** (`2baa42f3`; its round named before the build, `c414587d`; two amendments with the build, `d51b4d20` and `42ac51f5`): five rows, 247 in the gate; on the host 247 of 247, FULL×2, pushed; a third amendment after it (`38b51bed`)
+DESIGN-EVENT-0 made a design one batch and left one link outside the gate: the program that turns a design into
+that batch. This section records the word that took the rung, the court that shaped it and what was registered.
+The rung's own record, with the language, the codes, the rows and the plants, is in
+[`verify/RUNGS.md`](../verify/RUNGS.md).
+
+**The word.** *take next* (the owner, 2026-10-07), when the host's gate was FULL×2 on DESIGN-EVENT-0 by his own
+predicate. By his order of 2026-10-06 the rung after the event is the design representation and its diff.
+
+**What the tree said before the court.** Six facts shaped the questions. The compiler is the uncertified part, and
+ghost G28 names it. A diff already has a registered language: a VRDNP2 batch is a net change set with one byte
+form. No design object exists: a room is a statement that expands to cells. Not every difference between two worlds
+is a batch, since the session accepts stair cells and VRDNP2 only opens and closes. His deferral of 2026-10-06
+bounds any diff: it may be computed to propose and never wired into verification. And the rules already recorded
+for a design representation hold: earn the authority, a status is a witness, a compiler in the tree is program.
+
+**The court.**
+
+| the question | locked | the owner's refinement |
+|---|---|---|
+| what is certified first | the compiler | not the diff alone, which VRDNP2 already is; not persistent objects, which are *an authority-model redesign, saved-form question, and identity/provenance question simultaneously* |
+| where it lives | the certified shell, with an independent reference in the gate | *design/ is a client of the certified shell compiler, not the authority and not the court* |
+| provenance | the proposal id is the digest of the exact design bytes | no saved-form field; a commitment, recoverable only while the bytes are kept; no per-operation attribution |
+| readings and constraints | out, by name | *"the compiler produces the right diff"* is one claim; adding that the world satisfies a constraint system is another |
+
+His closing: *I would LOCK all four and resist adding a fifth theorem to DESIGN-IR/DIFF.*
+
+**What is registered.** The current design text, `VERDANDI-DESIGN 0`, is the source language, pinned at the byte.
+`shell design-compile` reads a design and a saved session and writes the one canonical VRDNP2 batch for the net
+difference between the session's world and the world the statements describe, or refuses with a code and the
+design's line. It never approximates: a border cell opened, a stair written over, the camera's cell closed and an
+empty change set are refusals. The proposal id is the SHA-256 of the design's exact bytes, which the admission
+already seals beside every event. The gate holds the compiler three ways: against an independent reference, byte
+for byte; against the statements applied by the gate itself to the parent's bytes, by content, through the
+admission; and against ten planted compilers.
+
+**A reference, before the registration.** The reference was written first and run against the shell as built. It
+fixed the registered id, digest and content, and it found three things. A plant bites only on some designs and
+parents, so each is run where it bites. The admission admits a batch that closes the camera's cell and one that
+opens a stair: two of the tool's three "predicted" refusals were never the seam's, and are now the source
+language's by registration. And a design's bytes can be admitted once in a history, by the session's rule on a
+repeated id.
+
+**What it costs the gate.** Five rows, 242 becoming 247 with the build, and an amendment for REASON-COURT-0's pins
+on the shell's sources. One sentence of DESIGN-EVENT-0's entry is read more narrowly than it was written:
+canonicalising never belongs *to the shell* is taken as a statement about the admission, which still rewrites
+nothing. The registration says so, and it is the owner's to strike.
+
+**Applied on the host, read, locked and batched (2026-10-07).** The owner applied the registration and its record;
+the host's gate read 242 of 242, and the output holds no push. He read the entry and struck nothing: *I would push
+0138/0139*, with one caution, that the camera's and the stair's rules must not be promoted into authority law. The
+entry already says they are the source language's alone, and they stay so. He locked one predicate before the
+build: the shell's bytes are the reference's, and the batch applied to the parent is the design's target. The
+first is byte equality and the second is equality of the world's content, and the plants attack each side. The
+amendment adds one plant for the second side alone: the same omission in the compiler and in the reference, so
+that the bytes agree and only the content can catch it.
+
+His second text named the round. DIFF-0 is the principal rung. Around it are four subcourts and two supporting
+courts, *not seven new claims*: the refusal boundary, the batch's meaning, the id's commitment to exact bytes, and
+a fence that keeps the design tool from becoming a second compiler; then the round trip and a mutation campaign.
+They are registered as one amendment before the build (`DESIGN-IR/DIFF-0a`, `c414587d`), which adds cases to the
+corpus and no row. The client fence sits in the tool's own checks, off the gate, because his locks leave it no
+other place: nothing under `verify/` reads `design/`, and the tool is not certified.
+
+One question he carries forward and rules out of this rung: *Should camera/stair validity be an authority
+invariant, or deliberately remain a property of the design language?*
+
+**What stays declared.** LIVE-AI-EDIT-0 and a graphical editor, in that order. Design objects that outlive
+admission. Constraints. The fifteen pivots.
+
+**The build (2026-10-07).** The compiler is in the shell, as a command apart from the admission, and the gate
+holds his predicate with it: the shell's bytes are an independent reference's, and the batch applied to the parent
+is the design's target. Every value registered before the compiler existed is reproduced by it. Five rows, 247 in
+the gate.
+
+Three things the registration did not foresee, each ruled by him the same day in three texts he brought.
+
+| what the build met | his ruling |
+|---|---|
+| a row that held an amendment's pins against the file as built: the first later amendment breaks it | the amendment chain, accepted as a law: an amendment starts where the one before it ended, and the last is the built file's. *Not an exception to the invariant. It is the invariant correctly stated* |
+| a row that held its six rows as the gate's last six | the anchor, accepted: the six that follow the 236. A historical position, not the ledger's end |
+| a planted defect that survived every row: no parent of the court stood on a stair | the corpus extended by that one parent, the defect and the reason recorded, and nothing beyond it |
+
+He rejected a semantic diff for this rung and any extra row, and gave one principle for all three: *history is
+immutable; state may evolve; transitions must preserve provenance.* Three layers stay apart: history, identity,
+behaviour. He asked whether the tree already held his relations. One it did not: that every pin is the first
+court's own or is reached from it by named links. The origin of the pins is now registered and held, with no row
+added.
+
+The design tool no longer computes a change set. It hands the design's bytes to the shell and keeps what the shell
+writes. A mutation campaign off the gate planted 97 defects: 85 of 94 first-order ones are caught by the rows that
+run the compiler, four only by a reading of the source, five are equivalent because another check covers them, and
+one was the hole the stair parent closed. The record, with the tables, is in
+[`verify/RUNGS.md`](../verify/RUNGS.md).
+
+**Grade.** DECLARED: the word, the court, the registration, his reading, the amendments, his three texts and
+rulings. ESTABLISHED (gate, the build container): the five rows, 247 in the gate. OBSERVED (the build container,
+one sitting): the mutation campaign, the tool's own checks, the times. MEASURED (host): the gate with the
+registration applied and with the first amendment applied, 242 of 242 each, one run each; pushed
+(`83b0261..5c8ad19`, carrying 0137 to 0141); the built gate, 247 of 247, two runs on one tree, FULL×2 by his
+predicate, pushed (`11afebf..c8b6a1f`, carrying 0145 to 0147).
+**does_not_show.** Equivalence for every design. That the reading the compiler and the reference share is what a
+designer means: HERMENEUTICS-0 is registered for that. That the two machines hold one tree.
+
+**On the host, and his fourth text (2026-10-08).** He applied the three patches, took Git's id of the tree, ran the
+gate twice, took the id again, ran the design tool's own checks and pushed. The tree was one tree and the two
+outputs read the same, so the gate is FULL×2 there on a tree that holds the compiler. The host's printed output is
+the build container's log, line for line.
+
+With the output he brought a text that rules on what had been put to him in private. Its distinction: *DIFF-0
+should certify a state transition, not grow a general-purpose provenance system.*
+
+| | his ruling |
+|---|---|
+| a ledger head | defer |
+| validating every compile at content time | reject for this rung; a ghost (G29) |
+| the registration's instrument as a layout | accept, inside the existing fence |
+| the origin's digest, as a projection of 56 files | accept, inside the existing row |
+| reading the chain on the host before the machines are compared | accept, as a protocol and not a row |
+| a triple-write or meta-audit | defer |
+
+The two acceptances that are mechanical are built into rows that exist (`DESIGN-IR/DIFF-0c`, `38b51bed`): over the
+58 files the first reason court holds, what differs on disk from the origin is exactly what an amendment names.
+No row is added. His last word on the rung: *I would stop adding architecture here.* The next rung's condition is
+met, and it waits for his word.
+
+### Hermeneutics and semiotics — what the design language means, apart from what compiles it · hermeneutics **built** (`22d52d02`, under its amendment `7e012752`; four rows, 251 in the gate; FULL×2 on the host; pushed), semiotics **declared** (texts the owner brought, 2026-10-07), not built
+Two texts the owner brought with the push of DESIGN-IR/DIFF-0's amendment, the second after he broke off the first
+exchange. They speak to an assistant, so their rules are quoted and the rest is summarized. They seat nothing.
+
+**The seam they start from.** DESIGN-IR/DIFF-0a says of its own predicate that a misreading of a statement shared
+by the compiler and the reference is caught by neither equality. The first text: *a shell compiler and an
+independent reference can agree perfectly while both implement the same mistaken reading of the language.* The
+rung's direct target court *is itself another implementation of the registered description.*
+
+**HERMENEUTICS-0, the first text.** Its question: *What is the authoritative meaning of VERDANDI-DESIGN 0,
+independently of either compiler?* It sets two agreements apart:
+
+```
+  Compile_shell(D,S) = Compile_ref(D,S)        implementation agreement
+  ⟦D⟧_S = Target(D,S)                          language-meaning agreement
+```
+
+| | |
+|---|---|
+| what it is | *A registered adjudication of the denotation of the source language.* Not *what the designer probably meant*, which *would immediately make the rung mushy* |
+| the questions it would answer | whether a room is rim-closed and inside-open as registered; whether statements overwrite in order; whether a no-op paint is observable; whether a rectangle is the same set whatever the order of its corners; whether an entrance is merely a floor write; whether the camera's and the stair's rules are the language's or the authority's; whether the net change set is an encoding of the meaning or part of it |
+| the camera and the stair | two questions there, which *need not be identical*: what the design language says, and what the world's authority permits. Not *silently making the compiler responsible for authority* |
+| what he would register | a hypothesis, that the source language *has a determinate denotation for each admitted design and parent, independently adjudicated from the implementation of the production compiler and its reference*; and a court, *a semantic corpus written before looking at the compiler implementation*: for each construct a source, a parent, a semantic target, a rule and an ambiguity status |
+| its plants | the ones DIFF-0 cannot tell apart: the compiler and the reference both wrong about a room, about overwriting, about corner order, about an entrance, about a paint or a net-zero design |
+| its success | the court's meaning is the semantic target, and never *Meaning_court = Compile_shell*. *That independence is the entire point* |
+| the strike | no *English-language "interpretation panel"*, and no model asked what a design means: *That would turn the semantic authority into an unbounded subjective oracle.* The owner registers the rulings *before implementation evidence* |
+| a ruling's three values | *LOCK — meaning is fixed. DEFER — language is genuinely underspecified. REJECT — proposed interpretation is not supported.* Where a construct has two plausible meanings, *the correct result may be "underspecified", not a forced semantic answer* |
+
+Its order, and its ruling:
+
+```
+  0140 DIFF-0a  →  0141 docs  →  HERMENEUTICS-0, registered  →  build DIFF-0  →  its court  →  FULL×2  →  build HERMENEUTICS-0
+```
+
+> **LOCK: introduce the concept now. DEFER: its implementation/build until after DIFF-0. REJECT: folding it into
+> DIFF-0 or treating compiler/reference agreement as hermeneutic evidence.**
+
+*Do not make HERMENEUTICS-0 a dependency of the DIFF build.*
+
+**Semiotics, the second text.** *Semiotics is different enough that I would not fold it into HERMENEUTICS-0. It
+sits one level earlier and asks a different question.* Its layers:
+
+```
+  SEMIOTICS       what does this symbol or construct stand for?
+       ↓
+  HERMENEUTICS    what does this particular design text mean, read as a whole?
+       ↓
+  SEMANTICS       what exact world-state does that meaning specify?
+       ↓
+  COMPILER        how is that world-state encoded as VRDNP2?
+       ↓
+  ADMISSION       is that encoded change permitted?
+```
+
+Its question of a token: *Why does the token `room` designate that kind of design operation at all?* A control, a
+text, a model's proposal, a recipe, an icon and a sentence of intent are *different sign systems pointing toward
+the same design authority.* It would not be another compiler court but *a language-design provenance court*: signs,
+referents, conventions, overloaded terms, and the boundary between a sign and authority. And it is not to be
+registered at once: *I would not register it immediately as a new engineering rung unless you find an actual
+ambiguity that DIFF-0 cannot resolve.* Its summary, which also restates the first text's rung more cautiously:
+
+| the layer | what the second text makes of it |
+|---|---|
+| semiotics | a conceptual layer, a vocabulary audit |
+| hermeneutics | a registered interpretive court, if ambiguity appears |
+| semantics | the exact target-world court |
+| DIFF | compiler correctness |
+
+*That prevents a dangerous collapse where "what the word means," "what the author meant here," and "what cells the
+program changes" become one giant oracle.* And of a model at the seam: it *is fundamentally a semiotic translation
+layer*, and *should never get to silently redefine what those signs mean.*
+
+**What already stands that it would rest on.** The limit is registered: DESIGN-IR/DIFF-0's first limit and its
+amendment's both say that agreement of the two programs shows one reading held twice. The meaning of every
+statement is registered as prose, in that entry. One registered plant is of a defect the byte oracle cannot see
+when it is planted on both sides; it is caught only because the target there is right.
+
+**Where it meets rules already in force.** Each wants the owner's ruling before anything is seated.
+
+- **A registered entry is not edited.** DESIGN-IR/DIFF-0's readings are pinned by `2baa42f3`. A ruling that reads a
+  construct otherwise does not correct that entry; it makes a later language.
+- **A registration needs something that can redden.** The court named here is a corpus of rulings, and the corpus
+  is not written. Its targets have to come from the owner's rulings and from neither program.
+- **The reference already exists.** It was written before DESIGN-IR/DIFF-0 was registered, by the hand that will
+  write the compiler, and the registered cases were run through it. *Before looking at the compiler
+  implementation* can be kept for the shell's compiler. It cannot be kept for the reference.
+- **Language proposes, the verifier admits.** The strike of a panel and of a model as the semantic authority is
+  that rule, one layer up.
+- **The two texts differ on when.** The first would register the rung now, very small. The second would register
+  an interpretive court if an ambiguity appears. Nothing is registered by this record.
+
+**The third text, and the court (2026-10-07).** With 0142 applied on his host (the gate 242 of 242; no push in
+that output) he brought a third text. It agrees that the trigger is met and says what to register: *an empty
+`HERMENEUTICS-0` registration would be weaker than registering a small semantic corpus.* One registration, two
+layers: the six readings as a denotation corpus, and four semantic laws beside it, *SEMANTIC-LAW-0 inside
+HERMENEUTICS-0*, ratified only as *owner-ratified properties of the language*. Its fence: *the semantic target is
+supplied by you before looking at the compiler's answer.* Its strike: *I would not register all six as
+automatically LOCK.* And its measure of the thing: *You're trying to close one epistemic gap—independent
+meaning—not build a new verification bureaucracy.* Semiotics stays where it was put.
+
+The court was then held, and it did not go as designed. He ruled the first case himself, as registered. For the
+second he asked for a search of the literature *for the wisest path*, and on the third and fourth he expressed no
+preference. He was given one reading that covers all six, with a recommendation for each remaining case, and he
+ratified all of it.
+
+| what was ratified | |
+|---|---|
+| the reading | a statement is a constant partial map from targets to values; a design is those maps composed in line order, the later winning; the target is the parent with the map laid over it; the batch encodes the difference |
+| two guards | no statement gives a frozen cell another value, the border being frozen at rock and a stair at itself; the target may not leave the camera's cell closed |
+| six rulings | each LOCK, as DESIGN-IR/DIFF-0 registered them. None underspecified |
+| four laws | corner order; fixed point; room as close and then open; exchange of statements that agree where both write. Each a theorem of the reading |
+| the corpus | the six cases and three more: ten designs on the registered parent, each with a literal target typed by hand |
+
+The reading borrows its shape from several fields at once, each attributed in the rung's record: writes that
+compose as the lens laws describe, constraints checked immediately or at commit as a database does, changes that
+commute as patch theory says, and refusal where a protocol would otherwise entrench a guess. That is why one
+definition answers all six cases and yields the laws as consequences.
+
+**What the registration says against itself.** Three things, each in the entry. Five of the six rulings are his
+ratification of a recommendation written by the reference's author. The court was not blind to the reference in
+four of the ten designs. And no plant is claimed to be caught by this court alone: read against DESIGN-IR/DIFF-0,
+that rung's registered values appear to catch all five. What the court adds is adjudication and targets that are
+the owner's.
+
+**Grade.** DECLARED: the texts, the court's rulings and the registration; semiotics, declared only. OBSERVED (the
+build container): the laws checked on the reference. MEASURED (host): the gate with the registration applied (0143
+and 0144), 242 of 242, one run; pushed (`5c8ad19..11afebf`, which carries 0142 to 0144). Nothing of it is built.
+
+### FPS-GRAYBOX-0 — the playable slice · **the sprint** (the owner's ruling, 2026-10-09); the gate stops growing · **built**: the slice runs (`graybox/`)
+
+**His ruling.** *Stop expanding the gate.* More verification architecture had come to compete with the product he
+wants: a design tool that compiles a reachable top-down grid is map data, and not yet a playable 3D FPS. The next
+milestone crosses that boundary. HERMENEUTICS-0 is closed once on the host and then frozen; no newly found hardening
+becomes a prerequisite for gameplay. The reach map is worth keeping and is not built now.
+
+**The four findings**, recorded for later repair and not claimed fixed:
+
+| finding | his ruling |
+|---|---|
+| `reasoncourt-source` reads a citation's line number and does not check it | a real source-validation defect; repair deferred (G34) |
+| `records-preregistered` skips a record that cites no registration | a real registration-coverage defect; repair deferred (G35) |
+| this roadmap misstated LATENCY-0's bound | corrected in the next documentation batch (this one; PRESENT-1, above) |
+| the witness misses changes hidden by Git's flags and settings | a real witness limitation; its empty status alone is not proof of a clean checkout (G36) |
+
+**When to run what**, his rule from now on:
+
+| what changed | what runs |
+|---|---|
+| the compiler, or authoritative semantics | the relevant engineering checks |
+| map content only | compile the level; light geometry and connectivity checks |
+| renderer or gameplay code | the relevant runtime tests |
+| a registered release checkpoint, or a change that threatens the certified contract | the full gate |
+
+Not after every room or corridor edit.
+
+**The milestone.** Three parts: a tactical graybox — three connected routes, distinct central and side engagements,
+cover, spawn regions, objective locations, simple geometry before art; playable first person — mouse look, WASD,
+jump, collision, a camera, a visible weapon placeholder, a player who actually traverses the level; a combat loop —
+one weapon, firing, hit detection, target feedback, a respawn or reset. His caveat: if the design tool cannot express
+height, collision volumes or traversal, do not force them into its tile grammar; the design compiler keeps the map's
+canonical layout and the smallest separate runtime representation carries the rest.
+
+**His stop rule**, in brief: one short inspection pass, then the first running scene; load the level from an explicit,
+deterministic representation; real 3D walls, floors, openings and cover; collision and gravity; a documented launch
+command; a smoke test. Not D3D12, upscaling, networking, anti-cheat, elaborate art, a general rendering abstraction,
+proof composition or a new gate framework. No registered law changed to make gameplay work, and no new rung unless a
+concrete defect blocks the slice. *Deliver a playable graybox, not another roadmap.* After it: map geometry, combat,
+performance measured with valid boundaries, 720p / 1080p / 1440p, networking.
+
+**His amendment: boundary integrity and runtime conformance.** He accepted five proposals in narrowed form:
+
+| proposal | his ruling |
+|---|---|
+| conversion-layer provenance | accept, strengthened: bind the built level to its source and converter, and check the gameplay geometry independently. *A hash alone proves identity, not correctness* |
+| cross-platform physics determinism | accept the principle, narrow the claim: replay determinism on one platform first; across platforms only if the numeric and physics contracts promise it |
+| unsafe-code boundaries | accept: declare the trusted core, the runtime shell and the interface; review when a boundary changes |
+| automated smoke tests | accept, staged: load, spawn, collision, clean exit now; performance thresholds when a stable renderer and test machine exist |
+| input-latency instrumentation on day one | accept the instrumentation, defer any absolute claim: each segment recorded apart, and summed software timings never called input-to-photon |
+
+Its core: *certify the conversion, not the mesh.* A verified design passes through several representations, so
+declare which one owns gameplay truth — a canonical spatial representation from which the collision world and the
+render mesh are each derived, the renderer never the authority for collision. Each built level gets a manifest (its
+source, its converter, the canonical and collision representations' hashes, semantic identifiers back to the source)
+and independent conformance checks (spawns valid and traversable, openings open, walls blocking at named probes, no
+undeclared obstruction on a required route, provenance kept), shown to bite by defect-directed mutations: an opening
+collapsed, a spawn moved into a wall, an invisible blocker. *Unsafe code is not automatically a contract violation;
+unbounded authority across the boundary is.* Cross-platform bit-exact determinism and absolute input-to-photon latency
+stay separate claims until their contracts and measurement protocols exist. *Do not expand the certification
+framework beyond the concrete properties needed to establish the first playable vertical slice.*
+
+**Grade.** DECLARED: his rulings and his amendment.
+
+**Built (2026-10-09): the slice runs.** `python graybox/serve.py` opens a first-person graybox in the browser; the
+folder's README says how to play and test it.
+
+```text
+  tactical.design ──design tool──► shell design-compile ──► shell design ──► tactical.layout    walls and floor
+  tactical.gbx (height, cover, spawns, objective, targets, probes, routes) ──────────┤
+                                                                                     ▼
+                         level.py:  D ──► W canonical world ──► C collision world ──► sim.js (moves against C)
+                                             └──────────────────────────────────────► render.js (draws W)
+```
+
+| his acceptance criterion | what stands |
+|---|---|
+| launches into a 3D first-person scene | WebGL in the browser, served by a standard-library Python script on 127.0.0.1 |
+| mouse look and WASD | pointer lock; a fixed tick of 1/120 s, input taken as one record a tick |
+| collision prevents passage through solid geometry | the player, a circle of 0.35 m, against each cell's solid top; a step of at most 0.55 m; the standing targets solid |
+| a complete route through the graybox | the tactical map's three routes, base A to base B, each walked end to end by a bot through the real movement |
+| the level from explicit source data | the walls and floor are the layout the design tool admitted (head `c862f3b1…`), read back with its heads; the overlay is a text file; nothing is drawn that the converter did not produce |
+| launch and controls documented | `graybox/README.md` |
+| a smoke test | `python graybox/check.py` for map content, and `python graybox/serve.py tactical --selftest` for the runtime |
+
+**The exact limitation that made a separate layer.** VERDANDI-DESIGN 0 says, of a 2D grid, which cells are rock and
+which floor, and the colour of five classes. It has no height, no volume, no collision rule and no gameplay mark. So,
+by his caveat, the language is not stretched: the design tool keeps the tactical map's walls and floor (an
+admitted design of 25 statements, 610 operations, every one of its 736 floor cells reachable), and a separate overlay
+says the rest, on floor cells only. The witness level plays too, read from its pinned bytes.
+
+**Why a browser.** No package could be fetched where it was built (the egress policy refuses the package index), and
+the owner's machine has Python and a browser. So the runtime needs Python's standard library and WebGL and nothing
+else. The simulation, `sim.js`, holds no DOM and runs under node as well; the renderer is one file behind one call,
+and can be replaced without touching the simulation or the maps.
+
+**His amendment, where it stands.** The canonical world W owns gameplay truth; the collision world C is derived from
+it and is all the simulation moves against; the renderer draws W and is never asked whether a wall is there. Each
+map's manifest names its source, the converter's hash, and W's and C's hashes, and every cell of W names the source
+lines that made it. `check.py` is the independent verifier: it reads the source again with its own reader and holds
+W and C to it with its own search — walls and floor, collision, provenance, spawns, probes, routes, the bases and the
+objective connected, the routes distinct — and refuses seven planted defects: an opening collapsed by the converter,
+the same in the source, a spawn moved into a wall, an invisible blocker on a route, a wall made passable in
+collision, provenance stripped, and a spawn written into a wall in the map file (refused by the converter). The
+runtime's own self-test: load, both spawns, every probe walked at, the three routes walked, gravity and the jump, a 1 m
+block refused on foot and mounted with a jump, a hit in the open, a miss behind a wall, the target back up, reset, a
+recorded route replayed twice with the state hashed at every tick, one frame drawn. The boundaries are in
+[`docs/BOUNDARIES.md`](BOUNDARIES.md). The HUD shows the page's own software timings, each segment apart, and says
+they are not input-to-photon.
+
+**What is not there.** Other players and damage, an objective that scores, ammunition, sound, ramps, ceilings and
+overhangs, interpolation between ticks. Nothing is claimed across browsers or machines, and no frame rate.
+
+**Run here.** In the build container: the map checks, every check and mutation passing on both maps, and the tactical
+layout compiled and admitted again through the design tool to the same head; the runtime's self-test 20 / 20 on the
+tactical map and 17 / 17 on the witness level, in headless Chromium (SwiftShader WebGL) through `serve.py --selftest`,
+which ended 0; walking with the keyboard, aiming and firing, captured in screenshots. On the owner's machine (with
+FPS-VISUAL-0, below): the map checks and the self-test pass, and the mouse was not captured. The overlay took the
+click; repaired by 0178.
+
+**Grade.** OBSERVED (the build container): everything above. NOT_MEASURED: the slice on the owner's host, its frame
+rate, and anything of feel. It is not a rung of the gate and adds no row.
+
+**What an equal hash is worth (2026-10-10), at the owner's request.** He asked for it to be built, *"creative/pioneering"*,
+*"consider mixing theorems"*. The replay compared hashes, and nothing showed that the hash read the whole state, or
+that the state was all a tick reads. Four checks now say so, each with a plant it refuses:
+
+- **`hash-coverage`.** The state's leaves are found by walking it. Each must be seen by the hash at its last bit,
+  or be a leaf the world declares, equal to the world's value and of a kind no tick writes. FNV-1a always separates
+  inputs that differ in one byte, and the last bit is one byte.
+- **`fx-noninterference`.** The view's feedback, which the hash leaves out, never reaches the authoritative state.
+  Twins are stepped in lockstep from reachable states.
+- **`snapshot-resume`.** Bit-exact snapshots are resumed in fresh instances of the simulation, with the rules frozen.
+- **`resume-realm`.** A snapshot is resumed in a worker, another realm, and a one-bit change must be told apart.
+
+Together, equal replay hashes now mean an equal game in one browser, up to 32-bit collisions between states that
+differ in more than one byte. The laws mixed are Reproducible Realization, Art/Gameplay Separation (the view's
+feedback is the view's) and Creative Noninterference, each a property of pairs of runs (R-2). Seven defects were
+planted by hand in a copy of `sim.js`, and each was refused by the check it targets. They were: the hash leaving out
+`cooldown`, the targets' `downFor` or the side; a tick reading the hit marker; a count kept at module level; the
+rules left unfrozen; and a new unhashed leaf.
+
+With them comes a measurement, printed and never counted. Each run is played in counterfactual engines whose
+`Math.sin`, `Math.cos` or `Math.hypot` is off by its last bit at every call. The state's bits parted, but no cell,
+footing or hit changed ([`RESEARCH-FINDINGS.md`](RESEARCH-FINDINGS.md), R-6). The self-test is now 27 checks on the
+tactical map and 24 on the witness level.
+
+**Run here.** Headless Chromium: 27 / 27 three times and 24 / 24, line for line the same. Under node: the simulation's
+22 and 19.
+
+**On the owner's machine (2026-10-10).** 0187 applied as tree `ba6360f7…`, as predicted. The self-test passed 27 / 27
+and 24 / 24 in the browser `serve.py` opened, every check's line as in the container, and the art checks passed. Pushed
+`ef1e6ec..00b7645`. Four of the eight MEASURED lines differed from the container's. Every check matched, so the two
+engines' `Math` returned different bits somewhere in these runs and rounding absorbed the difference
+([`RESEARCH-FINDINGS.md`](RESEARCH-FINDINGS.md), R-6). OBSERVED, once.
+
+**The trace experiment (2026-10-11), by the owner's ruling.** *"Investigate the cross-engine divergence, but do not
+let that investigation become a prerequisite for the native plaza slice."* He asked for *"the runtime fingerprint,
+actual transcendental input/output fingerprints, and first-divergence reporting in a small, separate experiment"*,
+kept outside the certified gate.
+
+- **What it is.** `graybox/trace.py` serves its own page and writes a trace: every call of `Math.sin`, `Math.cos`,
+  `Math.hypot` and `Math.atan2` with its arguments' and result's bits, in call order, every tick's input and
+  snapshot, and the browser's description of itself.
+- **The comparison.** Each function's results are compared on common arguments, and the first differing call is
+  classed as an argument or a result. The first differing input and state are reported, with the leaves.
+- **Its own plants.** Five, each found where it was planted.
+
+Node 22 and Chromium 141 differ by one ulp in `Math.sin` and `Math.cos` on a few arguments, and every tick of both
+runs still matches (R-6). The self-test is unchanged, line for line.
+
+**On the owner's machine (2026-10-11).** 0189 and 0190 applied as tree `aa7ddc63…`, as predicted; the director's ledger
+verified at 21 events, the files at head `cac46b5c8e28`, the director's self-test and the art checks passed, the graybox self-test
+27 / 27; `art\play.py plaza-night` launched; pushed `3eeab82..1b5e8f6`. His Firefox 157 trace against the container's
+Chromium 141: `Math.hypot` different on 943 of 3,523 common arguments, `Math.sin` on 1 of 745, `Math.cos` and
+`Math.atan2` the same, each difference one ulp; the first differing call the 2,386th, a result of `hypot`; every input
+and state the same at every tick. OBSERVED once (R-6, with what it does not show and a remedy left to the owner).
+
+### FPS-VISUAL-0 — the visual pass · **the owner's ruling** (2026-10-09); outside the certified gate · **built**: the graybox lit and dressed, the first renderer kept beside it
+
+**His ruling.** The graybox plays; the next pass makes it look like a place, and the certified gate stays out of it.
+His finite milestone:
+
+1. A sky gradient and more convincing directional lighting.
+2. Modular floor materials in place of the one-metre floor grid; the grid kept as a hidden debug mode.
+3. Wall paneling, corner trim, and visually varied cover.
+4. One real 3D viewmodel in place of the weapon block: receiver, barrel, sights, magazine, material contrast, subtle
+   recoil. Its visual transform is kept apart from the hitscan's origin and from the authoritative aim.
+5. The movement, the collision, the source hashes and the replay self-test preserved.
+6. Screenshots and performance compared before and after, and no performance improvement claimed without measuring
+   it.
+
+His advice beside the list: depth comes from the environment (overhead beams, recesses, windows, distant structures,
+controlled shadowing). Improve the WebGL 1 renderer first. Change the technology (WebGL 2; Three.js or Babylon.js;
+Godot or Unreal) only if it is needed later.
+
+**His rule: three worlds.** The canonical world says what the map means. The collision world says what blocks
+movement and shots. The render world says how it looks. In his words: *"The renderer can add bolts, trim, decals,
+surface detail, particles, lighting, and decorative meshes. It must not silently decide where walls, cover, or
+player-blocking objects exist. If visual decoration is intended to affect gameplay, that change must be represented in
+the authoritative world and checked."*
+
+**Grade.** DECLARED: his ruling. It is not a rung, and it adds no row.
+
+**Built (2026-10-09), beside the certified tree.** `python graybox/serve.py` now draws with a new
+`graybox/web/render.js`, still WebGL 1. The first renderer is kept as `render_flat.js`, unchanged but for its name
+(`--renderer flat`, or `?renderer=flat` in the address), so the two can be compared and the change undone.
+
+| his item | what stands |
+|---|---|
+| 1. sky and light | a sky gradient with a sun disc and thin cloud, per pixel; one sun, 40° up, whose shadow is traced through the canonical world's heights (a texel a cell, each cell a column), with a soft outer edge; light from the sky above and from the ground below; darkening at the foot of walls and in inside corners, from the same heights; distance haze in the sky's colour; a filmic tone curve |
+| 2. floors | a module a cell: poured concrete slabs, each sawn once across; steel tread plate at the bases, with the base's border and a spawn pad in the team's colour; a painted steel deck on the platform, welded every metre, striped where it drops; a painted border where the layout has stairs; the objective painted on the deck as a ring. The 1 m grid is an overlay: G, or `?grid=1` |
+| 3. walls and cover | formed concrete panels with joints and tie holes, a dark baseboard, a steel cap; windows painted on about one panel in five; steel guards on outside corners; a thin team band near the bases. Low cover is dressed as a wooden crate, an olive container or a concrete barrier, tall cover as a concrete column or stacked containers, chosen once for each group of cells; the platform's risers striped. Each is the column's own box: no dressing is larger or smaller than what blocks |
+| 4. the weapon | 22 parts: receiver, rail, handguard, barrel, gas block, muzzle device, front and rear sights, magazine well and a magazine raked forward, grip, trigger and guard, buffer tube, stock and pad, charging handle, ejection port. They are in gunmetal, black polymer, tan polymer and steel. A kick read from the weapon's cooldown, a sway from the look, a bob from the distance walked; a muzzle flash that lights the scene; a streak to where the shot ended. The weapon has its own projection and is drawn over the world. The shot stays the simulation's: from the eye along `Sim.aim`. The weapon's transform enters nothing |
+| 5. preserved | `sim.js` byte for byte (sha256 `86c7e5fe…`); `level.py`, `check.py` and the maps untouched, so the canonical and collision hashes are the same; every earlier check of the runtime's self-test passes; `render.js` calls one function of the simulation, `Sim.aim`, and reads its constants |
+| 6. compared | `serve.py --bench` draws the same poses (each spawn, the middle of each route, a shot) with both renderers at the same size, alternating, and writes a screenshot of each pose by each, with the timings, to `graybox/build/bench/MAP/` |
+
+**Depth.** Beams rest on the wall tops across short runs of open cells, on every fourth row and column. A skyline of
+44 blocks stands outside the map. Windows and recesses are painted, not cut: a recess cut into a wall would be the
+render world deciding where the wall is.
+
+**His rule, as the self-test holds it.** Three checks were added, beside `render-flat`, which builds and draws the
+first renderer. `render-readonly`: the whole state, and its hash, are the same before and after six frames drawn by
+both renderers mid-shot. `render-conforms`, against the collision world:
+
+- every top the lit renderer draws is at its cell's height in C, one to a cell;
+- every upright face runs from the lower neighbour's height to its cell's;
+- every step of C has its face, and there is no other solid in the world mesh;
+- each decoration block is outside the map, or above the play ceiling;
+- the target is drawn inside its hit box.
+
+The play ceiling is the highest eye a player can reach. The check finds it with its own search from the spawns, on
+the movement's numbers (a rise of at most a jump's height and a step): 3.845 m on the tactical map, 2.845 m on the
+witness level. The beams sit at 4 m and above, and a line between two points below the ceiling stays below it. So no
+decoration stands between an eye and anything it can shoot.
+
+Seven defects were planted in the renderer, each refused by its check:
+
+- a cover top drawn 0.3 m above what blocks;
+- a step's face left out;
+- the beams lowered into play;
+- a block of decoration on a route;
+- the target drawn past its hit box;
+- the renderer writing the state;
+- the renderer turning the view.
+
+A first form of the sixth wrote a value the state already held at that moment (the shot had hit, so the hit marker
+was above it). It changed nothing, and was replaced by a write that does change something.
+
+**What it does not do.** A shot aimed at a beam passes through it, and a player can see that. The targets' shadows
+are soft blobs, not traced; nothing casts a shadow but the heightfield's columns. There are no textures and no normal
+maps: every surface is computed in the shader. The anti-aliasing is what the browser gives.
+
+**Run here.** In the build container, in headless Chromium (SwiftShader, a CPU rasterizer):
+
+- the runtime's self-test, 23 / 23 on the tactical map and 20 / 20 on the witness level, through `serve.py
+  --selftest`, which ended 0;
+- the seven plants;
+- the bench, ten samples a pose and renderer at 1280 × 720. The tactical map: the first renderer about 58 ms, the lit
+  one about 1.15 s (the medians of all samples), about 17 to 21 times as long, pose by pose. The witness level: about
+  77 ms and about 1.52 s, about 17 to 22 times.
+
+On a CPU rasterizer that is the cost of the arithmetic per pixel. It says nothing of a GPU. Before and after are in
+the screenshots.
+
+**Grade.** OBSERVED (the build container): the self-test, the plants, the screenshots. MEASURED, in SwiftShader only:
+the bench above. NOT_MEASURED: the lit renderer's cost on the owner's GPU, and so any frame rate; feel. No
+performance improvement is claimed. It is not a rung of the gate, and adds no row.
+
+**On the host (2026-10-09).** 0174 to 0177 applied on `3dc15ec`, after a direct check of the Git state:
+
+- no `status.showUntrackedFiles` setting;
+- an empty status with every untracked file shown;
+- no file flagged assume-unchanged or skip-worktree;
+- `HEAD` and its upstream both `3dc15ece…`.
+
+The tree after was `c1a8b5f6…`. The tree given to the owner beforehand, `63bfc87b…`, was the build container's, and
+it was wrong for his checkout. His history holds 40 host records he committed himself (`kernel/attest/` and
+`shell/attest/`, each `-DANIELDILLBERG`), which the container never had. The same four patch files applied to the
+pushed `3dc15ec`, cloned from GitHub, give `c1a8b5f6…` exactly. The two trees differ by those 40 added files and by
+nothing else. The container now works on the pushed history.
+
+On his machine:
+
+- the map checks with `--compile`: every check and mutation passing on both maps, and the tactical layout compiled
+  and admitted again to head `c862f3b1aee2`;
+- the self-test, 23 / 23 on the tactical map, each line as in the container, down to the replay's last hash
+  `91350c39A` and the read-only check's `9613beecA`;
+- the bench, run twice, in Firefox 157 on Windows, through ANGLE on Direct3D 11 to an AMD GPU. It ran at 1280 × 720
+  with 20 samples of one draw each. *(Corrected 2026-10-09, after the record was written: it said "a Radeon R9 200-series GPU". The browser
+reported "ANGLE (AMD, Radeon R9 200 Series Direct3D11 vs_5_0 ps_5_0), or similar", the name Firefox gives a
+whole family of AMD GPUs; the model is not established. [`RESEARCH-FINDINGS.md`](RESEARCH-FINDINGS.md), R-8.)*
+
+The first renderer's medians were 1.0 to 1.5 ms a pose. The lit renderer's were 1.0 to 2.0 ms. Every timing was a
+whole millisecond, and no sample passed 4 ms. The page's clock in that browser advanced a millisecond at a time, so
+the difference between the two renderers is within the clock's step. The column headed p95 was in fact the maximum,
+an error of rank in `serve.py` at 20 samples.
+
+The witness level's self-test was not run there. Then he played, and **the mouse was not captured**.
+
+**The cause.** Until the mouse is captured, an overlay covers the view and asks for a click. The click landed on the
+overlay. Only the view listened for it, so the lock was never asked for. It had been so since 0175, and nothing here
+met it: the container's runs hid the overlay by script, and a headless browser plays no one's click.
+
+**The repair (0178).** A click on the overlay or the view asks for the lock. A refusal is shown on the overlay, and a
+second click asks again. It is checked off the repository, in headless Chromium, with the browser's lock replaced by
+a recorder, so that no emulated cursor enters. Seven checks pass:
+
+- a click where the player clicks asks for the lock;
+- the overlay goes;
+- 100 px of movement turns the view by 0.22 rad;
+- released, the overlay returns;
+- released, movement turns nothing;
+- a refusal is shown;
+- a second click captures.
+
+The 0177 page fails the first three. The bench's sample is now the mean of a batch of draws, each read back. The
+page's clock step is printed, and p95 is the nearest rank. `serve.py` asks the browser to isolate the page from other
+origins, which gives the page a finer clock in a browser that rounds it.
+
+**Grade.** OBSERVED (the host): the Git state, the tree, the map checks, the self-test, the capture failure. MEASURED
+(the host, a 1 ms clock): both renderers about one to two milliseconds a draw and readback at the median, at 1280 ×
+720. Their difference is not resolved by that clock. OBSERVED (the build container): the repair's seven checks. NOT
+MEASURED: a frame rate; the capture on the host after the repair; feel. Not pushed yet.
+
+**After the repair, on the host (2026-10-09).** 0178 and 0179 applied. The tree was `1275b4f4…`, as predicted
+beforehand from the pushed history (lesson 74, met). On his machine:
+
+- the self-test, 23 / 23 on the tactical map and, for the first time there, 20 / 20 on the witness level, each line as
+  in the container;
+- the bench, with the page now isolated, so its clock stepped by 0.02 ms. Each sample was the mean of ten draws, each
+  read back; 20 samples a pose, at 1280 × 720, in Firefox 157 on the same AMD GPU (its model not established; see the correction above).
+
+| pose | first renderer p50 / p95 ms | lit renderer p50 / p95 ms |
+|---|---|---|
+| spawn A | 1.172 / 1.310 | 1.753 / 2.036 |
+| spawn B | 1.177 / 1.354 | 1.670 / 1.780 |
+| route mid | 1.229 / 1.654 | 1.666 / 2.240 |
+| route north | 1.179 / 1.294 | 1.677 / 1.834 |
+| route south | 1.210 / 1.270 | 1.855 / 2.026 |
+| firing | 1.220 / 1.376 | 1.821 / 1.998 |
+
+The lit renderer took 1.36 to 1.53 times the first renderer's median: 0.44 to 0.65 ms more for each draw and
+readback. No sample of either passed 2.34 ms. The 17- to 22-fold seen in SwiftShader said nothing of this GPU, as the
+build had said it would not.
+
+Then he played, and reported: *the play felt really crisp for a first play.* The capture is taken as working from
+that report; no instrument saw it. Pushed, `3dc15ec..222f856`.
+
+**Grade.** MEASURED (the host, one run, a 0.02 ms clock): the table, a draw and its readback, which is not a frame
+rate and not input-to-photon. OBSERVED (the host): the tree, the two self-tests. DECLARED: his report of the play.
+NOT_MEASURED: a frame rate; input-to-photon; any other browser or machine.
+
+### NATIVE-PLAZA-0 — the plaza played without Unreal · **the owner's rulings** (2026-10-10, 2026-10-11); outside the certified gate · **built** (`art/play.py`, `art/web/`); its two rounds evaluated, not yet chosen; live edits built
+
+**His rulings.** On 2026-10-10: *"Make Verðandi-native the primary architecture. Keep UE5.8 as a secondary
+interoperability path. Do not make Unreal a prerequisite for authoring, compilation, or the eventual playable
+product."* His success criterion: *"the same canonical art and layout sources can produce a playable native scene
+without launching Unreal Editor."*
+
+On 2026-10-11, answering the session's two questions: *"Choose the art-owned launcher (`art/play.py`) and WebGL2 in the
+browser. Keep `serve.py` and the existing `graybox/` boundary unchanged."* He asked that the scene be served *"as a
+generated artifact"*, with the name validated and *"the launcher's allowed reads explicit"*, and set a narrow first
+slice:
+
+1. compile the admitted scene;
+2. launch it through `art/play.py` with WebGL 2;
+3. preserve movement and collision;
+4. *"Demonstrate one natural-language visual edit, such as making the cantilevers more imposing, without
+   unintentionally changing the playable layout"*;
+5. compare the registered views and inspect the result in motion.
+
+**Built (2026-10-11).**
+
+- **`art/play.py`.** It compiles the brief, holds the scene to the art checks (a scene that fails one is not served),
+  and serves six named paths on 127.0.0.1. It writes nothing. `graybox/serve.py` is unchanged.
+- **The page.** The graybox's `sim.js`, served unchanged, moves the player against C. Keys 1–9 move a camera to the
+  brief's views, not the player.
+- **`art/web/scene_render.js`, WebGL 2.**
+  - The moon's shadow.
+  - Every lamp, neon and downlight, each seen only from the cells it can see across the grid, so no light leaks
+    through a wall.
+  - Surfaces patterned by what they are: board-formed concrete with tie holes and drips, stone setts, black water,
+    steel.
+  - Light thrown up from the lit floor onto undersides, and the sky dimmed by the masses around and above.
+  - Height fog and each lamp's glow in it, the wet floor and the puddles as mirrors, rain and its rings, bloom.
+- **The exporter's new options**, recorded in the ledger by a rebase (#14): `tower … mass` (stepped masses with
+  cornices) and the canopy's `deep`, `ribs` and `lit`. No statement of the brief used them, so the scene's bytes were
+  unchanged. A new plant in `art/check.py` was meant to refuse ribs that hang below the reach ceiling under a slab that
+  clears it; its slab did not clear it, so it showed nothing about the ribs (found and fixed below).
+- **The director's self-test** now holds its fixture to the art and the world the round was written against, not
+  to the exporter, which is the program under test.
+
+**The edit, through the loop.** Two rounds, written by the model at head `cac46b5c8e28` and evaluated:
+
+- **"make the towers read as one monumental mass, not a comb"** (`art/rounds/plaza-mass/`, #15 to #17): A, B and C,
+  all CLEAN.
+- **"make the cantilevers more imposing"** (`art/rounds/plaza-cantilevers/`, #18 to #20): A, B and C, all CLEAN.
+  Every candidate changes the canopies and nothing else; the play boxes are the same 87.
+
+Nothing is admitted until he chooses.
+
+**Judged from the native renderer's stills** (OBSERVED, in a software renderer in the build container):
+
+- Massing: from above, the head reads as a comb. A, B and C read as stepped blocks with cornices, and C's crown is the
+  strongest.
+- Cantilevers: A's ribs are lost in the dark. B's downlights make the soffits read. C, the ribs and the light
+  together, reads as a structure.
+- The washed wall of the north flank, a lamp over every cell, shows as the earlier note said.
+
+Walk-throughs of the recorded walk, as frame sequences, were made for the head and for mass A with cantilevers C.
+
+**What it does not show.** That the picture is good: a person judges it. That it runs at any frame rate on any
+machine: nothing was timed. That the look is AAA: it is the first native renderer, boxes with procedural surfaces, no
+global illumination, no textures, and no shadows from the point lights.
+
+**The host run (2026-10-11).** 0189 and 0190 applied as tree `aa7ddc63…`, as predicted; the ledger verified at 21
+events, the director's self-test and the art checks passed, the graybox self-test 27 / 27, and `art\play.py
+plaza-night` launched on his machine. Pushed `3eeab82..1b5e8f6`.
+
+**Live edits (2026-10-11), at his request.** He asked to *"load the edit into the live world without closing the
+program"* when a model writes a change. Read first: Ursprung's `weltwerk` (commit `dcdad67`). Its rule, in
+`sim/world_edit.py`, is that an edit is *"NEW authority, not mutate existing truth"*: a rejected edit leaves the old
+world standing, and the player's own state is carried through untouched. Its `apply_edit` gates an edit with the
+authoring layer's parse, pre-play validation and consequence diff; the tests pass here (the seven authoring suites,
+and `sim/test_world_edit.py` 9 / 9). Its prototype page (`fps_demo/weltwerk_fps_prototype.html`, F8) has a live
+editor: text typed into the page rebuilds the world in place, the player's state kept. That editor is a JavaScript
+mirror of `apply_edit` that refuses only empty text, not the Python gate, and nothing reaches it from a file a model
+writes. Verðandi takes the rule, not the code: the checks stay with the authority (the art checks and the director),
+and the file a model writes is what the running page shows, or refuses.
+
+- **`art/play.py`.** Sources: the brief (or `--art`), and each `--intent FILE`, the brief with the intent applied as
+  `director.py` evaluates it (a REFUSED candidate is not served; nothing is written to the ledger). A thread watches
+  the files each source is made from; when their bytes change, the sources that depend on them are compiled again in
+  a fresh Python process, so that an edit to the exporter is used too, and held to the same checks. What passes is
+  served; what does not leaves the scene before it served, with the reason. `/live` says what is served.
+- **The page.** It asks `/live` twice a second. A new scene on the same map is fetched, held to its digest and drawn
+  in place (`Renderer.load`, the old scene's GL objects freed). The game is not touched: the renderer writes no
+  state. A new map is a new collision world and so a new game at the spawn, nothing of the old one carried into it.
+  A new renderer file takes the canvas over, or, if it does not start, the old one goes on drawing. A new `play.js`
+  or `sim.js` is announced, for a reload. `[` and `]` step through the sources.
+- **`python art/play.py --selftest`**, without a browser, 13 / 13: the paths served and no others; an edit served, and
+  equal to compiling that text in place; a touch that changes no byte compiles nothing; an edit to the intent compiles
+  that source alone; five refusals (a canopy where a player can be, a statement the exporter cannot read, an intent
+  naming no statement, an intent whose candidate fails a check, the compiler stopping), each leaving the scene before
+  it served. Seven mutants of `play.py`, each refused by at least one check.
+- **In a browser, in the build container** (Chromium with a software renderer; the harness is not committed), 11 / 11:
+  an intent rewritten from C to A was drawn 0.9 s after the write, with no reload, the state object, the world and the
+  snapshot the same, and the game went on (tick 62 to 95); a refusal was shown and the scene kept; an art edit
+  drawn; the renderer's file swapped, and a planted one that does not start refused; a change to `play.js`
+  announced; a layout candidate (the south flank closed to a slot, CLEAN) started a new game at the spawn; no page
+  errors. OBSERVED, these runs.
+- **What it does not show.** A frame rate, or the swap's cost on a GPU: nothing was timed on the host. That the GPU's
+  memory is returned: `dispose` deletes every object the renderer made, which was not measured. An editor that
+  writes a file in pieces is met by waiting for the file to hold still and, if a piece is read, by a refusal; not by
+  an atomic write.
+
+**A plant that proved nothing, found and fixed.** 0190's plant *"a canopy clear of every head whose ribs are not"*
+set its slab at 3.6 m, below the reach ceiling over the platform's middle (4.275 m), so the slab itself was refused
+and the plant said nothing about the ribs. Each canopy option's plant now shows the slab alone passing and the slab
+with the option refused: the ribs under a slab at 4.4 m, and a new plant for the edge lights.
+
+**The owner's art note on the cantilevers (2026-10-11).** *"Make the nearest cantilever lower and larger in frame, then
+keep its underside mostly dark with a narrow row of warm fixtures along the edge."* And: *"The comparison labels and
+borders also occupy enough space to interrupt the architectural read."*
+
+- **The exporter.** The canopy's `edgelit R,G,B CANDELAS`: a narrow row of small fixtures, one a metre, along the edge
+  that faces the region's middle, each with its light. Recorded by a rebase (#21, head `cac46b5c8e28` to
+  `1ff8e5e8f6be`); the brief uses it nowhere, so its scene's bytes are unchanged.
+- **D** (#22, CLEAN): the north slab alone, from 7.0 m down to 4.6 m and 2.2 m deep, over the same two rows, dark
+  beneath but for the warm row along its plaza edge. A version over a third row was rendered and set aside: the
+  plaza's pole lamps would stand under it, 0.1 m below the slab, and light its underside.
+- **E** (#23, CLEAN): D's north slab with the far slabs as in C.
+- The ledger verifies at 24 events, head `d22e7cb24356`. The play boxes are the same 87.
+- **The sheet.** The stills, from the round's views, are set edge to edge with a 2-pixel gap and a small label inside
+  the first row, nothing between the pictures. Judged from them (OBSERVED, software renderer): D's slab is lower and
+  larger in frame, a dark mass with a warm line along its edge, the magenta neon still below it. Nothing is admitted
+  until he chooses.
+
+**The host run of 0191–0193 (2026-10-11).** Applied as tree `a8d7b03a…`, as predicted. The art checks passed (with
+both canopy-option plants showing the slab alone passing), the ledger verified at 24 events (head `d22e7cb24356`, the
+files at `1ff8e5e8f6be`), `art\play.py --selftest` 13 / 13, the certified gate passed (251 rows / 0 fail, rowset
+`74db4c8d78625af5`), and `art\play.py plaza-night` with C, D and E as sources launched, watching 19 files. Pushed
+`1b5e8f6..30d2527`. OBSERVED once.
+
+### DET-MATH-0 — the simulation's rules made portable · **the owner's ruling** (2026-10-11); outside the certified gate · **built** (`graybox/web/sim.js` rules 1, `graybox/rules_ref.py`, `graybox/trace.py`)
+
+**His ruling.** *"My revised ruling: investigate and implement the deterministic math layer now."* *"I would not wait
+for the desktop renderer or networking. The browser runtime is already a useful place to establish the simulation
+contract."* In four steps: identify every transcendental operation that can affect authoritative state, *"including
+the bot's input generation"*; specify deterministic replacements, *"fixed-point/integer formulations where practical,
+or carefully specified software implementations with explicit range reduction and rounding"*, since *"Simply
+replacing `hypot` with `sqrt(a*a+b*b)` is not sufficient"*; *"run the same input sequence through Firefox and
+Chromium, comparing per-tick authoritative state and identifying the first differing field"*, the replay hashes kept
+*"as a compatibility measurement, not the sole correctness criterion"*; and decide what must be bit-identical. *"If
+you change the math now, replay hashes may change. That is acceptable if you deliberately version the simulation
+behavior and preserve the old baseline for comparison."* And the scope: *"Keep the scope limited to authoritative
+state, and let the measured divergence—not a blanket desire for identical math—determine which operations need
+replacement."*
+
+**1. The census.** Every call of a function whose last bits ECMA-262 leaves to the engine, in `sim.js`: `Math.sin` and
+`Math.cos` of the yaw in `step` (the walking direction) and of the yaw and pitch in `aim` (the shot: a hit or a
+miss); `Math.hypot` in `step` (the step's length); `Math.hypot` and `Math.atan2` in the bot (`walk`: when a waypoint is
+reached, and the turn it inputs), in `lines` and `makeRuns` (the fight's start cell, yaw and pitch), and in the
+self-test's own walkers and shooters. Nothing else a tick does is the engine's choice; no numeric literal in `sim.js`
+has more than 20 significant digits (ECMA-262 lets an engine round a longer one either way); and `hash` read the
+platform's byte order through a `Float64Array`, now written with a DataView, little-endian, which every platform a
+browser runs on already is (its values unchanged). Outside the authoritative state, and left as they are: the
+renderers, the mini-map and the page's measurements in `main.js`. The art's build (`art/dress.py`) uses no such
+function (one exact integer power), so its outputs do not depend on the platform's libm. The measured divergence: node
+22 against Chromium 141, `sin` and `cos`; the owner's Firefox 157 against Chromium 141, `hypot` on about a quarter
+and `sin` on one (R-6). `atan2` was not seen to differ in either pair; it is replaced too, since it makes the bot's
+inputs and the fight's start and the specification leaves it to the engine. That goes one function beyond the
+measured divergence, and is his to reverse.
+
+**2. The replacements**, in `sim.js`, built only from `+ - * / %`, comparisons, `Math.floor`, `ceil`, `min`, `max`,
+`abs`, `imul`, the bit operators, DataView's access to a double's bits and BigInt:
+
+- `xsin`, `xcos`: fdlibm 5.3's algorithm: a Cody–Waite reduction by pi/2 in three 33-bit parts, a second and third
+  step when the first cancels, the kernels' polynomials. Defined for |x| ≤ 2²⁰ · pi/2; beyond it, a `RangeError`.
+- `xatan2`: fdlibm 5.3's, with FreeBSD's correction for |y/x| > 2⁶⁰.
+- `xsqrt`, correctly rounded, by an integer square root in BigInt, not `Math.sqrt` (whose exactness the sources this
+  session found disagree on).
+- `xhypot`, correctly rounded: the squares summed exactly in BigInt, so no step overflows or underflows, subnormals
+  rounded as subnormals, `Infinity` only when the rounded result is.
+- Every constant written as its double's bits.
+
+A fixed-point tick (integer positions and angles) would be the stronger form; it changes every number in the state
+and every reader of it, the renderers included. These replacements keep the state's form and change only the
+functions, so rules 1 differ from rules 0 at exactly the calls the census names.
+
+**3. The same inputs in two engines.** `trace.py` now plays the three runs (the walk, the fight, and a new stress run of
+3,600 ticks made from integers alone) under rules 0 and rules 1 in one trace, and `--inputs A.json` plays A's runs,
+so that two browsers play exactly the same sequence; `compare` gives, rules by rules, each function's differing
+results, the first differing call, and each run's first differing tick with its fields. In the build container, node
+(V8 12.4) against Chromium 141 (V8 14.1) on the same inputs: under rules 0, `sin` and `cos` differ on 112 and 99
+arguments and every state is still the same; under rules 1, no call of the engine's Math and every state of every run
+the same at every tick. Within Chromium, rules 0 and rules 1 part on the stress run at tick 490, in `x`, by one ulp.
+**Firefox against Chromium on his machine is the measurement this step asks for, and it is his to run** (the
+commands are with the patch). Until then, rules 1's identity in SpiderMonkey rests on the specification: NOT
+MEASURED.
+
+**4. What must be bit-identical** (rules 1; `graybox/README.md`, *The simulation's contract*): the world built from
+the map's bytes; the transition, as the next state's snapshot bytes; the serialized state (snapshot, restore, hash);
+the inputs a run is made of (the bot's walk, the fight's start, the stress run); and the rules' arithmetic. Not: the
+renderers, the view's feedback, the HUD, timings, the measurements. A player's own input is data, recorded as bits.
+
+**Versioning.** `Sim.RULES` is 1; `Sim.withRules(0)` builds the rules as they were, for the measurements and the trace
+only. The self-test prints rules 0's replay against its baseline (`91350c39A` tactical, `ce819a52A` witness, recorded
+2026-10-10) as a measurement. Rules 1's replay of the walk ends at the same hashes on both maps in these runs: the
+engine's last bits were absorbed there, as before.
+
+**Held by.** Two self-test checks, each with plants: `rules-arithmetic` (the 43 constants; each function's results
+over 4,000 arguments against `rules_ref.py`'s digest; 31 special values; the sine's domain) and `math-fence` (Math's
+23 approximated functions made to throw while the runs are recorded and played: the same states; the source naming
+none of them). Eleven mutants of `sim.js`, each refused. `graybox/rules_ref.py`: the same algorithms in Python, the
+digests and constants agreed, the square root and hypot checked exactly against their neighbours' midpoints, and the
+accuracy measured against 70 decimal digits (sine 0.70 ulp, cosine 0.74, atan2 1.06 on the first 1,000 of each set;
+a sweep of 20,000 found atan2 at 1.23, fdlibm's own). The self-test is now 29 / 29 on the tactical map and 26 / 26 on
+the witness level (Chromium, 10.5 s and 8.6 s in the container's software renderer).
+
+**Measured cost.** About 4.2–4.6 µs a tick under rules 1, 1.4 µs under rules 0 (node, the container): BigInt's exact
+hypot, once a moving tick. A development measurement, not a row.
+
+**What it does not show.** That SpiderMonkey or JavaScriptCore give the same bits (until a trace from them is
+compared). That an engine has no defect in the operations rules 1 rely on. That the movement's own numbers are
+robust: rules 1 make the same bits everywhere, not better physics. Nothing here enters the certified gate.
+
+**On the owner's machine (2026-10-11).** 0194 and 0195 applied as tree `12a540fc…`, as predicted; `rules_ref.py`
+passed; the self-test in Firefox 157, 29 / 29 and 26 / 26, `rules-arithmetic` and `math-fence` among them (so
+SpiderMonkey's results for the five functions on all 20,000 arguments are CPython's); its own `Math` against the
+rules': `sin` different on 70, `cos` on 62, `hypot` on 693, `atan2` and `sqrt` on none, of 4,000 each; rules 0's
+baselines reproduced; the gate 251 rows / 0 fail; pushed `30d2527..0430b6c`. His Firefox trace's digests of every
+tick's state under rules 1 (the walk `207902cee453d357`, the fight `33e990dd20b743f8`, the stress `5b068df47e0b2e1a`)
+are the build container's Chromium 141's and node 22's, on the same inputs (`38f78768…`, `ee469f56…`, `7374b8c6…`);
+under rules 0 the stress run's differ (`99015929…` in Firefox, `6faecae7…` in V8). OBSERVED once, across two
+machines, at the level of a digest over every snapshot.
+
+**His ruling.** *"ACCEPT DET-MATH-0 as the right architectural direction, with one remaining measurement gap: Firefox
+has not yet been compared against an independently identified Chromium run on the same recorded inputs."* The run
+meant as Chromium's identified itself as Firefox 157: *"That comparison is Firefox against a second playback of the
+Firefox trace—not Firefox against Chromium."* So: versioned deterministic math ACCEPT; the Python arithmetic reference
+ACCEPT, within its coverage; rules 1's cross-browser equivalence NOT ESTABLISHED until the two-browser comparison; the
+full Python tick NEXT; a Rust port deferred until the tick and its contract are stable. *"Continue the art loop in
+parallel."*
+
+**The correction, in `trace.py`.** The `--no-browser` address had been opened in the default browser, and `--name
+chromium` wrote what came back under that name. Now `--browser msedge` (or `chrome`, `firefox`) opens the page in
+the browser named and expects a trace from its engine family; `--expect FAMILY` says the same without opening one; a
+trace from another family is refused and not written; and a trace is written under the engine it reports and its
+family (`chromium-given.json` is a Chromium engine's), a `--name` that names a family only if it is the trace's.
+`compare` now says what kind of comparison it is: `NOT A CROSS-ENGINE COMPARISON` when both traces describe the same
+browser, two builds of one family, or cross-engine. Its self-test holds the engine families of five browsers'
+descriptions and both verdicts.
+
+**The two browsers on one machine (2026-10-11).** 0196 and 0197 applied as trees `b0b5f0ff…` and `e5f313ef…`, as
+predicted. With `trace.py run tactical --inputs graybox/build/trace/tactical/firefox.json`, Edge 155 (`--browser
+msedge`; it described itself as `Chrome/155` and `Edg/155`, a Chromium engine, and the trace was accepted as one) and
+Firefox 157 (`--browser firefox`) played the runs his Firefox had recorded (given-runs digest `c97d5035…`), and
+`compare` called the pair cross-engine, Firefox against Chromium. Under rules 1: no call of the engine's `Math` in
+either, and every snapshot the same bytes at every tick of the walk (1,787 ticks), the fight (476) and the stress run
+(3,600). Under rules 0, the same machine and the same inputs: `Math.sin` different on 103 of 4,307 common arguments,
+`Math.cos` on 98 of 4,307, `Math.hypot` on 1,414 of 4,084, each difference shown one ulp; the first differing call the
+1,424th, at the walk's tick 475, in a result (`hypot(0.14834045293008993, -0.9889363528683207)`: 1.0 in Firefox,
+0.9999999999999999 in Edge); the walk's and the fight's states still the same at every tick, and the stress run's
+parted at tick 490, in `x`, by one ulp. The gate 251 rows / 0 fail; pushed `0430b6c..514a45e`.
+
+So the comparison his ruling named has been made once: on one machine, on one map's three runs, field by field,
+rules 1's states are the same in SpiderMonkey and in V8, and rules 0's are not. MEASURED once. Not the witness level,
+not another machine's Firefox, not JavaScriptCore, not other builds. Whether it moves rules 1's cross-browser
+equivalence from NOT ESTABLISHED is his to rule. Three things the same run shows besides, each OBSERVED in these runs
+only:
+
+- Rules 1's digests of every tick's state on these inputs (the walk `207902ce…`, the fight `33e990dd…`, the stress
+  `5b068df4…`) are those Chromium 141 and node 22 gave in the build container: three V8s on two machines,
+  SpiderMonkey, and (through `tick_ref.py`, below) CPython.
+- The runs his Firefox recorded itself under rules 1 are, byte for byte, the runs Chromium 141 recorded in the
+  container (the same given-runs digest, `c97d5035…`): the bot's walk, which calls atan2 and hypot at every tick, and
+  the fight's start came out the same in both engines.
+- Under rules 0, the stress run's digest is the same in every V8 measured (node 22 and Chromium 141 in the container,
+  Edge 155 on his machine: `6faecae7…`) and in both Firefox runs (`99015929…`): in these runs, rules 0's states were
+  a property of the engine family, not of the machine.
+
+**His ruling (2026-10-11, after that run).** *"DET-MATH-0 advances from NOT ESTABLISHED to MEASURED once for
+cross-browser equivalence on the tactical map."* *"This is not a universal cross-engine proof, but it satisfies the
+specific comparison previously missing."* *"The rules-0 stress divergence is a useful control showing that the
+experiment can expose a real difference."* And one result he asked to keep: *"input equality, initial-state equality,
+per-tick state equality, and individual arithmetic tests catch different defects. None subsumes the others."*
+
+### TICK-REF-0 — the tick a second time, in Python · **the owner's ruling** (2026-10-11): "Full Python simulation tick — NEXT"; outside the certified gate · **built** (`graybox/RULES-1.md`, `graybox/tick_ref.py`)
+
+**His ruling.** *"Browser JavaScript records the input sequence. Python independently advances the authoritative
+simulation. Each tick's expected snapshot is compared with the browser's snapshot. The first mismatch identifies the
+tick and state field. The reference implementation does not call into the browser simulation or trust its computed
+result."* *"Keep the Python implementation independent in structure, not merely a line-for-line translation. Share
+the specified rules and test vectors, but avoid sharing implementation helpers that could reproduce the same defect
+in both implementations."* And its limit: *"It is not yet proof of server security, network protocol correctness, or
+resistance to malicious inputs."*
+
+**Built.**
+
+- **`graybox/RULES-1.md`**, the specification: the arithmetic (each operation rounded, evaluated left to right; what
+  `floor`, `fmod`, `max` and `min` mean at −0 and NaN, and where Python's own differ), the constants, the world, the
+  state, one tick in nine steps, firing, the wall's distance, a box's entry distance, the snapshot and the inputs.
+  Independence in structure is possible; independence in arithmetic is not: two programs reach the same bits only
+  by the same roundings, so every formula is fixed operation by operation.
+- **`graybox/tick_ref.py`**, written from it: its own state (classes, not a walked object), world, collision walk,
+  ray walk, snapshot writer and reader, and square root and hypot (Python's integer square root, not the BigInt
+  Newton iteration of `sim.js`). The sine, cosine and atan2 are fdlibm's, from `rules_ref.py`, which is itself a
+  separate implementation held to every result. `verify TRACE.json` converts the map the trace names and holds it to
+  the trace's manifest, makes the stress run's inputs and start again from integers, and plays every rules-1 run from
+  its start with the browser's inputs, comparing every snapshot byte for byte and naming the first differing tick and
+  its fields. It trusts nothing the browser computed but the inputs and the bot's runs' starts, read back exactly.
+- **Its self-test**, on any trace: two plants in the trace (a field one bit off at tick 1,000, found there in `x`;
+  an input of the walk changed at tick 300, found there) and six in the Python tick (the height's two updates in
+  the wrong order, five halvings for six, the shot's direction with the wrong sign, a target standing again at 0,
+  the sine's polynomial cut short, the cells scanned from the centre), each found; and the specification's numbers
+  are `sim.js`'s.
+
+**Measured in the build container (2026-10-11).** Chromium 141's and node 22's traces, the tactical map (5,863 ticks)
+and the witness level (5,247): every snapshot the same bytes as the browser's, and the stress runs' inputs and starts
+made again in Python the same. 0.65 s for a trace. One finding about the method: a defect of one place in the last bit
+can be absorbed by a run. The plain root of the sum for hypot parts from the browser on the tactical walk at tick
+1,172 and never on the witness level's runs, and a sine reduced without its tail is absorbed there too. A tick-level
+comparison does not replace the arithmetic's own check, result by result (`rules_ref.py`); the two hold different
+things.
+
+**What it does not show.** The owner's limits: not a server's security, a protocol, or resistance to malicious inputs.
+Nor that the bot's input generation is the same in Python (it is not implemented here; the stress run's inputs are).
+Firefox's and Chromium's traces on his machine are the next measurement for it, as for DET-MATH-0.
+
+**On the owner's machine (2026-10-11).** `tick_ref.py verify` on his Firefox 157's own trace: the map converted there
+with the trace's digests (canonical `9e179490cafe`, collision `467b52595504`), every snapshot of the walk (1,787 ticks),
+the fight (476) and the stress run (3,600) the same bytes as Firefox's, and the stress run's inputs and start made
+again the same: `TICK REFERENCE VERIFIED`, 5,863 ticks. Its self-test on Firefox's given-runs trace passed: the trace
+verifies, the constants are `sim.js`'s, both plants in the trace found at their ticks (1,000, in `x`; 300), and the six
+plants in the reference each found exactly where the container's self-test finds them (the fight at tick 23, the
+stress run at 679, the fight at 1, the fight at 300, the walk at 475, the walk at 961). So the Python tick gives the
+same bytes as SpiderMonkey, as well as V8, on the tactical map's three runs: MEASURED once. Edge's own trace was not
+given to `verify` (the command was in the list and not run). Its snapshots are Firefox's byte for byte (`compare`,
+above), so they are the Python tick's too by that comparison; the direct run is among the next commands.
+
+**His ruling.** *"I'd accept 0196/0197 provisionally from the reported results, then build this as the next vertical
+slice"*: the Python bot that records the walk (BOT-REF-0).
+
+**The direct run (2026-10-11).** `tick_ref.py verify` on Edge 155's own trace of the given runs: every snapshot of the
+walk, the fight and the stress run the same bytes as Edge's, and the stress run's inputs and start made again the
+same: `TICK REFERENCE VERIFIED`, 5,863 ticks. Then on his machine, after BOT-REF-0, `tick_ref.py verify` on Firefox
+157's and Edge 155's plays of the Python walk: each 1,787 ticks, VERIFIED. His ruling, made before the direct run was
+reported: *"TICK-REF-0 — ACCEPT provisionally"*, *"Edge's trace still has not been directly passed through
+`tick_ref.py verify`; the matching Firefox snapshots support the inference, but I would keep that direct check
+outstanding."* It is no longer outstanding: run, and VERIFIED.
+
+### BOT-REF-0 — the walk made in Python from the map alone · **the owner's ruling** (2026-10-11): "the next vertical slice"; outside the certified gate · **built** (`graybox/WALK-1.md`, `graybox/bot_ref.py`)
+
+**His ruling.** *"Next piece: the Python bot that records the walk"*: *"It closes the gap between replaying a
+browser-produced trace and independently generating a reference run from the map."* The bot *"should produce inputs
+without consulting `sim.js`, browser state, or an existing browser trace."* Its contract, in six parts: independent
+input generation (*"Do not port the JavaScript bot line-for-line if that merely duplicates hidden assumptions"*); a
+deterministic policy; *"Separate policy from simulation. The bot chooses inputs; `tick_ref.py` alone advances
+authoritative state. The bot must not read the resulting future state or use the browser's decisions"*; a canonical
+trace, with *"map identity, initial-state bytes, rules version, bot-policy version, tick count, and the exact input
+bytes per tick. Reject malformed or mismatched metadata"*; field-by-field verification against the existing browser
+traces; and adversarial tests: *"Plant a defect in bot input generation, alter one input byte, change the map
+identity, and perturb a tick result."* Two properties are kept apart: *"Reference reproducibility"* and
+*"Cross-engine agreement"*. *"The first does not establish the second. And because the bot policy itself can be
+wrong, matching Python output alone does not prove that the walk represents the intended behavior. Keep the existing
+recorded browser traces as independent comparison evidence."* The individual math tests stay. *"Keep the scope
+narrow: one tactical-map walk first"*, the witness level *"only after the tactical walk passes"*, and the gate not
+expanded. The milestone: *"a browser is no longer needed to originate the reference walk, while browser runs remain
+independent evidence that the reference model agrees with the actual engine."*
+
+**Built.**
+
+- **`graybox/WALK-1.md`**, the policy written down from what `sim.js`'s bot did, with the choices it had left unsaid:
+  the route taken by name order (UTF-16 code units, as JavaScript sorts); the targets' cells closed to the plan,
+  standing or not; the plan's climb read from cell top to cell top, not the rules' collision; the turn taken whole
+  and the short way, forward only; a cell reached within 0.3 m, at the cost of a decision and no tick; progress
+  measured before the tick, and the stall rule. The policy is versioned (`walk-1`) apart from the rules (`1`).
+- **`graybox/bot_ref.py`**, written from it. The plan is a breadth-first search a layer at a time (`sim.js` keeps
+  one queue). A decision is a pure function of the path, the bot's own memory and an observation, `(x, z, yaw)`,
+  which the driver makes from the present state before each tick. The function is given nothing else, so it cannot
+  read a later state. The tick is `tick_ref.py`'s. The bot's atan2 and hypot are the rules', from `rules_ref.py`.
+  `make` writes the walk (`VERDANDI-BOT-TRACE 1`); `check` reads it and holds it; `compare` sets it beside a
+  browser's trace; `selftest` plants defects. The reader refuses the whole file, with a code for each fault:
+  `BOT-REF-BYTES`, `-KEYS`, `-FORMAT`, `-DIGEST`, `-RULES`, `-POLICY`, `-MAP`, `-ROUTE`, `-RUN`, `-TICKS`, `-INPUT`,
+  `-START`.
+- **`trace.py run --inputs BOT.json`**: a browser plays the walk, read as `bot_ref.py` reads it and refused whole
+  otherwise. The trace records the runs as given by `bot-ref-walk-1` with the walk's digest, and `bot_ref.py compare`
+  says when a browser played this walk's inputs rather than its own bot's.
+
+**Measured in the build container (2026-10-11), the tactical map.**
+
+- *Reference reproducibility.* The walk was made three times, here and in two fresh processes under `PYTHONHASHSEED`
+  0 and 4242: the same bytes each time (the file's sha256 `0ff71da1…`, its digest `a75baf13…`), in 0.17 s. MEASURED.
+- *The policy written down is the browsers' bot's.* The route `mid` (a path of 47 cells), 1,787 ticks: the start and
+  every input the same bytes as the walk Chromium 141's own bot recorded. By the digest of all the inputs
+  (`38f78768…`), it is also the walk his Firefox 157 recorded (field by field, his run next). MEASURED for Chromium,
+  OBSERVED at a digest for Firefox.
+- *Cross-engine agreement on inputs Python originated.* Chromium 141 (`--expect chromium`, its trace accepted as
+  Chromium's) and node 22 (a harness in the container, not committed) played the walk. Every snapshot was the same
+  bytes as the Python tick's, all 1,787 ticks, and `tick_ref.py verify` passed both. MEASURED, these two V8s.
+- *The self-test* (`BOT-REF SELFTEST PASSED`). Its rows: the file's form read apart from the writer; the three
+  makes; the walk read and held; the walk against the trace. The plants, each found: six defects in the policy
+  (0.35 m for 0.3; the neighbours z before x; the turn not the short way; the routes in reverse order; a climb of
+  1.0 m planned; the start facing north); one byte of an input changed (`BOT-REF-DIGEST`; resealed, made again
+  otherwise at tick 300, and the browser's walk differs there); the map's digest and the map's name changed
+  (`BOT-REF-MAP`); ten faults of form, each refused with its code; the Python tick's `x` one bit off at tick 1,000
+  (named there, in `x`); walks that break what a walk is held to (a turn of 3.5 rad, a shot, the last 5 ticks cut,
+  the `north` route's walk named `mid`, a path planned through walls and over any height); and a start wrong only in
+  a field the first tick writes over.
+- *Mutants of `bot_ref.py`'s own checks*: 23, of which 18 were refused by the self-test. The five that survived are
+  each equivalent on this map. On the tactical map no open cell beside a wall is higher than 1.0 m, so the climb check
+  refuses any path into a wall before the wall check can. No distance is exactly 0.3. The route names are ASCII,
+  where JavaScript's order and Python's agree. Spawn A stands on the route's first waypoint, so leaving the start's
+  feet as spawn A's changes nothing. The stall rule never fires, because each cell is reached within 40 ticks. Three
+  of the eighteen were caught only after plants were added for them (the walk's end and its waypoints held apart;
+  the start against the browser's); one, the file's keys unsorted, needed the form read apart from the writer.
+
+**Findings.**
+
+- **Four plants in the policy leave this walk byte for byte the same**: ±x searched in the other order, the targets'
+  cells left open, a stall after 18 ticks, and the distance by the plain root of the sum (`sqrt(dx·dx + dz·dz)`).
+  This walk is no evidence for those choices either way. The self-test reports them, with a fifth that depends on
+  the machine (the platform's atan2, below), and does not require them. Another map, or the witness level, may
+  exercise them.
+- **The bot's arithmetic.** The plain root of the sum for the bot's distance is absorbed by this walk. CPython's own
+  `math.atan2` (this machine's C library) parts from the rules' at tick 519, by 8.9 × 10⁻¹⁶ rad. A defect in the
+  arithmetic can be absorbed by one run and shown by another, which is why the rules' arithmetic is held result by
+  result, as his ruling keeps it.
+- **Each comparison holds something the others cannot.** An input changed in its last bit (tick 300, `dyaw` 0 to
+  5 × 10⁻³²⁴) leaves every state the same: the inputs show it, the states cannot. A start wrong only in a field the
+  first tick writes over (`onObjective`) leaves every state the same: only the start's bytes show it. A Python tick's
+  `x` one bit off at tick 1,000 is named at that tick; a walk made with that tick parts from the browser's inputs only
+  at tick 1,016, because the bot's decisions carry a state's error into the inputs after a delay.
+
+**His acceptance table, where it stands.**
+
+| Claim | Required evidence | Where it stands |
+|---|---|---|
+| Python bot is deterministic | repeated clean runs produce byte-identical input traces | MEASURED in the container (three makes, two hash seeds); on his machine, two makes compared: next |
+| Python reference tick is correct for those traces | every saved state matches, tick by tick and field by field | MEASURED: Chromium 141 and node 22 playing the Python walk, every snapshot the Python tick's |
+| Browser engines agree with Python | same map, initial state and inputs; engine identity verified; every snapshot compared | Chromium 141 (identity checked by `--expect`) and node 22, MEASURED; Firefox and Edge on his machine, NOT MEASURED until his run |
+| Bot matches intended gameplay behavior | explicit policy invariants and adversarial cases | the inputs, the path and the walk held, each with plants refused; six policy defects found; four choices not exercised by this walk. Not the walk a player would make |
+
+**What it does not show.** That `walk-1` is the walk a player would make: the checks hold a walk to what a walk of a
+route is for, nothing more. That Firefox and Edge agree with the Python walk: his run. The witness level, by his order
+after the tactical walk passes. A server, a protocol, inputs from a malicious client. Nothing here enters the
+certified gate.
+
+**On the owner's machine (2026-10-11).** 0198 and 0199 applied as trees `72856a08…` and `936c5054…`, as predicted.
+`bot_ref.py make tactical`, twice: the same file (`fc /b`: no differences), digest `a75baf13…`, sha256 `0ff71da1…`, the
+same as in the container. `check`: `BOT TRACE CHECKED`. `compare` against his Firefox 157's own trace, whose walk its
+own bot recorded: the start, every input and every state the same, field by field, 1,787 ticks. Then Firefox 157 and
+Edge 155 played the Python walk (`trace.py run --inputs graybox/build/bot/tactical-walk.json --browser firefox` and
+`--browser msedge`, each accepted as its family): `compare` against each, the start, every input and every snapshot
+the same as the Python tick's; `tick_ref.py verify` on each, VERIFIED; `trace.py compare` of the two, cross-engine,
+under rules 1 every state the same at every tick, and under rules 0 `Math.cos` different on 1 of 678 common
+arguments and `Math.hypot` on 255 of 677, with every state still the same. The self-test on his Firefox's trace:
+`BOT-REF SELFTEST PASSED`, every row as in the container, and the note on the platform's atan2 again found at tick 519
+(his Windows C library, as the container's Linux one). The gate 251 rows / 0 fail; pushed `514a45e..4f0ab5c`.
+
+So, in his acceptance table: the bot deterministic, MEASURED here and on his machine; the reference tick right for
+the Python walk, MEASURED in four engines (Chromium 141 and node 22 in the container, Firefox 157 and Edge 155 on his
+machine); the browsers' agreement with Python on Python-originated inputs, MEASURED in those four; the bot's intended
+behaviour, held by its invariants and plants, with four choices this walk does not exercise.
+
+**His ruling.** *"ACCEPT BOT-REF-0 provisionally."* *"The four untested policy choices matter: they remain
+unspecified by evidence, even if this particular walk is stable."* And of the gate: *"These additions are outside the
+certified gate, so this does not establish that the gate itself covers their behavior."*
+
+### INPUT-CONTRACT-0 — the tick's input admitted or refused, whole · **the owner's ruling** (2026-10-11); outside the certified gate · **built** (`graybox/RULES-1.md` *The input*, `graybox/web/input_cases.json`, `admit` in `graybox/web/sim.js` and `graybox/tick_ref.py`)
+
+**His ruling.** *"I agree with the proposed hostile-input slice, with one adjustment: make it a shared input-domain
+contract, not an attempt to force every invalid input through the same error mechanism accidentally."* First the
+domain, in `RULES-1.md`: the fields and their types, finiteness, bounds, the pitch's non-finite values, booleans,
+missing and unknown fields, *"validation timing: validate the complete tick input before mutating authoritative
+state"*, *"one canonical rejection category for each invalid-input class"*. *"For accepted inputs, rules 1 should
+preserve bit-identical tick semantics. For rejected inputs, require equivalent contractual outcomes—same rejection
+category and no state mutation—not identical exception text or stack traces across Python and JavaScript."* On the
+non-finite turn: *"My recommendation is to reject non-finite turn inputs before the tick starts. This keeps NaN out of
+authoritative state, where cross-engine bit identity is not a sound contract. Do not broaden this into a ban on every
+large finite number unless the intended input policy requires it."* A matrix of cases, *"Test both implementations
+against the same table. Include mutants that validate after mutation, accept NaN, and silently ignore an unknown
+field."* *"Do not fold network security, packet framing, rate limiting, or server authority into this slice."* His
+acceptance criterion: *"every input class has a written disposition; JavaScript and Python agree on acceptance or
+rejection; rejected inputs cannot partially mutate state; valid inputs continue to match the rules-1 reference tick."*
+
+**Before it, measured on the code as it stood.** The table's 61 steps that must now be refused, played through the
+old `sim.js` (node 22) and the old `tick_ref.py`: JavaScript ran 54 of them and threw on 7, Python raised on 20, and
+every one changed the state in both, at least its count of ticks, even where it threw (a side `"C"` failed in the
+spawn after the count had moved). On 13 one implementation ran where the other raised; on 7 more both ran and ended in
+different states. An infinite turn made JavaScript's yaw NaN (its bits `fff8000000000000`) for the rest of the run
+and Python raise a `ValueError`; a turn written as the string `"0.5"` was joined to the yaw as text in JavaScript (NaN
+after the wrap) and taken as 0 in Python.
+
+**The dispositions** (`RULES-1.md`, *The input*): a record (a plain object, a `dict`) whose own fields, in the order
+of their names by UTF-16 code units, are flags `true` or `false`, a side `"A"` or `"B"`, or a finite turn; anything
+else refused with the category of its first fault (`INPUT-NOT-RECORD`, `INPUT-UNKNOWN-FIELD`, `INPUT-FLAG`,
+`INPUT-SIDE`, `INPUT-NUMBER`, `INPUT-NOT-FINITE`), the state untouched; the tick reads the admitted copy, not the
+record again. His matrix, row by row:
+
+| his case | disposition |
+|---|---|
+| `dyaw` `+∞` or `−∞` | refused, `INPUT-NOT-FINITE`, the state unchanged |
+| NaN in every numeric field | refused, `INPUT-NOT-FINITE`: three NaN encodings (quiet, the sign set, a payload), in both fields |
+| `dpitch` `±∞` | refused, `INPUT-NOT-FINITE`, not clamped: one rule for every number in an input |
+| very large finite turns | admitted, no bound: the yaw reduced by `fmod`, exact for every finite double, the pitch held at ±1.45; the largest double either way, 3 × 10⁶, 2²¹, the smallest subnormal, each ticked to the same state in both implementations |
+| a missing required field | no field is required: an absent flag is false, an absent turn `+0`, an absent side leaves the side. Every recorded run relies on that (the fight's idle ticks are `{}`), so the class is empty by design |
+| an unknown field | refused, `INPUT-UNKNOWN-FIELD`: `crouch`, `F`, `__proto__`, `constructor`, `toString`, the empty name, `"dyaw "`, `"0"` |
+| `true` or `false` in a flag | admitted |
+| `0`, `1`, strings or null in a flag | refused, `INPUT-FLAG` (lists and records too) |
+| a repeated invalid tick | the same category each time, the state unchanged each time |
+| a valid input just after a refusal | the run goes on from the state before the refusal: a run with six refusals among twenty ticks ends where the run without them ends |
+
+And the rest: an input that is not a record, `INPUT-NOT-RECORD`; a side other than `"A"` or `"B"`, `INPUT-SIDE`; a turn
+that is not a number, `INPUT-NUMBER`; several faults in one record, the first in the order of names.
+
+**Built.**
+
+- **`graybox/RULES-1.md`**, *The input (contract 1)*: the domain, the categories and their order; the contract
+  versioned (1) apart from the rules. The arithmetic table's rows for a flag and a turn now say what an admitted input
+  can hold.
+- **`graybox/web/input_cases.json`**: 70 cases, 121 steps, each step's required outcome, written in a notation that can
+  hold what JSON cannot (a NaN's bits, `−0`, an infinity, a field named `__proto__`, an input that is not a record).
+- **`sim.js`**: `admit` before the tick, which reads the record once and passes its copy on; `step` returns `null`
+  or the category; `inputCases` and `inputFaults` play and judge the table; the self-test's new check `input-contract`
+  plays it, with four records only JavaScript can make (a flag left `undefined`, a `Date`, a record without a
+  prototype, a getter, read once) and the four plants. The self-test is 30 / 30 on the tactical map, 27 / 27 on the
+  witness level.
+- **`sim_worker.js`**: a `cases` mode; and its decoder of a trace's inputs now makes each field an own property. An
+  assignment of `__proto__` sets the prototype and loses the field, so a trace input naming it would have been played
+  without it in a browser and read with it in Python.
+- **`trace.py run --cases`** plays the table in a browser and writes each step's outcome and state;
+  **`tick_ref.py cases [RESULTS.json]`** plays it in Python, with the four plants, and holds a browser's results to the
+  table and to Python, step by step.
+- **`graybox/web/main.js`, `art/web/play.js`**: the live loops build records the contract admits. A key never pressed
+  had given `undefined` in a flag, and the graybox sent `side: null` on every tick; now every flag is `true` or
+  `false` and the side is sent only when asked for. A refusal is shown once in the console.
+
+**Measured in the build container (2026-10-11).**
+
+- Python: every step as the table requires. The plants: the check made after the tick has begun (63 faults), NaN
+  admitted (9), an unknown field ignored (13), a side applied before the rest of the record is checked (2). The same
+  four in the page's self-test give the same counts.
+- node 22 and Chromium 141 (`trace.py run tactical --cases --expect chromium`): every step as the table requires, and
+  against Python every outcome and every state the same, all 121 steps. MEASURED, these two V8s.
+- Nothing admitted changed: re-recorded in Chromium 141 after the change, both maps' three runs under both rules,
+  every start, input and snapshot the same bytes as before it; `tick_ref.py verify` on both maps; the self-tests of
+  `bot_ref.py`, `trace.py`, `tick_ref.py` and `rules_ref.py`; the page's self-test 30 / 30 and 27 / 27; the plaza's
+  live tests 13 / 13, and 11 / 11 in the browser; the graybox page played (walking, reset, side B) with no refusal.
+- Mutants: ten of `sim.js` and eight of `tick_ref.py`, 15 refused. Three are equivalent and so classified:
+  JavaScript's flags tested by `typeof` (the same values pass); Python's names sorted by code point (the orders
+  differ only above U+FFFF, and every name with a category of its own is ASCII); Python's tick reading the record
+  rather than its copy (a `dict` has no getters; in JavaScript the same mutant is refused by the getter's one read).
+  One of the fifteen is refused only across the implementations: JavaScript's admitted copy left empty. Every tick
+  then does nothing, alike, so the table alone (outcomes, unchanged states, runs ending together) holds, while
+  Python's states part at the first admitted step, and the rest of the self-test fails.
+
+**What it does not show.** His limits: not network security, packet framing, rate limiting or server authority. Not
+a hostile caller in the same process (a Proxy, a getter that throws): the contract is on data records. Not
+JavaScriptCore; Firefox and Edge are his to run. Not that the table holds every input: it holds the classes he named
+and their edges.
+
+**On the owner's machine (2026-10-11).** 0200 and 0201 applied as trees `06541c0a…` and `27c689b2…`, as predicted.
+`tick_ref.py cases`: `INPUT CONTRACT HELD`, the four plants giving the container's counts. Firefox 157 and Edge 155
+played the table (`trace.py run tactical --cases`, each accepted as its family): 60 steps ticked, 61 refused (`INPUT-FLAG`
+11, `INPUT-NOT-FINITE` 17, `INPUT-NOT-RECORD` 7, `INPUT-NUMBER` 6, `INPUT-SIDE` 8, `INPUT-UNKNOWN-FIELD` 12), and
+`tick_ref.py cases` held each to the table and to Python: every outcome and every state the same, all 121 steps,
+`INPUT CONTRACT HELD BY PYTHON AND THE BROWSER`. His Firefox's own runs recorded again after the contract, against
+its trace from before it (`trace.py compare`, the same engine): every call of the engine's `Math`, every input and
+every state the same, under both rules; `tick_ref.py verify` on the new trace, VERIFIED, 5,863 ticks. The page's
+self-test in his default browser (whose `Math` measured as Firefox 157's had: `sin` different from the rules' on 70,
+`cos` 62, `hypot` 693 of 4,000) passed 30 / 30 and 27 / 27, `input-contract` among them with the same four plants'
+counts; the plaza's live self-test 13 / 13; the gate 251 rows / 0 fail; pushed `4f0ab5c..714792c`.
+
+So his acceptance criterion holds on the tactical map in four engines (node 22 and Chromium 141 in the container,
+Firefox 157 and Edge 155 on his machine): every input class has a written disposition; JavaScript and Python agree on
+admission or refusal and on the category; a refused input leaves the state as it was; admitted inputs give the rules-1
+reference tick's states. MEASURED, these engines, this table.
+
+### STUDIO-0 — the summonable live director · **the owner's direction and ruling** (2026-10-11); outside the certified gate · **built** (`art/studio.py`, `art/STUDIO.md`, `art/providers/`, the studio in `art/play.py` and `art/web/`)
+
+**His words.** *"The way to streamline this is to make Verðandi feel less like a collection of procedural-generation
+scripts and more like a UE5-style world studio where the designer can summon an AI collaborator directly into a
+running world."* *"The designer should not have to think about patches, JSON, procedural parameters, or verification
+commands."* *"The key design principle: the LLM edits design intent; Verðandi compiles that intent into a live world;
+the designer remains in control."* The workflow: load and inhabit a world; select or summon (*"Without a selection,
+the prompt applies to the whole world"*); describe the result; *"Summon live alternatives"*, two or three candidates in
+the actual world, switched between from one place or walked through; admit, reject or refine, *"Every change has
+undo, provenance, and a clear record of what changed. The live world stays playable throughout."* The pipeline:
+*"The LLM should not directly rewrite the live scene or produce arbitrary engine code for every request. Give it a
+constrained, structured editing interface"*; designer intent, an AI design proposal (*"Target, desired effect,
+constraints, scope, candidate edits"*), the scene compiler, a preview in the running world, the designer's admission.
+The behaviours: keep playing while generating; preview transactionally; preserve session state; control edit scope;
+prevent stale results; undo at the intent level; keep the interaction direct; *"The exact latency target should be
+measured against real candidate complexity rather than promised universally."* What to build first, in his order:
+the live viewport and the summon; multi-candidate comparison; selection, hierarchy and property overrides; revision
+history and scope-preserving edits; visual-quality feedback. *"My recommendation: make the next milestone a
+summonable live director, not another verification rung. Start with the current plaza, object selection, a prompt
+panel, three candidates, live preview, and admit/reject/undo."* *"The test of success is simple: can a designer make
+a meaningful, high-quality change to a running world faster by describing it than by manually constructing it?"*
+
+**Its place in the order.** His ruling of the same day puts INPUT-CONTRACT-0 first: *"After that, return to the art
+loop"*, *"The plaza candidates should not remain indefinitely blocked behind verification work."*
+
+**What exists for it already** (NATIVE-PLAZA-0, DIRECTOR-0): the plaza played in the browser with the graybox's
+simulation; an edit to an intent compiled in a fresh process and swapped into the running page only when it compiles
+(the game, its position and inputs kept; a refused edit leaving the scene as it was); candidates checked against the
+head they meet and admitted or refused by a person, every step in an append-only ledger. **What does not:** a
+selection in the page, a prompt panel, a model that writes a structured proposal, candidates made from one prompt and
+compared in place, and admit, reject and undo from the page.
+
+**His ruling on the model (2026-10-11).** Asked which model the director should call, he chose *"a pluggable model
+adapter, with a persistent local director service behind it. Keep the studio independent of any particular model"*:
+*"a local director gateway that accepts requests from `play.py`, invokes a configurable model provider, validates its
+output, and returns up to three structured design candidates. Start with a CLI adapter so the first implementation
+remains standard-library-only; add direct API adapters when useful."* *"The key architectural decision is that the
+model proposes changes—it never directly mutates the live world. Verðandi owns validation, compilation, preview, and
+admission."* What makes it robust, in his list: structured output (*"Where supported, use the provider's constrained
+structured-output feature rather than relying on prompt instructions alone"*); *"Safe process boundary: Pass the
+prompt and context through stdin or a request file, never concatenate user text into a shell command. Limit output
+size, execution time, and concurrent requests"*; stale-result protection by request ids and source revisions;
+graceful failure; *"Credential isolation: API keys stay in environment variables or an appropriate local secret
+store; never expose them to browser JavaScript"*; *"Reproducibility: Record the provider/model identifier, prompt,
+context revision, candidate output, and compiler result. Replaying a recorded candidate should not require another
+model call."* *"A single configured CLI process is sufficient for the first version."* *"I would not make 'Me, in
+Cowork' the primary runtime dependency."* His acceptance test: *"press the summon key, enter a prompt, receive up to
+three valid candidates, preview one without resetting the player, reject a malformed candidate safely, cancel a stale
+request, and keep the world playable when the model is unavailable."*
+
+**Built.**
+
+- **`art/studio.py`, the gateway**, inside `art/play.py`. For a request (the prompt, the selected piece, the camera)
+  it reads the head as the files stand and writes one `VERDANDI-STUDIO-REQUEST 0`: the id and the head, the selection
+  with the brief's statement that made the piece (line, text, key) and its address patterns, the camera, every
+  statement of the brief, the revision syntax, the art language's reference (from `art/README.md`) and the response's
+  JSON Schema. A provider is a command from a configuration (an argument list, no shell), given the request on its
+  standard input, limited in time and in output, killed when the designer cancels or a newer request supersedes it.
+  Its `VERDANDI-STUDIO-RESPONSE 0` is read whole or refused whole (`STUDIO-RESPONSE-*`): the request's id, at most three
+  candidates of five bounded fields (a title, a rationale, revision lines, a scope, what it means to keep). Each
+  candidate becomes a `VERDANDI-INTENT` (the letter, the base and the prompt the gateway's) and the director evaluates
+  it at the current head; one it refuses is shown with the reason and never drawn, the others are compiled and served
+  as sources. Admission evaluates the candidate again at the head as the files stand and admits it through the ledger
+  only if that is the head it was drawn at and it is CLEAN; rejection records an evaluation and a refusal; undo admits
+  the latest admission's exact inverse as an intent of its own (an undo is never undone; undo again walks back). Every
+  request is recorded under `art/build/studio/` (the request, the raw response, each candidate's intent, one log line
+  with the head, the provider, the model, the prompt and the outcome), and a recorded candidate plays again without
+  the provider (`play.py --intent …/A.intent`).
+- **The page** (`art/web/play.js`, `play.html`): E selects the piece of the dressing under the crosshair (the nearest
+  box the ray meets; a wall in front hides it), and a frame marks it on screen; Enter opens the panel (the game goes
+  on, and typing is not playing); Ctrl+Enter asks; each candidate with its verdict and Show, Admit and Reject;
+  Original, Undo and Cancel. Show switches the drawn source as `[` and `]` do: the same map, so the scene changes and
+  the game, the player and the camera do not.
+- **`art/play.py`**: `--director CONFIG.json`; `--root DIR` (the brief and ledger of another tree, as the self-tests use);
+  `/studio/piece` and the five POSTs (ask, cancel, admit, reject, undo), each carrying the token the page is served
+  with and naming 127.0.0.1 or localhost (as built at STUDIO-0; STUDIO-1 replaced `/studio/piece` with the
+  `select`, `pin` and `unpin` POSTs, eight in all, `art/play.py:432`); the studio's state in `/live`. Without `--director` the panel says so and the
+  world is played as ever.
+- **The providers** (`art/providers/`): `scripted.py`, which is not a model (three fixed variations of a selected
+  canopy, the three of his sketch: *Monolithic*, *Lit underside* with magenta fixtures if the prompt says so,
+  *Deeper canopy*; anything else answered with nothing); and `anthropic_messages.py`, Claude through the Messages API,
+  its key and model in the environment, given one tool whose input schema is the gateway's and made to call it.
+- **`art/STUDIO.md`**: the contract (the configuration, the request, the response, every refusal's code, what is kept,
+  the boundary, what is not shown).
+
+**Measured in the build container (2026-10-11).**
+
+- `python art/studio.py selftest`, 29 / 29, in a scratch copy of the brief, its ledger and the maps: the scripted
+  provider's three candidates CLEAN and drawn on the same map in 0.4 s; the request recorded, and a recorded candidate
+  replayed without the provider to the same scene; a POST without the token, or naming another host, refused (403);
+  A admitted through HTTP (the ledger's evaluate and admit, the page's source 0 the candidate, the ledger verifies);
+  B, drawn before that admission, refused as stale; C rejected; a second request on A's head and its C admitted; undo
+  twice, back to the brief's bytes and scene; the ledger verifies. And each way a provider fails, the world served as
+  it was: no provider; a configuration with a shell line; not JSON; another request's id; four candidates (refused
+  whole, not cut to three); a candidate that names no statement (shown, never drawn) beside one CLEAN and one LEAKAGE
+  (drawn, not admitted); a cancellation (the command killed before it could write its mark); a newer request (the
+  first's result discarded); a timeout; an exit with an error (*the model is unavailable: 503*); output past the limit;
+  a command that cannot start; and the Anthropic adapter against a local server answering as the API's documentation
+  describes (the key in `x-api-key`, `anthropic-version`, one tool whose input schema is the gateway's, the call
+  forced, the tool's input read back as the candidates), an overloaded answer (529) and no key (nothing sent).
+- **His acceptance test in a browser** (Chromium 141, headless, through the page's own keys and buttons; a harness of
+  the container's, not committed), 10 / 10: E selected the north slab and the frame marked it; Enter summoned the
+  director, the prompt typed did not move the player, and three CLEAN candidates came back; B shown in place — the
+  scene swapped, the same state object, the player where he stood, the ticks going on, no new game; B admitted
+  through the ledger and source 0 became it; undo restored the brief and its scene; a candidate the director refuses
+  shown with its reason and Show disabled, the others drawn; a slow request cancelled from the page while the world
+  ticked; a provider that fails (503) shown, the scene kept, and W walked the player on; no page errors.
+- Mutants of the gateway and its endpoints: 13, 12 refused by the self-test. The survivor is equivalent: dropping the
+  check that discards a response that arrives after its request was superseded leaves the second check, before the
+  candidates are published, to discard it. Two were refused only after the self-test grew: four candidates (cut to
+  three silently, until a provider of four was added) and a LEAKAGE candidate admitted (which had made the director's
+  own refusal, a `SystemExit`, drop the connection; the director's refusals are now the gateway's,
+  `STUDIO-DIRECTOR-REFUSED`).
+- Stills of the brief and the scripted provider's three candidates for the north slab, from one place in the plaza,
+  in the build container's software renderer, were sent to the owner; they show the candidates differ, and are not a
+  judgment of them.
+
+**What it does not show.** The quality of what a model proposes: the director's checks hold a candidate to the art's
+rules and to its declared scope, not to taste. The live Anthropic API (no key in the build container). Selecting a
+light or a play piece. A change to the layout (the look only). A long-running worker: each request starts the
+provider afresh, which he allowed for the first version. Any latency of a model. Firefox and Edge on his machine are
+his to run. Nothing here enters the certified gate.
+
+**On his machine (2026-10-11).** 0202 and 0203 applied as trees bbe88393 and 78c85323, as predicted. On Windows:
+`python art/studio.py selftest` 29 / 29 (a command that cannot start said as `[WinError 2]`), the first run of the
+gateway outside the build container; the plaza's live self-test 13 / 13; `ART CHECKS PASSED`; `DIRECTOR SELFTEST
+PASSED`; the gate 251 rows / 0 fail (rowset 74db4c8d78625af5); pushed 714792c..59861b4. He then played the plaza with
+the scripted provider. His studio records (`art/build/studio/plaza-night/`, read in his folder, not copied into the
+repository) hold four requests between 22:41 and 22:44 UTC: *"make it look more structurally realistic"*, then three
+times *"make it look more structurally realistic with realistic building code design features"*, on three of the
+plaza's canopies; each answered in 122–163 ms with the same three CLEAN candidates, since the scripted provider reads
+a prompt only for the word *magenta*; *Lit underside* (B) admitted each time (ledger #24 and #25, #28 and #29, #30
+and #31, #32 and #33) and the first undone (#26 and #27), the page swapping the scene each time. He restored the brief
+and its ledger with `git checkout`. He then started the studio on the Anthropic provider; no request was recorded, so
+nothing was sent.
+
+**What he found.** That the words did not change the answers, and *"there is no object bar code or whatever so i can
+say match the design of this object or make it look like it connects"*. Both stand on the code as built: the
+scripted provider is not a model; the request carries the selected piece's id, but the page never shows it, a second
+piece cannot be named, and nothing in metres is sent. And a model would be held to the art language: a canopy has a
+height, two corners, a depth, ribs, downlights and edge fixtures, and no statement makes a column, a bracket or a
+hanger (a column on the floor would also be refused by the check that no dressing stands where a player can be).
+
+**His rulings (2026-10-11).** On the model: *"Choose “Both, CLI first.” That gives Verðandi two real model paths
+without tying the studio to either one"* — Claude Code's CLI, *"first provider to implement and test"*, and the
+Anthropic API kept, *"configure it with a Console API key, and compare output quality, latency, reliability, and actual
+cost."* *"the CLI route is convenient for your personal development setup, but it is not a substitute for a properly
+authorized provider integration in a product offered to other users."* *"A better model cannot invent usable columns
+or hangers if the scene language cannot represent them. The model adapter and the scene-authoring language are
+separate bottlenecks."* For the CLI provider: *"`--tools ""` must actually result in no available tools. The gateway
+must independently validate the returned JSON regardless of the CLI's schema enforcement."* *"The provider's smoke
+test should prove that the model was actually invoked—not just that a provider configuration was loaded. Record the
+provider, model, exit status, schema-validation result and latency, without logging secrets."* *"Implement CLI first,
+API second, shared schema and gateway throughout."* The comparison: *"whether candidates actually reflect the
+requested change; whether the scene language can express those changes; invalid-output and timeout rates; latency
+and cost per accepted edit"*; *"the best director is not the model that generates the most text or candidates, but
+the one that helps the designer reach a good, accepted world edit with the least friction."* On the references: STUDIO-1,
+below.
+
+### STUDIO-1 — two model paths, and references: tags, pins, geometry and relations · **the owner's rulings** (2026-10-11); outside the certified gate · **built**
+
+**His ruling.** *"Choose “Tags + pins + geometry” for this slice. Keep the reference system and art-language vocabulary
+separate so you can establish reliable object grounding before expanding what the compiler can build."* What it
+includes, in his list:
+
+- *"Visible tags: Stable, short IDs such as `@1`, `@2`, `@3` for the current scene revision. Show each tag in the
+  viewport and object list."*
+- *"Selection and pins: `E` selects the target; `R` pins or unpins references, up to four. Show the pins persistently
+  in the prompt panel."*
+- *"Metric geometry: For each referenced piece, include its world-space bounds in metres, position, dimensions, and
+  orientation. State the coordinate convention."*
+- *"Computed relationships: Include measured gaps, relative directions, facing, and nearest relevant wall face.
+  Distinguish measured relationships from inferred ones; don't present an approximate facing test as an exact
+  connection."*
+- *"Grounded prompt context: “Match @2” resolves to the pinned object, with its identity, geometry, and supported
+  properties included in the request. The model must not have to guess which object the user means."*
+- *"Revision safety: Bind references to a scene revision and object identity, not just a reusable tag. If an edit
+  invalidates a reference, report it rather than silently redirecting it."*
+
+Why not connecting pieces yet: *"Adding brackets, hangers, and tie-backs simultaneously expands the authoring language,
+exporter, and checks. That makes it harder to tell whether a failure came from bad references or missing construction
+vocabulary."* An image of the view is *"the next useful enhancement, not a substitute for the reference contract"*.
+His sequence: this slice; then *"Current-view image as optional model context, with a clear fallback for providers
+that do not support images"*; then *"Connecting pieces, introduced with explicit attachment semantics and new checks."*
+His acceptance criterion: *"the model consistently identifies the intended objects, receives their actual geometry,
+and proposes edits the existing compiler can express—without silently changing the meaning of a reference."*
+
+**The reading behind it** (`docs/RESEARCH-FINDINGS.md`, R-14): giving every object a short identifier a model and a
+person both use (Chat-Scene), and turning spatial relations into explicit, checked constraints (SceneCraft,
+ScanEdit). Nothing of it is claimed as new here.
+
+**Built, the providers (2026-10-11), by his ruling on the model (STUDIO-0, above): "CLI first, API second, shared
+schema and gateway throughout".**
+
+- `art/providers/claude_code.py` and `claude_code.json`: Claude through Claude Code's CLI, `claude -p`, on the login
+  it has. Run from an empty temporary folder, never through a shell: a fixed instruction as its argument, the request
+  on its standard input, its own system text from a file, the gateway's schema (`--json-schema`), `--tools ""`,
+  `--disallowedTools "mcp__*"`, `--strict-mcp-config`, `--safe-mode`, `--no-session-persistence`, `--permission-mode
+  dontAsk`, `--output-format stream-json`. The session's first event is read before its answer: if it offers any tool
+  but `StructuredOutput`, claude is stopped and nothing it said is used. Its answer goes to the gateway, which reads it
+  whole as it reads every provider's. On Windows only `claude.exe` is run: a `.cmd` or `.ps1` shim needs a shell and
+  is refused, with what to set instead.
+- `art/providers/director_prompt.py`: the system text and the request rendered as text, which both model providers
+  give their models, so that they are compared on the same question.
+- A response may say its usage (`provider.usage`: tokens in and out, a cost or null, and where the cost comes from),
+  read strictly. Every call's log line now holds what he asked for: the provider and model the response names, the
+  exit status, whether the response was valid, the provider's time, the usage. play.py prints one line a request.
+- A cancelled or superseded provider is killed with everything it started (its process group on POSIX, `taskkill /T`
+  on Windows), and play.py, stopping, kills a request running: a model's own command line cannot outlive the request.
+- `python art/studio.py probe CONFIG.json`, his smoke test: two different prompts about one canopy, through the
+  gateway, nothing admitted; SHOWN only if the provider reported a model and tokens for both and the two were answered
+  with different revision lines. `python art/studio.py report`: by provider, the requests answered, invalid outputs,
+  timeouts, provider errors, the provider's time, the verdicts, the admitted edits, the tokens and the reported cost
+  per admitted edit.
+
+**Measured (2026-10-11, the build container).**
+
+- **His check on `--tools ""`**, run before the provider was written (Claude Code 2.1.296): with `--tools ""` and
+  `--safe-mode`, the session still offered 22 tools of an MCP server the container connects (its source "dynamic");
+  `--strict-mcp-config` did not remove the server; with `--disallowedTools "mcp__*"` it offered `StructuredOutput`
+  alone. So the provider passes all three and refuses any session that offers more. With its own system prompt and
+  the MCP tools gone, a trivial call's input fell from 15,545 tokens to 3,672.
+- `python art/studio.py selftest` 38 / 38: the 29 rows before, and a provider's usage that is not counts refused; a
+  cancelled provider's own child killed with it (it would have written a mark 2 s later); every call's exit status,
+  validity, time and usage in the log, and no key in it; and Claude Code's CLI through a stand-in for `claude`: the
+  flags, the schema, the system text, the prompt on standard input and nowhere in the arguments, an empty folder, the
+  model and usage it reported recorded, a line printed; a session offering `Bash` and an MCP tool stopped before it
+  could answer; a fifth field in its structured output refused by the gateway itself; out of structured-output
+  retries; not logged in; a `.cmd` shim refused with nothing run.
+- 14 mutants of the gateway and the provider, 14 refused (among them: only the provider killed, not its group; a
+  session's extra tools accepted; no `--disallowedTools`; the prompt in claude's arguments; claude run from the
+  repository; a superset of a candidate's fields accepted; the exit status, the usage or the validity not recorded).
+- **The probe against the real CLI** (`claude_code.json`, Claude Code's default model, reported as
+  `claude-sonnet-5-5`), on the north canopy (`canopy:19,10-28,11`): SHOWN. *"make it read as one heavy, monolithic
+  slab that fills more of the sky"*: 16.7 s, 7,780 tokens in, 1,968 out, ~$0.051 by Claude Code's own estimate, three
+  CLEAN candidates (the slabs thickened; one slab over the whole plaza in place of three; a heavier material at one
+  height). *"make it lighter and thinner, with a warm glow along its edge"*: 15.1 s, 7,783 in, 1,789 out, ~$0.038,
+  two LEAKAGE (a material changed without declaring it) and one CLEAN. The scripted provider's probe: NOT SHOWN (no
+  tokens; the same lines for both prompts), as it must be.
+- **What the probe shows before the references.** One canopy was selected and the prompts said *it*; four of the six
+  candidates changed the other two canopies as well (all three of the first prompt's, the third of the second's),
+  each within a scope it declared, so the director passed them. The director holds a candidate to what it declares,
+  not to what the designer meant: naming the intended pieces is the references' work.
+
+**What it does not show.** The live Anthropic API (no Console key in the build container). Claude Code's CLI on
+Windows. Whether a model's candidates are good. A model's latency or cost elsewhere: two calls, one machine, one
+model.
+
+**Built, the references (2026-10-11), by his ruling: "Tags + pins + geometry".**
+
+- **`art/studio_refs.py`**, pure functions over a scene. An object is a box of the dressing with its parts (an id that
+  extends another by `:something`: a canopy's ribs, downlights and edge fixtures, a tower's cornice) and the lights
+  that share their ids; its identity is its id, which holds its cells. Its geometry: bounds, centre and size in metres,
+  underside and top, long axis, *"axis-aligned boxes; no rotation"*, its boxes and parts and lights, and, where its
+  lights record a direction, which way it faces (measured, as the scene records it). Its nearest wall of the play
+  geometry: which, on which side, how far in plan and in space, its top. Between two objects, measured from their
+  boxes: the gap (the least distance between their boxes, not their bounds), whether they touch, their overlap in
+  plan, the direction and distance between centres, the differences of undersides and tops, whether they share a
+  kind, a material, a statement, with the words *"a gap of 0 means the boxes touch or overlap, not that they are
+  joined"*; and, where the first faces somewhere, whether it faces the second, marked *inferred* (*"a half-space test
+  on centres; not a line of sight, not a connection"*). What a revision of each verb's statement can change, and how
+  many objects that statement makes.
+- **The gateway** (`art/studio.py`): E (`/studio/select`) makes an object the target, R (`/studio/pin`) pins one or
+  unpins it, up to four (`/studio/unpin` from the panel). Each object gets a tag the first time, `@1`, `@2`, …, that
+  names it by its id for as long as play.py runs and is never given to another; selecting or pinning it again binds it
+  again to the scene and head of that moment. Its status in `/live`, read against the scene served: ok, changed, gone.
+  A request (`VERDANDI-STUDIO-REQUEST 1`) carries the target and the pins with their statements, geometry, nearest
+  walls and binding (changed since or not), the relations between every two, the tags the prompt mentions, and the
+  coordinate convention. A prompt naming a tag that is neither the target nor a pin, or a tag whose object is not in
+  the scene at the head, is refused before anything is asked (`STUDIO-REFERENCE`); the target pinned, a fifth pin,
+  likewise (`STUDIO-REFERENCE`, `STUDIO-PINS`). Each candidate is shown with what it touches, from the director's own
+  verdict (what it realized, and what a changed material affected): each tag changed or not, the untagged objects of
+  the head it changed, the objects it made that the head has not.
+- **What a model is told** (`director_prompt.py`, both model providers): each tagged object with its line, what its
+  statement can change and how many objects it makes, its bounds, its nearest wall; the relations; and, in the system
+  text, *"A tag means that object and no other. Change the target; change a pinned object only if the prompt asks for
+  it"*, and that a candidate should name the tags it changes.
+- **The page**: what is under the crosshair is named in the corner, by its address and its tag if it has one; each
+  tagged object is framed and labelled on screen (the target amber, a pin dashed blue); the panel lists the target and
+  the pins with their addresses, sizes and lines, and an unpin button; each candidate says what it touches. R pinned,
+  so the game's reset moved to Backspace on this page (the graybox's own page keeps R). The scripted provider answers
+  *match @N* with one candidate giving the target the pin's material, height and options.
+- `python art/studio.py probe CONFIG --references`: his acceptance criterion put to a model. The north canopy the
+  target `@1`, the west and south canopies pinned `@2` and `@3`; four prompts, each naming what is to change; for
+  every candidate, which tags it changed and how many untagged objects, against what the prompt meant.
+
+**Measured (2026-10-11 and 12, the build container).**
+
+- `python art/studio.py selftest` 51 / 51: the 38 rows before, and thirteen in a scratch copy of their own: tags made,
+  kept and never moved (a rib names its canopy; the target refused as a pin; a fifth pin refused; a pinned object made
+  the target and back); the request's bounds, relations and nearest wall recomputed from the scene's boxes; the gap
+  between boxes, not bounds (an L of two boxes whose bounds enclose a third, 4 m from it); facing marked inferred; what
+  a model is told; *match @2* (the target given the pin's height and options, the pin and everything else untouched,
+  and the candidate says so); a candidate changing an untagged canopy, one moving the target's corners (a new object),
+  one changing a material (every object of it touched); a prompt naming `@9`, or a tag not in the request, refused with
+  nothing asked; an object changed since it was pinned (said in the page and the request, bound again when pinned
+  again); an object gone (its tag kept, the request refused until it is unpinned, the new object given a new tag); the
+  page's POSTs and `/live`.
+- **In Chromium 141**, through the page's own keys (a harness of the container's, not committed), 11 / 11: the address
+  under the crosshair named before anything is tagged; E, the target `@1` framed and labelled; the west canopy given an
+  edge of light through the studio and admitted; R, `@2` pinned and framed as a pin, the player where he stood; the
+  panel's list; *make @1 match @2*, one CLEAN candidate saying *@1 changed · @2 unchanged · no other object changed*;
+  shown in place, the game untouched; admitted, `@1` shown as *changed* and still `@1`; undone, `@1` as it was; a prompt
+  naming `@9` refused in the page; Backspace resets the game; no page errors. STUDIO-0's acceptance test run again on
+  the new page: 10 / 10.
+- Mutants of the references: 19, 19 refused (a new tag on every touch; a gone object's tag moved to another of its
+  kind; mentions not checked; no limit on pins; a part not resolved to its object; bounds from one box; the gap between
+  bounds; facing presented as measured; tagged objects counted as others; what a material affected left out; new
+  objects not told apart; a change since binding never said; a gone object shown as ok; the target kept as a pin; the
+  target pinned; no select endpoint; the scripted match keeping the target's options; the relations not told to the
+  model; re-pinning not binding again). The providers' 14 mutants run again on the final code: 14 refused.
+- **The references' probe against the real CLI** (its default model, `claude-sonnet-5-5`), each prompt asked twice, 24
+  requests in all: about 9,700 tokens in and 800–2,200 out a request, 8.7–17.5 s, $0.014–0.05 by Claude Code's own
+  estimate (about $0.64 in all). Three runs:
+  - the first, before a candidate's new objects were told apart from the others: 15 of 16 candidates changed exactly the
+    tags the prompt named and nothing else; the sixteenth gave `@1` new corners (a shorter slab), a new object by its
+    id, which the measure then counted as an untagged object;
+  - the second, with that told apart: 16 of 16 as meant (one made a new object, `@1` replaced by a shorter slab); 10
+    CLEAN and 6 LEAKAGE, all six the answers to *give @2 a warm glow along its edge*, in one run of it, whose scopes
+    named `@2`'s exact address, which does not cover the addresses of the edge fixtures its statement makes;
+  - the request was then made to say so beside each reference's patterns (*"an exact address … does not cover the
+    parts its statement makes, its ribs and lights"*); the third: 15 of 15 as meant, 15 CLEAN.
+  Before the references, the providers' probe (two other prompts, *it* for one selected canopy) had four of six
+  candidates changing the other canopies too. The prompts differ, so this is not a measured comparison.
+- His key: *"`R` pins or unpins references"*; R was the game's reset on this page, which is now Backspace (said in the
+  page and its HUD).
+
+**What it does not show.** That a model identifies the intended objects in general: four prompts, three canopies, one
+model, a few runs. The page in Firefox or Edge, or on Windows. Tags on lights or play pieces, tags that outlive play.py
+or are shared between pages. A scope pattern for one object with its parts: the director's grammar has none, and the
+request only says so; the scope protocol (DIRECTOR-0, its conformance vectors) is unchanged. The image of the view and
+the pieces that connect two objects: his next two slices. Nothing here enters the certified gate.
+
+**On his machine (2026-10-12).** 0204, 0205 and 0206 applied as trees 8c4b8777, 82433d43 and d52126f3, as predicted.
+On Windows: `python art/studio.py selftest` 51 / 51, among them the first runs outside the build container of a
+cancelled provider's own child killed with it (`taskkill /T`) and of a `.cmd` shim refused; the plaza's live self-test
+13 / 13; `ART CHECKS PASSED`; `DIRECTOR SELFTEST PASSED`; the gate 251 rows / 0 fail; pushed 59861b4..aa83f2f. Claude
+Code was not installed; he installed it (2.1.296, `C:\Users\…\.local\bin\claude.exe`, the official installer),
+pointed `VERDANDI_CLAUDE` at it and signed in with his Claude account (`claude auth status`: logged in, `claude.ai`,
+his plan). Its default model there answered as `claude-opus-5-5`. From his studio records (read in his folder, not
+copied into the repository):
+
+- `probe claude_code.json`: SHOWN. 24.1 s and 21.7 s; about 6,000 tokens in and 2,070 out a request, ~$0.089 and
+  ~$0.077 by Claude Code's own estimate; five candidates CLEAN and one REFUSED by the exporter (`ART-REFUSED`: a slab
+  0.15 m deep, under the language's least depth of 0.2).
+- `probe claude_code.json --references`: 8 requests, 16.8–23.2 s; 20 candidates, 17 CLEAN and each changing exactly the
+  tags its prompt named and no untagged object (one making a new object, `@1` trimmed to `@2`'s length); 3 REFUSED by
+  the director (`INTENT-APPLY`: a revision naming a statement the brief does not have, each an attempt to change a
+  canopy's corners with `=`, when its corners are part of its key), and none of them drawn.
+- **The page, in his browser.** A first prompt, *"make @1 match @2"*, was refused before anything was asked
+  (`STUDIO-REFERENCE`: the prompt named `@2`, which was not the target or a pin; his target was `@1` and his pin `@4`,
+  since a tag goes to an object at its first touch and he had touched two others first); nothing was sent and nothing
+  recorded. He also found that the plaza's canopies *"already match"*: all three are the same plain slab, 0.4 m deep,
+  and differ only in height and footprint. On a second start: the west canopy the target `@1` and the south canopy
+  pinned `@2`; *"give @2 ribs and a warm glow along its edge; leave @1 alone"* (23.3 s, three CLEAN candidates, each
+  touching `@2` alone; *Rib every cell, amber edge glow* admitted, ledger #24 and #25); then *"make @1 match @2"* (18.9
+  s, three CLEAN candidates, each touching `@1` alone: *Full match: height, ribs and edge light*, *Match the dressing,
+  keep @1's height*, *Match height only, no ribs or light*; the first admitted, ledger #26 and #27, the west canopy
+  given the south one's height, ribs and edge lights). Both tags then shown *changed since tagged*, as they were.
+
+So his acceptance criterion, *"the model consistently identifies the intended objects, receives their actual geometry,
+and proposes edits the existing compiler can express—without silently changing the meaning of a reference"*, held on
+his machine for the 23 candidates the director drew (the probe's 17 and the page's 6); 3 more were refused before being
+drawn. MEASURED, his machine, his plan's default model, these prompts. And one confusion of use, not of meaning: tags
+numbered by first touch are stable, and so not the numbers a designer expects.
+
+### STUDIO-APP-0 — Verðandi Studio, a runnable application that improves itself · **the owner's direction** (2026-10-12); outside the certified gate · **declared; researched and planned**
+
+**His words.** *"The next objective should be a runnable Verðandi Studio, not another narrowly scoped rung. The
+reference work is a feature inside that product, and rendered-view context should be batched with other improvements
+when the studio workflow can use them together."* *"The shift is from proving individual capabilities to building an
+executable application that can continually improve without losing its ability to launch, edit, and play the
+world."* Two requirements, not to be conflated: progressive development, and recursive self-improvement, which
+*"requires an explicit update and rollback mechanism, not just a prompt that edits source files."* *"Keep the studio
+that is running separate from the studio being built."* *"The model must not be able to overwrite the running
+executable or promote its own changes without the update supervisor's approval."* *"I would not rewrite the renderer
+or introduce Unreal merely to obtain an executable. Packaging is a deployment step; replacing the current rendering
+architecture is a separate decision."* *"The existing 251-row gate remains a regression signal, not the definition of
+the product."* On scope and method: *"a rung would be a waste on only a simple feature like that... it should be in
+a rung batched with other updates"*; *"prioritize larger rungs"*; *"be liberal with custom theorem mixing and be
+pioneering. consider ACCT as one of many potential candidates"*; *"when faced with design forks consider producing
+both"*. And his intermediary theorem, ACCT (Admitted-Change Containment), proposed *"as a candidate design principle
+for the Studio application and update lifecycle—not yet as an established theorem or a new rung."*
+
+**What was done (2026-10-12).** Research first — Windows delivery, process supervision and atomic updates, four
+editors, the theory a change transaction composes from, the director's providers (`docs/RESEARCH-FINDINGS.md`,
+R-15) — then the inventory from the source, then the decision, then the plan: [`docs/STUDIO-APP.md`](STUDIO-APP.md).
+Its consequential decisions: the page stays, in Edge's application mode with a private profile, under a std-only
+Rust stub (raw Win32 FFI, as `shell/win32.rs`) that owns a job object and the active-generation pointer and a
+std-lib Python supervisor; every version is an immutable generation and promotion is one write-through rename,
+blessed by the *previous* generation after a health check; one change transaction (VCT-0, nine parent theorems
+mixed, ACCT its statement) with two domain validators, the content ledger and a promotion journal in one canonical
+form; five batches, B1 the desktop launch with the content path made crash-safe, B2 the self-change transaction.
+Two findings that reorder the first batch: the Messages API provider sends a forced `tool_choice`, which every
+current Claude model refuses with 400 (VERIFIED on 2026-10-12; the self-test holds the adapter only to a mock), and
+the director writes the brief and appends the ledger without fsync or rename, while the shell's journal does both.
+Nothing is built; the gate is unchanged.
+
+**The review (2026-10-12).** 0208 applied as tree 1fc0422a, as predicted; the gate 251 rows / 0 fail; pushed
+aa83f2f..2517a27. He then brought three reviews of the plan with one instruction, *"websearch this before
+agreement"*. Each claim that bears weight was checked against a primary page the same day (`docs/STUDIO-APP.md`
+§13): one review's price claim was wrong (Fable 5.1 is the most expensive model, $10 / $50 per million tokens, not
+"cheaper"); the second review's cautions held — `_commit` says nothing of directory entries, no Microsoft page calls
+an NTFS rename atomic, process separation is not capability isolation, a generation hash is not a complete cache
+key, missing and invalid differ for `??=`; the third review's checkpoint refinement held. The plan was amended: VCT-0
+stated as three claims (isolation, promotion correctness, recovery correctness) over an explicit axiom list, with
+three levels of consistency claimed apart (process-kill measured; OS-crash under axioms; power-loss not claimed); a
+candidate's **basis** (base, sources, validators, toolchain, configuration) recorded at proposal and compared at
+promotion, and the only cache key; a generation's integrity verified before activation and recovery, its cost
+measured; the capability boundary made real with Windows' Mandatory Integrity Control (candidates validate and are
+tried at low integrity, which cannot write the pointer, the journal, the stub or the projects), its limit written;
+a fourth experiment for it. The reviews' recommended rulings remain his to make.
+
+**The contract (2026-10-12).** 0209 applied as tree 1d23474b, as predicted; the gate 251 rows / 0 fail; pushed
+2517a27..f99c494. He brought a second round of reviews: rulings (Inno Setup *"ACCEPT — optional"*; persistent tags
+*"Preserve first-touch numbering and display existing assignments"*; still-image consent *"explicit for each
+session"*; the journal-replay court *"ACCEPT — pre-B1 experiment"*; the five experiments *"ACCEPT, conditionally"*;
+the default model *"DEFER"* until *"the names, availability, and prices … need current verification"*), the
+correction *"Do not let the journal alone determine recovery"* with its question *"At which durable operation does
+promotion become committed?"*, and the request for *"a short Studio Architecture Contract that freezes these
+interfaces and transaction semantics before B1"*. Done, as `docs/STUDIO-CONTRACT.md`, which governs where it and the
+plan differ: the authority of each part; one candidate envelope for content and source (two gaps in the content
+domain's found and put in B1: the director's and the scope's source hashes and the configuration's digest are not
+recorded); the operations; the promotion journal `STUDIO-TXN 0`, its kinds, writers and grammar; the commit point,
+the durable `blessed` record, written by the stub, which no candidate can replace; the tries as `boot` records, so
+the pointer is a cache checked against the journal and its rename's atomicity no longer bears on correctness;
+`Recover(J, P, F)` as sixteen rules; tags across deletion and projects; the repository contracts the review named,
+looked up (all exist; two were misdescribed: BOT-REF-0 is a deterministic bot, HERMENEUTICS-0 is not a source
+fence); the five experiments' output form and kill criteria. Its reference, `art/studio_txn.py` (off the gate, no
+row), holds the table: `check` over 54 scripted promotions, 41,568 crash states, 195,376 crashes inside recovery,
+8,704 chains of failed boots and 134,773 damaged journals and pointers, every rule reached, 0 failures; `selftest`
+catches 16 planted wrong decisions and holds a generation's integrity on a real directory (MEASURED in the
+container; the stub does not exist yet, and Windows' writes are experiment 5's to measure). The models and prices
+were checked again the same day; the default model stays his.
+
+**B1, the first part (2026-10-12).** 0210 applied as tree 5b7923ee, as predicted; on his machine `python
+art\studio_txn.py selftest` PASSED (the reference's first run on Windows: the same 41,568 crash states, 0 failures,
+the 16 plants caught); the gate 251 rows / 0 fail; pushed f99c494..7234fab (a second `git am` of the same patch,
+refused, left a session open, which `git am --quit` closes). He then brought a review with one word, *"agree?"*: stop
+the architecture work at the contract (*"Patch 0210 should be the design boundary"*), keep the probes as bounded
+prerequisites run alongside B1, take Opus 5.5 for the API provider (*"matching the model already used through Claude
+Code"*, configurable), and work by one rule: *"No new architecture proposal, theorem, verification rung, or
+candidate-design patch unless implementation exposes a concrete defect that the current contract cannot handle."*
+Agreed. Built, off the gate (MEASURED in the container): the content path made crash-safe (`art/director/durable.py`;
+an admission writes its old and new files to a pending folder, then the admit event, the commit, then the files;
+every director command and play.py's start recover first; `python art/director.py crashtest` kills a real admission
+at each of its 10 death points (a torn admit line among them) and once inside a recovery, 14 cases in all, each back
+at the parent or the child with the ledger verifying); the tags kept in `art/ledger/<brief>.tags.json` and shown as chips that a click puts into the prompt, a
+refusal naming what a tag is and how to pin it; the API provider on structured outputs, `claude-opus-5-5` from its
+configuration, a refusal or a cut answer said and not read, the self-test's mock now refusing the old forced tool
+choice as the API does; each request's basis recorded (the validators' and the configuration's sha256s, the two gaps
+the contract found); play.py's `/healthz`, `/studio/alive`, `/studio/shutdown`, signals and exit codes, `--root`
+forwarded to its `--emit` child, its port bound exclusively on Windows (where SO_REUSEADDR *"allows a socket to
+forcibly bind to a port in use by another socket"*); the page's heartbeat; the five probes under `tools/probe/`
+(probes 3 and 5 also run here on Linux: 50 killed pointer writes all whole; 200 killed promotions, every decision the
+contract's). The self-tests: STUDIO 57/57, LIVE 17/17, DIRECTOR SELFTEST and CRASHTEST PASSED; in a browser (not
+committed) 11/11 for STUDIO-1's flows and 8/8 for B1's (the heartbeat heard, the chips, an admission through the
+crash-safe path, the tags back after the studio was killed and started again). Not yet: the supervisor, the stub, the
+layout and the shortcut, after probes 1 and 2 on his machine; the live API (no key here).
+
+**B1, the second part (2026-10-12).** 0211 applied as tree a3b18b17, as predicted; on his machine `python
+art\director.py crashtest` PASSED, 14 of 14 (the first run of the MoveFileExW write-through path and of `_commit` on
+Windows: every admission killed at a death point recovered to the parent or the child); the gate 251 rows / 0 fail;
+pushed 7234fab..30fe6ef. The probes: 2, the job object, HELD (nested in his shell's own job, `AssignProcessToJobObject`
+succeeded and play.py, a provider and its child were gone 0.2 s after the job closed); 1, Edge in application mode, HELD
+on its kill criterion (pointer lock engaged, W A S D walked, E framed the canopy: his answers, twice) with one case
+BROKEN twice, as the plan foresaw: Edge's process was still running 20 s after the page's last heartbeat, so closing
+the window does not end the browser. Built, off the gate: `art/studio_app.py`, the supervisor, which joins a job of its
+own so that play.py, the provider and Edge end with it; starts play.py on a free port without a console; opens Edge
+with its own profile; stops on the page's goodbye beacon (`pagehide`, not followed within 3 s by the page speaking
+again, as a reload does), on three minutes of silence (a minimized window's timers slow to about one a minute), or on
+play.py's end; opens another window when started twice; says its errors in a dialog and a log; and `shortcut`, which
+makes the desktop icon. `/studio/bye` in play.py; the page's beacon; Claude Code's native install found without
+`VERDANDI_CLAUDE`; probe 1's `--job` case (Edge started in a job, every one of its processes gone when the job closes).
+MEASURED in the container: STUDIO APP SELFTEST 7/7 with a stand-in browser that outlives its window (a reload, a
+second start, a silent page, a page that never speaks, play.py that cannot start or is stopped elsewhere), its two
+plants caught (the lingering window left running; a reload taken for a close); LIVE SELFTEST 18/18. Moved to B2's
+first step: the stub and the layout of generations (B1's one generation is his checkout; *"The studio does not need its
+self-updater to update itself in B1. That is B2."*). Not yet measured: the icon on his machine, Edge inside the job.
+
+**B1 accepted (2026-10-12).** 0212 applied as tree 35dd9fff; every self-test passed on his machine; the gate 251
+rows / 0 fail; pushed 30fe6ef..02aedc4; probe 1 `--job` HELD; the shortcut made. Then, in his words: *"I ran it from
+the desktop icon and it worked as built. congratulations. movement worked and the requested changes held after closing
+and reopening the program, as well as the @1 @2 and @3 tags."* His supervisor's log said `processes left in the job at
+exit: 256`, a misreading of the job's process list (the structure's two counts read as one pointer-sized word), not
+256 processes. Known limitation, deferred: an object's id carries its cells, so an admission that moves or resizes a
+tagged object leaves its tag "gone" rather than following it.
+
+**B1 hardened: the ghosts searched for, and fixes 1 and 8 (2026-10-13).** He asked to *"websearch for ghosts to harden
+in this before continuing"*. The search (fencing tokens, crash consistency, fsync errors, hash-chain freshness, event
+and cache-key drift, pinned stores, DNS rebinding, browser throttling and sleeping tabs, job objects, queues that pay
+twice, the configuration complexity clock, mode collapse, physics determinism) was checked against the source; eight
+ghosts were found live, each graded, and the fixes ordered. His review: *"Go — with three amendments worth making
+before the commits start"*; *"Fix 1 must fence inside the callee, not the callers"*; *"Fix 1 needs its own recovery
+rule, or it becomes a deadlock"*; *"Fix 8 can ride with any commit."* Two further amendments were found by reading and
+measuring, and he approved them: *"Approved. Both amendments are stronger than the original plan, and the measurements
+back them up."* — the lock belongs to the store, the ledger, since two threads appending to one ledger broke its chain
+in 19 of 20 trials (MEASURED in the container); and recovery refuses rather than clears, since every director command
+and every start recovered, and so could undo an admission still alive in another process. His addition: *"When
+releasing the lock on error, remove the `.pending` folder you created before raising the exception."* His order:
+*"Proceed with Fix 1 + Fix 8 in the same commit."* Built, off the gate: the content lock (`art/director/durable.py`
+`locked`; `art/director/ledger.py` `lock_path`) — a thread lock in a process and the system's file lock between
+processes (msvcrt.locking, flock), released by the system when its holder dies, so no timeout ever takes it from a live
+holder — held by every ledger append from its read to its append, by every admission from before its first write to
+after its last, by the tags file's write, and by recovery, which waits (60 s, `VERDANDI_LOCK_WAIT`) and then refuses
+(LEDGER-BUSY) having changed nothing. One lock for a whole tree, not one for each ledger: the briefs, ledgers, tags and
+maps of every brief share their folders, and recovery sweeps them, so a lock of one brief would let it remove another
+brief's temporaries; it also serializes two worlds' writes of a shared map. The fence: under the lock an admission
+computes the head again from the files and refuses (HEAD-MOVED) if it is not the head its caller checked; every caller
+of `commit_admission` is fenced there. An orphan pending folder met by an admission under the lock is recovered first.
+On a failure, a pending folder is removed only if its manifest was not yet written; once it was, the folder is that
+admission's redo and undo, and it is finished at once under the lock instead (removed blindly, an admission whose
+event was written would be left half installed). Found while building it and fixed with it: `Workspace.export` points
+the module-global `level.MAPS` at the folder it reads, and two exports at once (the brief's maps and a candidate's)
+failed on the first try (MEASURED), so exports take one lock; the gateway's `quiet()` swaps the process's one standard
+output, and two at once left it redirected in 20 of 20 trials (MEASURED), so it takes one lock. Fix 8: play.py answers
+a GET, as a POST, only to 127.0.0.1 or localhost by name. MEASURED in the container: DIRECTOR RACETEST PASSED (32
+cases: threads and processes appending; exports at once; at each of an admission's nine writes a second admission
+refused by the fence or before it, and another process's recovery refusing and changing nothing; a holder that dies
+releasing the lock; a failure before and after the manifest; an orphan recovered by the next admission; and the plants
+— no lock, 5 of 5 chains broken by threads and 3 of 3 by processes; no export lock, 23 of 40 exports wrong; no fence,
+the second admission written over the first; a recovery that ignores the lock, the tree changed under a live
+admission), DIRECTOR CRASHTEST PASSED (14 cases), DIRECTOR SELFTEST PASSED, STUDIO SELFTEST 59/59 (a GET by a rebound
+name refused; two `quiet()` calls at once, and their plant), LIVE SELFTEST 18/18, STUDIO APP SELFTEST 7/7, VECTORS
+62 / 62, ART CHECKS PASSED; in a browser (not committed) B1's flows 9/9. Not measured: the lock on Windows (his
+`crashtest` and `racetest` will run it; Windows releases a dead holder's lock at a time that "depends upon available
+system resources", which the wait absorbs). Next, in his order: 3, 4, 6, 7, 2.
+
+**0213 on his machine, and the self-tests' world (2026-10-13).** 0213 applied as tree b1dedbf1, as predicted. On
+Windows `python art\director.py racetest` PASSED, 32 of 32: the content lock measured there for the first time — the
+chain whole under two threads and two processes, every plant caught (no lock: 5 of 5 and 3 of 3 chains broken; no
+export lock: 9 of 40 exports wrong), the recovery of another process refusing at each of the nine writes, a dead
+holder's lock taken back after 0.00 s; `crashtest` PASSED, 14 of 14. `python art\studio.py selftest` failed four rows
+(the request's record, a refused candidate shown, the Anthropic adapter and Claude Code's CLI drawing nothing) and
+stopped in the references' self-test (`assert west0 + "\n" in text`). Not 0213: the studio's, the references', the
+live loop's and the desktop studio's self-tests copied `art/briefs/`, `art/ledger/` and the maps from the checkout, and
+his brief and ledger there now hold the edits he admitted through the studio, which the rows' expectations (the
+north slab's statement, the west canopy's line, a canopy with no depth yet) were not written for — the defect
+DIRECTOR-0's self-test had and lost on 2026-10-10 (its fixture the live state). Reproduced in the container: an
+edit like his, recorded by `rebase`, failed four rows of 59 at 0213. Fixed: `art/fixtures/selftest/` keeps the brief,
+design and layout as committed when those self-tests were written, and `art/director.py`'s `selftest_tree` lays them
+under a scratch root with the graybox's own maps and starts a ledger on them; the four self-tests play there, and a
+row says so. With the same edit in the checkout: STUDIO SELFTEST 60/60, LIVE SELFTEST 18/18, STUDIO APP SELFTEST 7/7
+(MEASURED in the container).
+
+**0214 on his machine (2026-10-13).** 0214 applied as tree 9365b09b, as predicted; the fixture row passed and with it
+the four rows his working brief had broken, and the references' self-test ran to its end. One row failed and the
+summary then stopped: *"a newer request supersedes the one running: its result discarded — the first ?"*, and
+`sum(rows)` met a list — the row's `... and first_out and ...` was `[]`, appended as the row's verdict. Two defects in
+the test and one in the gateway, fixed: a row's verdict is now `bool(ok)`, so a FAIL is counted and the summary
+printed (in the three self-tests that keep rows this way); the row waits up to 30 s for the first request's own
+record, which its thread writes only once its provider's tree is dead (on Windows by taskkill, which can come after
+the second request is done), and says how long it waited; and the gateway's `requests.jsonl` is written one line at a
+time (`studio.LOG_LOCK`), since the request's thread, a superseded request's and the page's decisions record there
+at once, and an append on Windows is the C runtime's seek to the end and then a write (git for Windows' fix for the
+same: *"Windows does support atomic O_APPEND semantics using the file access mode FILE_APPEND_DATA"*) — two at once can
+land on one offset, the later line over the earlier. Which of the two lost his row's record is not known; a new row
+records 200 lines from each of two threads and, beside its verdict on the locked writes, says what this machine's
+unlocked appends do (MEASURED there, not judged; atomic here). MEASURED in the container: STUDIO SELFTEST 61/61,
+LIVE SELFTEST 18/18, STUDIO APP SELFTEST 7/7.
+
+**0215 on his machine, and fixes 6, 7 and 2 (2026-10-13).** 0215 applied as tree 0bf50422, as predicted; STUDIO
+SELFTEST 61/61 on Windows, the supersede row passing with its record "after 0.0 s more"; the gate 251 rows / 0 fail;
+pushed 02aedc4..3b7d0a9 (0213, 0214, 0215). The new row's measurement on his machine: two threads appending to one
+file without a lock kept **399 lines of 400, 396 of them whole** (MEASURED; on Linux 400 whole) — the C runtime's
+append on Windows loses and tears lines written at once, so every log written by more than one thread holds a lock
+(the ledger the content lock; the gateway's record its own; the queue's, with STUDIO-2, its own). Asked where the
+studio's worlds should live — they are files of the checkout, so his edits show in `git status`, could collide with a
+patch and could reach the public repository — he chose *"Per-user folder (Recommended)"*:
+`%LOCALAPPDATA%\VerdandiStudio\worlds\<name>\`, his plaza moved there as the first world (copied, its ledger
+replayed before it is used, the checkout's files never deleted), the checkout's committed plaza the template a new world
+starts from; built with STUDIO-2. Then, in his order, fixes 6, 7 and 2, off the gate. Fix 6: `art/studio_app.py`
+reads JOBOBJECT_BASIC_PROCESS_ID_LIST as Windows lays it out — two DWORD counts, then pointer-sized ids (B1 read an
+array of pointer-sized words, took the first id for the count, and logged 256) — and grows its buffer until the list is
+whole (*"If this number is less than NumberOfAssignedProcesses, increase the size of the buffer"*); a list that cannot
+be read is said. Fix 7: play.py's `/healthz` says `busy` while a request runs, and the supervisor does not take
+silence for a closed window while it is: it waits for the request, says so once, then stops for the silence (Edge's
+sleeping tabs freeze a background page's timers; whether a minimized studio window sleeps is still not measured); a stop
+that leaves a request running says so. Fix 2: a layout admission is refused (SHARED-MAP) while another brief of the tree
+plays the same map, in `commit_admission` under the content lock, so every caller is held to it; the refusal says what
+to do; an art admission is not affected. The director's own tests now lay the round's base brief alone, not the
+checkout's other briefs. MEASURED in the container: DIRECTOR SELFTEST PASSED (with three new cases: a layout refused
+while a second world plays the map, both worlds' heads unchanged; an art change admitted, the other world's head
+unchanged; and the plant, no check, under which the other world's head moved though nothing was admitted there),
+STUDIO APP SELFTEST 10/10 (the process list read from planted bytes, 64- and 32-bit, a cut list known to be cut, B1's
+reading of the same bytes giving 256; a silent page while a request runs, the studio waiting for it; the plant, silence
+taken for a close, the studio stopping with the request running; on Windows an eleventh, a live job's list),
+DIRECTOR RACETEST PASSED (32 cases), DIRECTOR CRASHTEST PASSED (14 cases), STUDIO SELFTEST 61/61, LIVE SELFTEST
+18/18, VECTORS 62 / 62, ART CHECKS PASSED; in a browser (not committed) B1's flows 9/9.
+
+**0216 on his machine, and CWCT written (2026-10-13).** 0216 applied as tree ff0d4a9b, as predicted; on Windows STUDIO
+APP SELFTEST 11/11 (the eleventh, a live job's list, exactly the process and its child) and DIRECTOR SELFTEST PASSED
+with the shared-map cases; the gate 251 rows / 0 fail; pushed 3b7d0a9..15901d6. B1's fix list is done but for the
+queue's two, which go with STUDIO-2. Then, in the agreed order, `docs/CWCT.md`: the Creative World Closure Theorem as
+he ruled it on 2026-10-12 — *"ACCEPT the Creative World Closure Theorem as the organizing research hypothesis. DEFER
+any claim that it is proved or novel."* — and stated as he asked, *"state the l99 version of the theorem in the docs
+plainly"*: eight clauses in plain words (nothing reaches a world but an admission, or is found; what is not admitted
+changes nothing; an interrupted admission ends at the parent or the child; a late answer never overwrites newer work;
+one world's admission changes no other; every admitted state explained by digests; no machine admits; work reaches a
+decision, conditionally), with the review's corrections (the box over failures, not admissions; recovery as an
+enumerated set; VCT-0's operators imported verbatim; `ProtectedState` defined; `CWCT ⊃ VCT-0`, the content ledger its
+content-domain instance; `◊Decided`; shared assets as pinned revisions; a batch and a kill criterion per clause; the
+proposal's integrated experiment attached to batches; hash chains with cross-references by digest), the fault model
+and the rules the measurements gave, the four operational invariants with their status, the game-and-physics
+consequences, the art reviews' obligations as measurements, and the grammar's guardrails. Its sources are
+`docs/RESEARCH-FINDINGS.md` R-16. Docs only; no row, rung, pinned source or oracle file changed.
+
+**0217 on his machine, and STUDIO-2 built (2026-10-13).** 0217 applied as tree 782cbdb9, as predicted; the gate 251
+rows / 0 fail; pushed 15901d6..fadeb7b. Then STUDIO-2, off the gate: the immediate milestone of his vision document of
+2026-10-12, *"Build a desktop-launched application that can open two saved worlds, switch between them, queue an edit
+for either world, and review the resulting candidate without interrupting play."*, with the worlds where he chose,
+*"Per-user folder (Recommended)"*. **The worlds.** `play.py NAME --worlds DIR` serves every world in a folder, each a
+tree of its own — its brief, its ledger and tags, its own copy of the maps, its requests' records, its content lock —
+opened when the page or the queue first asks for it (`Hub`). A folder with no world is seeded from the checkout
+(`seed_worlds`): each brief copied whole into a folder made aside, its ledger replayed there, and put in place by one
+rename only if it verifies; `SEEDED.json` records what was copied, by sha256. The desktop studio serves
+`%LOCALAPPDATA%\VerdandiStudio\worlds\` (`studio_app.py`, `--worlds DIR` to choose another). A second world to start
+with: `art/briefs/harbor-day.art`, sunlit harbour terraces at midday on the same graybox, nothing of the layout moved.
+**The page.** The panel names the world and lists the others (choosing one loads its page); Duplicate as makes a world
+from this one, with its own ledger and maps; the Queue section queues the prompt for any world, with a provider and a
+model; the task list shows each task's state, its model and the tokens or cost its provider reported, with Cancel,
+Review, Set aside and Queue again; a toast says when a task is ready or failed, in whatever world's page is open.
+**The queue** (`art/studio_queue.py`). A task belongs to a world and records its references, its camera, the heads
+when it was queued and when it ran, its provider and its model; tasks run in the order queued, at most two at once and
+one per world; Review draws its recorded candidates again at the head as it is then (`Gateway.restore`), each
+evaluated again, never trusted. Fixes 3 and 4 of the review of 2026-10-13: a torn last line of `queue.jsonl` is set
+aside and cut, durably, before the next append; a task the studio stopped under is ready when its world's records hold
+its answer, and nothing is asked again. Every append to the queue's file holds its lock (his machine's 399 of 400).
+With a maps folder per world, play.py's own compile points the module-global maps folder at the world's, and so it
+does that under `EXPORT_LOCK`, as the director's export does: a row compiles two worlds over different maps at once,
+each with its own map, and its plant, without the lock, reads across. The gateway takes a queued task's references and provider in place of the
+page's, and on Windows starts a provider with `CREATE_NO_WINDOW`, so that a studio started from its icon opens no
+console window for it (INFERRED from the flag's documentation; not seen on Windows yet).
+
+In a browser (headless Chromium, not committed): the STUDIO-2 flows 10/10 — a target chosen in harbor-day;
+plaza-night's page listing both worlds; a prompt queued for harbor-day from plaza-night's page, and the player walking
+there while it ran (41 samples with the task running, its provider answering 15 s late); the toast; the task ready,
+with Review; Review opening harbor-day with three candidates drawn; an admission there (its ledger two events longer,
+plaza-night's as it was); the switcher back to plaza-night; Duplicate making and opening plaza-copy; no page error. B1's flows 9/9 again (its
+row on the tags after a restart now waits for the page's first `/live`, which came later than the row looked). Two
+findings. A defect of the panel, fixed: after a click on one of its buttons, Esc closed the panel but left the button
+focused, so the game's keys went to it and W did not walk (B1's buttons had it too); a closed panel now keeps no focus,
+and a focused list takes its own keys. And one of the container, not the product (OBSERVED there only): in headless
+Chromium on ANGLE SwiftShader, a navigation away from a page with a live WebGL context did not finish for 40 to more
+than 90 s, the server having answered the new document within a millisecond (its request log); with the old page's
+context given back first (`WEBGL_lose_context`) the next page was ready in 0.3 s, with software compositing in 3 s
+(but a frame then took seconds). The run gives the context back before each click that navigates. Whether switching
+worlds is quick in his browser, on his GPU, is not measured. MEASURED in the container: STUDIO-2 SELFTEST 13/13
+(seeding, once, a ledger that does not verify refused; each world read by name; a request queued for one world while
+the page plays the other, reviewed and admitted there, the other world's bytes untouched; a duplicate; at most two
+requests at once and never two in one world, the studio busy while work waits; cancel and queue again; two worlds
+compiled at once over different maps, and the plant without the export lock; fixes 3 and 4 with their plants; the
+queue read back), STUDIO APP SELFTEST 11/11 (a new row: without `--root` the studio serves its worlds folder, seeded
+beforehand from the fixture; with the supervisor made to pass nothing, the row fails), STUDIO SELFTEST 61/61, LIVE
+SELFTEST 18/18, DIRECTOR SELFTEST PASSED, DIRECTOR CRASHTEST PASSED (14 cases), DIRECTOR RACETEST PASSED (32 cases),
+CONFORMANCE 62 / 62, ART CHECKS PASSED. Not built: a new world from the checkout's committed template after the first
+start (the folder is seeded once; a new world is a duplicate). Not held: a studio that dies between asking a provider
+and recording that the task started finds the task still queued at its next start and asks again. **His world,
+moving.** The studio's first start after 0218 makes the worlds folder from his checkout: his plaza with the edits he
+admitted, its ledger and tags (if the ledger verifies in the copy), and harbor-day. Once he has seen his plaza open
+from the new folder, the checkout's brief and ledger can go back to the committed ones; the desktop studio does not
+read them again, and his earlier requests' records stay in the checkout's `art/build/studio/`.
+
+**0218 on his machine, and harbor-day drawn white (2026-10-13).** 0218 applied as tree e2366170, as predicted; on
+Windows STUDIO-2 SELFTEST 13/13, STUDIO APP SELFTEST 12/12 (the new row naming the per-user folder), STUDIO SELFTEST
+61/61 (providers started with `CREATE_NO_WINDOW` run and are cancelled as before; whether a console window would have
+opened without it is still not seen), LIVE SELFTEST 18/18, ART CHECKS PASSED with harbor-day's checks and plants; the
+gate 251 rows / 0 fail; pushed fadeb7b..c925154; and the checkout's plaza put back to the committed one. His unlocked
+appends this time: 397 lines of 400, 390 whole (MEASURED; 399 and 396 before). He then played the studio from its icon
+and queued a prompt for harbor-day (Claude through Claude Code's CLI, `claude-sonnet-5-5`, $0.0230): *"the director
+proposed nothing"*. Two things his window showed. **The answer was empty**, and an empty answer carries no reason;
+whatever the model's, the art file has no statement for a person, a vehicle or a prop, so a prompt to add a figure
+can only be answered with nothing (art/STUDIO.md says so now). **harbor-day was drawn nearly white**, a defect of
+mine: its sun was written as a real sun's 90,000 lux at an exposure bias of −0.6, as Unreal would take them, but the
+native renderer is linear in lux, set on the night plaza's moon (0.35 lux at +1.5) with no exposure of its own, so the
+sunlit surfaces came out tens of thousands of times the display's white; no check sees a picture, and I had not looked at a still of it
+before delivering it. MEASURED in the container (stills, the plaza-centre view): as delivered, 51% of the pixels white;
+with the sun at 1.0, 1.6, 2.5 and 4.0 and no bias, none white, a sunlit midday from 2.5 (four more views looked at).
+Fixed: the template's sun is 2.5 at no bias; art/README.md says the native renderer's scale; AGENTS.md: a new brief, or
+a change to a brief's sky or air, is looked at in a still before it is delivered. His own harbor-day, a world of its
+own now, changes only through its ledger: an intent (`harbor-day-sun.intent`, the same two lines, scope `env/light`
+and `env/exposure`) evaluated CLEAN and admitted in a seeded copy here, and given to him to evaluate and admit there.
+
+**0219 on his machine, his pivot, and 0220: every request ends in a disposition; the icon opens a first window
+(2026-10-13).** 0219 applied as tree c140fe20, as predicted; ART CHECKS PASSED with harbor-day at scene 549d5d76035f;
+the gate 251 rows / 0 fail; pushed c925154..b3050b1. In his own harbor-day the sun's intent evaluated CLEAN (ledger #1);
+the admit command I gave him failed, `invalid literal for int() with base 10: 'N'`, because it held a placeholder where
+the ledger's number goes (my error: a command given to be pasted must be complete; nothing was written, it stopped
+reading the number). Then his pivot, toward *"a studio like a mix between ue5 and paint"* with graphics and physics,
+researched against his other repositories and the literature (the report was delivered to him, not committed), and
+his rulings on what to build: *"The physics layer should enter through the existing exporter, extending
+`art/dress.py` so that motion and interaction statements become part of the art language itself"*, and *"the
+sequence should be outcomes and launcher, followed by the physics slice"*; and his direction for the icon: *"when i
+click the desktop icon a window should open asking what part of the studio should open first; different abstractions
+can be added as be design"*. **0220, built, off the gate.** Every request that ends on its own ends in a disposition:
+the request publishes the studio's capabilities (what it can make, and by name the closed list of what it cannot make
+yet: `entity.person`, `entity.vehicle`, `motion.path`, `motion.surface`, `mechanism.door`, `physics.dynamic`, ...);
+the response may carry the provider's `outcome`, and the adapters pass on the API's `stop_reason`; the gateway decides,
+the host's observations first: REALIZED, DECLINED (the API's refusal, the studio's decision; or the provider's, with
+a reason from a closed list, its account), UNSUPPORTED (no candidates, and what is needed named from the list; a name
+the studio has, or one never listed, refuses the response), AMBIGUOUS (one to three questions, shown as text and never
+carried out), FAILED (the provider not run or not read, or an empty answer with no reason, `STUDIO-EMPTY-WITHOUT-REASON`);
+INFEASIBLE and PROJECTED reserved, no repair stage being built. No disposition but REALIZED evaluates, draws or writes
+anything. The request record is hash-chained line to line (`python art/studio.py records`: the chain, the dispositions,
+and what was asked for and is not made yet, as telemetry). The queue gains `answered` (a request that came back with
+no candidates and a reason: set aside or queued again), and fix 4 covers it (an answer recorded before a restart is
+read again, not asked again). The scripted provider names what is missing when a word of the prompt is in its small
+list (word matching, said to be). The first window: the icon's URL leads to `start.html`, which lists the worlds, each
+read back as it opens (its ledger replayed to its files under its lock; VERIFIED is integrity, not truth; not anchored
+outside the world folder, and said so), and six views from manifests in `art/web/views/` (Play and direct, Queue
+prompts, History ready; Compose, Mechanisms, Evidence not built, each saying why); a malformed manifest, or one opening
+a page outside the studio, is listed as unavailable with why. The window and the History view hold a second token,
+good for the heartbeat and goodbye only: they cannot ask, admit or queue. MEASURED in the container: STUDIO SELFTEST
+70/70 (nine new rows: each disposition, the API's refusal through both adapters, an outcome naming a capability the
+studio has refused, the world byte for byte after every answer without candidates, the record's chain with a line
+taken out found and the end cut not, as said), STUDIO-2 SELFTEST 19/19 (the launcher, its token, a broken manifest, a
+world changed outside its ledger not verified, an answered task, fix 4 for an answer), STUDIO APP SELFTEST 12/12 (the
+window opening on the launcher); in 15 runs of it here, 2 ended a row with exit 1 (the silent page once, the page that
+never speaks once), the supervisor's exception not shown, so its cause is not known: the self-test now prints that
+exception whenever the supervisor exits 1, and 5 runs since were clean (OBSERVED in the container, not on Windows); the first window and History looked at in headless Chromium at 1100 and 390 px wide. Not
+measured: whether Claude Code's CLI passes the API's stop reason on (if not, a refusal on that path reads as FAILED or
+as the provider's own account). Next, in his order: the physics slice through the exporter (a platform that carries
+the player, a door, a crate, a standing person), which records one rebase in every world's ledger.
+
+**His ruling on the cage, and 0221: QUALITY-0, the scene's bytes exact (2026-10-13).** After the second research
+report (on his Dentatus and Ursprung, the creation cage and a quality rung; delivered to him, not committed) he ruled:
+*"Remove capability keywords as a pre-model refusal gate."*; *"Four candidate rungs, classified by the host … The
+model must not choose its own rung, and filenames alone must not determine it."*; *"A cage around admission, not model
+expression."*; *"Every verdict states what it did not check."*; and, refining, *"Classify the effective change, not
+only its direct diff"*. His order: *"Run 0220 on your machine first. Then proceed with the exact quality checks,
+host-derived rung classification, and mechanically complete verdicts. Defer RULES-2 until those contracts exist."*,
+the first of them *"Cheap exact quality checks. Validate finite and bounded scene values, budgets, and stored
+reference outputs. Add renderer-independent image checks such as pure-white pixel fraction and other carefully chosen
+clipping or black-frame indicators."*, with his conditions that reference images are frozen evidence identified by
+digest and that image thresholds are detectors, not proofs. 0220 had not yet been run on his machine when this was
+built. **0221, built, off the gate.** `art/quality.py`: every verification (art/check.py, the director's evaluation,
+the plaza's serving) now holds the scene's bytes exact — finite JSON in the exporter's one byte form (no NaN, no
+Infinity, no number that overflows to one, which `json.loads('1e999')` does without a word, no key twice, no integer
+above 2^53 − 1); every field known, with its type and range, restated rather than imported, and a field the checker
+does not know refused rather than passed over; every box with extent and inside the world; every coordinate under
+1,024 m, where float32 keeps the scene's 0.1 mm steps apart (from 1,024 m, 1,808 of the next 10,000 steps merge); and
+inside the native renderer's budgets, read from its own source: it draws the first 160 lights and drops the rest
+without a word, and its visibility texture is one texel to a cell, which WebGL 2 guarantees up to 2,048 wide (OpenGL ES 3.0's
+minimum as recalled, INFERRED; the specification could not be fetched here, and web3dsurvey.com reports no device
+below 4,096, OBSERVED); two
+budgets are chosen, not derived (4,096 boxes, 4 MiB). A light above 2,000 cd is noticed, not refused (its glare is
+drawn at 2,000). Each checkout brief is held to its frozen reference (`art/references.jsonl`: the scene's sha256 and
+each top-level field's, for one art at one exporter); the comparison never writes; `freeze` appends, never twice for
+the same inputs, and refuses outright if the same inputs give other bytes. When the exporter changes, the line fails,
+naming the fields the new exporter moved, until a person freezes the new references: the golden regression an
+exporter change owes. The detectors on stills (PNG, 8-bit RGB or RGBA; anything else is not checked, and says so):
+white (every channel 250 or above, and at 255 beside it), black, a channel at 255, distinct colours, mean luma; they
+flag and refuse nothing. `approve` reads them on the still it records, and a flagged or unreadable still is approved
+only with `--despite-detectors`, which the event records. MEASURED in the container: QUALITY SELFTEST 58/58, each
+check against the defect planted for it, and 23 of 23 mutants of `art/quality.py` caught by it; DIRECTOR SELFTEST
+PASSED with six new rows (a still approved with its detectors; a mostly white still and an unreadable one refused
+without `--despite-detectors` and nothing written, then approved with it and recorded so); ART CHECKS PASSED, both
+briefs at their frozen references (harbor-day scene 549d5d76035f, the digest his machine printed for 0219: one
+agreement between two machines, OBSERVED); STUDIO SELFTEST 70/70, STUDIO-2 SELFTEST 19/19, STUDIO APP SELFTEST 12/12,
+LIVE SELFTEST 18/18, DIRECTOR CRASHTEST PASSED (14 cases), DIRECTOR RACETEST PASSED (32 cases), VECTORS 62 / 62. The
+PNG reader agrees byte for byte with PIL's on 21 stills made by headless Chromium, which use filters 1 to 4 (PIL used
+here only, as a second reader; not a dependency), and the Paeth predictor it shares with the self-test's encoder is
+held to seven answers worked by hand from the specification, so that the two cannot agree on a mistake. The
+detectors on those 21 stills: harbor-day as delivered in 0218 flagged, 51.8% white (34.1% at 255) and 66.2% with a
+channel at 255; every other still at most 0.34% white and no flag. The thresholds were chosen with these stills in
+view: calibration on a handful, not a rate. A correction: 0219's record says *"51% of the pixels white"* without its
+definition; it is every channel at 250 or above, and at 255 it is 34.1%. Found, not changed: the art reader takes its
+numbers through Python's `float()`, so `2_5` reads as 25, the Arabic-Indic digits six and two (U+0666 U+0662) as 62, and `25e-1` and `+2.5` as 2.5 (MEASURED); a
+number grammar of its own is an exporter change, which moves every head, and is proposed to go with the physics
+slice's exporter change, one rebase rather than two.
+
+**0222: every verdict complete, the rung computed by the host, the evidence before Admit (ADMISSION-0, 2026-10-14).**
+His ruling's third item and the intent half of the second: *"Every verdict states what it did not check."*, *"Four
+candidate rungs, classified by the host … The model must not choose its own rung, and filenames alone must not
+determine it."* and *"Classify the effective change, not only its direct diff"*. **Built, off the gate.**
+`art/director/contract.py` (pure): every evaluation carries a record beside its DIRECTOR-0 verdict, which is unchanged
+(VECTORS 62 / 62): the rung, computed from the effective change — the scope protocol's realized and affected
+addresses, never the intent's words or its declared scope — A when each is an instance or a parameter of an admitted
+kind, C when one is of a kind the classifier does not know, D when the candidate did not export (unknown, classified at
+the top); certifies, derived from the checks that ran and passed and the scope's finding; not_checked, every expected
+check that did not run and what the director never checks; a horizon of 0 ticks, since nothing in the scene moves; the
+sha256 of every component the verdict rests on; and what an admission requires. For rung A that is the verdict CLEAN
+(or LEAKAGE accepted), every expected check passed, and a still of the candidate as drawn with its detectors read by
+the host, a flagged still admitted only despite them; an undo needs no still, being checked to be the exact inverse of
+the admission it undoes. `admit` refuses (ADMISSION-0) until every item is present; an evaluation from before the
+record is evaluated again. The still is kept beside the ledger by its sha256, written under the content lock before the
+admission's first write; replay refuses an admission of a recorded evaluation without its evidence (LEDGER-EVIDENCE),
+and verify reads every still again (LEDGER-STILL). The studio: each candidate's card shows its rung and why, what an
+admission needs and what was not checked; Admit takes a still from the canvas (a copy at most 960 pixels wide) and gives
+it to play.py (`POST /studio/still`), which reads its detectors; a flagged still admits nothing and shows **Admit
+despite**. `python art/director.py record BRIEF SEQ` prints a record; `admit` takes `--still FILE.png`
+(`--despite-detectors`, `--inverse-of SEQ`). MEASURED in the container: DIRECTOR SELFTEST PASSED (17 new rows: the
+record complete, an admission refused without a still, with a flagged still, and as an undo that is not one, then
+admitted as each should be; the evidence and the still read back; three plants on the evidence — detectors that are not
+the still's, a still taken away, an admit event written past the director — each refused; a kind the classifier does
+not know classified C and not admitted; a candidate that did not export classified D; a skipped check said and keeping
+the admission out), DIRECTOR CRASHTEST PASSED (15 cases: one more, death after the still is kept), DIRECTOR RACETEST
+PASSED (32 cases), STUDIO SELFTEST 73/73 (three new rows: no still, a flagged still, a still not PNG or without the
+studio's token), STUDIO-2 SELFTEST 19/19 (the launcher's token cannot give a still), LIVE SELFTEST 18/18, STUDIO APP
+SELFTEST 12/12, STUDIO-TXN SELFTEST PASSED, QUALITY SELFTEST 58/58, ART CHECKS PASSED; in headless Chromium (not
+committed) B1's flows 9/9 and STUDIO-2's 10/10 with the still taken by the page, and the card looked at. OBSERVED
+there: on SwiftShader the still and the admission took 13 s at 640 × 360 and 122 s at 800 × 450, and `toBlob` waited
+minutes for an idle moment the drawing page never had, which is why the page encodes with `toDataURL`; on a real GPU
+the time from Admit to admitted is NOT_MEASURED. What is not claimed: that the still shows the candidate (it is bound
+by digest; at the command line a person gives it), or that the rung is right beyond the kinds the classifier restates.
+For his own harbor-day: an intent evaluated before 0222 is evaluated again before it can be admitted, and at the
+command line it now needs a still (`--still`); the studio takes one by itself. Next in his order: the rung of a change
+to the program itself, computed by the host (0223), then RULES-2.
+
+**0223: the rung of a change to the program, computed by the host (RUNG-0, 2026-10-14).** The other half of his
+second item: *"Classify the effective change, not only its direct diff … calculate the rung from the candidate's
+dependency closure and changed semantics, conservatively escalating when that analysis is incomplete."*, and of rung D,
+*"a trusted admission path outside the candidate's authority, plus independent evidence"*. **Built, off the gate.**
+`tools/rung.py classify BASE HEAD`: the trusted base is anchored by a list of roots (the gate, the art's checks,
+QUALITY-0, the director and ADMISSION-0, the admission path and its tokens, the twins and references, the classifier
+itself, AGENTS.md), the one place names decide; everything else is computed on both trees, read through git: each
+Python file's imports (against its folder and what it puts on sys.path) and every path it names (a tracked file's path
+or name as a literal, docstrings aside; an `os.path.join` of known parts naming a file or a folder), followed through
+every Python file reached. A file in the closure is D; a root that loads code by a computed name, or reads files by
+computed paths, escalates every other changed file to D? (D for its evidence, the lines that caused it said); code
+outside is C; Markdown outside is A. It names what loosens a checker whatever the rung (a name dropped from
+ADMISSION-0's expected checks, a detector or a budget made looser, a frozen reference rewritten, the vectors changed,
+fewer plants), and what each rung needs. It never reads a commit message. `plants BASE HEAD` runs the suites' planted
+defects in both trees (git worktrees) and fails if one the old checker refused passes the new, or is gone. Who runs
+it: the copy the pushed tree holds, never the patch's (`git show origin/main:tools/rung.py > rung.py`, then `python
+rung.py classify origin/main HEAD --repo .`); this first copy came with its own patch and was judged by nobody.
+MEASURED in the container: RUNG SELFTEST 17/17 (a scratch tree: a helper imported through a folder put on sys.path, a
+module loaded from a joined path, data named file by file and folder by folder, a file the change brings under an
+import, a removed file of the checker, escalation by a computed import and by a computed read, the classifier and the
+agents' rules changed, three loosenings and one addition that loosens nothing, the plants compared; and this
+repository at HEAD: 309 files in the closure), 13 of 13 mutants of the classifier caught. On this series: 0220, 0221
+and 0222 each classify D, every file in the closure or escalated — art/dress.py is the closure's through art/play.py,
+the renderer through art/play.py and QUALITY-0, the providers through the queue, and art/README.md through art/studio.py,
+which reads its section on the art file into every provider's prompt (a document that runs, found by the reading, not
+by its name); the docs escalate, because the base reads files by computed paths in about 400 places and verify.py
+imports modules by computed names (verify.py:259, 13102). So in this repository a patch is rung D, and what D needs is
+his run on his machine and the plants: `plants b8b2fe0 39b3265` PLANTS HELD (25 planted defects refused before, 65 after,
+none lost). Not claimed: that the closure is complete (a computed path is escalated, not followed), or that a loosening
+of a kind it does not look for is seen.
+
+**0220 to 0223 on his machine, and 0224: a refusal answered only after its request is read (2026-10-14).** His first
+`git am` of 0221 failed on AGENTS.md, docs/CORE.md and docs/ROADMAP.md: his checkout was at 0219 (tree c140fe20), 0220
+not yet applied, and 0221 edits lines 0220 adds (the same three files fail on 0219's tree here, and 0220 then 0221 to
+0223 reach the predicted tree). Aborted, then applied in order: 0220 as tree db333247 and 0223 as tree 733ab149, both
+as predicted. On his machine (Windows, Python 3.14): QUALITY SELFTEST 58/58; ART CHECKS PASSED, **each brief equal to
+its frozen reference** — harbor-day 549d5d76035f and plaza-night 99001240ed5c, frozen in the container under Python
+3.11 on Linux: the first mechanical comparison of the exporter's bytes between two machines, two of two equal
+(MEASURED); DIRECTOR SELFTEST PASSED, with ADMISSION-0's rows; DIRECTOR CRASHTEST PASSED (15 cases); DIRECTOR RACETEST
+PASSED (32 cases); then STUDIO SELFTEST stopped after 13 rows, `ConnectionAbortedError: [WinError 10053]`, on the row
+that gives a still with a token that is not the studio's. The cause: the server refused the still at once and closed
+the connection with the request's body unread; the system then resets the connection, and Windows drops the answer
+the client had not yet read (Linux hands it over first: in the container a client read the 403 in 10 of 10 trials,
+bodies of 60 kB and 3 MB, MEASURED, which is why this row passed here). **0224, built, off the gate.** `art/play.py`:
+every refusal of a POST (403, 400, 404) reads the request's body first, up to its limit (64 KiB for JSON, 32 MiB for a
+still), with a timeout, then answers and closes. A new row holds it where the container can: the headers sent alone,
+no answer comes while the body is still to come, then the 403; the plant (no draining) answers before the body.
+`art/studio.py`: a request's line is written to its record before the request reads as ended (it was written just
+after): a reader that waits for the end and then reads the record found no line in 1 of 2 runs of the studio's
+self-test here before the change (the Claude Code row, IndexError), and cannot now. MEASURED in the container: STUDIO
+SELFTEST 74/74 in 4 of 4 runs after it; STUDIO-2 SELFTEST 19/19 in 15 of 16 runs, and 17/19 once, its failing rows not kept (OBSERVED; the cause
+not known); LIVE SELFTEST 18/18, STUDIO APP SELFTEST 12/12, STUDIO-TXN SELFTEST PASSED. Not measured: the new row on
+Windows, which is where the reset happens; his run of the rest of 0223's list is still to come.
+
+**0224 on his machine, and 0225: RULES-2, movers, in the simulation and its twin (2026-10-14).** His run of 0224, on
+Windows: STUDIO SELFTEST 74/74, the new row among them, so a refusal now reaches the client where the reset happens
+(MEASURED there); STUDIO-2 SELFTEST 19/19; LIVE SELFTEST 18/18; STUDIO APP SELFTEST 13/13 (the row reading a live
+job's process list runs on Windows only); RUNG SELFTEST 17/17, the classifier giving 0224 rung D; PLANTS HELD (25
+refused before, 65 after); the gate 251 rows / 0 fail; pushed b3050b1..52670bd. That closes the three items of his
+order of 2026-10-13 that came before RULES-2 (0221 to 0223, and 0224 their fix). With it came his document
+*Verification Complete: The Foundation Is Solid*, whose first milestone for RULES-2 is one mover and one rider (the
+platform empty, a player standing on it, the player jumping off mid-motion), and three checks before it: the rules'
+version in the tick's hash, independent test vectors, and a disposition for overflow. Where it describes the
+foundation as proven 32-bit fixed point, that is not this repository: the simulation is binary64 under RULES-1, and
+what has been compared between two machines is the exporter's bytes (0221), not a tick. **0225, built, off the
+gate.** [`graybox/RULES-2.md`](../graybox/RULES-2.md): rules 1 with movers — boxes on one axis whose coordinates are
+multiples of `Q` = 1/256 m below 1,024 m, moving ping-pong by whole phase units, so none of a mover's arithmetic rounds
+in any engine; the mover step a slot of the tick after the spawn and before the yaw, one code path (a world without
+movers plays the same ticks); a rider (on the ground, feet exactly on the top, overlapping in plan) carried by the
+exact displacement, or the mover stopped when the carried body would be blocked; a mover that would enter a player
+stopped (policy `stop`); a box wholly above the head a ceiling; a parked mover a static box; and a world refused
+(`RULES2-MOVER`) unless every mover is slow enough that no tick can pass it through a player (`speed·Q < 2·radius + t`
+along x or z, `height + t` along y). Every rules-2 hash is FNV-1a 64 seeded with an identity: `VERDANDI-RULES 2`, then
+every constant (gravity and the timestep among them), the input contract's version, the map and every mover, each
+number as its bits; the identity's own hash is reported beside a run. `GrayboxSim.withRules(2)` in `sim.js` (the
+default stays rules 1) and `tick_ref.py rules2`, both written from the document. His three checks, as built: the
+version and every parameter in every tick's hash (the identity); independent answers ([`rules2_cases.json`](../graybox/web/rules2_cases.json),
+eleven cases whose values were worked by hand from the document, with the working, each implementation held to them
+and not to the other, then to each other); overflow refused where a world is made (the bounds above), so no integer of
+the mover arithmetic is ever outside what a double holds exactly. His milestone is K2 (a rider carried out and back,
+x 46.25 at tick 1, 50 at 16, 49.75 at 17, 46 at 32), K4 (a rider jumping off mid-motion keeps none of the motion, x
+47.25 at ticks 5, 6 and 8) and W2 (3,000 ticks of the stress run from the platform's top). MEASURED in the container:
+`tick_ref.py rules2` RULES 2 HELD BY PYTHON (every worked value; K11, no movers, 157 ticks the same bytes as rules 1's but for the empty list of movers;
+W1 and W2, 6,000 and 3,000 ticks among a deck, a lift and a wall, no tick ending with the body inside a box) and its
+five plants in the Python tick each caught by a worked case (no carry, a wrap past 2·len, no stop, no ceiling, no
+tunnelling bound); node v22 and headless Chromium 141 (`trace.py run tactical --rules2`) each RULES 2 HELD BY PYTHON
+AND THE ENGINE, every snapshot, hash and identity the same over 9,284 ticks; rules 1 unchanged: GRAYBOX SELFTEST 30/30
+and 27/27, TICK REFERENCE VERIFIED, TICK-REF SELFTEST PASSED, RULES REFERENCE PASSED, INPUT CONTRACT HELD BY PYTHON AND
+THE BROWSER. NOT_MEASURED: Firefox (none in the container), and his machine. No page plays rules 2 yet.
+
+**A measurement for his open-world proposal (`graybox/translate_probe.py`).** His second document, *The Continuous
+Open-World Coordinate Solution*, rests its determinism on moving the origin changing nothing. The probe plays rules 1's
+stress run (3,600 ticks, from spawn A) on the tactical map and on the same map moved by 2^k m along x and z, k = 7, 10,
+14, 17, 20 and 23 (a whole number of cells), and sets the two runs against each other tick by tick. MEASURED: at every
+offset the runs part from tick 1; the widest gap grows from 5.65e-13 m (128 m) to 3.95e-08 m (8,388.61 km), where
+doubles are 1.86e-09 m apart; in no run did a cell, the footing or a hit differ. So rules 1 are deterministic and not
+translation-invariant bit for bit: a world rebased in the middle of a run plays different bits afterwards, which makes
+a rebase a step of the rules, at a defined tick, done the same by both implementations, and not a change of view or an
+admission. What it does not show: another map, a longer run (a gap can grow until a discrete outcome differs), rules 2,
+or an engine other than Python's arithmetic. Next: 0226, the art language's mover statement (`art/dress.py`, which
+moves every world's head once, with the number grammar's fix), QUALITY-0 and ADMISSION-0 learning movers, the scene
+renderer drawing them, the plaza playing `withRules(2)` by the version handshake, and the exporter's checks of swept
+boxes against rock, spawns and each other; his references frozen again after it.
+
+**0225 on his machine, and 0226: movers enter through the art language (2026-10-14).** His run of 0225 (Windows,
+Python 3.14, Edge 155): applied as tree d228b6dc, as predicted; `tick_ref.py rules2` RULES 2 HELD BY PYTHON, line for
+line the container's; then, the browser's run made, RULES 2 HELD BY PYTHON AND THE ENGINE: every snapshot, hash and
+**identity** the same over 9,284 ticks, the identities the container's (fa57af895f527fdf to dd2eeb4aa57b16d0) —
+rules 2 agreeing across machines and engines (V8 in Edge on Windows, V8 in node and Chromium 141 on Linux, CPython 3.11
+and 3.14), MEASURED; RULES REFERENCE PASSED; GRAYBOX SELFTEST 30/30 and 27/27; the translation probe's six lines as
+the container printed them (to the three digits printed: not a comparison of bits); the gate 251 rows / 0 fail, rowset
+74db4c8d78625af5; pushed 52670bd..cc8ed69. Not run there: rules 1's trace held to Python (`tick_ref.py verify`) and
+Firefox. His first comparison was asked for before the browser had written its file, and `tick_ref.py` played the
+whole table and then stopped on a traceback: it now says which file is missing and the command that writes it, before
+playing anything. **0226, built, off the gate**, by his ruling that *"the physics layer should enter through the
+existing exporter, extending `art/dress.py` so that motion and interaction statements become part of the art language
+itself"*, the exporter change that moves every head once carrying the number grammar found in 0221. `art/dress.py`:
+**the number grammar** — a number is ASCII digits, at most one `.` between digits, a `-` in front when negative;
+`2_5`, `+2.5`, `25e-1`, `.5`, `5.` and digits of other scripts are refused (float() took them, MEASURED in 0221); a
+spacing, a percentage or an `every` must be whole (`int()` cut `2.7` to 2 without a word); a colour's channels and a
+cell's coordinates ASCII (`str.isdigit()` took a superscript two, which `int()` then refused with an error the exporter
+did not catch: a crash, now a refusal). **The mover statement**, `mover NAME MATERIAL X0,Y0,Z0 X1,Y1,Z1 along AXIS
+travel METRES speed M/S`: its corners and travel whole numbers of 1/256 m (exactly, through `Fraction`), its speed a
+whole number of 1/256 m a tick (a refusal names the two nearest speeds); held to rules 2's own table by the twin's
+`Mover` (the tunnelling bound among it), and its travel to the world: inside the grid, above every cell it crosses,
+clear of every spawn's column, of every target's column (rules 2 do not move targets: a box would pass through one),
+of every other mover's travel, and of every piece of dressing but what lies flat on the floor. The reach ceiling counts a rider at each mover's highest top (every mover taken to be boardable, which can
+only raise it) and the cells a rider can step off onto. A scene with movers names `rules: 2` and carries them; a scene
+without is byte for byte what it was (harbor-day 549d5d76035f and plaza-night 99001240ed5c, the same scenes and plan
+views as before), so the only head that moves is the exporter's: recorded in the plaza's ledger by a rebase (#24,
+1ff8e5e8f6be to aaf42446abed). `art/check.py` holds movers apart from the exporter's code: the handshake (a scene
+names rules 2, which `sim.js` and `tick_ref.py` both say they implement, read from their sources, with the same unit
+and the same body), rules 2's table restated, every travel against the world, the spawns, the targets and the other
+movers, a rider in the reach ceiling, no dressing in a path; twenty-two new plants in every brief (the grammar's six
+beside a lamp the exporter takes; eight movers the exporter refuses beside one it takes; a slab clear of every head on
+foot refused once a lift stands under it; seven defects planted in the brief's scene with a lift, which itself passes
+every check, among them rules 3, a travel through a target's column — and the same scene over a world without targets
+passing, so that the refusal is the target's — and a rider left out of the ceiling). QUALITY-0 knows `rules` and `movers` (both or
+neither, rules 2 only, every field bounded, every travel inside the world and under 1,024 m) and the renderer's mover cap
+(64, read from its source). The scope protocol: a mover is play (`play/mover/NAME`), and any change to one, or to the
+rules, is refused whatever is granted (SCOPE-PLAY), its material being its look (`surface/mover`); three new vectors
+fix it (65 in all, the 62 before byte for byte the same), the Rust twin reproduces all 65, and each twin with the rule
+taken out fails the vector it should. So a mover enters a world by a person's edit, recorded with `rebase`, never
+through a prompt, and the studio still names `motion.path` among what it cannot make. ADMISSION-0: the movers' check
+among the expected ones, `mover` among the play kinds, `sim.js` and `tick_ref.py` among the components a verdict rests
+on, and a scene with movers says that no tick was run. The plaza: `play.js` plays a scene under the rules it names and
+no other (rules 2 with its movers; a scene naming rules it does not play is not played), starts a new game when the
+movers or the rules change and not when only their look does; `scene_render.js` draws each mover where the simulation
+has put it (no moon shadow: that map is drawn once). The Unreal importer refuses a scene with movers. A world to play
+them: `art/briefs/harbor-lift.art`, harbor-day with a deck sliding 16 m along the south lane at 3.75 m/s and a lift
+beside the 2.6 m block at its west end, rising 2.25 m at 0.9375 m/s. MEASURED in the container: ART CHECKS all PASS
+but the three references (the exporter changed; his act to freeze, the comparison saying no field moved for harbor-day
+and plaza-night); QUALITY SELFTEST 73/73; DIRECTOR SELFTEST PASSED (a new row: an intent adding a lift refused,
+SCOPE-PLAY, its record saying the mover was not played), CRASHTEST (15 cases) and RACETEST (32 cases) PASSED; VECTORS
+65 / 65 and CONFORMANCE 65 / 65; LIVE SELFTEST 20/20 (a lift added to the art served under rules 2; a mover through a
+wall refused, the scene before it served); STUDIO SELFTEST 74/74; STUDIO-2 SELFTEST 19/19; STUDIO APP SELFTEST 12/12;
+STUDIO-TXN SELFTEST PASSED; RUNG SELFTEST 17/17; `tools/rung.py classify` D (the twins, AGENTS.md and the art's checks
+are roots), and `plants` NOT HELD with one plant *gone*, read and kept so: QUALITY-0's *a field the checker does not know
+(movers)* cannot stand now that movers are a known field, and is planted as *(doors)*, the same defect under another
+name, beside thirteen plants of the movers' own fields — the comparison is right to stop on it, and a person to read
+it. In headless Chromium (not committed), harbor-lift played: rules 2 and
+its two movers; the movers moving; a rider carried 0.5 m by the deck in 16 ticks and 0.78125 m up by the lift in 100,
+exactly; the lift to the block's top and a step east onto it; the movers taken out of the art on disk, a new game under
+rules 1, and put back; a change of their material alone leaving the game untouched; no page error. OBSERVED there
+(SwiftShader): the lift a dark steel slab beside the block, at its top level with it; the detectors flag neither still.
+Not measured: his machine; a real GPU; a person riding it.
+
+**His documents on the origin, and 0227: ORT-1, the origin moved between ticks (2026-10-14).** While 0226 was being
+built he sent the *Origin Rebase Diamond Protocol* (a rebase as a state transformation at a tick boundary, Python and
+JavaScript bit-identical, conservation, overflow detection, evidence, a rung-D human admission) with *"you should be
+able to include the current rung you are building with this"*; a review of it (a sound core, a rebase is a state
+transition and not a camera move, but an implementation that establishes none of its guarantees, with its defects
+listed; *"do not integrate this version"*); a corrected draft, ORT-0 (int32 region and local coordinates, the region
+size a protocol constant), and a review of that (still blocked: a floating-point margin, duplicate ids accepted,
+region coordinates unchecked, a 30-byte buffer for variable ids, a harness that could not run, no byte comparison, a
+tick controller with no lifecycle; *"ACCEPT the protocol-constant decision and the corrected algebra. DEFER
+implementation readiness"*); and *ORT-0 → ORT-1* (a rebase as a proof-carrying transition: freeze the basis, build a
+candidate, challenge it, commit by compare-and-swap against the basis, record a receipt; framed canonical bytes;
+dependency closure; three answers; attack the contract), with *"batch/scrap and proceed"*, and then *"do an
+adversarial review for hardening and implement; websearch if needed"*. **0227, built, off the gate.**
+[`graybox/ORT-1.md`](../graybox/ORT-1.md) says what was kept of them and what was scrapped and why: kept, the transition
+and its conservation proved exactly, the closed event, the framed bytes, the candidate built without writing, every
+check before anything changes, the commit bound to its basis, the receipt, the declared dependencies, the three
+answers, the plants; scrapped, the int32 region model (a second state model would be a second simulation: here the
+state stays binary64 metres and the origin is whole cells, the shift the map's own cell), the 90% trigger (when to
+rebase is the caller's), partial rebases, a phase variable standing for atomicity, the rung-D admission (a rebase at run
+time is a step of the run; introducing ORT-1 is a change to the program, which RUNG-0 classifies) and every claim of
+being unbreakable. `sim.js` and `tick_ref.py`: a rules-2 world has an origin, read by `top`, the spawns, the targets and
+the objective, and named in the identity when it is not (0, 0); at (0, 0) rules 2 are byte for byte what they were
+(rules 2's table held again in node, in Chromium against its old results and in a new run; rules 1's trace, the input
+contract, the reference arithmetic, the bot and the page's self-tests, 30/30 and 27/27, unchanged). `web/ort.js` and
+`ort_ref.py`, written apart: `prepare` reads and writes nothing (the world rules 2, its cell whole metres, the event's
+form, its tick, the origin's bound, every leaf of the state and field of the world declared, every moved number moved
+exactly — TwoSum's error 0 — a mover still in rules 2's table, the candidate held leaf by leaf to what it should be);
+`commit` refuses a replay, a stale tick, a basis whose bytes or whose history moved, a candidate changed since it was
+prepared, and otherwise replaces the owner's one published record of world and state; receipts chained by `prev`.
+Fourteen cases worked by hand (`web/ort_cases.json`), the state after each rebase built by the checker from the state
+before and the worked numbers alone; every committed rebase held to conservation again without floating point
+(`Fraction`; BigInt counting 2^-1074). **The adversarial review**, of the build itself: a transition prepared, the world
+moved there and back, then committed — the same bytes, a longer history, the ABA problem of compare-and-swap, which a
+basis of bytes alone admitted (O11; answered by `prev`); the live state written outside a tick (O13; the bytes' check,
+which the history alone would miss); a candidate changed after it was prepared (O12; `ORT-TAMPERED`); a transform
+touching a leaf it should not (`ORT-SELF`); a world field the rebase would leave behind (O14; `ORT-UNDECLARED`); a
+refusal that writes first (every refusal held to the owner's bytes, objects, receipts, count and last id); TwoSum and
+overflow, read in the 2Sum literature (an intermediate overflow can make the error NaN, which the guard refuses: a
+false refusal at worst, never a false admission). In 0226 the same review added the targets' columns to a mover's
+travel and the twins' body to the handshake. MEASURED in the container: ORT-1 HELD BY PYTHON (14 cases; twelve plants,
+each refused by the case written for it); node v22 and headless Chromium 141 ORT-1 HELD BY PYTHON AND THE ENGINE, every
+snapshot, hash, rebase's bytes and receipt the same (4,545 ticks, 38 rebase attempts and preparations), five changes
+planted in an engine's results each found; 14 mutants of `ort.js` caught by the table, one found equivalent (a type test
+whose removal changes nothing); SHA-256 in `ort.js` against FIPS 180-2's two answers. In O10, 4,500 ticks among three
+movers with the origin moved by 1 and 4 cells and back, the global positions equal the unmoved run's exactly until tick
+2,253 and then differ by at most 4.26e-14 m, with no cell, footing, score or mover phase different (MEASURED, one run).
+Not built: a tick owner with threads, durability (no run is persisted), and the plaza calling ORT-1 (its worlds are
+96 m across; no need yet). NOT_MEASURED: Firefox, his machine.
+
+**His run of 0226 and 0227, his report, and 0228: RULES-3, solid walls, targets with a top, push (2026-10-14).** He
+applied 0226 and 0227 on Windows (Python 3.14, Edge 155): every suite passed, the gate 251 rows / 0 fail, pushed
+cc8ed69..78e458b, his own commit freezing the art's references at the exporter 61587cd0fda2 among them. Then he played
+harbor-lift and reported three things: from the lift he jumped onto the ledge toward the centre and could *"walk
+through the wall up there"*; on a dummy he got *"stuck into it instead of collision keeping me on top of it"*, freed
+only by shooting it down; the lift and the deck *"worked as intended sliding and lifting"*, but *"The sliding deck
+doesn't move my would be character if i get in the way like when lifted"*. Each read against the rules and measured in
+the container: rules 1 and 2 know no wall (a wall is a cell 4 m high, and a jump of 1.225 m plus a step of 0.55 m reaches
+it from a 2.6 m cover or from the lift's top at 2.5 m; the art draws the city's rock above 4 m, and he walked inside the
+drawing): of 1,944 jumps from the lift's top, 233 ended on a wall's top. A standing target blocks only a body below its
+top, and has no top: a player above it walks into its column and falls into it, and every step from inside ends inside
+(1,045 of 15,552 tries ended held in a target). The deck stopping for him is rules 2's one policy, stop, as specified.
+And the art's own reach model, which was to keep a player off what is drawn above the walls, counted a jump's apex
+alone, between neighbouring cells alone, since ART-GENERATION-0: the climb is apex and step, 1.775 m (corrected
+2026-10-21, 0257: the tick's own apex and step, 1.745833 m; 1.775 m is the parabola's), and neither the
+model nor 0226's adversarial review of it saw that (0229 corrects it). **0228, built, off the gate.**
+[`graybox/RULES-3.md`](../graybox/RULES-3.md): rules 2 with a cell as high as the world's wall blocking the body at any
+height; a standing target's top as ground (within a step of the feet, as any top); a target that would stand again
+while a body is in its column waiting, down, until it is clear; and a mover's policy push (along x or z, the player in
+its way moved by the mover's exact displacement unless that place is blocked, else the mover holds still; along y, as
+stop). The identity names rules 3 and the world's wall. `sim.js` (`GrayboxSim.withRules(3)`) and `tick_ref.py`
+(`rules3`), both from the document; rules 1 and 2 unchanged byte for byte. `web/rules3_cases.json`: fourteen cases
+worked by hand, among them his three (R5 the wall 0.5 m above the feet; R9 standing on a target and shooting it from
+its top; R1 the pusher), and, where rules 3 change what rules 2 do, what rules 2 do with the same inputs, which both
+implementations play and are held to; two stress runs among three pushers. `trace.py run --rules3`; the worker plays it.
+MEASURED in the container: RULES 3 HELD BY PYTHON (nine plants, each caught by a worked value); node v22 and headless
+Chromium 141 RULES 3 HELD BY PYTHON AND THE ENGINE (9,753 ticks of rules 3 and 653 of their rules-2 runs, every snapshot,
+hash and identity), six changes planted in an engine's results each found; 19 mutants of `sim.js`'s rules 3, 17 caught,
+two shown equivalent (a waiting target's test at the feet equal to its top, needing a surface at exactly t.y + 1.9 under
+a down target; a push tested against the mover's old pose, which keeps the pushed player's place relative to the box);
+the stress runs pushed 14 times and held a push 57 times, stood 15 ticks on a target's top, and no tick ended in a box,
+a standing target or over a wall's cell. Against his report, the same searches under rules 3: 0 of 1,944 jumps from the
+lift end on a wall; 0 of 14,940 tries end held in a target. Rules 1 and 2 unchanged: GRAYBOX SELFTEST 30/30 and 27/27,
+TICK REFERENCE VERIFIED, TICK-REF SELFTEST PASSED, INPUT CONTRACT HELD BY PYTHON AND THE BROWSER, RULES 2 HELD BY PYTHON
+AND THE ENGINE (node, Chromium), RULES REFERENCE PASSED, BOT-REF SELFTEST PASSED, ORT-1 HELD BY PYTHON AND THE ENGINE
+(ORT-1 moves rules 2's worlds alone and refuses a rules-3 world). Nothing plays rules 3 yet: 0229 makes the art's
+scenes name them. NOT_MEASURED: Firefox, his machine.
+
+**0229: the art plays rules 3, and its reach ceiling is held to the simulation (2026-10-14).** His report found the
+art's own model wrong as well: the reach ceiling (dressing must stand above the highest a head can rise) counted a climb
+of the jump's apex alone, to a neighbouring cell alone, since ART-GENERATION-0, and nobody on a wall. The simulation
+climbs the apex and a step (1.775 m; corrected 2026-10-21, 0257: 1.745833 m, the tick's apex and a step), crosses
+gaps, stands on targets, and under rules 1 and 2 on the walls: a slab or a
+lamp the model put above every head hung in the way of a head on a 2.6 m cover, and the city's rock drawn above 4 m
+stood where a player walked. 0226's adversarial review of movers checked a rider's ceiling and missed the climb.
+**0229, built, off the gate.** `art/dress.py`: every scene names rules 3 (with movers or without) and carries its
+targets; the mover statement takes `policy stop|push` (push along y refused: say stop); REACH-1 (`art/README.md`): the
+surfaces a body may stand on (open cells, movers' tops over their travel, targets' tops), those reached from the spawns
+by the jumps the rules allow (the feet still as high as the next surface less the step, less nothing for a target,
+after flying the gap), and over each cell the highest head a body flying from one of them raises there, rising then
+falling, plus the margin; square roots by `math.sqrt`, correctly rounded on every machine. `art/check.py`: REACH-1
+again, apart from the exporter's code and with its arithmetic (the two ceilings equal, number for number, on every
+brief), the handshake for rules 3 read from `sim.js` and `tick_ref.py` (`RULES3`), every scene held to name rules 3, a
+mover's policy stop or push, the scene's targets W's; seven new plants in every brief, among them a slab at 4.5 m
+beside the 2.6 m cover (clear of the old ceiling, 3.275 m, not of a head on the cover; REACH-1 says 5.875 m) beside the
+same slab at 6.0 m, which passes. QUALITY-0 knows `rules` (3, required), `targets` and the two policies (76 rows).
+`art/web/play.js` plays rules 3 (and rules 1 and 2 for scenes before 0229); the Unreal importer takes a scene that
+names rules (Unreal moves its character by its own movement, said) and still refuses movers. `art/briefs/harbor-lift.art`:
+the deck pushes, by his report; the lift, along y, holds still for a player in its way, as before. What moved in the
+three scenes: `rules` and `targets` added, the ceiling raised at 531 cells and none lowered, so 23 lamps a scene hang
+higher (by 0.2 to 2.575 m); nothing else. The plaza's ledger rebased (#25). The director's self-tests played the first
+round, whose base hangs its slabs at 5.2 m over the 2.6 m covers: under REACH-1, A and B are refused for those slabs
+(CHECK-FAILED) and D for them and its leak. They now play `art/fixtures/round/`, the same candidates over that base with
+the two slabs at 6.0 m (A, B and C CLEAN, D LEAKAGE, E and F REFUSED, the round's own verdicts); the owner's round and
+its record are unchanged. The scripted provider's *Monolithic* lowers a slab by 1 m to no less than 6.0 m (it lowered
+by 1.2 m to 4.6 m, which REACH-1 refuses over the fixture's slabs). MEASURED in the container: a breadth-first search of
+rules 3's simulation (node v22; 24 yaws, jumps at once, after 3 or 8 ticks or none, movers waited for) recording every
+tick's head over the cells under the body: the tactical map, 308,352 tries, no head above REACH-1's ceiling less its
+margin (the closest 0.029 m under), and 334 cells where a head rose above the old ceiling's (by up to 2.3 m, beside the
+2.6 m cover at 20,11); harbor-lift with its movers, 400,032 tries, none above REACH-1's. ART CHECKS all PASS but the
+three references (his to freeze: the fields that moved are `lights`, `reach`, `rules`, `targets` and `visuals`, as
+read); QUALITY SELFTEST 76/76; DIRECTOR SELFTEST, CRASHTEST (15) and RACETEST (32) PASSED; VECTORS and CONFORMANCE
+65 / 65; LIVE SELFTEST 20/20; STUDIO SELFTEST 74/74; STUDIO-2 SELFTEST 19/19; STUDIO APP SELFTEST 12/12; STUDIO-TXN
+SELFTEST PASSED; RUNG SELFTEST 17/17; RULES 3 HELD BY PYTHON AND THE ENGINE again. In headless Chromium 141 (not
+committed), harbor-lift played under rules 3, 14 of 14: a rider carried by the deck and the lift; on the floor in the
+deck's way, pushed from tick 5, 96 pushes of 1/32 m by tick 100; 1,944 jumps from the lift's top, none ending on a wall
+or over a wall's cell; standing 30 ticks on a target's top and walking off it; a target down with the player in its
+column waiting, then standing once he walked out; the deck's policy edited to stop, the movers taken out and put back,
+each a new game under rules 3; a repaint keeping the game. RUNG-0, run from the classifier his push holds: 0228 and 0229
+each rung D (files in the trusted base's closure); 0228's plants HELD (103 refused before and after); 0229 reads one
+loosening and nine plants gone, each read here: the expected check *movers: rules 2 holds them and their paths are
+clear* dropped from ADMISSION-0's list is that check renamed (*the rules: rules 3 hold the scene, its movers and their
+paths clear*, in the list in its place), and it now holds every scene, not only those with movers; of the plants,
+seven are reworded for rules 3 (a scene that names no rules for movers without their rules, twice; rules 4 and rules 2
+for rules 3 as the rules no scene may name; rules 3.0 for rules 2.0; the policies stop or push; the tunnelling bound as
+the rules' own), one moved (the false ceiling planted at 3,0, which REACH-1 now gives a ceiling, for 4,2), and one is
+retired, QUALITY-0's *rules without movers*: under 0229 that is every scene without movers, the norm and no defect
+(its place taken by *an empty list of movers*, kept, and *a scene without its targets*, new); 113 refused after,
+none no longer refused. NOT_MEASURED: his machine, Edge, a real GPU; the search is a search and not a proof (a place it
+did not reach is not shown unreachable).
+
+**His push of 0228, 0229 and the references, and his plan: the studio's shell (2026-10-14).** He ran 0228 and 0229
+(every suite passed; RUNG-0 from his pushed classifier, `rung D` each, the renamed check read as one loosening; the gate
+251 rows / 0 fail, rowset 74db4c8d78625af5), froze the three references at the 0229 exporter, and pushed
+`78e458b..14e980f`. Then two mockups of *Verðandi Studio* and a plan in sprints: Sprint 1, the core studio shell
+(*"Launch Verðandi, enter the world, select an object, inspect it, and play"*); Sprint 2, Mark & Shape (*"Mark a wall,
+draw a doorway outline, save it, reopen it, and request an edit against that exact region"*); then the candidate loop, a
+world-generation slice, the dynamic world, scale; with authority kept apart from views, authoring from runtime, and
+*"the Director proposes, the host validates, a human admits"*. **0230, STUDIO-3, the shell: built, off the gate.**
+`art/web/play.html`, `art/web/play.js` and a new `art/web/studio_ui.js` make the play page a studio after his first
+mockup (art/STUDIO.md, *The shell*): the menu bar, the context bar (scene, layer, selection; connected, world,
+revision, source, rules), the navigator, the viewport with its tools, pills and measured statistics, the inspector
+(Transform, Static Mesh, Materials, Collision, LOD, Physics, Gameplay Tags, Custom Properties), Layers, World Settings,
+the asset browser with thumbnails from a second renderer, the candidates with theirs, the ledger, the director as a
+drawer, and the roadmap in a footer; what is not built says so and why. The page opens in an editor (a free camera, the
+cursor picking by the ray through its pixel, a click selecting, the selection drawn as its box in blue); **P** plays as
+before, Esc returns. `art/play.py`: GET `/object.json` and `/validate.json`, read-only (nothing bound, no tag), and POST
+`/studio/build` (compile every source again now); each served source keeps its check rows and its statements. LIVE
+SELFTEST 24/24 (four new rows: the inspector's read and that it writes nothing, Validate's rows equal to the checks
+compiled, Validate during a refusal, Local Build with and without the token). MEASURED in the container: ART CHECKS
+PASSED; LIVE SELFTEST 24/24; STUDIO SELFTEST 74/74; STUDIO-2 SELFTEST 19/19 (18/19 once, the row *the queue read back
+after a restart* failing on its task count and passing on the next run with nothing changed: OBSERVED, a race in that
+row, not read further); STUDIO APP SELFTEST 12/12. In headless Chromium 141 with SwiftShader (not committed): the shell
+drawn at 1600 × 900 and 1920 × 1080, a click selecting the canopy (`/object.json`: line 61), F framing it, E making it
+`@1`, the scripted director's three candidates drawn as thumbnails, P capturing the mouse and leaving play putting the
+editor's camera at the player's eye, Validate listing 10 of 10 rows, nothing on the console but the favicon's 404. NOT_MEASURED: his machine, Edge, a real GPU's frame rate (SwiftShader's
+is no measure). Docs: AGENTS.md (and the RUNG-0 row's command for PowerShell, `cmd /c`: its `>` writes UTF-16, as his
+run of 0229 found), art/STUDIO.md, docs/CORE.md, this entry.
+
+**0231, MARK-0, Mark & Shape: built, off the gate.** His Sprint 2, after his second mockup (art/STUDIO.md, *Marks and
+shapes*): **M** turns the shell to marking (the worlds, the layers and the shapes on the left; Viewport, Top, Side and
+Perspective over the viewport; Select, Move, Rotate, Scale, Add Point, Finish Shape and Cancel under it; the shape's
+inspector on the right, with its vertices in the face's frame and its constraints marked HOST or WORDS; the candidates
+with M, C and P and a split of the world and a candidate below). A click marks one face of one box (of the dressing or
+the play geometry); each click after it adds a point where the ray meets that face's plane, snapped to its edges and to
+5 cm; Enter saves. `art/studio_marks.py` (new): the face frames; exact predicates on integer millimetres and fractions
+(simple, within, and the clearance a body needs: an upright rectangle 2 r wide and c tall standing within a step of the
+face's foot, decided over a finite set of positions that contains one if any fits); a shape's status against a scene
+(ok only when its box is exactly as marked; changed, with whether the marked face itself moved; gone; ambiguous); the
+shapes file under the content lock; `#name` mentions. `art/play.py`: GET `/shapes.json`, POST `/studio/shapes/save` and
+`/delete` with the page's token (a shape's body read with its numbers as decimals; NaN, Infinity and a key twice
+refused). `art/studio.py`: a prompt naming `#name` sends that shape in a request of version 2, refused (STUDIO-SHAPE) if
+no shape has the name or it is not ok at the head; `art/providers/director_prompt.py` renders it; the scripted provider
+answers an opening in the play geometry UNSUPPORTED `layout.change` and a shape on a canopy as that canopy targeted.
+Three agents ran beside the build, each with web search (their files in the session's scratch, not committed):
+ADVERSARY-A fired 54 attacks at the HTTP surface (10 real defects in the code before 0230, fixed in 0232) and wrote the
+planned shapes rows; THEOREM-B wrote an independent exact geometry with proofs (the frames' bijection, simplicity as a
+Jordan polygon, the candidate set of the clearance test; 26 of 26 mutants caught) and found what this build took: the
+scene's boxes are not all on the millimetre (8 coordinates of harbor-lift's 2,910 are not: a shape keeps its box as the
+exact decimal), a door must stand on the floor (the walkable clearance), a numeric body read as doubles rounds silently
+(read as decimals), a box changed behind its face (said), two boxes of one id (ambiguous); MIXER-C prepared Sprint 3
+(an object-level scene diff with M, C and P, exact containment in a shape's prism, proofs of determinism, inverse and
+completeness) and found two defects of the gateway fixed in 0232. MEASURED in the container: MARKS SELFTEST 19/19 (12
+pure, 7 over HTTP with the scripted director: a doorway saved and read back after a restart; NaN, a key twice, a decimal
+past the millimetre, an older scene and a bow-tie refused; #doorway asked, version 2, UNSUPPORTED layout.change, the
+world as it was; #underside answered on its canopy, three candidates; the canopy raised by an edit, #underside changed
+and refused as input; a shape deleted); the two implementations of the predicates, the build's and THEOREM-B's, agree on
+30,000 polygons (simple) and 3,000 clearance questions, 0 disagreements; 20 mutants planted in `studio_marks.py`, 14
+caught by its self-test, 6 equivalent (an orientation's sign compared only for equality; the crossing number's ray to
+either side; NaN caught downstream; three of `simple()`'s guards, each implied by the others: 0 differences on 126,339
+polygons, 66,339 of them every polygon of 3 to 5 vertices on a 3 x 3 lattice); LIVE SELFTEST 24/24; STUDIO SELFTEST
+74/74; STUDIO-2 SELFTEST 19/19; STUDIO APP SELFTEST 12/12; ART CHECKS PASSED. In headless Chromium 141 (not committed),
+at 1920 x 1080: M, four clicks on a wall's +z face at 7.4 to 8.6 m by 0 to 2.3 m (snapped exactly), Enter, saved ok
+with clearance, simple and within held; the page reloaded and the shape read back ok; "cut #wall_opening_01 through"
+asked: UNSUPPORTED layout.change; a region on the canopy's underside, "light #region_01 warmly": three candidates, M, C
+and P read A P, B M and P, C P (C never); the split drawn; nothing on the console but the favicon's 404. NOT_MEASURED:
+his machine, Edge, a real GPU. What the shapes do not do yet: hold a candidate to the region (the director is told;
+nothing checks where a change lands: the candidate loop's), and cut the play geometry. Docs: AGENTS.md, art/README.md,
+art/STUDIO.md, docs/CORE.md, this entry.
+
+**0232, HARDEN-0, the studio's HTTP boundary made total: built, off the gate.** From what ADVERSARY-A (54 attacks, a
+harness of its own, run against the code before 0230) and MIXER-C (the Sprint 3 review) MEASURED. A prompt holding half
+of a character (a lone surrogate: half an emoji pasted) was accepted, and the request's thread died writing it, leaving
+the request running for ever and the server busy: it is refused now (STUDIO-PROMPT), and a request's thread that raises
+anything ends its request failed (STUDIO-FAILED), recorded. Five requests ended in a reset connection instead of an
+answer (a non-integer Content-Length, JSON nested 40,000 deep, a list for a world, a list for a task's id, a camera that
+is not an object or of 10^400 metres): each is answered with its code now, and whatever a handler raises that it did not
+expect is answered 500 STUDIO-INTERNAL. A negative Content-Length was read to the end of the connection: 400. A client
+that stops sending held its thread for ever: let go after a minute (`SOCKET_TIMEOUT`). After a restart every tag read
+*changed* and the model was told so (the tags file did not keep what its object was): the file keeps each tag's
+fingerprint, and a tag from an older file reads *unknown* until bound again. An object a candidate adds was counted once
+for each of its parts: once now. And, OBSERVED once under load in this build's own run, the supervisor read the answer
+to POST /studio/shutdown cut short (IncompleteRead): the server stops only after that answer is written. MEASURED in the
+container: BOUNDARY SELFTEST 7/7 (every request answered; half a character refused and a camera that is not an object
+ignored; a planted exception in the POST handler answered 500; a planted exception in the request's thread ending it
+failed with the server not busy; a silent client let go at the timeout; a tag read back after a restart ok, one from a
+file before 0232 unknown; an added canopy with its parts one object); nine fixes taken out one at a time, each caught
+by it; ADVERSARY-A's harness against 0232: 52 of 54 PASS, no reset connection and no request left running; the two left
+are its own thresholds (it wants a silent client closed within 4 s, the boundary allows a minute; it wants a 64 KiB
+shape refused as JSON, play.py refuses a body over 64 KiB before reading it, 400 plain text); MARKS SELFTEST 19/19; LIVE
+SELFTEST 24/24; STUDIO SELFTEST 74/74; STUDIO-2 SELFTEST 19/19; STUDIO APP SELFTEST 12/12 (11/12 once, the row above,
+before the fix). Docs: AGENTS.md, art/STUDIO.md (*Its boundary*, the tags), docs/CORE.md, this entry.
+
+**His run of 0230 to 0232, and 0233 (2026-10-15).** He applied the three (the tree 341d53a3, as predicted); MARKS
+SELFTEST 19/19, BOUNDARY SELFTEST 7/7 and LIVE SELFTEST 24/24 on his machine (Windows, Python 3.14); STUDIO SELFTEST
+stopped after 14 rows with WinError 10053 in its own helper: the row *a refusal is sent only after the request's body is
+read* sends a still with its plant on (DRAIN off: the server answers before it reads, and closes), then the body, then
+reads the answer, and on Windows the body met at a closed socket brings a reset that loses the answer, the very loss
+0224's draining prevents: OBSERVED on his machine, where that row had passed in every run since 0224; whether 0232's
+socket timeout moved the race is not measured (on Linux the answer is read before the reset). **0233, built, off the
+gate:** the helper takes a reset as the answer lost (its text in its place) instead of stopping the self-test; the row
+reads the plant's `early` alone, as it did, and the two answers it reads with draining on (both must be 403) fail it if
+they were lost, and now say what they were. STUDIO SELFTEST 74/74 in the container. NOT_MEASURED: his machine's run.
+
+**His run of 0233 (2026-10-15).** The tree edba9f1b as predicted; STUDIO SELFTEST 74/74, STUDIO-2 SELFTEST 19/19,
+STUDIO APP SELFTEST 13/13, ART CHECKS PASSED, the rung D and loosening nothing, the plants 82/82 HELD; the gate 251 rows
+/ 0 fail, rowset 74db4c8d78625af5. MEASURED on his machine.
+
+### DSC-0 — the state-commitment court · probe 6, **built, off the gate** (0234, `tools/probe/state_commit.py`)
+
+**The question.** With his run of 0233 he brought outside documents: a recursive-proof state that would "dissolve the
+ledger", and Differential State Commitments, a Merkle tree over the grid giving "O(k log n) verification instead of
+O(n) replay", with a threat analysis and a draft implementation said to be ready to deploy. The question they put:
+should the session's content function become a tree commitment now?
+
+**The draft, read and run (a port of its root and its batch in the container, not committed).** Its tree has
+`TREE_DEPTH = 8` over 256 x 256 leaves, so in a release build its root reads 256 of the 65,536 leaves (one column;
+`debug_assert` stops a debug build first): MEASURED, a change of cell (10, 5) leaves the root as it was. Its batch checks
+every old value against the state before the batch, then writes in a stable sort, so two operations on one cell that
+both claim the empty value are both accepted and the cell keeps whichever came last: the forged prior value its own
+threat analysis names first, MEASURED. Its command-line verifier checks a manifest against a new empty grid, never reads
+the manifest's proofs, and its proof siblings are a placeholder; its test of a single change asserts that a cached root
+differs from itself; its falsification report gives timings, three platforms and "ALL EXPRESSIONS PASSED" for code
+that names crates (sha2, serde, clap, chrono, proptest, fastrand) this repository's build cannot reach (rustc alone, no
+Cargo, no `--extern`: §2 of docs/CORE.md). READ, not run: the report's numbers were written before any run could be.
+
+**The repository's facts that decide it (read).** An edit's law is local: inside the level, the border rock, the
+alphabet (`apply`, workshop/session.rs; `push_edit_cell`, shell/playback.rs), and the grant is an operation kind, a
+rectangle and classes (shell/admit.rs); the design tool's reachability is "a view, not a constraint". The kernel's world
+is at most 48 x 48 cells (`LATTICE`, kernel/mantle.rs:53). The content is the SHA-256 of the whole level and tiles; the
+shell keeps the two digests as an exact memo and the workshop keeps none.
+
+**The court.** DSC-0 is built as a reference over the same bytes: leaves that name their place, nodes apart from
+leaves, a path's sides taken from its index and never from the proof, a tile class committed by its generator when it
+is one colour (and then only so), a root bound to the level's extent, one byte form for a batch's receipt (strictly
+increasing places, each with its old and new value, nothing that changes nothing) and for its proof (the siblings the
+union of its paths needs, exactly that many), and a verifier that is given the root before, the receipt and the proof
+and nothing else. The probe's kill criteria are in its header: soundness, agreement with the workshop, and necessity at
+the kernel's largest world. MEASURED in the container: `PROBE 6-dsc VERDICT HELD`, 36 cases HELD, at two seeds (60 edits
+over a plain base and 60 over a textured one; 120 and 120). Sixteen forgeries refused with their codes (an old value, a
+place twice, places out of order, a change of nothing, a sibling, a hash too many and one too few, a proof moved to
+another place, a padding place, a class that does not exist, an empty receipt, a border cell, a byte outside the
+alphabet, the extent transposed, a class's old colour, trailing bytes), and a stale root; the reference agrees with the
+workshop at the end of every batch (the content it logged, the final bytes of its replay, its verify); the root reached
+by receipts is the root computed again from the bytes; the inverse receipts walk back to the genesis over the plain
+base. Fifteen mutants of the verifier: 13 caught; two equivalent for soundness, and shown so: with a leaf that does not
+name its place, 7,018 of 277,394 proofs also verify at another place holding the same value, every one to the true root
+(a proof stops naming one place; nothing false is accepted), and since no leaf's preimage is 64 bytes long a node cannot
+pass for a leaf without the node prefix (which costs no block).
+
+**What it settles.** (1) DSC is replay with a tree-shaped content function, not a replacement for the log: a receipt
+for cells that went back to their old values verifies again (`limit-history`: a root holds no history, so the duplicate
+and anchor checks stay with the log), and a paint over a textured class has no inverse without the class's old bytes
+(`limit-inverse-texture`: undo needs the log or the base). ESTABLISHED by construction, and reproduced. (2) A tree
+commitment cannot certify the present heads: each head folds the SHA-256 of the whole state, which only the whole
+state's bytes give, so a tree kept beside the chain verifies nothing of it for less than replay costs, and adopting one
+means a new content function and every head moving. ESTABLISHED. (3) It buys nothing measurable at the kernel's world:
+one cell edit at 48 x 48 hashes 307 blocks (about 0.09 ms at the workshop's own rate here) against DSC-0's 54, and a
+paint 15,363 blocks (about 4.7 ms) against 18. MEASURED. (4) Its place is the format of a larger world: at the
+workshop's rate the incumbent's cell edit passes a tenth of a 60 Hz frame at 1024 x 1024 cells (about 5.1 ms) and a
+whole frame at 2048 x 2048 (about 20 ms), while DSC-0's verification stays between 0.04 and 0.13 ms through 4096 x 4096:
+MEASURED over levels of the present layout made larger, which the kernel refuses; INFERRED for a format that does not
+exist yet. Kept apart from this: the admission path's own growth, the design tool's admission at 89 ms after 3 designs
+and 137 ms after 80 (160 edits) in the container, which is the session read and written whole, not hashing (INFERRED
+from the memo: a cell edit there hashes 295 blocks).
+
+**Not done.** No row, no rung; nothing in `kernel/`, `workshop/`, `shell/` or `verify/` changed, and nothing reads
+DSC-0. NOT_MEASURED: his machine. Docs: AGENTS.md, docs/CORE.md (tools/ 1,996 lines), this entry.
+
+**His run of 0234, and his ruling (2026-10-15).** The tree 3f3ce251 as predicted; `PROBE 6-dsc VERDICT HELD`, 36 cases
+HELD on his machine (there, a cell edit at 48 x 48 about 0.054 ms and a paint about 2.7 ms at the workshop's rate; the
+incumbent's cell edit past a tenth of a frame at 1024 x 1024 and past a frame at 4096 x 4096); the rung D, loosening
+nothing; the plants 82/82 HELD; the gate 251 rows / 0 fail, rowset 74db4c8d78625af5. MEASURED on his machine. His
+ruling: *"DSC-0 should remain an isolated reference probe, not become part of the current kernel or studio admission
+path"*, frozen at 0234; its roots, receipts and proofs are never put in authoritative state; the log keeps history, a
+state commitment says content, admission gives permission, and a tree commitment does none of the other two. And: *"let's
+not get distracted from the main trajectory"*: the candidate loop, below.
+
+### HELD-0 and COMPARE-0 — the candidate loop · Sprint 3, **built, off the gate** (0235, `art/scene_diff.py`)
+
+**What it is.** The owner's Sprint 3 (art/STUDIO.md, *The candidate loop*), on what MIXER-C prepared beside 0230 and
+0231. What a candidate changed is said by the host once, from the two scenes of its own evaluation (the head as the
+files stood when it was evaluated, and the candidate; never the slot served, never the page): an identity diff, keyed
+by id and never by likeness, whose inverse is the diff read backwards and which applied to its base gives the candidate
+(and to any other scene is refused), with M, C and P read from it. For each shape the prompt names, every box the
+candidate changes is related exactly to the shape's region, its outline swept along its face's normal from the back of
+the marked box out to its reach (to the sky on a top face, 1 m elsewhere, settable; an opening runs on through its
+box), and the candidate reads held, adjacent, outside, missed, empty or stale. The request tells the director the region
+and which statements make objects wholly in it at the head. The candidates are shown in the host's order (the
+director's verdict, the region, the play for a request of the art, the objects not held, how much changed, the letter;
+never a model's words); Diff outlines the account's boxes over the split; an admission records the set it was chosen
+from, and **None** records a set rejected. `art/scene_diff.py` and `art/scene_diff_test.py` (new); `art/studio_marks.py`:
+a shape's status decided in one place, its reach; `art/studio.py`: the shapes' records with the request, the report
+with each candidate (`<letter>.held.json`, its sha256 on the request's line), `host_order`, the comparison record,
+`none`, `held`, the region facts for the director; `art/play.py`: the report in `candidate_slot`, GET `/held.json`,
+POST `/studio/none`, the HTTP self-test; `art/providers/director_prompt.py`: the region and what it can hold;
+`art/web/play.js` and `play.html`: the host's M, C and P (the page computes none now), the region's verdicts on the
+cards, the host's order, None, Diff, the inspector's *Region*, the split framed on the request's shape from the side its
+face looks to, and Sprint 3 in the roadmap's footer.
+
+**Measured in the container.** SCENE-DIFF SELFTEST PASSED: 13 properties (MIXER-C's twelve, over 160 random scene pairs,
+960 polygons against an area oracle, 640 boxes against per-face formulas worked by hand, DIRECTOR-0's scope protocol on
+160 pairs; and T9, the region's reach) and 20 of 20 planted defects caught (MIXER-C's 18 and two of the reach). HELD
+SELFTEST 8/8 over HTTP with the scripted director: #whole on a canopy's underside; every candidate with its report (its
+base the evaluation's head); the request naming the canopy's statement as wholly in the region; *Lit underside* held,
+*Monolithic* and *Deeper canopy* outside (the slab brought down, or made deeper, beyond the region's 1 m reach); the
+host's order B, A, C; the order unchanged by a candidate's title; one admitted and the set recorded, the other two not
+chosen and one still rejected through the ledger after; none chosen of a second set, recorded, and refused again; the
+canopy then raised, so the first request reviewed again reads stale for every candidate. Nine defects planted in the
+integration (the order reading a title, the siblings decided rather than compared, none taken twice, the state carrying
+the boxes, the report taken against the candidate itself, the region's facts swapped, a review reading no shapes, the
+ranks inverted, the record naming no order): 9 caught by those rows. STUDIO SELFTEST 74/74 (its request-record row now
+expects each candidate's report beside its intent); MARKS SELFTEST 19/19; LIVE SELFTEST 24/24; STUDIO-2 SELFTEST 19/19;
+BOUNDARY SELFTEST 7/7; STUDIO APP SELFTEST 12/12; DIRECTOR SELFTEST PASSED; ART CHECKS PASSED. In headless Chromium 141
+at 1920 x 1080 with SwiftShader (a scratch tree, not committed; one run end to end): #whole saved, its inspector showing
+*Region* (1 m below the underside), *light #whole* asked through the drawer, the cards in the host's order B #1 (#whole
+held, M P), A #2 and C #3 (#whole outside, P) in both docks, Diff over the split (40 boxes against #whole for B, 2 for
+A), None: the server's state none chosen at once, the page's 110 s later (SwiftShader drew a frame in about 11 s, and
+the page's thread was busy drawing the thumbnails: OBSERVED; on a GPU NOT_MEASURED), every card none chosen and the
+button gone; nothing on the console but the favicon's 404.
+
+**Not done.** The region drawn as a volume in the viewport; a lamp held inside a region lights beyond it (a light is its
+fixture's box: NOT_MEASURED, said in the page); statements that make many objects cannot be held by a small region
+(the director is told which can; finer verbs are a change of the language). NOT_MEASURED: his machine, Edge, a real
+GPU. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md, art/README.md, art/STUDIO.md, docs/CORE.md
+(art 22,123 lines), this entry.
+
+**His run of 0235, and the plan he approved (2026-10-15).** Every self-test of the art layer passed on his machine
+(SCENE-DIFF 20 of 20 plants, HELD 8/8, STUDIO 74/74, MARKS 19/19, LIVE 24/24, STUDIO-2 19/19, BOUNDARY 7/7, STUDIO APP
+13/13, ART CHECKS PASSED); the rung D, loosening nothing; the plants 82/82; the gate 251 rows / 0 fail; pushed
+14e980f..b2ea25c. MEASURED on his machine. He approved the plan put to him: Phase I in the order B0 to B5, ending in a
+flagship (a facade edit in an industrial district); D1, the renderer (the WebGL viewer grows; the Unreal importer stays
+an export path), decided only once there are real measurements of renderers; the 48 x 48 kernel and its gate rows
+untouched through Phase I. His acceptance for B0: the full check of an art-only patch within 15 minutes on his host,
+twice on the same inputs, logged, p50 and p95 before and after, the scene's build, each candidate's generation and
+validation, the admission and the whole request timed apart, and a result reused only where candidates cannot
+contaminate each other. For B1: one bay of a facade changed and admitted, its exact receipt in the ledger, the art
+checks passing, its account held, malformed edits and edits outside the region refused, and an admission then its undo
+giving back the head before them byte for byte; *"small and falsifiable"*: no arbitrary meshes, no openings, no general
+geometry framework. His safeguards: *"a memo skip is not a pass"*; a memo of the gate stays outside the authoritative
+verifier until its invalidation is proven, and names the gate's version, command and environment and every file it
+read. For later (B3): the impact panel's deltas (polycount, lights, texture bytes, an estimated frame time marked
+advisory) with their provenance (the producer, the prompt's sha256); a preview in motion as a deterministic camera path
+over a seeded simulation. Taken as follows, and said to him: his "make these gated tests in verify/" and his "no change
+to [...] gate rows in Phase I" cannot both hold, and the second is the plan he approved, so B0's and B1's tests are the
+art layer's own self-tests (`art/selftests.py` runs them all) and verify/ is untouched; and the "Incremental
+Merkle-Assisted Admission" he brought with it (receipts, proofs and signatures in the workshop, the shell and the
+verifier) is declined under his ruling on DSC-0, which measured no gain at 48 x 48: a bay's edit is a change of the art,
+not of the kernel's cells, and the art layer's admission already has its evidence (the ledger's receipt, the request's
+record, the account against the region) and its undo (the exact inverse revision).
+
+### THROUGHPUT-0 — the export memo, and the self-tests in one command · Phase I, B0, **built, off the gate** (0236, `art/director.py`, `art/selftests.py`)
+
+**What it is.** An evaluation exports the head and the candidate, an admission evaluates again, and an undo evaluates
+the inverse and admits it: one request of three candidates and one admission exported the head five times and each
+candidate twice, each about 0.35 s in the container. `Workspace.export` now goes through an exact memo: one result per
+brief, sha256 of the text and maps folder, kept with the sha256 of every file the export opened and every folder it
+listed, recorded while it ran (PEP 578's audit events, in the exporting thread alone), and used again only while each
+of them is byte for byte as it was and each path it tried and did not find is still absent. A result is kept as its
+pickle and every use is given a copy of its own, so that what one caller does to its result reaches no other. Not
+kept: an export that raised, wrote a file, opened something by a descriptor, or ran while a file it read changed (its
+stat before and after); none while a plant of the director is set, or with `VERDANDI_EXPORT_MEMO=0`. What it does not
+see: a branch on whether a file exists that opens nothing; the export has none (VERIFIED by reading `art/dress.py`,
+`graybox/level.py`, `graybox/check.py`'s `source_rows`, `art/check.py`'s `verify` and `art/quality.py`'s
+`check_scene`). `art/selftests.py` (new) runs every self-test of the art layer, thirteen suites, at most a machine's
+processors at once, each in a process of its own (`PYTHONHASHSEED=0`, `PYTHONUTF8=1`), each passing only on its exit
+status and its summary line both; it logs every suite's summary, wall time and output (`art/build/selftests/`), and
+`--repeat 2` fails unless the summaries are the same in both runs. It is not the gate and reads nothing of it.
+
+**What the export reads.** Seven files, MEASURED by the memo's own record over the fixture's world: `art/dress.py`,
+`graybox/level.py`, `graybox/tick_ref.py`, `graybox/web/sim.js`, `art/web/scene_render.js` (QUALITY-0's bounds of the
+native renderer) and, in the maps folder, the map and its layout; no folder listed. The fifth is one a list written by
+hand from the exporter would have missed.
+
+**Its falsifiers.** `python art/director.py memotest` (and the same rows at the end of `selftest`): nine rows against
+the export computed with the memo off: a result used again equals the export; a caller that clears a copy's visuals and
+changes its head and checks changes nothing the next caller is given; every file above recorded; another text is
+another result; a byte appended to the map is a miss; an export that writes is not kept; a file another thread rewrites
+while the export reads it is not kept; a path not found must stay absent; off under a plant. Its four plants, each
+caught: the kept object handed out itself (by the copy row), the inputs never checked (by the map and the absent path),
+the text left out of the key (by another text), a writing export kept (by its row). And one repair the full check asked for: `art/studio_queue.py`'s self-test added a task and then stopped the scheduler, which under load had started it first (OBSERVED once in two runs, the task *running* where *cancelled* was meant); the scheduler is now stopped and gone before the task is added.
+
+**Measured in the container** (2 processors, Python 3.11; a private harness, not committed: HELD-0's canopy loop over
+HTTP with the scripted director, ten requests, each asked on #whole, its three candidates evaluated, the first admitted
+with a still and then undone; the memo off, `VERDANDI_EXPORT_MEMO=0`, which is 0235's export, against on; p50 / p95 in
+ms; at 0237's tree, which changes none of this loop's code):
+
+| stage | memo off | memo on |
+|---|---|---|
+| the head's scene build (the page's, `brief_slot`) | 411 / 613 | 402 / 511 |
+| the provider (the candidates' generation) | 40 / 60 | 40 / 47 |
+| one candidate's evaluation (its validation, its map, its account) | 884 / 1,032 | 68 / 413 |
+| the whole request (three candidates) | 3,187 / 3,731 | 350 / 1,362 |
+| the admission | 1,873 / 2,640 | 76 / 142 |
+| the undo | 2,454 / 3,243 | 83 / 174 |
+
+The memo's own count: 177 hits, 4 misses. What this shows and what it does not: the ten requests repeat one prompt at
+one head, so after the first every export hits; the first request, whose head and three candidates were new, is the
+p95 (1,362 ms against 3,187 at p50 with the memo off), and a candidate never seen misses once, on its own export (413
+ms at p95). An admission and an undo always hit, since the evaluation before each exported the same texts. The page's
+build of the head does not go through the memo and did not move. Every one of the twenty iterations ended with the
+brief's bytes as they began.
+
+**Not done.** The page's own build of the head (`play.py`'s `compile_scene`, the scene the page plays after every
+change) does not go through the memo: it reads the brief's file and keeps the checks' details, and is a second change.
+A memo of the gate is kept privately, outside the repository and the verifier ("a memo skip is not a pass"); the gate
+is his to run. NOT_MEASURED: his machine. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md,
+art/README.md, docs/CORE.md (art 22,497 lines), this entry.
+
+
+### FACADE-0 — a building and its bays · Phase I, B1, **built, off the gate** (0237, `art/dress.py`)
+
+**What it is.** Two statements of `VERDANDI-ART 0`, small on purpose (his words: no arbitrary meshes, no openings, no
+general geometry framework). `building REGION MATERIAL HEIGHT x0,z0 x1,z1 [face window|panel MATERIAL] [storey M]
+[bay N]`: a block on rock (every cell of the rectangle rock, one cell beside it in its region, no cell shared with
+another building), from the wall's top to HEIGHT; with `face`, every bay of every floor on each side that looks onto
+open cells is one piece, `building:x0,z0-x1,z1:SIDE-bK-fN`, a window set in the bay or a panel filling it, standing out
+from the face by 5 or 4 cm: less than FLUSH, so that `art/check.py`'s envelope holds it as flush on a rock face wherever
+a player can be, with no new rule. `bay x0,z0-x1,z1:SIDE-bK-fN window|panel [MATERIAL]` or `... blank`: one bay of one
+floor, named by the place of the piece it makes, so that its statement's key is that piece; one no building has is
+refused, with the bays the building does have. A bay is the finer verb HELD-0's *Not done* asked for: a statement
+whose objects are one piece, which a small region can hold. The director's classifier knows the kind (rung A for a
+bay's edit); the studio's words for what a building's statement can change; the scripted director answers a shape on a
+building's side with the bay under it panelled, blank, or panelled on every floor.
+
+**Its falsifiers.** `python art/play.py --facade-selftest` (FACADE SELFTEST 8/8, over HTTP with the scripted director,
+in the fixture's world with one building added on the north lane's north side, 8 bays by 4 floors of 3.5 m): the
+building drawn, the art checks passing on it and their 50 plants refused; #bay drawn on bay 3 of floor 2 of its south
+face, three candidates CLEAN, *Panelled bay* and *Blank bay* held, *Panelled column* outside, the column last in the
+host's order; *Panelled bay* admitted with its still: the ledger's receipt names its evaluation, the head before, the
+head after (the evaluation's prediction, reached), the inverse `- bay 10,2-17,2:s-b3-f2` and the still, the brief one
+line longer, the request's record choosing it; the admitted scene passing the checks and changed in that one piece
+(its box and material; its statement's hash, which no badge reads, also moves); undone, the brief's bytes, the head and
+the scene's 157,998 bytes those before the admission; eight planted bays refused by the exporter, each with its reason
+(a bay beyond the side, a side against rock, a floor above the roof, an unknown element, an undeclared material, no
+building at the corners, a leading zero, a blank with a material); a bay beyond the candidate's scope refused as
+LEAKAGE (SCOPE-LEAK), its account against #bay *missed*, its admission refused; and the export memo serving the loop. The suite joins `art/selftests.py` (fourteen suites).
+
+**Measured in the container** (2 processors, Python 3.11). The same harness as THROUGHPUT-0's on #bay, ten requests
+each way (p50 / p95 ms, the memo off against on): the whole request 3,515 / 3,834 against 315 / 1,454; one candidate's
+evaluation 957 / 1,143 against 56 / 449; the admission 2,007 / 2,482 against 89 / 137; the undo 2,341 / 3,010 against
+80 / 186; the head's scene build 409 / 600 against 386 / 563; 177 hits and 4 misses; every iteration ended with the
+brief's bytes as they began. The full check of the two patches, `python art/selftests.py --repeat 2`, two suites at
+once: fourteen suites, 284.5 s and 289.1 s, the summaries the same in both runs, ART SELFTESTS PASSED, with QUALITY-0's
+three references frozen again at this exporter in a scratch copy (his act; no field of any scene moved, the bytes the
+same). Before the queue's repair (0236) and before that freeze, the same command read STUDIO-2 17/19 in its first run
+and 19/19 in its second, and the three references unfrozen: so the runner's `--repeat` caught a flake no single run
+had. The rung D, loosening nothing (`python tools/rung.py classify 1e2501c HEAD`). The gate: a memo of the gate, kept
+privately (strace over the gate's run of 0235's tree, 251 rows / 0 fail, rowset 74db4c8d78625af5; outside the
+repository and the verifier), records 210 files read, 15 folders listed, 1 path looked at without being opened and 5
+tried and not found, none of them in `art/`, `docs/` or AGENTS.md; for these two patches applied to 0235's tree it reads HIT, and it reads MISS, naming what moved, for a byte appended to a file the gate read (HIT again once it was put back), a file added to a folder it listed, a path it did not find made present, and the path it looked at moved away; a byte appended to `art/dress.py` is a HIT. A memo's HIT predicts the gate's
+result unchanged; it is not a pass, and the gate is his to run.
+
+**Not done.** Held is not a gate: a candidate scoped honestly to another bay is CLEAN and admissible, and its account
+(*missed*, *outside*) informs the designer and the order, as in HELD-0; whether a region should refuse an admission is
+his to rule (his risk of a generator touching other lots). No openings, depth, mullions or meshes; a building's
+facade on a side against rock is not drawn; the industrial district of the flagship (B5) is not made. NOT_MEASURED: a
+building in the page or in a browser, his machine. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md,
+art/README.md, art/STUDIO.md, docs/CORE.md (art 22,866 lines), this entry.
+
+**His run of 0236 and 0237, and his ruling on B2 (2026-10-15).** Both applied, the tree c8784d88 as predicted; the
+three references frozen again at the 0237 exporter, his act, no field moved (a79995b); `python art\selftests.py
+--repeat 2`: ART SELFTESTS PASSED, fourteen suites at once, 91.4 s and 94.2 s, the summaries the same in both runs
+(STUDIO APP 13/13 there, 12/12 in the container); the gate 251 rows / 0 fail, rowset 74db4c8d78625af5, as the private
+memo of the gate had predicted; pushed b2ea25c..a79995b. MEASURED on his machine: B0's full check of an art-only patch
+within 15 minutes, twice on the same inputs, logged. Not in his paste: the rung's classification and plants (the
+command given him lacked `--repo .`). His ruling: *"B2 should be Region-strict admission, and 'held' should default to
+information but be opt-in per request (Strict mode) so a request can require only held candidates be admitted"*, with
+a contract (a strict request's declared support; the host's dry run of each candidate and its footprint; the footprint
+within the support or the admission refused, ADMIT-OUTSIDE; the receipt and the inverse receipt in the ledger), six
+tests and a path to making it a gate later. Taken as: off the gate, the art layer's own self-tests, as his ruling says;
+the dry run is the director's evaluation, which compiles the candidate without writing anything, and the footprint is
+HELD-0's exact one; nothing in `workshop/`, `shell/` or `verify/` (his checklist's `workshop/session.rs`,
+`verify/dsc_incremental` and a CI job): a facade's edit is an admission of the art, which never reaches the workshop,
+and Phase I leaves the kernel and its rows as they are; his `DSC-ORDER` is not used, DSC-0 staying the reference he
+froze; `ADMIT-OUTSIDE` as he named it, with `ADMIT-EMPTY` and `ADMIT-STALE` for the other two ways a strict check
+cannot pass.
+
+### STRICT-0 — region-strict admission · Phase I, B2, **built, off the gate** (0238, `art/scene_diff.py`, `art/studio.py`)
+
+**What it is.** A request may be strict (the drawer's *Strict: held only*; `"strict": true` with POST `/studio/ask`);
+it must then name a shape (STUDIO-STRICT), and the director is told. Each of its candidates carries the host's strict
+check, from the two scenes of its own evaluation (`art/scene_diff.py` `strict`): the receipt, every box the change
+touches (a changed piece twice, as it was and as it is), each with the shapes whose regions hold it, its coordinates as
+exact decimals; the inverse receipt, the same for the change back against the same regions; PASS when the footprint is
+not empty, every box lies inside at least one region, and nothing of the whole world changes; else ADMIT-OUTSIDE,
+ADMIT-EMPTY or ADMIT-STALE. The whole check is kept beside the intent (`<letter>.strict.json`), named on the request's
+line; the card shows it and Admit is off for a FAIL. Admitting checks again from the admission's own evaluation: a FAIL
+is refused and recorded (`admit-refused`, with its code); a PASS is admitted with `region` in the ledger's admit event
+(the shapes, their records' sha256, the count, the receipt and the inverse receipt with their sha256), and
+`cmd_admit` itself refuses a strict admission whose check did not pass or that brings no receipt. A request not strict
+is byte for byte as before. docs/STUDIO-CONTRACT.md §13 has the codes and what is recorded.
+
+**Its falsifiers.** `python art/play.py --strict-selftest` (STRICT SELFTEST 11/11, over HTTP with the scripted director,
+in the fixture's world with two buildings side by side on the north lane): a strict request without a shape refused; a
+request not strict without a strict field anywhere; #bay strict: *Panelled bay* and *Blank bay* PASS, *Panelled column*
+FAIL ADMIT-OUTSIDE (6 of its 8 boxes, those of floors 0, 1 and 3, outside), each check kept; the column's admission
+refused, the refusal recorded, the brief and the ledger as they were (B2-SOUNDNESS); *Panelled bay* admitted with its
+receipt (2 boxes: the window as it was, the panel as it is) and inverse receipt in the ledger, the receipt's sha256 the
+same at the evaluation, at the admission and from the files as admitted (B2-AGREEMENT); undone, the brief, the head and
+the scene's bytes as before, and the undo's own footprint exactly the recorded inverse receipt (B2-INVERSE); a provider
+whose one candidate edits the neighbouring building's bay, its scope honest and so CLEAN at the director, refused
+ADMIT-OUTSIDE (B2-PLANTED); the director's own refusal of a failed check and of a check without receipts. Its three
+plants, each caught: the check skipped at admission, a footprint passed when any box (not every box) is held, the
+receipts left out of the ledger. The suite joins `art/selftests.py` (fifteen suites).
+
+**Measured in the container** (2 processors, Python 3.11; the private harness of THROUGHPUT-0 on #bay, ten requests each
+way, the memo on, p50 / p95 in ms, the request not strict against strict): one candidate's evaluation 64 / 544 against
+161 / 614 (the check is two diffs and two footprints, about 0.1 s); the whole request 361 / 1,821 against 659 / 2,183;
+the admission 90 / 150 against 192 / 250 (the check made again); the undo 107 / 171 against 96 / 181; every iteration
+admitted and undone, the brief's bytes as they began. The full check, `python art/selftests.py --repeat 2`, two suites
+at once, with the three references frozen again in a scratch copy as he froze them: fifteen suites, 328.4 s and 352.6
+s, the summaries the same, ART SELFTESTS PASSED.
+
+**Not done.** Strict as a gate on every request that names a shape (his escalation path); the queue's requests are not
+strict; the page's checkbox and chips are drawn by the page from the host's state and were not run in a browser
+(NOT_MEASURED; the host's refusal holds whatever the page does). NOT_MEASURED: his machine. No row, rung, pinned
+source or oracle file changed. Docs: AGENTS.md, art/STUDIO.md, docs/STUDIO-CONTRACT.md, docs/CORE.md (art
+23,202 lines), this entry.
+
+**His run of 0238, and his go for B3 (2026-10-15).** 0238 applied on a79995b; the rung D, loosening nothing, and the
+plants 82/82 HELD (`--repo .`); the gate 251 rows / 0 fail, rowset 74db4c8d78625af5; ART SELFTESTS PASSED, fifteen
+suites at once, 94.3 s and 93.9 s, the summaries the same (STRICT SELFTEST 11/11); pushed a79995b..fb1616f. MEASURED on
+his machine. His word on B3: *"Go — build B3 exactly that way"*, with a checklist: the panel's fields (polycount,
+draw calls, lights and their candela sum, texture bytes, estimated frame-ms labelled ESTIMATE, the provenance, the
+preview's seeded camera path, the advisory badge); a linear model `frame_ms = a*triangles + b*drawcalls + c*lights +
+d*texture_MB + e` calibrated on this host from measured draws of the head scene and variations, the data, host and date
+recorded; the impact saved with the candidate; IMPACT-DET, IMPACT-PLANT, IMPACT-PROV and IMPACT-REPEAT as art
+self-tests; one candidate's impact under 5 s; nothing in `kernel/` or `verify/`. Taken as follows: a term that does not
+vary in the calibration cannot be fitted, so `b` (every static triangle is one call a pass: the draw calls are the same
+in every scene) and `d` (the textures the renderer builds from a scene are, here, a function of its lights) are said
+and left at nought, their cost in the intercept and in `c`; texture bytes are the textures the renderer builds from the
+scene, which carries no image; the host is the container's software rasterizer, so the estimate's absolute
+milliseconds are a CPU's and a frame budget is not checked against them (the advisory budgets are counts); the impact is
+kept with the request's other records (`art/build/studio/<brief>/<request>/<letter>.impact.json`) rather than a
+folder of its own.
+
+### IMPACT-0 — the impact panel · Phase I, B3, **built, off the gate** (0239, `art/impact.py`, `art/impact_model.json`)
+
+**What it is.** For each candidate, against the base of its own evaluation, what the native renderer makes of each
+scene, counted as `scene_render.js` makes it: the triangles, the draw calls of a frame, the lights it draws (the first
+160) and their candelas, the bytes of the textures it builds from the scene; their differences; an ESTIMATE of a
+frame's milliseconds from the model in `art/impact_model.json`; the advisory budgets it is over; the provenance (the
+provider, its model, the configured model, the prompt's sha256, the request, the seed); the preview's camera path,
+named and seeded by the request and the same for all its candidates; the director's words for why, not checked. Kept
+beside the intent (`<letter>.impact.json`, named on the request's line), shown on the card with the terms, the
+calibration's host and date in its tooltip, and read by nothing that decides: *ADVISORY ESTIMATE — not admission
+evidence*.
+
+**The model.** Measured in the container on 2026-10-15 (19:57 UTC): ten scenes, the fixture's world with FACADE-0's
+building and its variations (more buildings, the lanes' lamps twice as dense, no skyline, no puddles, and their
+combinations), each drawn by `scene_render.js` in headless Chromium on SwiftShader at 480 x 270 from its view
+plaza-centre, two frames to warm and five timed (to readPixels after gl.finish), the median kept; the triangles and
+lights of every row the renderer's own (`R.triangles`, `R.nl`) and `art/impact.py`'s, equal in all ten. The least
+squares, exactly: `frame_ms = -589.294 + 0.2566 x triangles + 18.203 x lights`, the root mean square of its residuals
+654 ms over frames of 1.6 to 4.6 s (the skyline's fill, which no count here sees, is most of the misfit). A CPU's
+rasterizer, not a GPU: what the estimate gives is a direction and a proportion, until D1 measures renderers.
+
+**Its falsifiers.** `python art/impact.py selftest` (IMPACT SELFTEST 9/9): the counts against a scene worked by hand;
+the lights past the renderer's cap neither drawn nor counted in its textures; the model's coefficients its rows' least
+squares again, exactly; the path named, seeded, the same for the same seed; a candidate over a budget flagged; the
+report a function of its inputs, and another prompt another provenance; its three plants caught (the budgets skipped,
+the provenance fixed, the path seeded by the clock). `python art/play.py --impact-selftest` (IMPACT-STUDIO SELFTEST 8/8,
+over HTTP with the scripted director in the facade's world): every candidate's panel with every field, kept and on its
+line, one path for the request (IMPACT-SAVED; the bay panelled and the column panelled change no triangle, the blank bay
+takes twelve away); the impact computed again from the evaluation's own scenes, provenance and seed to the same bytes
+(IMPACT-DET); another prompt, another prompt sha256 and request (IMPACT-PROV); a candidate hanging the lanes' lamps
+twice as densely, 138 lights drawn against a budget of 128, flagged *over budget (advisory)* and still admitted
+(IMPACT-PLANT); eight candidates' impacts twice, the same bytes, 0.2 ms each (their scenes 3.6 s; IMPACT-REPEAT); the
+same three plants caught here.
+
+**Two repairs the full check asked for.** STUDIO SELFTEST's row on a request's record lists the files kept beside it,
+and now expects each candidate's impact there too (73/74 until it did). DIRECTOR RACETEST's plant without the export
+lock was missed once, 0 of 40 exports wrong with two suites running at once (OBSERVED at 0239; caught in every run
+before): the two threads now start together at a barrier and switch every 10 microseconds while they race, and the plant
+was caught 40, 28 and 38 times of 40 in three runs after; its honest row still finds every head right.
+
+**Measured in the container** (2 processors, Python 3.11): one candidate's impact 0.2 ms beside the export it rides on
+(eight candidates' scenes 3.6 s, their impacts 1.6 ms in all); the full check, `python art/selftests.py --repeat 2`, two
+suites at once, with the three references frozen again in a scratch copy as he froze them: seventeen suites, 323.5 s
+and 323.1 s, the summaries the same, ART SELFTESTS PASSED (IMPACT SELFTEST 9/9, IMPACT-STUDIO SELFTEST 8/8).
+
+**Not done.** A request drawn again (`restore`) shows no impact (its candidates are evaluated again at another head;
+the recorded impact is of the first); the path is recorded and named, and the page does not yet move along it (the
+preview in motion); no measured frame beside the estimate ("simulate" against "estimate") until a timing pass on a GPU;
+the page's panel was not run in a browser. NOT_MEASURED: his machine, a GPU. No row, rung, pinned source or oracle file
+changed. Docs: AGENTS.md, art/STUDIO.md, docs/CORE.md (art 23,712 lines), this entry.
+
+**His run of 0239, and his go for B4 (2026-10-15).** 0239 applied on fb1616f; the rung D, loosening nothing, and the
+plants 82/82 HELD; ART SELFTESTS PASSED, seventeen suites at once, 97.2 s and 105.5 s, the summaries the same
+(IMPACT SELFTEST 9/9, IMPACT-STUDIO SELFTEST 8/8); the gate 251 rows / 0 fail; pushed fb1616f..31444a9. MEASURED on his
+machine. His word on B4: *"go; websearch as you go to keep tight and elegant"*, with a specification: for each
+candidate a meta (request, candidate, provider, prompt sha256, camera path, viewport, framerate, tick count, seed,
+timestamp, semantics version), an archive of per-tick states and fingerprints, an archive of stills and a report (per
+tick the state fingerprint, the image digest and a comparison result PASS, DIFFER or UNTRUSTED); the same camera path
+for base and candidate, a seeded simulation with an explicit spawn, the state fingerprints' equality the canonical
+proof and SSIM or PSNR advisory; B4-DETERMINISM, B4-SEED-SENSITIVITY, B4-PAIR-STILLS, B4-PLANTED-MISMATCH (a mover's
+start moved: the tick and the reason), B4-INCOMPLETE-CAPTURE (a failure code, never "replayed"), B4-RESET-ON-CHANGE and
+B4-TIMING-BOUNDARY; a split preview with play, pause and step, a *state verified* badge, the provenance and seed, the
+frame's compare; 30 days' retention with the record keeping the sha256; UNTRUSTED_IMAGE when images differ and states
+match, a missing still a failure; off the gate, nothing in `kernel/` or `verify/`. Taken as follows: his
+`verify/tests/b4_preview.py` would be a change to `verify/`, which the same specification rules out, so the tests are
+the art layer's own (`art/motion.py selftest`, `art/play.py --preview-selftest`, both in `art/selftests.py`); his
+`docs/STUDIO-B4.md` is a section of `art/STUDIO.md`, where every surface of the studio is written; his orchestrator API
+is the studio's own routes; every tick's state is kept, and the stills are drawn at each of the path's eight poses, not
+at every tick (here the page drew one in about 18 s on a CPU's rasterizer, so 960 a side would take this container
+hours); UNTRUSTED is a state seen before with other still bytes (the base's and a candidate's stills are meant to
+differ where the states agree: that is what a change of dressing is); the retention is a function run at the end of
+every preview and from the command line, not a daemon; the meta's `made_at` is the one clock, and nothing else holds
+one.
+
+### PREVIEW-0 — the preview in motion · Phase I, B4, **built, off the gate** (0240, `art/motion.py`)
+
+**What it is.** *Preview* on a candidate's card: the host plays the base and the candidate along the request's camera
+path (IMPACT-0's, named and seeded by the request) with one seeded simulation, the graybox's own tick under rules 3 in
+its Python twin `graybox/tick_ref.py` from spawn A, driven by an actor whose next input is drawn every 30 ticks from a
+stream seeded by the request: 120 ticks a pose, 960 a side, each side from a world and a state made new. Every tick's
+state is written canonically (the twin's snapshot, every mover's box, the world's identity, the stream's counter) and
+fingerprinted by sha256; the page draws a still of each side at each pose with the renderer it plays with and gives
+them to the host, which reads each, compares and keeps. Per pose PASS, DIFFER (with the first tick that differs and its
+fields), INCOMPLETE (`PREVIEW-INCOMPLETE`, never replayed) or UNTRUSTED (`UNTRUSTED_IMAGE`); *state verified* only when
+every pose is complete and every state agrees; SSIM (Wang et al. 2004, the reference's window and constants, on luma at
+96 x 54) and PSNR a look. Kept beside the intent: `<letter>.preview.meta.json`, `.preview.states.tar.gz` (every tick,
+both sides), `.preview.stills.tar.gz`, `.preview.report.json`, each named by sha256 on the request's line; the archives
+the same bytes from the same inputs. The page: Current | Candidate, ◀ Play ▶, the badge, per pose the tick, the
+result, the SSIM and both fingerprints, the path, the seed and the provenance. Nothing that decides reads it.
+
+**Its falsifiers.** `python art/motion.py selftest` (PREVIEW SELFTEST 12/12, harbor-lift with its two movers): the same
+inputs, the same 961 states a side and the same archives (B4-DETERMINISM); another seed, 960 of 961 ticks other
+(B4-SEED-SENSITIVITY); the first mover started 0.5 m along x: DIFFER from tick 0, fields `identity` and `movers`
+(B4-PLANTED-MISMATCH); a still missing, PREVIEW-INCOMPLETE at tick 360 and not replayed (B4-INCOMPLETE-CAPTURE); a
+still drawn again otherwise, UNTRUSTED and the state still verified, and the planted mover's states DIFFER and not
+verified; the base the same after a run of another world (B4-RESET-ON-CHANGE); both sides' 960 ticks in 0.3 s
+(B4-TIMING-BOUNDARY); SSIM 1 for an image against itself and 0.26 for a flat field against a ramp; the retention; three
+plants caught (the stream not seeded, one run's world and state carried into the next, a capture cut short passed).
+`python art/play.py --preview-selftest` (PREVIEW-STUDIO SELFTEST 13/13, over HTTP with the scripted director in the
+facade's world): the plan and both sides' stills at the eight poses, the four files and the line naming them, the
+meta's fields, the report and a still read back, every state the base's (the bay is dressing, not play: B4-PAIR-STILLS);
+a preview older than 30 days removed at the next one's end; the same preview again to the same states, archives and
+report (B4-DETERMINISM); a still drawn again otherwise, UNTRUSTED_IMAGE; another candidate's preview starting with
+nothing of the last (B4-RESET-ON-CHANGE); a capture cut short, PREVIEW-INCOMPLETE on its line (B4-INCOMPLETE-CAPTURE);
+the refusals (a still without a plan, beyond the poses, of no side, not a PNG, without the token; an unknown request);
+another request, another seed (B4-SEED-SENSITIVITY); the head moved, PREVIEW-STALE; the whole preview over HTTP 0.8 s
+(B4-TIMING-BOUNDARY); the same three plants caught. Both join `art/selftests.py` (nineteen suites).
+
+**In a browser (OBSERVED, the container's headless Chromium on SwiftShader, the facade's world, #bay, the scripted
+director).** The first run found two defects, each now repaired: the thumbnailer gave JPEG, the host refused every
+still, and the report read PREVIEW-INCOMPLETE at all eight poses, not replayed (the failure code doing its work on a real
+fault); and the two stills overflowed the dialog. After: *Blank bay*'s sixteen stills drawn one at a time and given to
+the host in 281 s at 1280 x 720 (a CPU drawing both the page and the stills), the badge *state verified*, PASS at
+every pose, SSIM 0.994 to 1, step and play moving the pose. Some of the path's poses stand inside or behind a building
+(IMPACT-0's orbit at 14 m does not look for geometry): the stills show a wall.
+
+**Measured in the container** (2 processors, Python 3.11): one candidate's plan, both sides' 960 ticks, 0.23 to 0.30 s;
+the whole preview over HTTP with synthetic stills 0.8 s. The full check, `python art/selftests.py --repeat 2`, two
+suites at once, with the three references frozen again in a scratch copy as he froze them: nineteen suites, 741.9 s and
+705.4 s, the summaries the same, ART SELFTESTS PASSED (the container slower than at 0239, the two suites that write and
+sync the most, crashtest and racetest, about seven times as long; nothing of theirs changed).
+
+**Not done.** A planted mismatch over HTTP: an art candidate cannot move play (the director's scope refuses it), so the
+mismatch is planted in `art/motion.py`'s own test; the camera path avoiding geometry; stills at every tick; the page's
+own `sim.js` beside the twin's fingerprints. NOT_MEASURED: his machine, a GPU. No row, rung, pinned source or oracle
+file changed. Docs: AGENTS.md, art/STUDIO.md, docs/CORE.md (art 24,534 lines), this entry.
+
+**His run of 0240, and his word on what follows (2026-10-15 and 16).** 0240 applied on 31444a9; the rung D, loosening
+nothing, and the plants 82/82 HELD; ART SELFTESTS PASSED, nineteen suites at once, 103.6 s and 107.2 s, the summaries the
+same (PREVIEW SELFTEST 12/12, PREVIEW-STUDIO SELFTEST 13/13); the gate 251 rows / 0 fail, rowset 74db4c8d78625af5;
+pushed 31444a9..c6e59a3. MEASURED on his machine. On the three steps put to him he agreed the sequence (B5a, B5b, D1-M)
+with two refinements: *"B5a should establish a trustworthy camera path, not merely a visually clear one"*, each pose
+and the segments between poses checked against the world's geometry and collision with a defined clearance; and B5b
+proves the flagship with the scripted director, a real provider's run recorded apart as observed. His decisions: a
+fourth world, harbor-day unchanged; GPU measurement after B5, on the flagship, outside the gate; the missing impact of a
+request drawn again repaired in B5a only if small and localised. His caveat: clearance proves only the geometric
+condition, not good framing, so he reviews the reference path by eye before freezing it. Then, on Meaning-to-View (the
+relation of what a world means, what it holds and what a view shows of it; a contract per role of intent, cues,
+conditions, failure and evidence; Wang and Zahl's Kakeya result an inspiration for directional test families, not a
+theorem about perception): *"maybe you can batch a test on this logic with this rung"*. Taken as follows: one test of
+it in this rung, LEGIBLE-0, small, deterministic and advisory, on the flagship's window along the flagship's path; the
+roles' language, the director's corrections and the directional families stay after B5, as he put them.
+
+### PATH-0 and LEGIBLE-0 — the foundry yard, a camera path that holds, and one test of Meaning-to-View · Phase I, B5a, **built, off the gate** (0241, `art/briefs/foundry-yard.art`, `art/camera.py`, `art/legibility.py`)
+
+**The district.** `art/briefs/foundry-yard.art`, the fourth world, an industrial district at dusk on the tactical
+graybox (no wall, floor, cover, spawn or target moved): six buildings of FACADE-0's statement on the rock that faces the
+two side lanes, brick warehouses glazed with wired glass and corrugated-steel sheds panelled in rusted steel in wide
+bays, the yard's roofs (the skyline) behind them, sodium lamps, oil on the paving, signal colours at the bases; only
+statements the language has. The flagship's warehouse is `building:10,2-17,2` (eight bays, four floors), where FACADE-0's
+fixture stood. The art checks pass on it but for its reference, which is his to freeze (`python art/quality.py freeze
+foundry-yard`), after looking at the path. A finding on the way: with the warehouses three cells deep, the skyline's
+blocks stood inside them (the skyline takes rock that borders no floor, and the building statement does not reserve
+its cells from it); the district's buildings are one cell deep, and the exporter is unchanged (a change to it would
+ask him to freeze every reference again). OBSERVED.
+
+**The path (PATH-0).** `art/camera.py`: every box of the scene an obstacle (collision, dressing, each mover over its
+travel, each target's column); a pose clear at 0.5 m in the max norm and 0.5 m above the ground plane; the segment
+between consecutive poses inside no box grown by 0.5 m; all decided in exact rational arithmetic, floats only choosing
+what to try. With a shape, an arc of eight poses over 120 degrees in front of its face at one radius and rise all round
+(the first that clears every pose and segment with every pose seeing the focus); without one, an orbit; failing both,
+each pose on its own, one that cannot clear named and left out; fewer than four, no path (CAMERA-PATH-NONE; the preview
+then refuses, PREVIEW-NO-PATH). The same scene, focus, face and seed give the same path. IMPACT-0's `camera_path` is
+this plan now, aimed by the shape's face (`aim_of`). The path is made at the head and checked again against each
+candidate's own scene when it is previewed (`path_check`, in the plan, the report and the dialog), never moved. A request
+drawn again makes its path again from its recorded shapes and each drawn candidate's impact again (the defect left at
+0239, small and localised: three places in `restore`).
+
+**One test of Meaning-to-View (LEGIBLE-0).** `art/legibility.py`: for a piece a person names as the subject, at each
+pose of a path, the share of a 5 x 5 grid on its outward face framed and seen (camera.py's exact occlusion), its area in
+pixels at the preview's 480 x 270 and 66 degrees, and the WCAG contrast ratio of its material's base colour against the
+surface it is set in; a pose reads the cue at half the face seen, 24 x 24 pixels and 3:1 (declared, borrowed from screen
+standards, not fitted). A proxy: no light, emission, reflection or hue; not a perception claim; nothing decides by it.
+
+**Its falsifiers.** `python art/camera.py selftest` (PATH SELFTEST 8/8): the rule against boxes worked by hand (0.5 m
+in front of a wall clear, 0.499 m not, a 4 cm sign counts, a segment through the wall refused, one along the grown top
+exactly clear); planted in the district, pose 3 moved inside the flagship's warehouse (CAMERA-INSIDE) and behind it
+(CAMERA-CROSSES on segments 2-3 and 3-4); 81 paths, every view and every building's face of the four worlds with three
+seeds, each checked again exactly and clear, every face's arc whole with every pose seeing its focus, and 12 views'
+orbits refused in the narrow flanks (CAMERA-PATH-NONE, said); the same inputs the same path; the flagship's arc in front
+of its face at 14 m and 9 m up; three plants caught (segments not checked, no margin, the dressing ignored).
+`python art/legibility.py selftest` (LEGIBLE SELFTEST 6/6): the projection, the centre, the contrast (white on black
+21:1, mid grey on black 5.32:1) and the occlusion worked by hand; the flagship's window measured; planted collapses
+each found by its proxy (a hoarding before it: seen 0; the bay in the wall's own brick: contrast 1:1; a pose behind the
+face: seen 0; one grazing it from 60 m: 0.8 px; one turned away: unframed); three plants caught (occlusion skipped,
+unframed points counted, sRGB not linearised). PREVIEW-STUDIO SELFTEST 14/14 now: the pair's path an arc held clear in
+both scenes, and a request drawn again with its path and every drawn candidate's impact, its preview state verified.
+Both new suites join `art/selftests.py` (twenty-one).
+
+**What the test found (MEASURED, a proxy).** The flagship's window along the flagship's path: seen whole at all eight
+poses, but 172 to 365 pixels (under 24 x 24) and 1.37:1 against its brick (glass_wired 52,64,70 on brick 128,64,48): by
+these proxies no pose reads it. The preview's stills agree (OBSERVED): base against *Panelled bay* SSIM 0.9997 to
+0.9999 at every pose, the bay about 0.2% of the frame. For B5b: the subject of a one-bay edit is too
+small in the preview's frame as it is drawn now, and the window does not stand apart from its brick by luminance.
+
+**In a browser (OBSERVED, headless Chromium on SwiftShader, the foundry yard, #bay on the flagship's bay 3 of floor 2,
+the scripted director).** The arc's eight stills drawn and given to the host in 152 s; state verified, PASS at every
+pose; the path clear in both scenes; every still frames the warehouse (at 0240 two of the orbit's stills showed a wall);
+in two, the yard's dark roofs fill the foot of the frame. The contact sheet is his to review before he freezes.
+
+**A repair the full check asked for.** DIRECTOR RACETEST's plant without the export lock was missed again, 0 of 40
+exports wrong, with two suites at once in the container (OBSERVED at 0241, after 0239's repair of the same: a barrier and
+fine switching left the race to chance). Under that plant alone, `_export` now holds the window the lock closes open for
+20 ms, so the race is met, not hoped for: caught 18, 32 and 36 times of 40 in three runs; the honest path is as it was.
+
+**Measured in the container** (2 processors, Python 3.11): a flagship arc made in 0.15 s, checked again exactly in 0.05 s, the legibility probe along it 0.95 s; 81 paths made and
+checked again in 28.8 s; the full check, `python art/selftests.py --repeat 2`, two suites at once, with the four
+references frozen in a scratch copy: twenty-one suites, 748.1 s and 727.1 s, the summaries the same, ART SELFTESTS PASSED.
+
+**Not done.** The roles' language (entrance, barrier, route, landmark, cover), the director's corrective proposals and
+directional families of views (his Meaning-to-View plan, after B5); legibility on the cards or in the record; the
+framing judged by anything but a person; orbits in the narrow flanks; the exporter's skyline inside a deep building.
+NOT_MEASURED: his machine, a GPU. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md, art/README.md,
+art/STUDIO.md, docs/CORE.md (art 25,241 lines), this entry.
+
+**His run of 0241, and the visual review (2026-10-16).** 0241 applied on c6e59a3; the rung D, loosening nothing; the
+plants on his machine *"82 planted defects refused by the old checker; 82 by the new"* with three art/check.py rows GONE
+(the neon sign off its wall, a piece of dressing given collision, the scene changed after export) and *"PLANTS NOT
+HELD (0 no longer refused, 3 gone)"*; foundry-yard's reference frozen (scene 9743e35c7303 at exporter 0ddd26bd1f48,
+as predicted) and committed (1918135); ART SELFTESTS PASSED, twenty-one suites at once, 123.6 s and 146.1 s; the gate
+251 rows / 0 fail, rowset 74db4c8d78625af5; pushed c6e59a3..1918135. MEASURED on his machine. The review of the
+contact sheet that followed: the industrial dusk promising, the warehouse's massing readable, the eight views a useful
+baseline; the flagship's window not legible in them and a one-bay edit barely visible; *"keep foundry-yard
+unfrozen"* as a visual reference, the sheet kept as 0241's provisional baseline, the visual reference frozen after B5b
+fixes a framed comparison. For B5b: the marked bay the explicit subject; a clear arc's distance chosen for the
+subject's coverage and then fixed for the baseline and every candidate; the stills compared themselves, not SSIM
+alone; PATH-0's clearance unchanged, and a framing that cannot be met said as a framing failure, never met by weakening
+the path; the 24 x 24 pixel and 3:1 thresholds kept explicitly as engineering proxies, not perceptual legibility.
+Taken as follows: the reference he froze is the scene's bytes (what ART CHECKS compares), which approves nothing
+visual, so it stays; 0241's docs ran the two together ("his to freeze after he reviews the path"), and art/STUDIO.md
+now keeps them apart: the eight views are a provisional visual baseline until B5b, whatever the freeze's note says.
+
+### RUNG-0's plants on a Windows console · **repaired** (0242, `tools/rung.py`, `art/check.py`)
+
+**What his three GONE rows were.** R5 (`rung.py plants`) runs each suite and reads its plant rows from its output. On
+Windows a pipe is cp1252, and art/check.py's number-grammar plant (since 0226) prints the Arabic-Indic digits it
+refuses: the suite raised UnicodeEncodeError there, at its first brief, and R5 read the 22 rows printed before. At
+0241 the first brief became foundry-yard, whose three subject-named rows differ from the old first brief's (its first
+neon, its first piece of dressing, its first material), so those three were GONE and three new ones came. MEASURED by
+simulation in the container (the suites run with a cp1252 console at 0240 and at 0241): exactly his result, 82 and 82,
+the same three gone, art/check.py stopped at 22 rows both times. VERIFIED by reading art/check.py's whole output at
+0241: the three plants are refused still, in harbor-day, harbor-lift and plaza-night. So no defect passed, but on his
+machine R5 has compared only art/check.py's first brief's first 22 plants since 0226, and said HELD of them.
+
+**The repair.** `tools/rung.py`: R5 runs every suite with UTF-8 output (PYTHONUTF8, PYTHONIOENCODING) and reads it as
+UTF-8, whatever the console; a suite that raised is named (*THE OLD CHECKER STOPPED EARLY* is said; *THE NEW
+CHECKER STOPPED EARLY* is NOT HELD). RUNG SELFTEST 18/18, its new row: a suite printing three plant rows, the second
+with those digits, read whole under a cp1252 console, and the same suite left to cp1252 stopping with its stop said.
+`art/check.py`: its output writes a character the console cannot as an escape rather than stopping the checks.
+A patch to the classifier is judged by the pushed tree's classifier: this one by 0241's, whose R5 reads 0242's
+art/check.py whole (it no longer stops) against 0241's 22 rows; the next patch by this one, after he takes it from
+origin/main.
+
+**Measured in the container**: RUNG SELFTEST 18/18; 0241's classifier on this patch, a cp1252 console simulated: PLANTS
+HELD; the full check, `python art/selftests.py --repeat 2`, two suites at once, the four references frozen in a
+scratch copy: twenty-one suites, 689.2 s and 680.8 s, ART SELFTESTS PASSED. NOT_MEASURED: his machine. No row, pinned
+source or oracle file changed. Docs: AGENTS.md (RUNG-0's row), art/STUDIO.md, docs/CORE.md (art 25,246 lines, tools 2,047), this entry.
+
+**His run of 0242, and his word on what follows (2026-10-16).** 0242 applied on 1918135; the rung D; the plants by
+0241's classifier *"82 planted defects refused by the old checker; 116 by the new"*, PLANTS HELD, as predicted; RUNG
+SELFTEST 18/18; ART SELFTESTS FAILED: in the first run STUDIO APP SELFTEST 11/13 and PREVIEW-STUDIO SELFTEST 13/14, in
+the second all twenty-one passed (210.4 s and 185.6 s); the gate 251 rows / 0 fail, rowset 74db4c8d78625af5; pushed
+1918135..3ebb854; his classifier taken again from origin/main. MEASURED on his machine. Read from his log: PREVIEW-STUDIO's
+timing row failed on its simulation, 1,076 ms against a bound of 1 s that was the agent's, not his; STUDIO APP's two rows
+on a silent page while a request runs failed because the studio stopped at 4 s of silence before the request had begun
+(its start slowed by 0241's path planning, under sixteen suites at once; INFERRED from its stop line and the code). His
+word: plants completeness a rung of its own, later and not before B5b (an expected row set defined apart from the output,
+each suite's rows accounted by identity, exact reconciliation, failing closed, planted omissions, both consoles), and a
+green plants result not read as complete until then; B5b next, then the studio's dashboard foundation as the next product
+rung, D1-M in parallel on his own device; the visual baseline his approval, apart from the bytes freeze and the plants.
+Taken as follows: agreed, with two refinements said to him: a plant row's identity is its suite, world and kind (its
+subject's id detail, not identity), and the expected set shrinking is a loosening the classifier names; the dashboard a
+consolidation of the shell the studio already has, audited against his five areas before anything is built.
+
+### FRAME-0 and FLAGSHIP-0 — a path framed for its subject, and the flagship's acceptance · Phase I, B5b, **built, off the gate** (0243, `art/camera.py`, `art/flagship.py`)
+
+**Two repairs his run asked for.** PREVIEW-STUDIO's timing row keeps his 10 s for the whole preview and drops the
+agent's own 1 s for the simulation, a loosening of a test's bound, named. STUDIO APP's stand-in page speaks once more
+after its request is accepted, so its silence begins while the request runs, which is what the two rows mean to test;
+and the request's path is made in the request's own thread, so asking returns as quickly as before 0241.
+
+**Framing (FRAME-0).** With a shape on an upright face, the arc is framed for the shape's region: of the rings that hold
+PATH-0 with every pose seeing the focus, the one whose smallest view of the region is largest, provided that at every
+pose its four corners lie inside the still less 5% at each edge, at least half of it is seen (exact occlusion) and it
+covers at least 24 x 24 px; chosen in floats, recorded exactly; when no ring frames it, PATH-0's plain arc and
+FRAME-NONE, the path never loosened to meet it. Framed again against each scene at a preview. The sheet to inspect
+(`<letter>.preview.compare.png`): both stills at each pose, both crops of the subject and their difference eight times
+over. The thresholds stay engineering proxies, as he asked.
+
+**The flagship's acceptance (FLAGSHIP-0).** `python art/play.py --flagship-selftest`: in the foundry yard with the
+scripted director, the marked bay's edit through the studio's HTTP surface, each stage's evidence required before the
+next (mark, request, candidate, preview, admit, undo; see art/STUDIO.md), the first without it stopping the procedure with
+its code. The studio's own admission still reads none of what the procedure asks for. A visual baseline is his act:
+`python art/flagship.py approve WORLD REQUEST LETTER --note TEXT`, from a complete, verified and framed preview only, into
+`art/visual_baselines.jsonl`, apart from the bytes reference.
+
+**Its falsifiers.** PATH SELFTEST 11/11: the marked bay framed at every pose (5 m out, 2.5 m up: 2,769 to 8,984 px, all
+seen, against 271 to 921 px on 0241's plain arc), the path clear, the framing decided exactly again; a 10 cm subject no
+ring can frame: FRAME-NONE and the plain arc's poses, unchanged; a fourth plant caught (a ring taken whatever its
+framing). FLAGSHIP SELFTEST 9/9: the whole edit from mark to undo, every stage's evidence, the head, the brief and the
+scene as before; planted, each stopping its transition with the active world as it was: an invalid region (the column,
+stopped at the candidate, and the studio's own admission refusing it too, ADMIT-OUTSIDE), the impact missing
+(FLAGSHIP-NO-IMPACT), the preview's verification failing (FLAGSHIP-PREVIEW, first difference at tick 0), a stale revision
+(the brief edited after the preview: FLAGSHIP-ADMIT, the studio's STUDIO-STALE, the world as the edit left it); the visual
+baseline written from the honest run's preview and refused from the unverified one and without a note; three plants of
+the procedure caught (the held, impact and verification checks each skipped). PREVIEW-STUDIO SELFTEST 14/14 (the sheet
+among the preview's files).
+
+**In a browser (OBSERVED, headless Chromium on SwiftShader, the foundry yard, #bay, *Panelled bay*).** The framed arc's
+sixteen stills in 161 s; the subject framed in both scenes at every pose (3,981 to 8,993 px); state verified, PASS at
+every pose. The sheet shows what framing could and could not do: the bay now fills its crops, yet the panel and the
+window it replaces differ inside the subject's box by at most 15 to 17 levels of 255 in any channel at seven of the
+eight poses (at the eighth a lamp's glint on the new panel, 238; MEASURED from the stills), so the raw crops look alike
+and only the difference shows the change, the same panel at every pose. Framing answered the size; the
+contrast at dusk (LEGIBLE-0's 1.37:1) is the world's, a question for the director's correction, not the camera's.
+
+**Measured in the container** (2 processors, Python 3.11): a framed path 1.4 s, in the request's thread; FLAGSHIP SELFTEST
+82 s alone (its honest and four planted runs, and its three plants); the full check, `python art/selftests.py --repeat 2`, two suites at once, the four
+references frozen in a scratch copy: twenty-two suites, 799.9 s and 835.2 s, ART SELFTESTS PASSED.
+
+**Not done.** The real provider's rehearsal (his machine, OBSERVED, never this acceptance); the visual baseline (his to
+approve, after his eyes on the sheet); plants completeness (its own rung); the dashboard (next). NOT_MEASURED: his
+machine, a GPU. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md, art/STUDIO.md, docs/CORE.md (art
+25,835 lines), this entry.
+
+**His run of 0243, and a trajectory tweak (2026-10-16).** 0243 applied on 3ebb854; the rung D; PLANTS HELD, 116 and
+116; ART SELFTESTS PASSED, twenty-two suites at once, 181.9 s and 174.7 s; the gate 251 rows / 0 fail, rowset
+74db4c8d78625af5; pushed 3ebb854..e1fb9f4. MEASURED on his machine. Then two documents and a note. The first: drop
+probabilistic patchwork for exact algebra fitting the model: admissions as morphisms and stored inverses as
+isomorphisms (a groupoid), local edits as sections over a cover of the world that glue when they agree on overlaps and
+whose disagreement is a canonical obstruction (a sheaf, its Čech cocycle), operations as rewrite rules whose critical
+pairs say where order matters, a few lemmas in Lean; start with a sheaf-merge pilot. The second: the agent as a typed
+producer and curator of artifacts: admission certificates (parent, operation, inverse, child), a census of critical
+pairs, a declared cover with section deltas, and a detector of dusk's near-collisions with ranked fixes; nothing
+float-dependent on the certified path, measured proxies for the director's proposals only. The note: *"the integral of
+two gaussians has an analytical closed-form algebraic solution... consider tailoring sigma packet variance to handle
+(CONTENT TIME) smooth fuzzing constraints if needed"*. Taken as follows: certificates and glue first, in the art layer
+(his `workshop/inverse.rs`, `verify/sheaf_merge.rs` and `kernel/op_algebra.rs` would touch what Phase I keeps as it is),
+the census's first table with them; the ledger's form untouched (it is shared with the Rust conformance vectors), the
+certificates derived from it and kept with the world's records; an obstruction reported as it is and not reduced by a
+coboundary (statements, boxes and materials carry no group to subtract in; a conflict is an object, as in Mimram and Di
+Giusto's category of patches); Lean not begun. The Gaussian closed form (the integral of the product of two normal
+densities is a normal density in the difference of their means, its variance the sum of theirs) considered and not
+used: nothing certified rests on a float, by his own rule, and the scenes have no content-time axis to fuzz yet (one
+sun, still); it enters the director's advisory proposals if dusk is given time.
+
+### CERT-0 and GLUE-0 — every admission's certificate, and two edits glued or not · **built, off the gate** (0244, `art/certificate.py`, `art/glue.py`)
+
+**Certificates.** After each admission and each undo the studio writes the admission's certificate by its ledger
+sequence number (`art/build/studio/<world>/certificates/<seq>.json`): parent, operation, inverse, child, the statement
+keys touched, provenance, and the sha256 of the ledger event it is made from; checked at once against the brief as
+admitted, exactly and without an export: the child's text is the child's, each head its parts', the change the art's
+alone, and the inverse applied to the child gives the parent byte for byte (`exact`) or its statements token for token
+(`statements`). The admission's answer and the request's line carry it; an undo says whether the head before came back
+(`head_restored`). FLAGSHIP-0's admit and undo stages now require the certificate, exact.
+
+**What the certificates found (MEASURED).** The stored inverse is an isomorphism on texts only for `+` and for `=` on a
+statement written in single spaces. An `=` on a statement written in aligned columns comes back in single spaces, and
+a `-` comes back at the end of the file without its comment: the statements and the scene are as before (the same bytes
+of scene), the brief's bytes and so the head are not. So an undo of such an admission leaves the world's head new, and
+a brief's frozen reference would no longer match it (its art sha256 moved). The flagship's edit (`+ bay`) is exact,
+which is why FLAGSHIP-0's undo held. The repair is a change of the revision language and is his to rule: (a) the
+inverse of `=` and `-` recorded as the exact row and its line (a positioned, verbatim form applied only by undo; old
+ledgers replay as they are; the intent's validation and the Rust conformance vectors learn the form); or (b) the head's
+art part taken over the statements instead of the bytes (sorted, single-spaced, comments out), a change of DIRECTOR-0's
+head that re-freezes every reference and rebases every ledger. The agent's recommendation: (a).
+
+**Glue.** Two edits written against one head commute when both orders apply and give the same scene; they glue when,
+besides, the glued scene changes exactly what each changes and the two agree on every section both change (a piece by
+its id, a material by its name, the environment; the provenance `by` left out). Otherwise OBSTRUCTED, the obstruction
+an object with a sha256 the same whichever edit is named first (corrected 2026-10-21, 0256: not for a pair whose two
+orders differ, the face against the raised warehouse, nor for the glued text of two statements added; MEASURED on
+ab2a535 and repaired in 0256). The census of seven of the flagship's edits (two bays
+panelled or blank, a neighbouring bay, the whole face panelled, the warehouse raised, a lighter glass, the lanes'
+lamps): 21 pairs, 16 glue, 5 obstructed: the same bay set two ways (neither order applies), the face against each of
+three bays (they commute, the bay's statement winning either way, but they set the bay differently: commuting is not
+gluing), and the face against the raised warehouse (one statement, two values: the orders differ).
+
+**Its falsifiers.** CERT SELFTEST 7/7: four admissions' certificates, exact where they should be and statements-only
+where they should be; the finding, the scene's bytes the same and the head not; a wrong inverse, a child not the
+admitted text, a parent head not its parts', a layout's change, each refused with its code; the certificate a function
+of its inputs; three plants caught (the child unhashed, statements taken for exact, the heads unchecked). GLUE SELFTEST
+9/9: two bays glue; one bay two values obstructed with one fingerprint either way; the same value twice glues; the face
+and a bay commute and do not glue; a material and a bay glue; the census twice the same; three plants caught (the
+sections unchecked, the fingerprint ordered, a repeat refused). FLAGSHIP SELFTEST 9/9 with the certificates.
+
+**Two repairs the classifier's own run asked for.** 0243's classifier on this patch said, in two of three runs,
+*"THE NEW CHECKER STOPPED EARLY: art/studio.py selftest"* and PLANTS NOT HELD (OBSERVED, a cp1252 console simulated):
+STUDIO SELFTEST's output carried a traceback it went on from
+(74/74 every time), and 0242's reading took any traceback for a stop. Caught again in a worktree as the classifier
+makes one: the traceback was the socket server's, printed when a client the studio refuses (a still sent without the
+token) hung up before the 403 was written (ConnectionResetError in `send`). Two repairs: `art/play.py`'s server lets a
+client that hung up go quietly; `tools/rung.py` calls a suite stopped only when it ended with a non-zero status and its
+error output ends with the traceback that ended it (RUNG SELFTEST 19/19, its new row a suite that logs a traceback and
+goes on against one that dies). The first takes effect for this patch's own run; the second from the next patch, once
+he takes the classifier from origin/main.
+
+**Measured in the container** (2 processors, Python 3.11): a certificate made and checked in milliseconds; the census's
+21 pairs 12.6 s (four exports a pair, 0.12 s each); the full check, `python art/selftests.py --repeat 2`, two suites at
+once, the four references frozen in a scratch copy: twenty-four suites, 955.0 s and 964.2 s, ART SELFTESTS PASSED.
+
+**Not done.** The inverse's repair (his ruling); the cover declared as a file and section deltas in the ledger (E3's
+rest); the census over every kind of statement (E2's rest); the dusk detector and ranked fixes (E4); glue used by the
+studio (a second candidate re-evaluated or merged when it glues); Lean; the dashboard. NOT_MEASURED: his machine. No
+row, rung, pinned source or oracle file changed. Docs: AGENTS.md (two rows), art/STUDIO.md, docs/CORE.md (art 26,311 lines, tools
+2,063), this entry.
+
+**His run of 0244, and his word on the inventory (2026-10-16).** 0244 applied on e1fb9f4; the rung D by the classifier
+he held before the push (each file D or D?, loosening nothing); *"116 planted defects refused by the old checker; 116
+by the new"*, PLANTS HELD; RUNG SELFTEST 19/19; ART SELFTESTS PASSED, twenty-four suites, sixteen at once, 156.5 s and
+196.6 s wall; the gate 251 rows / 0 fail / 0 skipped, rowset 74db4c8d78625af5; pushed e1fb9f4..6af1d9f; his
+classifier taken again from origin/main. MEASURED on his machine. He then brought two documents: an engine and studio
+specification built on a canonical relational world, and, *"in other words"*, a corrected brief whose first step is an
+inventory (a capability matrix, a baseline, a patch plan) before broad changes, its first slice the dashboard. Taken as
+follows, in a session of the agent on his machine (not the container): the inventory read the tree and changed nothing
+(eleven readers, two skeptics each, a critic and sixteen answers to it; 704 rows; docs/CAPABILITY-MATRIX.md and its
+generated rows); the dashboard audited against his five areas, read (INFERRED) as the regions of the brief's §11
+layout with its global strip as a sixth (his five are not written in the repository); the gate run there once (§2 of
+it); and an order put to him: 0245 LEDGER-SAFE-0, 0246 the page executed by a test, 0247 the dashboard's consolidation
+held by it, then the candidate's binding and the inverse's repair on his rulings. His word: *"Agreed on the order.
+Build 0245 (LEDGER-SAFE-0) here, as a patch I apply; I'll rebase the checkout's plaza-night myself first."*
+
+### LEDGER-SAFE-0 — no event over a head the ledger does not hold · **built, off the gate** (0245, `art/director.py`, `art/studio.py`, `art/play.py`, `tools/rung.py`)
+
+**What the inventory found (MEASURED on his machine, on copies; nothing of his was written).** In a `git archive` of
+6af1d9f, `python art/director.py verify plaza-night` refused: UNLOGGED-CHANGE, the files `df8b640defd8`, the ledger
+`9e7811343bcf` (0237's exporter, `0a6ce8b`, recorded by no rebase: INFERRED, as #21, #24 and #25 recorded theirs). One
+`evaluate plaza-night art/fixtures/round/A.intent` there appended #26, checked against the files; after it `verify`
+said LEDGER-HEAD at #26, and `rebase`, the remedy `verify` names, said the same: the tools could not repair that ledger
+again (only restoring its file by hand could). On copies of his desktop studio's worlds folder, both worlds refused
+UNLOGGED-CHANGE too (harbor-day `bd321617d339` against `36686b4e6080`; plaza-night `7221f144ba1f` against
+`7017cc385db7`). So every ledgered world was one evaluation from a ledger the tools could not repair (MEASURED on the
+checkout's copy; by reading for his two worlds). By reading (two agents, and the code): the studio's admit, reject and
+undo evaluated outside the content lock and appended afterwards, so another writer landing between them did the same;
+`rebase` recorded whatever the exporter took and dropped the results of the checks its export ran.
+
+**What it changes.** An event that names the head it was checked against (an evaluation, an admission, an approval)
+is appended only under the tree's content lock, and only while the files are the head the ledger replays to and that
+head is the one it was checked against (`held_head`, `append_checked`, `append_evaluation`); otherwise it is refused
+and nothing is appended: LEDGER-UNLOGGED (its message opens with the rebase to run, with the world's `--root`) or
+HEAD-MOVED. The admission's fence holds the ledger's head as well as the files'. The guard and `rebase` first recover a
+dead writer's half-done admission they find under the lock (completed if its admit event is in the ledger, undone if
+not). `rebase` reads, replays and appends under the lock, and records only files that pass the art checks an
+evaluation runs (REBASE-CHECKS) and the exporter takes (REBASE-EXPORT, where it raised before), keeping the checks in
+its event; replay holds a rebase's text to its parts (LEDGER-REPLAY) and refuses one recorded with a failing check
+(LEDGER-REBASE). Every existing rebase event, in the checkout's ledger and in his two worlds', passes the new replay
+(checked read-only). The studio: its three evaluations appended through the guard; a director refusal reaching the
+page as STUDIO-DIRECTOR-REFUSED with the director's own code as a field (`director_code`; before, it was only in the
+message's text, and a LedgerError was not caught there at all), its message no longer cut at 300 characters; a
+certificate written whole, and every art admission the ledger holds without one given one at the start from the
+ledger alone, where its part of the ledger replays (`recover_certificates`, which skips one it cannot make and never
+stops a start); a studio route with no branch refused (STUDIO-ROUTE) where the undo was every unmatched route's last
+line. RUNG-0's R5: art/check.py's rows keyed by the world they are printed under (its 202 plant rows were 56 keys, the
+last brief's verdict standing for four: MEASURED from his log), art/studio.py's bracketed rows that name a plant read
+(R5 had read none of that suite's; the "116 and 116" was quality 54, check 56, director 6, studio 0), and two rows
+under one key one row that passes only if both do. A refuse names no head and is appended as before. Not changed: the
+live loop serves a hand edit as it always did.
+
+**Its falsifiers.** DIRECTOR SELFTEST (nine rows in `safe_rows`, each in the self-test's tree, put back after): an
+evaluation over a hand edit refused LEDGER-UNLOGGED with nothing appended; a late evaluation, the head moved by a
+recorded change, refused HEAD-MOVED; an admission over a hand change back to its own head refused at the fence; a
+rebase of files failing an art check refused REBASE-CHECKS; and five plants: four take a guard away and show the
+ledger replay then refuses (without the held head, the evaluation appended and verify, then rebase, said LEDGER-HEAD;
+the late one, LEDGER-HEAD; at the fence, LEDGER-STALE; a rebase unchecked, LEDGER-REBASE), and one forges a rebase
+line that replay refuses (LEDGER-REPLAY). STUDIO SELFTEST 78/78 (four rows): a hand edit before asking, the admission
+refused STUDIO-DIRECTOR-REFUSED with `director_code` LEDGER-UNLOGGED and the ledger's bytes unchanged; another
+writer's recorded change landing between the gateway's evaluation and its append (a hook at `studio:admit-evaluated`),
+refused HEAD-MOVED with the ledger verifying, and its plant leaving LEDGER-HEAD; a certificate taken away made again at
+the start, the same parent, operation, inverse and child. RUNG SELFTEST 22/22 (three rows: a plant no longer refused
+in one world of several said, which the keying without the world missed; a bracketed row naming a plant read; a
+repeated key keeping its FAIL). One suite asked for a repair, and it is the defect: PREVIEW-STUDIO laid its building by
+hand after the ledger's genesis and admitted over it; it now records the building with rebase, as a person would.
+
+**What the review found, and what was done.** A review of the patch (five lenses, each finding put to a skeptic, read
+only) confirmed seven distinct findings, all repaired: two of the new director plant rows shared one R5 key (renamed,
+and R5 now combines a repeated key); LEDGER-UNLOGGED's remedy fell past the studio's 300-character cut and named no
+`--root`; two studio self-test rows caught only LedgerError, which quiet() now turns into a StudioError;
+`recover_certificates` let an IndexError stop a start; the corrected inverse note said today's briefs fall where 0244
+said, which they do not (a `-` of the last statement and its undo give back the head on three of the four: MEASURED
+here); four documents called `refuse` held; and docs/CAPABILITY-MATRIX.md cited this entry before it was written.
+Three the skeptics judged not this patch's defects are said too, one of them repaired anyway: the guard took a dead
+writer's half-done admission for an unlogged change and named rebase for it (it now recovers it first, under the
+lock); `replay` judges past admissions by today's EXPECTED_CHECKS, so a later change to that list stops every
+evaluation, admission, approval and rebase of a recorded world as it already stopped `verify` (a refuse is appended as
+before; before 0245 the writes went on and broke the chain); R5 still does not read the memo's four plants
+(`PASS memo plant ...`, since 0236).
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 6af1d9f under
+%TEMP%, never the checkout). The full check, `python art/selftests.py --repeat 2`, sixteen suites at once: twenty-three
+suites passing and then twenty-four, 402.8 s and 406.5 s wall, ART SELFTESTS FAILED on one row of PREVIEW-STUDIO, its
+10 s for a whole preview (10.28 s); a double run before the review's repairs failed the same row once (11.85 s; the
+other run 6.86 s). Under %TEMP% a full run takes about 400 s against his 156 s and 197 s; there 6af1d9f's own single
+run took 8.32 s for that preview (401.3 s wall, ART SELFTESTS PASSED), and, with the suite run alone, alternating,
+that preview took 1.70 s and 1.81 s with the patch and 1.87 s and 1.80 s without. Nothing in the timed preview
+changed. Every other suite passed in both runs, and in both of the earlier double run: DIRECTOR SELFTEST PASSED,
+CRASHTEST 15, RACETEST 32, STUDIO 78/78, the rest as at 6af1d9f. The pushed tree's classifier (`git show
+origin/main:tools/rung.py`) on the patch's eleven files: rung D, loosening nothing; its plants, on the final tree:
+"116 planted defects refused by the old checker; 122 by the new", PLANTS HELD. RUNG SELFTEST 22/22. The gate: 251 rows / 0 fail / 0 skipped, rowset 74db4c8d78625af5, row
+for row the baseline's (1,011 s; the baseline 1,074 s, with the inventory's agents beside it).
+
+**His act.** Before any evaluation in a world, record what moved outside the loop, after reading it:
+`python art/director.py rebase plaza-night --note TEXT` in the checkout, and for each world of the desktop studio
+`python art/director.py rebase NAME --root "%LOCALAPPDATA%\VerdandiStudio\worlds\NAME" --note TEXT`. Until then the
+studio refuses their admissions with LEDGER-UNLOGGED, where it would have broken their ledgers.
+
+**Not done.** 0246, the page executed by a test; 0247, the dashboard; the candidate's binding (F-3, F-4: his rulings);
+the inverse's repair (his ruling of 0244's (a) or (b)); plants completeness (its own rung). NOT_MEASURED: the full
+check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (four rows and the reading
+table), art/STUDIO.md, art/director/README.md, docs/CAPABILITY-MATRIX.md and its rows (new), docs/CORE.md (art 26,681
+lines, tools 2,103), this entry.
+
+**His word on 0245 (2026-10-16).** *"0245 is applied and pushed. Build 0246 (PAGE-0, the page executed by a test) as
+the next patch."* His run of 0245 is not in what the agent can read. While 0246 was built, `git ls-remote origin main`
+and his checkout's HEAD both read 6af1d9f (read twice on his machine by the agent). 0246 is therefore made on 0245's
+commit and applies after it. NOT_MEASURED: his run of 0245, its classifier, its full check and its gate.
+
+### PAGE-0 — the page executed by a test · **built, off the gate** (0246, `art/page_test.py`, `art/web/page_test.html`, `art/web/page_test.js`, `art/play.py`, `art/selftests.py`; a plant's repair in `art/director.py`, a count's in `art/studio_queue.py`)
+
+**What was missing (F-5, docs/CAPABILITY-MATRIX.md).** No test ran the studio page's own script. The suites called the
+studio's routes from Python and gave it synthetic stills. Whatever the page does itself was held by nothing: its keys,
+its buttons, the still it takes of its canvas, and the preview it draws with the native renderer.
+
+**What it changes.** `python art/play.py --page-selftest` makes the flagship's edit (FLAGSHIP-0) through the page, in a
+real browser, headless, with a throwaway profile: on Windows Edge, then Chrome; elsewhere the first of `microsoft-edge`,
+`google-chrome`, `chromium` and `chromium-browser` on PATH. `--browser EXE` or `VERDANDI_BROWSER` names another, and
+`--headed` shows it.
+
+The host lays the foundry yard in a scratch tree, serves it with the scripted director, and arms a page test on its own
+server. Only then does the server serve a driver page (`/page_test.html`, `/page_test.js`) and answer its channel
+(`POST /studio/page-test`, the studio's token). Unarmed, it serves neither: 404, and STUDIO-ROUTE.
+
+The driver holds `/play.html`, unchanged, in a frame of the same origin. It does the host's steps one at a time with
+the page's own controls: Enter, the shape's tag, Strict, Ask, the card's Preview, Admit and Show, and the drawer's Undo
+and Original. Each control's centre is hit-tested before it is pressed, and a covered control is said, never clicked
+through (lesson 75). The events are synthetic. The camera for the admission's still is put on the request's framed path
+through `PLAY.cam`, a hook.
+
+The driver reports what the page showed and decides nothing. Each row but one is held by the host's own state: the
+request, the ledger, the certificate, the preview's report, the scenes it serves, and the stills the page gave it, read
+as PNG. Most rows hold the page's words as well; the unarmed row and the browser's end are the host's alone. The
+exception is the opening, which rests on what the page reports: its title, held against the brief's own; its director;
+its canvas; and the slot it shows. The camera step is held at the admission: the view stands at the path's first pose
+before Admit is pressed and after the page's word.
+
+A run ends at once when its page is lost, rather than letting every later step wait out its time (PageLost):
+- a step the page does not answer;
+- a browser that has ended;
+- a run past its deadline: 900 s for the honest run and 300 s for each plant's, inside the full check's 1800 s.
+
+The rows are printed as they are made, so a run killed at the limit keeps what it learned.
+
+**Its falsifiers.** PAGE SELFTEST 16/16:
+- unarmed, no driver and no channel;
+- the page opened, its title the brief's, its shell built and its director read;
+- the shape listed in the drawer;
+- the request asked through the page: strict, at the head, its candidates drawn;
+- the Panelled bay's card: strict PASS and Admit enabled, the host holding it with its impact;
+- the preview: sixteen stills of 480 × 270 drawn by the page's native renderer, unlike the window's at every pose;
+  replayed, verified and framed; the page's window saying state verified;
+- Admit: a 960 × 540 still from the canvas, the view at the request's first pose before and after; admitted, with the
+  ledger's admit from the request's head, its receipt and an exact certificate; the page's line and its toast saying
+  so;
+- Undo: the world as before, the head restored;
+- Show, then Original: the view drew the scene the host serves in the candidate's slot, then the world's;
+- four plants through the page, each showing its code with the world as it was:
+  - a region refused: the host's strict check refuses the column (ADMIT-OUTSIDE, boxes outside), its card shows
+    strict FAIL, and Admit cannot be pressed;
+  - a failing preview: the host's verification fails, and the page's window says "states differ";
+  - a still never received: STUDIO-NO-STILL;
+  - a stale head: STUDIO-STALE;
+- the browser ended and nothing of it left, the query that says so having found the browser's own processes while it
+  ran (not the holder's alone);
+- two plants of the harness: Admit unwired, and the still skipped. Each is a served copy of `play.js` with one line
+  changed, caught only by the admission's row.
+
+They are the first stills in any suite drawn by the native renderer and not synthetic.
+
+**Three repairs the full check asked for.** The first full check of the work in progress (`--repeat 2`, twenty-five
+suites, sixteen at once; its log `20261017T060335Z`) failed once in each run, each time on a row that passed alone. A
+later one (`20261017T095118Z`) failed a third such row.
+
+STUDIO 77/78. The row on two director commands at once through `quiet()` checks a plant that takes the lock away. That
+plant left the console redirected in 0 of 5 trials. The row's two commands overlapped by sleeps (0.02 s and 0.05 s,
+started 0.005 s apart), and under that load the overlap did not happen. They now overlap by events:
+- the second starts once the first is inside;
+- the first waits for the second to be inside (0.2 s at most), and ends first.
+
+With the lock the console is left redirected in 0 of 5 trials. Without it, it is left redirected in every trial where
+the second command is inside within the first's 0.2 s. That was 5 of 5 in a run alone (0 and 5, in 1.0 s; a snippet,
+not logged), and in every run of every full check after. The row's verdict is unchanged; its mechanism changed.
+
+PAGE 14/15. One process of the browser's tree was still standing 20 s after `taskkill /T`; the row named its pid only.
+On Windows the browser is now started by a holder in a job of its own (KILL_ON_JOB_CLOSE, the desktop studio's `Job`),
+and ending the holder ends it. The holder also ends by itself once nothing but itself is left in its job: the browser
+ended on its own. That needed the job, because Edge's first process hands off to another and ends within 0.1 s (OBSERVED
+once, in a check made for it; not kept). What is left is waited for 60 s and named by pid and name; what stood at the
+first look is printed.
+
+In both runs of the first full check after the repair (`20261017T062625Z`), four of the browser's processes
+(`msedge.exe`) still stood at the first look after its job closed. All were gone by 14.5 s and 15.2 s after the ending
+began (MEASURED). These are upper bounds: each is the time of the first look that found none, and the looks are a 1 s
+pause plus a query apart.
+
+Alone, the browser ended in 0.5 s to 0.9 s in three runs, and in 3.8 s once (MEASURED; upper bounds, as above). That
+once was a run whose other timings were several times slower (its stills 33.0 s against 5.0 s to 6.3 s), most likely
+under load from outside the check (INFERRED; a load reading taken after it, OBSERVED once, not kept). So the failure was
+most likely the same slow ending under load against a 20 s window, not a process that escaped (INFERRED). Two passing
+runs cannot say which part of the repair answered it, the job or the 60 s wait. The job makes the ending the kernel's,
+whatever a process's parent.
+
+DIRECTOR RACETEST, one case of 32. Its plant without the export lock (two exports at once, one over the brief's maps
+and one over a candidate's) went unmet: 0 of 40. A 20 ms sleep had held its window open since 0241, and chance had
+missed it before that too, at 0239 and 0241. The plant's two exports now meet twice (`PLANT_MEET`, under that plant
+only): once both have pointed `level.MAPS` at their folders, and once both have exported, before either is put back.
+Both are then inside the window in every pair. Whether one reads the other's folder is still the interleaving's,
+since the exporter (`dress.world`) points `level.MAPS` at its own folder again just before the converter reads it.
+Alone, the row read 40 of 40 wrong or failed in each of three runs. Under sixteen suites at once it read 39 and 33 of
+40 in the full check `20261017T102139Z`, 37 and 39 (36 and 38 of them refused) in `20261017T105239Z`, and 38 and 38
+(38 and 37 refused) in the final one, `20261017T113320Z` (MEASURED). In a
+fourth run alone, with a spy on `_export`, every one of the 40 was refused by the map check that reads the layout
+again apart from the converter (`source_rows` in graybox/check.py): "the layout's bytes are not the ones the converter
+read" (OBSERVED once; not kept). The row now counts refusals apart from wrong heads, so its log carries the kind.
+
+Its counts are now kept under a lock. The two threads added to one count without one, and the first full check that
+counted refusals read "35 of 40 wrong or failed (36 refused)" (MEASURED in `20261017T104447Z`): an addition was lost.
+In the honest trial a lost addition could have hidden a wrong head. STUDIO-2's two worlds compiled at once
+(`art/studio_queue.py`) counted the same way since STUDIO-2, and are repaired the same way.
+
+The race test's honest trial made no export since 0236. Its two memo keys were made just before it, so its 40 exports
+were 40 kept results (THROUGHPUT-0's memo). The lock its plant takes away was never what it held, and removing that
+lock from `_export` would have left both rows passing. Both trials now run with the memo off, and every export is
+counted: the honest row asks for 40 computed under the lock and none wrong, so the memo is no longer a difference
+between the two trials. The honest one holds the lock; the plant's takes it away and makes its two exports meet inside
+the window the lock closes (`PLANT_MEET`, above). The honest trial has no meeting, so its pass alone does not show the
+lock is needed; the plant's row does. This is a repair of a control, in new words here; 0236's and 0241's records
+stand as written.
+
+The full check between them (`20261017T071619Z`) showed two more rows of that kind, and they are said, not repaired. Its
+first run was most likely made under load from outside the check (INFERRED from its timings: 387.1 s wall against 159.2
+s for its second run, every suite slower; a load reading taken just before it, OBSERVED once, not kept). It failed two
+timing rows in suites this patch does not change:
+- STUDIO APP's plant of a silence taken as a close (its 4 s);
+- PREVIEW-STUDIO's 10 s for a whole preview (29.85 s).
+
+Its second run passed all twenty-five suites. The next (`20261017T095118Z`), its load reading low just before it
+(OBSERVED once, not kept), passed all twenty-five in its first run and failed only the race plant above in its
+second.
+
+**What the review found, and what was done.** A review of the work in progress (five lenses, each finding put to a
+skeptic; 27 agents, read only) gave 22 findings. The skeptics confirmed ten, seven of them distinct, and all seven are
+repaired, the one about POSIX on Linux only:
+- A harness plant was counted caught by any failed row, the run's own stop included, even when its line could not be
+  planted (three lenses). It is now caught only by the admission's row, and a plant whose line is not in `play.js`
+  exactly once is NOT PLANTED, and fails.
+- The preview's row asked only one pose of eight to differ. It now asks all eight.
+- On POSIX, nothing ended the browser if the suite's process was killed. On Linux the browser's first process now
+  has PR_SET_PDEATHSIG. Its other processes are not signalled, a launcher that runs a set-user-ID helper (a snap)
+  clears the setting, and elsewhere off Windows a browser can still outlive a killed suite; the driver lets the page
+  go after a minute without its host (NOT_MEASURED: there is no Linux here).
+- Leftovers were killed by pids read seconds before. The kill no longer passes the row, and what is left is ended in
+  the same query that finds it.
+- A failed query of what is left read as nothing left (two lenses). It now reads as unknown, and the row requires the
+  query to have found the browser's processes while it ran.
+- The admission's and the plants' rows read the drawer's status line, closed by then, and no toast. The toasts are
+  now required.
+- The Original step could not fail. It is now Show, then Original, each held against the scene the host serves.
+
+The skeptics rejected twelve. Among them was the charge that the camera hook and the synthetic events were presented as
+a person's acts; the comments and the docs now say what they are.
+
+**What a check of the claims found.** One more agent then read every claim of this entry, art/STUDIO.md's section, the
+AGENTS.md row, the commit message and the code's comments against the code and the logs. It found eleven wrong or
+overstated, and each is repaired. Three were repaired by making a row check what its words said:
+- the region plant's row reads the host's own strict verdict for the column, not only the page's chip (its words were
+  repaired too: every row but the opening is held by the host);
+- the failing preview's row asks the page's window for "states differ", where it took any badge but "state verified";
+- the browser row's query has to find one of the browser's own processes; the holder's command line names the profile
+  too, and once satisfied it alone.
+
+The other eight were repaired in words:
+- a line count one short;
+- "25 suites at once" for sixteen at once;
+- "by construction" where a 0.2 s wait stands;
+- the 60 s wait called the repair;
+- two timings of one kind graded two ways;
+- the header's "as a person makes it";
+- "Chromium elsewhere" where the finder tries Edge and Chrome first;
+- "all seven are repaired" where the one about POSIX is repaired on Linux only.
+
+**What the last check found.** A final adversarial check (five lenses, each finding put to a skeptic; 30 agents, read
+only) read the tree after those repairs. Of its 25 findings, the skeptics confirmed sixteen, nine of them distinct, all
+low and all repaired:
+- docs/CORE.md's line count, still the stale one where this entry said it was repaired: now counted on the committed
+  tree;
+- the claims check's eleven listed with one twice and one missing: the list above;
+- the opening said to rest on the page's title, which the row never read: the title is now held against the brief's
+  own, and AGENTS.md's "each step" now excepts the opening;
+- the camera step held by nothing: now held before and after the admission;
+- the region plant's host check passing any strict failure: it now asks for ADMIT-OUTSIDE with boxes outside, the
+  column drawn;
+- the bounds on the browser's ending described backwards in a comment: corrected;
+- the Linux claim ungraded and wider than the code: now the first process only, NOT_MEASURED;
+- a page that stopped answering made every later step wait out its time, past the full check's 1800 s: now the run
+  ends at once;
+- a browser that could not start read as "no answer from the page in 210 s", three times, its cause removed with the
+  run's folder: now the run ends at once when the browser has ended, the plants are NOT RUN when the honest run's page
+  never opened, and the browser log's last lines are printed on a failure (a `--browser` path is still not checked
+  before it is started).
+
+For that last one, the holder sees a browser that ended on its own. The check made for it killed the browser during
+the honest run's preview; the run ended at once with "the browser ended before the page answered step 5 (press)", and
+nothing of it was left (MEASURED once, in a check made for it and not kept in the repository).
+
+The skeptics rejected nine, among them that the plants' catch cannot tell a plant from an admission slower than 45 s.
+The honest run's own admission row stands against that.
+
+**What the check of the last changes found.** A last adversarial check of the changes since (three lenses, each finding
+put to a skeptic; 14 agents, read only) gave eleven findings. The skeptics confirmed ten, seven of them distinct, all
+low and all repaired:
+- the race test's honest trial made only kept results (since 0236): repaired above;
+- the race's refusal given to the converter and graded MEASURED from output not kept: it is the map check's, OBSERVED;
+- "the race is then met in every trial", where the full check `20261017T102139Z` counted 39 and 33 of 40: said as
+  counted;
+- "the same full check" named for another: each is now named by its log;
+- the sentence on what holds each row garbled: rewritten;
+- 0.4 s for the browser's ending, taken from a run whose browser the check had already killed: the three runs alone;
+- "eight distinct" where nine were: the browser that could not start, listed.
+
+The skeptics rejected one: Edge's hand-off graded MEASURED with nothing on file. It is now graded OBSERVED, as it is.
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 0245 under
+%TEMP%, never the checkout):
+- PAGE SELFTEST 16/16 alone on the final page code, in 89 s. The page opened in 1.7 s, the preview's sixteen stills
+  took 5.0 s with nothing flagged by their detectors, the admission's still was 960 × 540, and the browser ended in
+  0.5 s.
+- OBSERVED: headless Edge drew on the machine's GPU through ANGLE. The browser's own report is printed by the suite
+  and not recorded here.
+- DIRECTOR RACETEST alone after its last repair: the honest trial 0 wrong with 40 computed; the plant 40 of 40 with
+  40 refused.
+- The full check of the final tree, `python art/selftests.py --repeat 2`, sixteen suites at once
+  (`20261017T113320Z`): twenty-five suites passing in both runs, 146.4 s and 145.8 s wall, ART SELFTESTS PASSED.
+  - PAGE SELFTEST 16/16 in both, in 133.2 s and 130.7 s.
+  - The race plant: 38 and 38 of 40 wrong or failed (38 and 37 refused).
+  - The preview's stills took 12.2 s and 12.6 s.
+- The full checks before it, each of the tree as it then stood:
+  - `20261017T060335Z`: FAILED (STUDIO 77/78, then PAGE 14/15), 253.9 s and 257.1 s.
+  - `20261017T062625Z`: PASSED, 234.2 s and 242.7 s.
+  - `20261017T071619Z`: FAILED in its first run (STUDIO APP 12/13 and PREVIEW-STUDIO 13/14, 387.1 s, most likely
+    under load from outside the check, INFERRED); its second passed (159.2 s).
+  - `20261017T095118Z`: its first run passed (160.6 s); its second FAILED (DIRECTOR RACETEST, one case, 161.6 s).
+  - `20261017T102139Z`: PASSED, 154.7 s and 158.9 s.
+  - `20261017T104447Z`: PASSED, 147.9 s and 151.4 s, with the race's count losing an addition.
+  - `20261017T105239Z`: PASSED, 147.5 s and 150.0 s (the race plant 37 and 39 of 40, 36 and 38 refused); the tree
+    after it changed in two comments and in words only.
+- The classifier 0245 holds (`git show da8214f:tools/rung.py`, outside the clone), on the patch's eleven files: rung D,
+  loosening nothing. Its plants: "272 planted defects refused by the old checker; 272 by the new", PLANTS HELD.
+- The gate: 251 rows / 0 fail / 0 skipped, rowset 74db4c8d78625af5, row for row as before (772 s; rustc 1.96.1).
+
+The final full check, the classifier's plants and the gate each ran on the tree as committed, but for this block's own
+figures and the commit message, which none of them reads; the classifier's rung was taken again after them.
+
+**What it does not show.**
+- A person's judgement of the picture.
+- The page's look.
+- A real provider.
+- Mouse look and play mode: pointer lock needs a person's gesture.
+- Mark & Shape's drawing of a region: the host saves the shape, as FLAGSHIP-0 does.
+- Whether a person's own click reaches the control: the events are synthetic, and only the hit test is a person's.
+- Timings: they are printed, never checked.
+- The browser's ending off Windows: never run here.
+
+R5 reads none of this suite's plants (it reads quality, check, director and studio). Without a browser the suite
+fails; there is no skip.
+
+**Not done.**
+- 0247, the dashboard, held by this harness.
+- The candidate's binding (F-3, F-4: his rulings).
+- The inverse's repair (his ruling).
+- Plants completeness (its own rung, where this suite's plants would join R5).
+
+NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (a
+row), art/STUDIO.md, docs/CORE.md (art 27,630 lines), this entry.
+
+**His run of 0245 and of 0246 (2026-10-17).** 0245 applied on 6af1d9f:
+- the classifier the pushed tree held: rung D, loosening nothing; *"116 planted defects refused by the old checker;
+  122 by the new"*, PLANTS HELD;
+- RUNG SELFTEST 22/22;
+- ART SELFTESTS PASSED, twenty-four suites, 156.1 s and 156.9 s wall;
+- the gate `GATE PASSED`, `RECONCILE  rowset 74db4c8d78625af5  251 rows / 0 fail / 0 skipped`;
+- pushed 6af1d9f..603ae63.
+
+0246 applied on 603ae63:
+- the classifier the pushed tree held (0245's): rung D, loosening nothing; *"272 planted defects refused by the old
+  checker; 272 by the new"*, PLANTS HELD;
+- `PAGE SELFTEST 15/16`. The Show and Original row failed: *"the page drew 1c9fa9bc90f1 then 1c9fa9bc90f1; the host
+  serves 1c9fa9bc90f1 in the candidate's slot and 1c9fa9bc90f1 in the world's"*;
+- not pushed.
+
+MEASURED on his machine, by him. His word: *"from now on when you give me a next step tell me what it entails and the
+theorem or design behind each path. before that we have a failure to address"*.
+
+### PAGE-0's read of the world after an undo · **repaired, off the gate** (0247, `art/page_test.py`, `art/web/page_test.js`)
+
+**What failed, and why.** The world the host served in slot 0 was still the admitted scene, 1c9fa9bc90f1, after the
+undo had put the files back to 9743e35c7303; the undo's own row had passed on the files. `play.py`'s live loop serves
+a write of the files one compile after it sees it, a compile in a fresh process. It is eventually the files'. The row
+compared against slot 0 without waiting for it.
+
+A trace on his machine, by the agent (a scratch clone under %TEMP%), caught the same race in an ordinary run, with only
+the trace added (MEASURED once, after passing in every run before it):
+- the admission's write was compiled from 13.85 s to 14.48 s, and slot 0 served the admitted scene;
+- the undo wrote the files back between 14.06 s and 14.50 s, while that compile ran;
+- the second request ran from 14.52 s to 16.23 s;
+- the loop began compiling the undo's write at 15.69 s;
+- the row read slot 0 at about 16.24 s;
+- the loop served the files' head at 16.37 s.
+
+The read came 0.13 s too soon. Two attempts to reproduce it by slowing the compiles (8 s each) passed (MEASURED).
+Slowed, the admission's own compile can begin after the undo has written, and then slot 0 never serves the admitted
+scene at all (INFERRED). The third harness plant below makes the race certain, and its row's detail ends in his
+row's own words.
+
+Not the cause, by reading: the live compile takes no lock of the director's.
+
+**What it changes.** Only the test; the product is as it was.
+- The live loop's recompiles in the run pass through a gate. The honest run waits until the loop serves the admitted
+  scene, then holds the gate closed from before the undo until it has read the world served. That read is the admitted
+  scene still, behind the files, so the race his run met is met in every run.
+- It then lets the loop go and waits, at most 120 s, until the loop serves the files' own head. Only then does it
+  compare.
+- The page is told the scenes the host serves in the candidate's slot and in the world's, because its own list of
+  slots is as old as its last read of `/live`. It draws the world the host serves first, then presses Show and
+  Original, and each press must make it apply a scene (its count of swaps grows). Otherwise the stale world, being the
+  candidate's own scene, would let Show pass with nothing drawn.
+- The row now asks four things:
+  - the held loop served the admitted scene while the files were the head;
+  - let go, it served the head;
+  - the page drew the candidate's scene, then the head, applying a scene at each press;
+  - the host serves exactly those.
+- A third plant of the harness, `page-live-unwaited`, takes the host's wait away. It is counted caught only when that
+  row fails with the plant run's admission and undo passed, the hold met and the world read stale. The suite prints
+  each plant's breaking row.
+- The plant runs' deadline is 200 s, so that the honest run's 900 s and three plants' come to 1,500 s inside the full
+  check's 1800 s (0246's entry, which gave the plants 300 s, stands as written). A wait for the loop never runs past
+  its run's deadline.
+- The gate is always opened again when a run ends.
+
+**Its falsifiers.** `PAGE SELFTEST 17/17`: the fourteen rows, with the Show and Original row as above, and the
+harness's three plants each caught by the row it breaks. In the honest run the row reads: held, the loop served
+1c9fa9bc90f1 and the files 9743e35c7303; let go, the head (MEASURED). The wait for it was 0.6 s and 1.0 s alone, and
+2.8 s and 1.9 s in a full check (OBSERVED: polled every 0.2 s, not a measurement of the loop). The suite prints the
+plant's row: *"held: the loop served 1c9fa9bc90f1, the files 9743e35c7303; let go: not waited for (the plant); the page
+drew 1c9fa9bc90f1 then 1c9fa9bc90f1; the host serves 1c9fa9bc90f1 in the candidate's slot and 1c9fa9bc90f1 in the
+world's"* (MEASURED). It ends in the words of his failing row.
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 0246's tree
+under %TEMP%, never the checkout):
+- PAGE SELFTEST 17/17 alone, in 106 s. The plant runs printed their rows; the live plant's is the one quoted above.
+- The full check of the final tree, `python art/selftests.py --repeat 2`, sixteen suites at once
+  (`20261017T173820Z`): twenty-five suites passing in both runs, 225.6 s and 233.0 s wall, ART SELFTESTS PASSED, PAGE
+  SELFTEST 17/17 in both. A full check before the review's repairs (`20261017T133705Z`) passed too, 164.0 s and 167.2 s.
+- The classifier 0245 holds, which is the one his pushed tree (603ae63) holds, byte for byte: `git show
+  da8214f:tools/rung.py`, outside the clone. It ran over 0246 and 0247 together, as his `origin/main..HEAD` will read
+  them: rung D on eleven files, loosening nothing; "272 planted defects refused by the old checker; 272 by the new",
+  PLANTS HELD.
+- The gate: 251 rows / 0 fail / 0 skipped, rowset 74db4c8d78625af5, row for row as before (818 s; rustc 1.96.1).
+
+The full check, the plants and the gate each ran on the tree as committed, but for this block's own figures and the
+commit message, which none of them reads; the classifier's rung was taken again after them.
+
+**What it does not show.**
+- The live loop's own timing. The honest run holds the loop and then waits for it; a test that holds a loop does not
+  measure how soon the loop catches up.
+- What a person sees after an undo. The page's Original may show the world before the undo for a compile's time, until
+  its next read of `/live` (VERIFIED BY READING `art/web/play.js`). That is the loop's eventual consistency, and this
+  patch does not change it.
+- That no other row reads the live loop too soon. Every other read of it in the run waits for a new version
+  (`wait_version`), waits until it serves the files' own scene (`served_head`), reads the files themselves, or, as the
+  shape's anchor does before the first request, reads it before anything is written, as `Live` compiled it at the
+  start (VERIFIED BY READING).
+
+**What the review found, and what was done.** A review of the repair (two lenses, code and claims, each finding put to
+a skeptic; 15 agents, read only) gave thirteen findings. The skeptics confirmed all thirteen, seven of them distinct,
+and all seven are repaired:
+- The Show half could pass with nothing drawn: the stale world was the candidate's own scene, so choosing its slot
+  drew nothing new. Now the world is drawn first and each press must apply a scene.
+- The live plant was counted caught on any failure of its row, with the 45 s limits the page plants use for an
+  admission and an undo it needs to succeed. Now it has the honest run's limits and the narrower count above.
+- The three plants' deadlines made the runs' total the full check's whole 1800 s. Now they are 200 s each, and the wait
+  for the loop is capped by its run's deadline.
+- The 0.13 s was credited to his run. It was the agent's trace, on his machine.
+- The plant's quoted words were graded MEASURED with no output that printed them. The suite now prints them.
+- The wait's 0.6 s was graded MEASURED. It is OBSERVED.
+- An OBSERVED line said the loop served the head even when the wait ran out; the list of the run's other reads of the
+  loop missed one. Both are corrected.
+
+**Not done.** DASHBOARD-0, held by this harness, is now 0248: it was 0247 in the agreed order, the numbers shift and
+the order does not. Then the candidate's binding (F-3, F-4: his rulings), the inverse's repair (his ruling), plants
+completeness, and BLENDER-VIEW-0 where he places it.
+
+NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
+PAGE-0 row), art/STUDIO.md, docs/CORE.md (art 27,701 lines), this entry.
+
+**His run of 0247 (2026-10-17), and the text he brought.** 0247 applied on 6178026:
+- the classifier the pushed tree held: rung D on eleven files, loosening nothing; *"272 planted defects refused by the
+  old checker; 272 by the new"*, PLANTS HELD;
+- `PAGE SELFTEST 16/17` alone. The Show and Original row failed: *"the page drew Show on Pane then ; the host serves
+  1c9fa9bc90f1 in the candidate's slot and 9743e35c7303 in the world's"*;
+- ART SELFTESTS PASSED, twenty-five suites, 188.8 s and 218.7 s wall, PAGE SELFTEST 17/17 in both runs;
+- the gate `GATE PASSED`, `RECONCILE  rowset 74db4c8d78625af5  251 rows / 0 fail / 0 skipped`;
+- pushed 603ae63..e51e7ef.
+
+MEASURED on his machine, by him. He also brought a text agreeing to the order: *"I agree: apply 0247, then do 0248
+DASHBOARD-0 before BLENDER-VIEW-0."* It sets five acceptance conditions for the dashboard:
+- *"The host owns truth."*
+- *"Every panel is revision-bound."*
+- *"Admission is a host decision."*
+- *"Undo proves restoration, not merely success."*
+- *"Import is transactional."*
+
+It also sets seven adversarial cases for its page test and one invariant: *"At the time a panel claims to represent host
+revision H, its displayed facts must be derivable from H—or the panel must identify itself as stale."* Of the Blender
+rulings it says to resolve them *"explicitly rather than inferred from the recommended defaults."* The dashboard's
+entry will quote the text whole. That patch is now 0249, because this repair took 0248; the order is unchanged.
+
+### PAGE-0's press after a redraw · **repaired, off the gate** (0248, `art/page_test.py`, `art/web/page_test.js`)
+
+**What failed, and why.** The detail *"the page drew Show on Pane then"* is the driver's own error, cut to twelve
+characters by the row's formatting. The page builds its cards again on every sync of its slots: `shell.candidates`
+empties `#c-list` and builds every card again (VERIFIED BY READING `art/web/play.js`). 0247 had the driver do three
+things in order:
+1. find the card;
+2. wait until the page drew the world the host serves, which is a sync;
+3. press the card's Show.
+
+When the page synced between steps 1 and 3, the Show found at step 1 was no longer in the page. Detached, it measures
+0 x 0 and `press` refuses it as not shown (VERIFIED BY READING `press`). His output shows only the error's first twelve
+characters, *"Show on Pane"*, and `press` begins every refusal with the control's name, so it cannot tell "not shown"
+from "covered by". That his press met a control the page had replaced is INFERRED, on three grounds:
+- the drawer is closed first and is `display: none`, and the toasts take no pointer events, so nothing covers the card;
+- the failure was intermittent: 17/17 in both runs of his full check;
+- a forced redraw gives the same words.
+
+The forced redraw was a run on his machine, by the agent, with only a redraw added between the find and the press. The
+row gave his detail word for word: *"the page drew Show on Pane then ; the host serves 1c9fa9bc90f1 in the candidate's
+slot and 9743e35c7303 in the world's"* (MEASURED once, in a check made for it; not kept). Nothing printed his run's full
+error. The product is as it was: the harness pressed a card the page had replaced.
+
+**What it changes.** Only the test.
+- `press` refuses a control no longer in the page by name: *"… was replaced as the page redrew it, and is not
+  pressed"*.
+- Before Show, the driver draws the cards again on purpose, by a hook: `PLAY.slot(0)`, the function Original's button
+  calls, not a control pressed. It waits until the card list is new and the scene applied, so the redraw is met in every
+  run.
+- The driver finds the card after that redraw, in the same step as the press. JavaScript runs that step to its end
+  before any redraw, so nothing can redraw between.
+- When the step failed, the row prints the driver's error whole, never cut, and says the step failed rather than what
+  was drawn.
+- A fourth plant of the harness, `page-card-held`, presses the card found before the redraw. It is counted caught only
+  when the Show and Original row fails, with the plant run's admission and undo passed, the world read fresh, and the
+  press refused as a replaced control.
+- The honest run's deadline is now 700 s and each of the four plants' 200 s: 1,500 s inside the full check's 1800 s.
+
+**Its falsifiers.** `PAGE SELFTEST 18/18`: the fourteen rows and the harness's four plants. The suite prints the new
+plant's row: *"… the step failed: Show on Panelled bay was replaced as the page redrew it, and is not pressed; the
+host serves 1c9fa9bc90f1 in the candidate's slot and 9743e35c7303 in the world's"* (MEASURED).
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of e51e7ef under
+%TEMP%, never the checkout):
+- PAGE SELFTEST 18/18 alone, in 123 s.
+- The full check of the final tree, `python art/selftests.py --repeat 2`, sixteen suites at once
+  (`20261017T205158Z`): 426.3 s and 434.2 s wall, ART SELFTESTS FAILED. PAGE SELFTEST was 18/18 in both runs. Two
+  timing rows of suites this patch does not change failed:
+  - STUDIO APP 12/13 in both runs: its plant of a silence taken as a close (the page silent for 4 s and 5 s);
+  - PREVIEW-STUDIO 13/14 in the second: its 10 s for a whole preview (17.92 s).
+- The same check on the base tree, e51e7ef, without this patch, run straight after under the same conditions
+  (`20261017T212636Z`): 419.1 s and 423.4 s wall, ART SELFTESTS FAILED on the same two rows (STUDIO APP 12/13 in the
+  first run, PREVIEW-STUDIO 13/14 in the second), PAGE SELFTEST 17/17 in both. The same tree had taken 147.5 s to 233 s
+  earlier that day. So the machine was slower, not the patch (INFERRED). The patch's page suite took 298 s and 308 s
+  against the base's 266 s and 278 s.
+- The classifier his pushed tree holds (e51e7ef's, the same bytes as 0245's): rung D on six files, loosening nothing;
+  "272 planted defects refused by the old checker; 272 by the new", PLANTS HELD.
+- The gate: 251 rows / 0 fail / 0 skipped, rowset 74db4c8d78625af5, row for row as before (828 s; rustc 1.96.1).
+
+The full check, the plants and the gate each ran on the tree as committed, but for this block's own figures and the
+commit message, which none of them reads; the classifier's rung was taken again after them.
+
+**What it does not show.**
+- That no other step of the driver presses a control found before an await. The other steps find and press in one step
+  with no await between (VERIFIED BY READING `art/web/page_test.js`); the new guard in `press` names any that does.
+- Anything of the dashboard. That is the next patch.
+
+**Not done.**
+- DASHBOARD-0, now 0249. Its design is settled, read from the tree and critiqued, but nothing of it is built: it waits
+  on his rulings.
+- Then the candidate's binding (F-3, F-4) and the inverse's repair, their numbers after the dashboard's.
+- BLENDER-VIEW-0 after the dashboard, by the text he brought, with its rulings made explicitly.
+
+NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
+PAGE-0 row), art/STUDIO.md, docs/CORE.md (art 27,723 lines), this entry.
+
+**His run of 0248 (2026-10-17), and his word.** 0248 applied on e51e7ef:
+- the classifier the pushed tree held: rung D on six files, loosening nothing; *"272 planted defects refused by the old
+  checker; 272 by the new"*, PLANTS HELD;
+- `PAGE SELFTEST 18/18` alone;
+- ART SELFTESTS PASSED, twenty-five suites, 202.0 s and 218.4 s wall, PAGE SELFTEST 18/18 in both runs;
+- the gate `GATE PASSED`, `RECONCILE  rowset 74db4c8d78625af5  251 rows / 0 fail / 0 skipped`;
+- pushed e51e7ef..2c70a71.
+
+MEASURED on his machine, by him. His word with it: *"build 0249 as specified; One nuance: the first-blocker test should
+compare the host’s displayed admission account with the host’s actual refusal under the same revision and conditions.
+It must not create a second, dashboard-owned admission policy."* And: *"Execution order: apply 0248 and confirm its
+reported PAGE 18/18 result in the actual checkout; build 0249 and run its new suite plus the full check; then build 0250
+with the separate worlds-mode test rig. Keep the dashboard’s “current” status strictly observational throughout."*
+
+"As specified" is read as the settled design's recommended answers: the split into 0249 (the revision, the cards and
+their accounts, the drawer's tabs, Evidence, Undo's proof, the wrong-world guard) and 0250 (the worlds, the outliner,
+import); Admit gated by the host's admission account alone; EVIDENCE-0 advisory and not FLAGSHIP-0's name for an
+acceptance; the new suites PAGE-CARDS and PAGE-WORLDS; the still's, the preview's and the undo's binding recorded, never
+refused on, until the binding's patch (now 0251; the inverse's repair 0252). The order is his.
+
+### DASHBOARD-0, the cards half · **built, off the gate** (0249: `art/play.py`, `art/studio.py`, `art/director.py`, `art/flagship.py`, `art/web/play.js`, `art/web/play.html`, `art/web/page_test.js`, `art/page_test.py`, `art/page_dash.py` (new), `art/selftests.py`)
+
+**The text he brought (2026-10-17), whole as the rule it is held to.** His five conditions: *"The host owns truth."*,
+*"Every panel is revision-bound."*, *"Admission is a host decision."*, *"Undo proves restoration, not merely
+success."*, *"Import is transactional."* (the last is 0250's). His seven adversarial cases, of which this patch holds
+the first five and the seventh in one tree (the sixth, import, is 0250's): *"the page renders before compilation or host
+state settles; the host head changes after a card is drawn; validation fails while an old successful result remains
+visible; evidence is missing even though the page looks ready; Undo restores files but not the expected ledger head;
+import fails partway through; a panel renders correctly but displays data from the wrong world."* His invariant: *"At
+the time a panel claims to represent host revision H, its displayed facts must be derivable from H—or the panel must
+identify itself as stale."*
+
+**One predicate, his nuance.** The account that enables Admit is admit()'s own checks, run dry:
+- `Gateway._admission` (art/studio.py) holds an admission's checks in admit()'s order; `admit()` runs it before it
+  writes, and `Gateway.account` runs it with `dry`, writing and logging nothing, the still pending (the page takes it as
+  Admit is pressed);
+- the director's checks are made as at the press, by the director's own code: `admit_dry` (art/director.py) runs
+  append_evaluation's guard (`held_head`), `cmd_admit`'s checks (now `admit_checks`, which `cmd_admit` itself calls) and
+  the commit's shared map (`shared_map`, which the commit calls), on the evaluation admit() would append, with a stand-in
+  still the detectors flag nothing in;
+- its answer is the first refusal, admit()'s code and the director's, or none; a failure the press would answer
+  STUDIO-FAILED (or STUDIO-INTERNAL) is answered the same, by one mapping (`studio.failures`, `failed_answer`) that
+  `studio_post` now uses too.
+
+No check of the account is the page's or the dashboard's. A worker per world (`Live.accounts_loop`) computes the
+accounts again when the revision moves, and keeps them only if it did not move while they were computed and no admission
+was half written; `/live` carries them with the revision they are of. The page enables Admit only by an account of the
+revision it last read that says admissible. Undo's account is held the same way: whether Undo would be refused is
+undo()'s own checks run dry (`Gateway._undoing`, which `undo()` runs before it writes), not a rule of its own.
+
+**The comparison, three ways.**
+- STUDIO (host only): in nine planted states the account `/live` displays is the refusal admit() answers, a clean still
+  given first, the revision read again just before the press, and each is the answer its state must give. Two plants make
+  the dry run differ from the press (`account-drops-stale`, `account-director-skipped`); each is caught by its own
+  divergence. In three states what `/undo.json` says Undo would do is undo()'s own answer at the same revision; its plant
+  (`undo-dry-skipped`) is caught.
+- PAGE: the refusal the column's card and the stale bay's card display (ADMIT-OUTSIDE, STUDIO-STALE) is the host's own
+  answer to Admit under the same revision and conditions: the clean still given first, the card read once the page shows
+  the host's account at the revision that makes, the revision read again before and after the press.
+- PAGE-CARDS: the same, in that order, for cases 2a, 2b, 3 (STUDIO-FAILED) and 5c (STUDIO-DIRECTOR-REFUSED,
+  LEDGER-UNLOGGED).
+
+**"Current" is an observation.** The page compares identities and computes none: a panel is `current` when the identities
+it was drawn from equal the host's at the page's last read of `/live`, and says so as of that revision; otherwise
+`stale`, `settling`, `unknown` or `refused`. It authorizes nothing: the host checks every press again, under the content
+lock.
+
+**What it changes.**
+- *The revision* (`/live`'s `rev`, VERDANDI-REV 0, `Live._read`): the world, the process, the live version, each slot's
+  scene and head and latest head and refusal's sha256, `settled` and `compiling`, the files' stamps, the ledger's last
+  line and pending folder, the request's identity and whether it is publishing, read consistently (`read.consistent`).
+  `Live.seen` and `compiling` are the watcher's; the live version now moves on a head too (a comment changes the head,
+  not the scene); `Refused` keeps the head of a compile the checks refuse.
+- *The gateway*: `publishing` while a request's candidates are published (a card never points at a slot that serves
+  another scene); the items name `written_against`, `base_sha` and `scene`; `evidence()`, `undo_target()`, `undo()`'s
+  `restoration` (from two replays: exact, statements-not-bytes or not-restored; unknown, and said, when the undo is in
+  the ledger and its proof could not be read), a certificate made from the ledger and kept by the POST where none was; the still and the preview's stills record the scene the page drew, and the undo's
+  press the admission the page showed (`page_saw`, and whether it is the one undone), each recorded and never refused on.
+- *The live loop's inputs*: it now watches what the art checks read on every export (`graybox/web/sim.js`,
+  `graybox/tick_ref.py`, `art/web/scene_render.js`), so that an edit to them compiles again and moves the revision.
+- *Routes*: `GET /evidence.json` and `GET /undo.json`, read-only, the world required and never opened (`STUDIO-WORLD`
+  for one this server has not open), every answer ended (HARDEN-0), a refusal naming its world; `validate_info` read
+  under the live loop's lock; `/object.json`, `/held.json` and `/shapes.json` name their world.
+- *FLAGSHIP-0*: its predicates factored out of `run()`, unchanged (`held_ok`, `strict_ok`, `impact_ok`, `clear_ok`,
+  `framed_ok`, `preview_ok`). EVIDENCE-0 applies them and run()'s conditions on a preview (framed when the request names
+  a shape; the candidate's path the plan's), advisory.
+- *The page*: panel marks; cards that name world, head, request and scene, with the host's account (its badge, why
+  Admit cannot be pressed, the evidence missing; "Ready" is gone); the dock's tabs; the static Undo and its restoration
+  chip; the Edit menu's Undo; Compare outside Mark mode; the stats labelled a software timing with the clock's step; the
+  Source chip; `answerFor`; the page's world from `data-brief` only.
+- *PAGE*: a card read, and Admit pressed, once the host's account of it is of the page's revision; one row added (the
+  first-blocker comparison).
+
+**FOUND, and repaired.**
+- `Hub.inspect` let the exporter's refusal out: `GET /history.json` for a world whose files do not export answered
+  nothing, its traceback on the console (MEASURED on his machine, by the agent: PAGE-CARDS' case 3 met it). Now not
+  verified, and said (`FILES-REFUSED`); case 3's row reads it.
+- The page's server printed a traceback once, in a PAGE run on his machine by the agent, after a plant's browser ended:
+  a ConnectionResetError on the first read of a request line (OBSERVED; none in the eleven earlier PAGE logs kept by the
+  agent there). That the client was the ending browser is INFERRED. Such a hang-up is now let go quietly, as 0244 did for
+  a refused client (VERIFIED BY READING; no row exercises it).
+- The page's server listened with Python's default backlog of 5, and on Windows a connection that finds the backlog
+  full is refused, not queued (MEASURED on his machine, by the agent: twenty connections to a server accepting none, 5
+  connected and 15 refused, each refusal after 2,021 to 2,035 ms; with 128, all 20). A page asks for its scripts at once,
+  and a loaded host accepts slowly. Now 128 (`Server.request_queue_size`); BOUNDARY's new row holds a burst of 32 to a
+  server accepting none, and its plant, a backlog of 5, is caught (BOUNDARY SELFTEST 9/9). It was looked at as the cause
+  of the page below that did not open, and is not that cause: a refusal takes two seconds, and that load failed in 64 ms.
+
+**FOUND, its cause not known.** In two full checks on his machine by the agent, one of PAGE-CARDS' thirteen openings of
+the page did not build its shell in 120 s (the validation scenario's, then the world scenario's; MEASURED). The second
+time the open step said what the page held: the document complete, `sim.js`, `scene_render.js` and `studio_ui.js`
+answered 200 in about 0.8 s each, and `play.js` a network error (status 0) after 64 ms, so the page never started; its
+overlay kept its first words, for the page says nothing when a script does not load. Four runs of PAGE-CARDS alone under
+load, one of them beside another browser, did not meet it; the third full check met it in neither run (MEASURED). That
+the browser, not the server, failed the load is not known: the server now keeps what it answered while a page test is
+armed (`Channel.served`, from `Handler.send` and the server's errors), and a page that does not open prints it beside the
+page's own account, so that its next occurrence says whether the server answered `play.js` and how. Not repaired: a page
+that says when its scripts did not load, and a page test that opens the page again, wait on knowing which side failed.
+
+**Changed expectations, said.** PAGE's stale-head plant row: the card now shows the host's own STUDIO-STALE and its Admit
+cannot be pressed (before, the page said STUDIO-STALE after the press); its Undo row requires "restored exactly"; its
+region row requires the card to name ADMIT-OUTSIDE; its Panelled bay row reads the card once the host's account of it
+is current and requires that account admissible and the badge to say so (before, the badge was not read and Admit was
+enabled by the page's own "Ready"). No STUDIO, LIVE or FLAGSHIP row was reworded.
+
+**A review of the patch** (three lenses read it, the host's account and revision, the page and its tests, the claims
+against the code and the rules; each of their 27 findings was then put to a skeptic who tried to refute it from the
+code: 30 agents). One was refuted: that another brief, outside the revision, could make an account read current and be
+refused SHARED-MAP. The studio's candidates carry no layout, so the shared map cannot refuse one; the doc of `admit_dry`
+now says so. 26 were confirmed in whole or in part, and all are repaired:
+- *A second rule*: `/undo.json`'s "can undo" ran only the choice of a target; it is now undo()'s own checks run dry
+  (above), with a row and a plant.
+- *GETs*: they could open (and so write) a world not yet open; a ledger that did not read left `/undo.json` without an
+  answer; a host refusal was drawn as another world's answer.
+- *The comparisons*: in PAGE and PAGE-CARDS the press came after the still had moved the revision; STUDIO's states did not
+  assert the answer each must give; plants could count as caught by a timeout or a moved revision. Each plant is now
+  required to show its own divergence, and each step deciding a plant's row waits only for what the plant does not
+  change (the host's revision, its new answer).
+- *The page*: the restoration chip claimed a lag after the world had moved on; the Queue panel claimed a revision it is
+  not part of; the chips were not bound to the files' head the ledger's verification was read at; the clock's step could
+  read 0; a failed read kept an old answer marked current; Compare's window did not turn stale; three answers were not
+  checked for their world.
+- *The host*: `settled` could stay false after a file came or went in a watched folder; the undo's `held_after` read the
+  files without the lock; a kept certificate was taken by its number alone; EVIDENCE-0 left out run()'s framing and
+  one-path conditions.
+- *The docs*: grades and place (results stated before they were measured, "here" for runs on his machine), a quote
+  not exact, wording.
+
+**A second round** (the same three lenses over the repaired patch, each finding again put to a skeptic: 26 agents)
+found 23 more, all confirmed in whole or in part, none refuted, and all are repaired:
+- *The host*: the revision left out three files the art checks read on every export (sim.js, tick_ref.py,
+  scene_render.js), so an account could stay current after the press would refuse; the undo's proof could raise after
+  the undo was in the ledger, answering a committed undo as failed (now a proof that cannot be read is said); the undo's
+  ledger read was mapped on one path only; a dry run could foresee a refusal where the press first recovers a dead
+  writer's half-done admission (now not foreseen, said); EVIDENCE-0's one path checked this candidate only, not run()'s
+  every drawn candidate; undo's CLEAN rule was written twice (now one place, `_undoing` with the press's `record`).
+- *The page*: Undo's account was read again only when the ledger moved, though it depends on the files (now on the whole
+  revision, its reads in order); the press did not name the admission the page showed (now recorded, `page_saw`); the
+  chips stayed stale with a false reason when the ledger did not verify (the line now read with every verification);
+  the restoration chip said "moved since" just after each undo; Compare's window gave one attribute two meanings; a
+  driver step could outlast the host's wait (one deadline per step now).
+- *The tests*: PAGE-CARDS' first-blocker helper compared a card's "admissible" with the host's "admitted", so it could
+  never agree for an admissible card; latent, for its four comparisons (2a, 2b, 3, 5c) are all refusals and an
+  admissible state is compared by STUDIO and by PAGE's flow; mapped now, for a regression that shows a card admissible
+  there. Its worst case did not fit the full check's 1800 s (now one budget of 1,500 s for the suite).
+- *The docs*: the undo's binding said recorded and not built (built now, as recorded); the answers' world claimed for
+  the POSTs too; the deciding steps' wording; the PAGE bay row unsaid; the queue's text; the plants' comment; the
+  selftests' "measured" for an estimate.
+
+**A third round** (the same lenses over the patch as repaired, each finding put to a skeptic: 15 agents) found 13, all
+confirmed in whole or in part, none refuted, and all are repaired:
+- *The page*: an answer of Undo's account read before a press could land after it and enable Undo again (a press now
+  cancels the read); a restoration the host could not read (`unknown`) was drawn as NOT restored (now said as not known);
+  the restoration chip's lag compared the world with the admission's head after, not the head the undo was made at (now
+  `undone_at`, given by the host); the Edit menu said an Undo not foreseen as a code it does not have.
+- *The host*: the account's reason for not foreseeing (a half-written admission) and the Evidence answer's still list
+  shared one key, `pending`, the second overwriting the first (now `not_foreseen`).
+- *The tests*: the Edit menu's Undo was pressed without waiting for the page to read Undo's account at the host's
+  revision, and a disabled one waited out its step (now the revision first, and a disabled item said at once); case 5c
+  read the Revision chip without waiting for it; the undo plant changed a line the repaired page no longer decides by;
+  the PAGE-CARDS first-blocker mapping's wording (above).
+- *The docs*: three paths no row exercises, now graded VERIFIED BY READING (STUDIO.md); when Undo's account is read.
+
+Found while measuring the repairs: STUDIO's plant of a request drawn again over another went uncaught in one run
+(94/95, MEASURED on his machine, by the agent), the scene drawn again being the second request's. A request's id is its
+second and its gateway's count; the row's fixture makes two gateways of one world, and when both asked in one second the
+second was given the first's id and its record written over the first's (INFERRED from the scenes; a studio keeps one
+gateway per world, so the collision is the fixture's). The fixture now asks the second in the next second, and both rows
+require the two ids to differ and print them. And STUDIO's nine-state comparison failed in both runs of a full check
+(94/95, MEASURED): in its state of refused files the account and the press named the same refusal, but the revision moved
+between them, for the state was compared while the loop still compiled the refused files. The fixture now lets the host
+settle after each state's write (the refused files, the hand edit, the broken ledger): the same revision and conditions
+at the read and the press, as his nuance asks.
+
+**Its falsifiers.**
+- A planted state where the displayed account and admit()'s answer differ at one revision.
+- A panel that says current while its identities differ from the host's at the page's last read.
+- An undo shown as success without its restoration, or a restoration whose verdict another certificate decides.
+- A GET that writes; an answer for another world drawn.
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 2c70a71 under
+%TEMP%, never the checkout):
+- Alone: PAGE-CARDS SELFTEST 30/30 in 94 s (the owner's cases 1 to 5 and 7 through the page, its seven plants each caught
+  by the row it names, nothing of the browser left); PAGE SELFTEST 19/19 in 131 s; STUDIO SELFTEST 95/95; LIVE SELFTEST
+  30/30; BOUNDARY SELFTEST 9/9; PREVIEW-STUDIO 14/14, its whole preview in 1.73 s and 1.96 s against the base tree's
+  1.71 s and 1.73 s, run alternately.
+- The full check of the final tree, `python art/selftests.py --repeat 2`: twenty-six suites, 506.1 s and 516.5 s wall,
+  ART SELFTESTS FAILED on one timing row, PREVIEW-STUDIO's 10 s for a whole preview (10.20 s and 14.79 s); every other
+  suite passed in both runs, PAGE-CARDS 30/30 and PAGE 19/19 among them. The base tree 2c70a71, run straight after under
+  the same conditions (twenty-five suites, 425.1 s and 430.0 s), failed the same row in its second run (15.14 s; 8.73 s
+  in its first) and STUDIO APP's plant of a silence taken as a close in its first. That the load fails the row, not the
+  patch, is INFERRED from the timings alone above.
+- Two full checks of the tree before its last repairs failed besides on the timing rows (STUDIO APP's silence plant in
+  one run of each), and what they met is said above: PAGE-CARDS' page that did not open (27/28, then 29/30), and
+  STUDIO's comparison of the refused files at a moving revision (94/95 in both runs of the second). STUDIO alone met the
+  fixture's two requests of one id once (94/95).
+- The classifier his pushed tree holds (2c70a71's `tools/rung.py`, run from outside the checkout): the rung D on fifteen
+  files, loosening nothing; *"272 planted defects refused by the old checker; 277 by the new"*, PLANTS HELD, no checker
+  stopped early.
+- The gate: `GATE PASSED`, `RECONCILE  rowset 74db4c8d78625af5  251 rows / 0 fail / 0 skipped`, row for row as before
+  (819 s).
+
+**What it does not show.**
+- That an account holds at the press: it is of its revision, and the press checks again under the content lock. A
+  writer holding the lock (BUSY) is not foreseen by the account.
+- That `settled` sees a write that keeps a file's mtime and size, or one before the watcher's first look.
+- That the stills are bound to their scene by the host: recorded and said, not refused (0251).
+- A person's reading of the page, its look, timings (printed, never checked); Linux; browsers other than Edge (Chrome
+  is in the finder and never ran).
+- The Undo account's agreement with the press beyond its three states, and the admission account's beyond its nine.
+- An account or Undo not foreseen (a half-written admission), a restoration that could not be read, and the press naming
+  another admission than the one undone: VERIFIED BY READING, no row.
+- Why one opening of the page in thirteen did not build its shell in each of two full checks (above): not known.
+- Anything of the worlds, the outliner or import: 0250.
+
+**Not done.**
+- 0250: the worlds, the outliner and transactional import, with its own worlds-mode rig (PAGE-WORLDS), as he ordered.
+- Then the binding (0251) and the inverse's repair (0252); BLENDER-VIEW-0 after, its rulings made explicitly.
+
+NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
+native plaza's, the studio's and PAGE-0's rows, and a DASHBOARD-0 row), art/STUDIO.md (a section, and notes on the cards and PAGE's stale
+plant), docs/CAPABILITY-MATRIX.md (dated notes on the numbers), docs/CORE.md (art 30,365 lines), this entry.
+
+### DIRECTOR-0 — the operator loop: scope declared, verdicts head-specific, intent kept · **the owner's ruling** (2026-10-10); outside the certified gate · **built** (`art/director.py`, `art/director/`)
+
+**His ruling.** *"The goal is now a prompt-driven art director with a trustworthy, editable change loop—not another
+verification campaign."* He accepted the first-slice scope the research supported. It has five parts: a canonical
+intent; a reference graph with early cutoff; a pure `check_scope` with shared conformance vectors; a structural diff;
+and visual anchors as provenance only. Futures, playtesting, signing, replay certificates and memory are deferred. He
+locked three boundaries:
+
+- canonicalization *"must be a defined contract, not 'sorted JSON'"*;
+- early cutoff *"must depend on content identity"*;
+- *"A scope verdict must name the head it checked."*
+
+**His five further boundaries, with the word "Go":**
+
+1. The vectors are the new end-to-end path, *"consumable by a second implementation without importing or executing
+   the Python reference implementation"*, comparing verdicts and canonical outputs, *"not just whether both
+   implementations return PASS"*.
+2. The protocol is pure and versioned, with no claim of RFC 8785 compatibility it does not have.
+3. Scope decisions are head-specific, with no stale-verdict override.
+4. The ledger is append-only in behaviour: a re-evaluation is a new event, and the old verdict is kept.
+5. The plaza's candidates exercise the protocol, not only its happy path: a valid change of the look, a layout
+   change, a stale candidate, an out-of-scope change that must be refused, and malformed or unknown-version input.
+
+His last word on it: *"Then stop expanding protocol machinery and use it to make the plaza. The protocol exists to
+protect the creator's intent—not to become the product."*
+
+**Grade.** DECLARED: his ruling. It is not a rung, it adds no row, and the gate does not read `art/`.
+
+**Built (2026-10-10).**
+
+- **The canonical form** (VERDANDI-CANON 0, `art/director/intent.py`): a restricted JSON defined rule by rule. Values
+  are strings, booleans, arrays and objects only, integers are strings, keys are ASCII, escapes are exact, output is
+  ASCII only, and a document is admitted only in its own byte form. It says plainly that it is not RFC 8785.
+- **The intent** (version 0): an unknown version is refused, never translated.
+- **The scope protocol** (`art/director/scope.py`): one pure function. It works over stable addresses, a
+  piece-to-material graph with early cutoff and a cycle check, patterns with namespaces granted only by name,
+  `layout/` and `surface/` grants, and a play scope that can never be granted. Its verdicts are CLEAN, LEAKAGE or
+  REFUSED, each naming the head written against and the head checked.
+- **The ledger** (`art/director/ledger.py`): one canonical document a line, hash-chained. Its events are genesis,
+  evaluate, refuse_input, admit, refuse, rebase and approve, and `verify` replays it to the files.
+- **The conformance vectors** (`art/director/vectors.json`, 62): the canonical form, its refusals, intents, heads,
+  material digests, patterns and fifteen scope cases, all with exact expected bytes.
+  - The Python reference reproduces them, and so does a second implementation, `art/director/conform.rs`: std-only
+    Rust with its own JSON reader, which never runs the Python.
+  - Tampered expectations are caught by both.
+  - Of four rule defects planted in the Rust copy, three were caught. The fourth (DEL left unescaped by one branch)
+    was equivalent, since the next branch escapes it; planted as a real defect, it was caught.
+- **The first round**, "make the plaza more imposing" (`art/rounds/plaza-imposing/`), evaluated in 3.5 s:
+  - **A** (monumental towers): CLEAN.
+  - **B** (a layout change closing the north flank to a slot, through the design tool): CLEAN.
+  - **C** (heavier cantilevers): CLEAN.
+  - **D** ("for the plaza", but through shared materials): LEAKAGE, reaching the bases' towers, every wall and the mid
+    lanes' neon.
+  - **E** (sealing the south flank under a plaza-only grant): REFUSED.
+  - **F** (a slab at 3.6 m over the platform): REFUSED.
+  - An unknown version and a malformed input were refused on input.
+- **The self-test** (`python art/director.py selftest`) runs the lifecycle in a scratch copy:
+  - it admits A;
+  - it refuses to admit C at the moved head, re-evaluates C as a new event naming the old one, and admits it;
+  - it refuses D on a person's word, then re-evaluates and admits B (whose layout is admitted through the design tool);
+  - it verifies the ledger, refuses two planted defects (an unlogged hand edit, a changed ledger line), and accepts a
+    hand edit recorded with rebase.
+- **The one-place rule**, which a piece's identity rests on, is part of this slice. It found two puddles in one place
+  in the first brief, and the brief's mid lane became two regions.
+- **Choices are keyed by a statement's name, not its text**, so a revision of a statement's numbers no longer
+  reshuffles its other choices.
+
+**What it does not show.** That the art is good: no check here measures it. That either implementation is right: one
+author wrote both, and the vectors are the contract. That the ledger's last line is protected: nothing after it names
+it, so it rests on the commit that holds it.
+
+**Next, by his ruling.** The owner chooses from the round (`python art/director.py admit plaza-night <seq>`, or in the
+session). Then the plaza is made in Unreal.
+
+**The round admitted (2026-10-10).** His choice: *"Choose A, B and C — admit all three, sequentially, through the
+ledger."* A first, to *"establish the vertical silhouette"*; B, to *"reshape the approach"*; C last, to *"add overhead
+framing after the first two changes have been re-evaluated against the current head"*. His condition was to inspect
+the result after each admission before the next, and to stop and revise the art direction if a change made the
+composition worse, *"rather than admitting changes just because their scope checks pass"*. In his words, *"CLEAN means
+the candidate satisfies the scope rule; it does not mean the scene is artistically better."*
+
+- **The ledger.** A was admitted at #9. B was re-evaluated at #10 (CLEAN, HEAD-MOVED) and admitted at #11, its layout
+  through the design tool. C was re-evaluated at #12 (CLEAN, HEAD-MOVED) and admitted at #13. The head moved from
+  `88c5151740aa` to `c53d87349709`. D, E and F stand evaluated, neither admitted nor refused.
+- **The checks after each admission.** The ledger verified and `art/check.py` passed. After B, the graybox's map checks
+  passed (the tactical layout compiled again through the design tool, head `1c80227de403`), and so did its runtime
+  self-test (23 / 23). These were run here, in the build container.
+- **The judgement, from the provisional preview's stills** (OBSERVED, in a software renderer; a sketch, not the
+  Unreal look).
+  - **After A**, from eye level the towers change little. From 30 m, the plaza's crown stands above the skyline. The
+    towers, one prism per cell, read as a comb of spikes rather than one brutalist mass: a note for the kit, not a
+    reason to stop.
+  - **After B**, from the slot the plaza is framed in a narrow lit opening, the compression B intended. From the
+    north-flank view the new wall fills half the frame, and a lamp over every cell washes it flat and pale: a note for
+    the lighting.
+  - **After C**, inside the plaza at eye level the slabs at 7 m mostly leave the frame. The west bridge reads as a
+    lintel over the approaches from base A and the mid-west lane, so the plaza is entered as through a gate. Looking
+    up, the sky is framed. The heavier slabs will need light on their undersides to read at night.
+
+  No admission made the composition worse, so all three were admitted.
+- **Two defects it found, both tests whose fixture was the live state.**
+  - The director's self-test copied the live brief. Once A was admitted for real, A's `+ material` no longer applied,
+    and the self-test failed. Its fixture is now the round's `base/`: the files at the head its candidates were
+    written against. The self-test checks that its scratch copy starts at that head, and a planted change to the
+    fixture is refused.
+  - The art check's layout revision closed the same three cells of the north flank that B admitted. After B it had
+    nothing to test and said SKIPPED. It now narrows the south flank, and it and its plant run again.
+
+**Next.** The plaza is made in Unreal: brutalist massing in place of the per-cell prisms, wet concrete, controlled
+neon, rain, fog and light. The certified layout and collision stay authoritative.
+
+### ART-GENERATION-0 — prompted art over a playable world · **the owner's pivot** (2026-10-10); outside the certified gate · **built** (its first slice, `art/`); the Unreal import not yet run on an engine
+
+**His words.** *"the verification should exist only to guarantee the purity of the art. we want to move from
+verification to enabling the user to prompt art through llm and i mean at the quality of aaa games"*. With them came a
+text he brought. It names the slice and its loop: intent, art direction, world, play, critique and revision. It keeps
+a small set of guarantees (provenance from source to scene, geometry integrity, edit locality, reproducibility,
+performance budgets, playability), each in proportion to the harm it prevents. It holds that visual quality is
+judged from rendered views and by people, not certified by tests, and that the repository should be read before
+choosing between extending the renderer, connecting an engine or a hybrid.
+
+**The reading of the repository** (2026-10-10, in the session). The certified kernel is an integer raycaster over a
+grid of at most 48 × 48 cells. No growth of it reaches the target, and it is the truth about layout. The design tool
+and the graybox are already the stage studios call blockout: a layout a model can propose and the owner admits, a
+collision world derived from it, routes walked and planted defects refused. So the path is hybrid. Verðandi keeps
+layout, collision and lineage; an engine renders; the model directs the art in between.
+
+**His decision, answering the session's three questions.** *"Finite decision: Unreal; curated modular assets + CC0 +
+selective AI props; separate `graybox/` project. Keep verification subordinate to artistic intent and gameplay
+integrity."* His qualification: *"prove the smallest end-to-end scene works on your actual hardware before committing
+to its full toolchain"*, and Godot is the fallback if Unreal proves too heavy. His first milestone: *"one rain-soaked
+brutalist coastal plaza at night that you can actually enter in first person, critique in plain language and revise.
+Make one layout change and one visual change. Verify that collision and routes survive both, that unrelated regions
+remain untouched, and that the scene loads. Judge visual quality from actual rendered viewpoints—not from a passing
+gate."*
+
+**Grade.** DECLARED: his ruling. It is not a rung and adds no row. It goes ahead of EVIDENCE-LINK-0, which stays
+declared as written.
+
+**Built (2026-10-10), beside the certified tree: `art/`** ([`art/README.md`](../art/README.md)). The project is named
+`art/` because `graybox/` is the slice it dresses.
+
+- **An art file** in its own small language (`VERDANDI-ART 0`). It sets materials, massing (skyline, towers),
+  canopies, neon, lamps, puddles, air and critique views. Every mesh it uses names its source and licence.
+- **An exporter**, `art/dress.py`. It turns the art file, plus the W and C of the graybox map it names, into one
+  engine scene. The scene's collision is C exactly, merged inside 8 × 8 chunks. Every dressing choice is a hash of
+  its statement and cell, so an edit cannot reshuffle the art elsewhere. A lineage binds the art file, the layout's
+  heads, W, C, the exporter and the scene.
+- **The art's checks**, `art/check.py`. They cover the export's determinism and the graybox map's own checks. The
+  collision boxes must lay back onto C cell for cell. No dressing may stand where a player can be: every piece must
+  be inside rock, inside or flat on a solid top, flush on a rock face, or above a reach ceiling recomputed from C and
+  the player, whose constants are read from `graybox/web/sim.js` itself. No piece may have collision. Every mesh must have a source and licence, and the lineage must hold.
+- **Eighteen planted defects**, each refused by the check that should catch it. Five are statements the exporter
+  itself must refuse.
+- **The two revisions of his milestone.** The look revision, "make the wet surfaces less reflective", changes the
+  three materials it names and nothing else. The layout revision, "make this alley narrower", closes one column of
+  the north flank through the design tool's own preview and admission. Play still holds after it: three cells
+  changed, all in its region, and nine pieces of the scene changed, all beside them.
+- **The Unreal 5.8 importer**, `art/unreal/verdandi_import.py`, run inside the editor. It works in one undoable
+  transaction. It keeps every actor whose item did not change, checks the level's collision against C, reports the
+  template character's movement against the player the checks assume, and writes a report beside the scene.
+
+**What it does not show.** The importer has run only against a stand-in for Unreal's Python module, outside the
+repository. Its first run on an engine is the host's, and its report is the evidence. The first scene uses the
+engine's cube alone: it is the hardware test, not the look. There is no kit yet, no textures, no rain particles and
+no AI props. Visual quality is NOT_MEASURED: no check measures it, and none is claimed.
+
+**Next, by his milestone.** On the host:
+
+1. Install Unreal 5.8.
+2. Create a First Person project in `art/unreal/VerdandiArt`.
+3. Import the scene, enter it, and critique it from the views.
+4. Re-import after each revision.
+
+Then the kit: a curated modular set, CC0 materials and selected AI props, each declared with its source and licence
+and placed under the same rule.
+
+### EVIDENCE-LINK-0 — a claim about a recorded event, traced to its source · **accepted as the next slice** (the owner's ruling, 2026-10-09); declared; not registered, nothing built
+
+```text
+  build evidence ──► recorded result ──► copied claim ──► published documentation
+       checked            checked          unchecked
+```
+
+**Why.** The first stages are checked: the gate checks the tree, the witness the host, the recomputation the witness.
+Copying a result into a commit message or a document is not. Six commit messages here named a wrong tree id when
+first written (0150 to 0152, 0159, 0164 and 0165). Each was caught by hand, reading the message against Git's own
+output, and corrected by a new commit before its patch was cut. None is in the pushed history; the reading that
+caught them is not a check. His words: *the missing property is not another build check. It is provenance
+preservation across the act of reporting.*
+
+**His scope.** Mechanically checkable claims only.
+
+| claim class | source of truth | check |
+|---|---|---|
+| commit and tree ids | Git's output for the named revision | exact equality |
+| push range | the recorded output of the push | the endpoints agree |
+| row counts and failures | the raw gate log | the parsed values agree |
+| evidence hashes | the recomputed file bytes | SHA-256 agrees |
+| prediction outcomes | the registered prediction and the retained run evidence | the result follows from the recorded criterion |
+| documentation references | registered source records | every named value resolves to the intended source |
+
+**The design choice he names.** Each claim's source is explicit. *A checker that merely compares one copied string
+against another copied string can certify a consistently repeated mistake*: a message and a document carrying the
+same wrong tree id agree with each other, and both must be held to Git's result for the named revision.
+
+**His three adversarial tests, and the positive cases.**
+
+| | the corruption | the checker must |
+|---|---|---|
+| wrong value | a documented tree id replaced by another valid-looking one | fail |
+| wrong source | a claim pointed at another commit, whose tree id is valid and irrelevant to the run | fail |
+| missing provenance | a row count or push range kept, its source record removed | refuse to certify it, never skip it |
+| positive | one unmodified record for every supported class | pass |
+
+**Its form.** An instrument outside the repository, as proposed: it reads evidence and reports discrepancies; it edits
+no document and makes no commit. For each claim it names the claim, the value expected, the value observed, the
+source record and the verdict. *Do not register a broad documentation linter unless these concrete cases
+demonstrate the need.*
+
+**Its boundary.** Not bundled into HERMENEUTICS-0: that rung is what registered material means; this is whether claims
+about recorded events match their authoritative sources. Defined and registered after the current rung is
+advanced: its scope, its mutation cases and its acceptance criterion written down first, then its predictions, then
+the run.
+
+**Acceptance (his).** Each supported class corrupted deliberately and caught; the unmodified records passing.
+
+**Grade.** DECLARED: the ruling and the scope. The six messages are a count taken from the build notes kept outside
+the repository; nothing is built. **does_not_show.** That a claim the checker cannot parse is true: it checks the
+structured facts the project repeatedly copies, not every sentence.
+
+### Beyond the rung — eight ideas on composition, history, debt, attestation, hashing, compression, zero knowledge and proof strength · **ruled** (a text the owner brought, and his rulings on it, 2026-10-09); nothing built
+
+**The text.** It asks what happens when proofs are composed — whether ⊢R1 and ⊢R2 give ⊢R1∘R2, so that one theorem
+could certify the whole ladder — and offers seven more ideas: amendment chains that fork and merge; proof debt as a
+weighted score with a budget; hardware-signed witness chains; semantic hashes beside byte hashes; a Merkle tree over
+row results; zero-knowledge proofs that a row ran; proof strength scaled by a row's criticality and age. It
+recommends starting with proof debt and semantic hashing.
+
+**His rulings.**
+
+| the idea | his ruling | his reason, close to his words |
+|---|---|---|
+| proof composition | accept the question, reject the shortcut; DEFER as a rung | ⊢R1 ∧ ⊢R2 ⇒ ⊢(R1∘R2) is not valid without conditions: interfaces, assumptions, environments and evidence identities have to line up. A matching reconstruction in a second container establishes neither independence of the environment nor of the checkers. First, certificates with stable interfaces, explicit assumptions and exported obligations; EVIDENCE-LINK-0 is a sensible prerequisite |
+| branching amendment chains | accept the model (a DAG, not a tree), DEFER | a merge names both parents and the decision; two branches that pass do not make a merge that passes, which is a new artifact. No defect in the linear chain demands it |
+| proof debt | ACCEPT a qualitative proof-obligation ledger as a practice; defer any score | multiplying severity, likelihood and cost invents precision; a budget may bound accepted residual risk and must never make an unproved critical invariant acceptable by its total. G29, G31 and G33 are not interchangeable debts |
+| hardware-signed witnesses | DEFER | an attestation binds which process claims to have made an artifact; it does not show the compiler correct, the machine uncompromised, the tests sufficient or the output free of hidden dependencies. First, witness records bound to recomputable source evidence |
+| semantic hashing | ACCEPT two identities, defer the build | H_byte identifies the artifact; H_sem identifies its canonical form under a stated equivalence and inherits the canonicalizer's soundness. Only when a consumer needs semantic equality; never added because it is easy |
+| proof compression | DEFER | a Merkle root shows a leaf belongs to a committed set; not that the row ran, that its verdict is true or that the set is complete. No storage or cost problem at this scale |
+| zero-knowledge execution | REJECT for now; a research direction if confidentiality is ever required | a proof that a circuit's constraints hold is not a proof that the circuit is the gate or that its inputs came from the registered tree |
+| adaptive proof strength | ACCEPT prioritization; defer automation | criticality sets where extra adversarial evidence goes, never a weaker baseline for a registered requirement; a row's age is a record of repeated behaviour, not of correctness |
+
+**His conditions for composition**, should it come: the downstream assumptions are discharged by upstream guarantees
+or kept as assumptions; the artifacts' identities and interfaces match exactly; the evidence is bound to the
+registered source and its execution context; an independence claim has perturbation evidence and is not inferred
+from a matching reconstruction; and the composed certificate keeps every unresolved obligation. The rule he writes
+under them — C₁ ⊨ G₁ and C₂ ⊨ (G₁ ⇒ G₂) give C₁∘C₂ ⊨ G₂ — he marks as schematic and not a theorem of this gate.
+Sequential validation, compositional verification, proof compression and environmental independence are four
+obligations; composition can save repeated work after evidence exists, and cannot make evidence.
+
+**His order.** HERMENEUTICS-0 through HERMENEUTICS-0a; EVIDENCE-LINK-0, narrow, external and read-only; a qualitative
+proof-obligation ledger; semantic hashing registered only for a concrete comparison, byte identity kept regardless;
+certificate composition after the evidence interfaces are explicit; branching history, Merkle packaging, hardware
+attestation, adaptive campaigns and zero knowledge left until a real use justifies them. In his words: *a passing
+result cannot inherit a guarantee that its inputs never established.*
+
+**Grade.** DECLARED: the text and his rulings. Nothing was computed for this section.
+
+### Toward the final gate — a PASS that means one precise thing · **declared** (a text the owner brought, 2026-10-09); his final ruling kept; nothing built
+
+**The text.** Move from proving checks to proving the relations between checks, their inputs, their evidence and
+the verdict. Six bridges between fields: relational databases and provenance; causal intervention and metamorphic
+testing; assume–guarantee contracts; mutation testing as falsification; build provenance and event sourcing;
+information flow. A certificate is sketched as a constrained join of six relations — registered claims, sources,
+executions, verdicts, evidence and documentation claims — with anti-joins for claims nothing supports and two-sided
+set equality for change closure; a row's verdict should not move when an input it does not declare is changed; and
+a candidate name, RELATIONAL-CERT-0, is offered and not registered. Its pivots in order: EVIDENCE-LINK-0; a reach map
+for registrations, computed before an entry is committed; dependency-directed environmental independence;
+composable certificates. And a final PowerShell run in five phases: freeze the candidate's identity; run the
+existing checks without changing what they mean; bind the evidence to the candidate; enforce the registered laws;
+emit a certificate, not a green line. *I would not write a replacement gate command from memory.*
+
+**His final ruling.**
+
+| | |
+|---|---|
+| next registered work | HERMENEUTICS-0 through HERMENEUTICS-0a |
+| next verification pivot | EVIDENCE-LINK-0 |
+| next research theorem candidate | dependency-directed environmental independence |
+| longer term | relational certificates with assume–guarantee composition |
+| the final operational goal | a PowerShell run that proves the registered predicate from retained, independently checkable evidence — not a script that prints PASS |
+
+*Every final claim must be traceable to its authority, every comparison must state what relation it checks, and
+every guarantee must stop at the boundary of the evidence that supports it.*
+
+**Set against the tree.** The witness already keeps PowerShell out of the evidence: it launches Git and the gate from
+Python with raw bytes, reads the status, the tree id and the commit at three moments, runs the gate twice and the
+design checks once as a separate condition, and holds FULL×2 as registered — stdout only — with stderr and the
+commit recorded beside it and not in the predicate, as the text asks. Its warning on `$LASTEXITCODE` is right by
+Microsoft's documentation: a native program's nonzero exit sets it and does not stop a script. Several of the operators it names have counterparts in rows that exist:
+the two-sided layout relation in `designir-fence`, entries at their hashes, the watches' heard-against-registered
+counts. The documentation relation is the one with none, which is EVIDENCE-LINK-0. Of its sources, two are cited for
+claims they do not make: arXiv 2202.10766 is *Revisiting Semiring Provenance for Datalog* (Bourgaux, Bourhis,
+Peterfreund and Thomazo, KR 2022), not a study of explanations; the Wiley STVR paper is Schuler and Zeller's
+*Covering and Uncovering Equivalent Mutants* (2013), on equivalent mutants and not on subsumption.
+
+**Grade.** DECLARED: the text and his ruling. The sources were looked up; nothing was built or run for this section.
+
+### LiDAR — a sensor that observes the authoritative world · **declared** (the owner's ruling, 2026-10-09): the first slice recorded; not registered, nothing built
+
+```text
+  World + Sensor State + Scan Input ──► Canonical Returns + Evidence       (his sensor contract, eventually)
+  the renderer may draw the returns; it does not become their source of truth
+```
+
+**His ruling.** Keep LiDAR work focused on making the sensor's relationship to the authoritative world measurable,
+deterministic and falsifiable, *not merely improving point-cloud appearance*. Defer it until INPUT-0a and G33 are
+closed. *Don't build a generalized sensor framework until one concrete LiDAR defect demonstrates the need.*
+
+| slice | what | his placing |
+|---|---|---|
+| ray-to-world consistency | each ray a canonical origin, direction, range interval and hit or miss, held against the authoritative geometry; any discrepancy with a defined cause | first |
+| deterministic returns | frames, units, precision, scan order, range quantization, tie-breaking between equally near surfaces | first |
+| occlusion and visibility | nearer opaque geometry hides farther, at shared edges, thin barriers, corners and grazing angles; adversarial cases, not inspection | first |
+| observer noninterference | the world before and after a scan; an active sensor's effect an explicit input | first |
+| environmental independence | irrelevant surroundings perturbed, the canonical scan compared; legitimate dependencies declared | with the court he deferred |
+| reconstruction | what a scan establishes apart from what a reconstruction infers: a missing return does not prove empty space | later |
+| sensor realism | | later |
+
+**Considered against the tree.** One ray law exists: the kernel's walk of a ray through the cell lattice, held to the
+frozen oracle on both machines (`kernel-oracle`, `gauntlet1c-dda`, the bearing camera's rows). It is integer, it takes
+the first cell hit, and what it witnesses today is a frame's digest, not a range per ray. A LiDAR here would read that
+law as data; whether it needs a second law is what the first slice would find.
+
+**Grade.** DECLARED: the ruling. **does_not_show.** That any return the kernel computes is a range a sensor would
+report.
+
+### A claim and its evidence — four layers · **declared** (two texts the owner brought, 2026-10-09); his rulings in the first are kept; nothing built
+
+**The first text.** *Verðandi should not confuse a declared contract with a demonstrated property, or a recorded verdict
+with trustworthy evidence.* Four layers, not to be conflated: the **contract** (what is claimed, from which inputs,
+prerequisites and surroundings); **validation** (are the declarations well formed: prerequisites present, the graph
+acyclic); **adversarial evidence** (does the claim survive mutation, isolation, order, perturbation, another machine);
+the **certificate** (which observations support the verdict, and can another reader rebuild it). And what each layer
+does not give: *a valid dependency graph does not prove dependency completeness*; a passing row is not shown to be
+independent of the rows before it; matching outputs are not shown correct; a clean status at two ends does not show
+that nothing changed between them. His rule:
+
+```text
+  declare the contract  ──►  validate its structure  ──►  attack its completeness  ──►  preserve the evidence
+```
+
+| his ruling | in his words, or close |
+|---|---|
+| the witness | ACCEPT the design, REVISE the evidence boundary, keep the predicate unchanged. Status and tree id are complementary evidence, not substitutes. A manifest of the files hashed one after another is not an atomic snapshot: describe the guarantee as matching observations at the boundaries |
+| G33 | INVESTIGATE FIRST: an intended prerequisite, an accidental dependence on state an earlier row left, or a defect of the row itself. Register only the demonstrated contract; *if it is accidental, do not institutionalize it as a prerequisite*. A validator can show the declared graph well formed; it cannot show that every real dependency is in it |
+| normalization | DEFER as a replacement for FULL×2. Byte identity and an equivalence `∼` are two predicates; a semantic one only for a demonstrated variance, naming the field, with mutations that show meaningful differences still fail |
+| what comes after | the general dependency-completeness court deferred; G33 to find the smallest useful next slice |
+
+**The second text.** It reads the first beside a proposal for a GPU backend, which was not brought here, and ranks
+them in two tiers: the witness, G33 and byte identity first; the GPU work later, under the same courts. It proposes one
+evidence format for every layer, a discovery of dependencies by running each row with each other row, and courts for
+a GPU backend (shader against the CPU reference, pixel-exact frames, two platforms, two drivers).
+
+**Set against his rulings and the tree.**
+
+| the second text | what stands |
+|---|---|
+| discovery by running every row with every other, a prerequisite registered after three counterexamples | the broad isolation mechanism his rulings defer (*do not add a broad row-isolation framework yet*); and a count of counterexamples does not decide between an intended prerequisite and an accidental one, which is what he asks first. G33 was settled by seven cases on one row |
+| *Fixed-point Q32.32 logic* as the tree's counterpart to fixed-point shaders | the tree's Rust holds no Q32.32. Its laws are integer: the tick law, the bearing camera. Fixed point appears only in the frozen oracle's game tools |
+| *RHI Firewall* | no counterpart in the tree. The nearest is the shell, which presents and holds no authority |
+| *PRESENT-EXACT-0* readback, READER-COURT-0 as two languages | they exist: a presented frame read back and compared exactly; two readers of one saved form |
+| a unified evidence format | the witness's files and their manifest are one, for the host's runs; the rows keep their own |
+
+**Grade.** DECLARED: both texts; his rulings in the first. Nothing was computed for this section beyond what G33's
+investigation records (RUNGS, INPUT-0).
+
+### REFLEX — a reflexive semantics: authority, perspective, effect, environment, observation, reconstruction, intervention and certification as relations · **declared** (two texts the owner brought, 2026-10-08, after a research report put to him in private); considered at his word; not registered, nothing built
+
+```text
+  knowledge flows up:      L0 world ─► L1 claims ─► L2 campaigns ─► L3 claims about campaigns
+  authority does not flow down, unless it becomes an explicit input at L0
+
+  observe freely ·  intervene explicitly ·  certify only from below          (his cardinal rule)
+```
+
+**The first text.** His judgement of what came before it: *still too conservative*. A per-row matrix of
+environmental dependencies is one projection of something larger. In it:
+
+| his element | in his words, or close |
+|---|---|
+| the object | `𝓡 = (A, E, O, P, D, L, τ, Γ)`: authority, environment, observer, the authoritative projection, declared dependencies, semantic level, a contract for failure and termination, an evidence graph. *A row is merely one executable instance of a claim*, and a claim's verdict is PASS, FAIL or UNDEFINED |
+| one theory, not four | the world changing, the environment changing a verdict, observation changing the world, claims about claims: *four manifestations of dependency* |
+| an effect footprint | `Eff(x) = (R, W, I, O, M)`: reads, writes, interventions, observations emitted, meta dependencies |
+| backreaction | the scalar dropped for the set of counterexamples `BR_P(O) = {(s,T) \| P(T(s)) ≠ P(T(O(s)))}`, and observers classed by their reaction footprint, from a pure projection to an *unbounded observer*, which is inadmissible |
+| lenses | an observer is `get` only; a participant is `get` with a lawful `put`; *illicit backreaction* is `get` with a hidden `put`. An observer has an effect signature, not only a return type |
+| correction | *Any correction crossing from observer state back into authority must become an explicit authoritative input* |
+| stratification | a finite truth table is possible; what matters is the level. A row may read another row's recorded result; it may not declare truth for claims that include itself |
+| grounding | a graph of which verdict depends on which; grounded recursion allowed, with `⊥` where a claim is not grounded: PASS / FAIL / UNDEFINED, a least fixed point |
+| the reflexive certificate | sound over a domain iff seven things hold: authority closure, environmental noninterference, observer transparency, observer fidelity, reconstruction (`Replay(Seal(A)) ∼_P A`), groundedness, and an endorsement path computed by an implementation independent of the path that produced the claim |
+| a certificate as a graph | who may observe whom, who may change whom, which environment may matter, which claims rest on which evidence, where the last endorsement comes from |
+| Kross | a naming system only: *rights decrease as perspective increases* |
+| a capability lattice | 1P read, write, commit; 2P read, propose; 3P read, observe, reconstruct; L2 inspect, mutate in a campaign, compare; L3 certify about L2. Nothing at L3 reaches the authority |
+| the Adversarial Projection Principle | his name for *direct the perturbation; watch every row*: a perturbation may be chosen by a hypothesis about one observation, and is judged against the whole verdict vector, *so the investigator does not select both the weapon and the target* |
+| a declarative perturbation | a claim declares what it reads and what it must not depend on; the compiler solves for the perturbations — a clock whose decimal or hexadecimal spells a literal, a path that holds it — and runs the whole-vector comparison |
+| the matrix compiled | static, dynamic, directed, mutation, grounding and independence obligations derived from each row's declaration, *not documentation* but *executable semantics* |
+| the identity | *Verðandi compiles not only a world, but the permitted perspectives on that world* |
+| the arena | the same calculus would certify a map: whether rendering, a spectator or the folder can perturb what is authoritative in play |
+
+His ladder, *a sequence of increasingly strong theorems*, and *I would not immediately build all of this*:
+
+```text
+  REFLEX-0  perspective types          authority, observer, reconstructor, intervener, court, meta; no behaviour changes
+  REFLEX-1  effect footprints          declared against actual
+  REFLEX-2  environmental independence the whole verdict vector under E → E′
+  REFLEX-3  oracle-directed perturbation  a literal of an oracle solved into the environment
+  REFLEX-4  observer transparency      observers off against on, the same authority inputs
+  REFLEX-5  reconstruction             replay of the seal, equivalent over future traces
+  REFLEX-6  grounded meta-claims       the claim graph built, ungrounded cycles refused
+  REFLEX-7  an independent court       a checker that is not another run of the same checker
+  REFLEX-8  the reflexive certificate  machine-readable: authority, effects, dependencies, perturbations,
+                                       observations, reconstruction, grounding, independent endorsement
+```
+
+His ruling: the report's idea of a per-row matrix is good, and *the actual breakthrough is one level above it*: a
+reflexive semantics of which the matrix is one projection.
+
+**The second text.** Said to be *the operational mapping of this reflexive architecture*. It restates the first text
+as four parts — dependency as one axis, observers verified by effect type, the boundary of correction and levels,
+the graph of grounding — and closes with a table that gives each level of the tree a rung.
+
+**Considered against the tree.** Each line is what stands. None is a proposal.
+
+| the first text asks for | what stands |
+|---|---|
+| a correction becomes an explicit input | holds where an edit is made: *language proposes, the shell admits, the session records*. The design tool proposes and only the shell's admission writes; a host's state is attached after a label is fixed (`hoststate-fence`) |
+| the capability lattice's 2P, read and propose | the design tool: it reads a session and proposes a batch; only the shell's admission writes |
+| reconstruction, `Replay(Seal(A)) ∼_P A` | replay is the authority: sessions replay to their heads in rows (`sessionwalk-replay`, `livesession-resume`, `admit-replay`) |
+| an endorsement path independent of the producing one | holds per row in many rows: the compiler against the gate's own reference (`designir-compile`), a Python twin of the movement rules (`input-replay`), two readers (`readercourt-agree`), the frozen oracle (`kernel-oracle`). For the gate itself, no: the host runs the same gate |
+| a grounding graph | not declared. The rows run in one fixed order, and what a row takes from the rows before it is not written down |
+| effect signatures for observers | none in the design language or the gate. `membrane-wall` refuses one path of writing, in memory, through a Reading |
+| levels L2 and L3 | outside the rows, as his rulings keep them: the mutation campaigns, the class reading of G30, the host's reconstruction, the perturbed pass |
+
+**Where the texts need care.**
+
+- *Lenses.* The laws are Foster, Greenwald, Moore, Pierce and Schmitt's (2007): GetPut, putting back what was just
+  got changes nothing; PutGet, getting what was just put gives it back; PutPut, a second put overrides the first.
+  An observer that reads and writes back what it read satisfies GetPut. So no comparison of states or outputs can
+  tell it from one that never writes; what tells them apart is the effect signature, as the first text says.
+- *Grounding.* The first text gives an ungrounded claim `⊥` and keeps grounded recursion. The second makes the graph
+  a DAG and a cycle red. They are two rules; which one is his.
+- *The second text describes as done what the first declares.* Its words against the tree:
+
+| the second text | what stands |
+|---|---|
+| *an unyielding, self-certifying machine* | the first text's rule is the opposite: *certify only from below*. Nothing in the tree certifies itself, by his own rulings |
+| the write-back mutant *completely neutralized*; *rejected at compile-time* | nothing is built. No observer has an effect signature. A Rust shared reference forbids writing only for types without interior mutability, and files, the environment and statics are outside it |
+| purity by construction, *completely removing the need* for runtime checks | the first text keeps dynamic testing as *the second line of defense* |
+| a correction as an *explicit, authenticated input* | nothing is authenticated: a seal is a hash, not a signature (G16). The first text says *explicit authoritative input* |
+| a row at L(n+1) *structurally blocked* from reaching down | held by rulings and by the rows' own design, not by a structure: nothing prevents a row from reading anything |
+| a cycle caught, the gate red, *refuses to emit the binary* | no such check exists, and the gate emits no binary |
+| L0 BEARING-FAST-0 and SIM-TICK-0, *the integer-locked, float-free physical substrate* | a rung is not a level: each rung puts programs at L0 and rows at L1. The tick law and the bearing camera are integer; there is no physics |
+| L1 ADMIT-0 and DESIGN-IR/DIFF-0 | their programs, the admission and the compiler, are on the path of the authority, L0; their rows are L1 |
+| L2 READER-COURT-0 and REASON-COURT-0, *dual-runtime cross-language parsing courts* | rows, L1. READER-COURT-0 holds two readers of one language to one verdict; REASON-COURT-0 holds refusals to registered reasons, and is not a parser |
+| L3 MINT-WATCH-0 and the G30 audit, *absolute exception tracking* | MINT-WATCH-0 is rows, L1, and states its reach: 105 of 164 raise sites never reached, a mint not a judgment, the watch hearing up to its own row (G26). The class reading of G30 was outside the gate, L2 |
+| *the standing layout of the active rungs transitions into its definitive configuration* | no rung changed. The ladder stands as before, and HERMENEUTICS-0 waits for his word |
+
+**What stays declared.** All of it. REFLEX gathers what was declared before it: REFLEX-2 is the environmental
+independence he accepted and deferred, REFLEX-0 and REFLEX-1 are PERSPECTIVE-0's laws as types and effects,
+REFLEX-3 is the clock of G30 made general. Whether any becomes a registered rung, in what order, and against
+HERMENEUTICS-0, is his.
+
+**Grade.** DECLARED: the two texts and his ruling. ESTABLISHED (gate): the rows named above, as they stand.
+OBSERVED: nothing was computed for this section.
+**does_not_show.** That the seven conditions of the certificate can be held of this tree. That an effect signature
+can be given to an observer in Python or in the design language. That a compiled matrix would stay small enough
+to read.
+
+### PERSPECTIVE-0 — what a system is, what it sees, what it models, what it may claim · **declared** (three texts the owner brought, 2026-10-08); considered at his word; not registered, nothing built
+
+```text
+  1P   execute       S ──T──► S′                          the transition
+  2P   observe       S ──O──► (Y, S)                      the state unchanged
+  3P   reconstruct   A ──R──► Ŝ ;  O(Ŝ) =? O(S)           another producer
+  M    claim         a verdict about an observation, one level up
+       the wall      no level holds a truth predicate for itself
+```
+
+**The three texts.**
+
+- *Four sources toward one boundary.* Ethan Kross's work on distanced self-talk, abstracted to the separation of
+  acting from observing; the Luenberger observer, which estimates a hidden state from outputs and is not the plant;
+  the state monad as the plumbing; Tarski's undefinability of truth as the wall. His rulings in it: Kross ACCEPT,
+  *provided the psychological claims aren't overstated*; Luenberger STRONGLY ACCEPT; the state monad ACCEPT; Tarski
+  ACCEPT, *as a design constraint rather than a literal implementation theorem*.
+- *The deeper version.* A perspectival machine `V = (S, F, Π, Ω, M, C)`: state, transition, perspectives,
+  observations, models, courts. *No perspective inherits authority merely by being able to describe another
+  perspective.* An observation with an error channel. Observational equivalence: two states that no permitted
+  observer tells apart. A reflection tower in which quoting climbs a level and no level holds its own truth. Six
+  laws: state authority, perspective non-collapse, observation purity, reconstruction agreement, reflection
+  stratification, no internal truth oracle. And a killer mutation: *change an observation into an
+  authority-bearing state transition while leaving its output unchanged.*
+- *Backreaction.* An observer inside the system can change it. A passive observer returns the state it was given; a
+  participating one does not, and must say so: *unmodeled backreaction = defect*, *declared backreaction = part of
+  the program*. A reaction profile for each observer. Three equivalences: of state, of observation, of future
+  behaviour. And a reflexive system, one whose representation of itself takes part in its own dynamics.
+
+His word on all of it: *I would not build it yet*. A declared research rung first, *not immediately into code*.
+
+**Considered against the tree.** Each line is what a row or a ruling already holds. None is a proposal.
+
+| the texts' law | what already holds it |
+|---|---|
+| observing does not move the authority | `hoststate-fence`: the same raw record, sealed with no probe and with two different host states, gives the same label and reading. `mouselook-capture`: the window leaving the foreground changes nothing saved, and a control shows the same inputs do change it in the foreground. The design tool's preview: a dry run writes no session |
+| an observer is not read back | `refusallog-fence`, `runledger-fence`: each log written by one primitive and read by nothing on the path, by source. `refusallog-bijection`: a log that cannot be written leaves a refusal's exit status and message as they were |
+| perspective as a type | `membrane-wall`: an edit through a live Reading must not borrow-check, rustc's refusal is the row's pass, and `membrane-build` is its control |
+| reconstruction agreement | `readercourt-agree`: two readers, one verdict on every single-byte mutant of three documents. `kernel-oracle`. `designir-equivalence`. The host's re-run of the whole gate |
+| an environment declared irrelevant | `livesession-classify`: a shell built from sources with CRLF line endings names the same renderer. `simtick-equivalence`: inputs moved within their tick save byte-identical data |
+| an observer's error is a result | each refusal carries a registered code; a host comparison where the chain fails is not interpreted (DIFF-0c) |
+| no internal oracle | the mutation campaigns and the host's reconstruction stay outside the rows; reconstruction is *a test, not a fifth invariant* (DIFF-0c); every entry forbids reading *that registering a condition earns it*; a seal is a hash, not a signature (G16) |
+| evidence is a declared projection | G30, in his backreaction text's words: *An observer must declare which projection of the world constitutes evidence* |
+
+So the tree has met these laws a row at a time. What the texts add is a name for the class, and the demand that a
+row say which perspective it holds.
+
+**Where a formula needs care.** A reading here, with the outside sources it rests on.
+
+- *The commutator.* `O;T ∼ T;O` cannot hold on what the observer reports: observing before a transition and after
+  it sees two states, which is what observing is for. Compared on the authority's projection `P` alone,
+  `P(T(O_S(s))) = P(T(s))`, it is his backreaction text's own condition of transparency. Asked of every transition,
+  it is the unwinding by which noninterference is shown step by step (Goguen and Meseguer; Rushby).
+- *Backreaction as a difference.* `Obs(T(S)) − Obs(T(O(S)))` needs observations that subtract. As the set of states
+  and transitions where the two disagree, it asks for that set to be empty. A pair of runs refutes it; no assertion
+  inside one run can.
+- *Observation purity as `O;O ∼ O`.* That is the state monad's get-get law. An observer that reads the state and
+  writes it straight back satisfies it as well (get-put), and so would the killer mutation.
+- *Tarski's reach.* Truth for a finite language can be defined by listing its true sentences; Tarski's paper of
+  1933 gives that definition among its examples. The wall stands against an evaluator of every claim a language can
+  express, itself among them. The sharper reason a gate cannot vouch for itself is Löb's: a system that proves *if
+  provable then true* of a sentence already proves the sentence. His qualifier, *a design constraint*, is what keeps
+  the analogy honest.
+- *Kripke.* A language can hold its own partial truth predicate when every claim is grounded. Read for a gate: a row
+  may read other rows' outputs if the chain ends in the world. A cycle is the defect, not reference to itself.
+- *Kross.* The studies (Kross and colleagues, 2014) set first-person pronouns against one's own name and
+  non-first-person pronouns, pooled; second and third person are not told apart. A preregistered meta-analysis
+  (Murdoch and colleagues, 2023; 25 experiments) finds a small benefit and calls it uncertain. The names 1P, 2P
+  and 3P are borrowed. What the engineering claims rests on rows.
+- *The host's re-run as the third person.* It is independent of the machine and its compiler, not of the checker:
+  the same gate runs on both. Wheeler's diverse double-compiling earns its independence from a second, trusted
+  compiler.
+
+**What stays declared.** All of it. Whether PERSPECTIVE-0 becomes a registered rung, and where it sits against
+HERMENEUTICS-0 and environmental independence, is his.
+
+**Grade.** DECLARED: the three texts and his rulings in them. ESTABLISHED (gate): the rows named above, as they
+stand. OBSERVED: nothing new was computed for this section.
+**does_not_show.** That the six laws hold of the tree as a class. That a perspective can be made a type of the
+design language's IR. Anything about the psychology of people.
+
+### Environmental independence — directed environment perturbation · **accepted as a future audit mechanism, deferred** (the owner's ruling, 2026-10-08); not registered, nothing built in the gate
+
+```text
+  FULL×2              V(E) = V(E)                       two runs, one environment, near enough
+  the host's re-run   V(E_host) = V(E_here)             another machine, the same gate
+  his proposition     ΔE ∩ Dependencies(r) = ∅  ⇒  V_r(E) = V_r(E + ΔE)
+```
+
+**His ruling.** On the clock reproduction and the path probe of G30: ACCEPT as a future audit mechanism; defer
+until after the host's result. *Do not add the directed court yet.* His names for it: *Directed Environment
+Perturbation*, or *Environmental Independence Court*. The proposition is claim-relative, not that a row passes
+under many environments: *A row may depend on its declared environment; it may not accidentally depend on an
+undeclared environment.*
+
+| his design point | in his words, or close |
+|---|---|
+| a matrix, not a list of literals | per row, the verdict at baseline and perturbed: clock in decimal, clock in hexadecimal, path, locale, timezone, separator, environment |
+| `—` in a cell | *not applicable by construction*, never *we forgot to test it* |
+| no aggregate | the output is the matrix, not a single pass. *That prevents the future court from becoming another opaque score* |
+| legitimate dependencies kept | a row may depend on paths, separators, locale, clock, architecture, line endings or executables, when it declares them |
+| a court of the class | perturbations generated from the audit's literals and dependencies, not one-off `4242` tests |
+| the estimate | superseded as evidence by the controlled reproduction; the future window a detail of reproduction, never part of an invariant |
+| a wider property | *Canonicalization must eliminate accidental environmental degrees of freedom*: a world must not depend on the folder it was compiled in |
+
+**His order.** Accept the eight patches; finish the head's passes and the host's evidence; reconcile the host's
+reconstruction against the chain precondition; only then decide whether this deserves a rung; if so, a court of the
+class, its perturbations generated from the audit, verdicts held only outside a row's declared dependencies. The
+first three are done (RUNGS, DESIGN-IR/DIFF-0: *The amendments on the host*). The fourth is his.
+
+**A reading in his text, set right.** He reads the path probe as showing that *the same class of environmental
+contamination exists beyond time*. It did not show that. Three rows were run in a checkout whose path spelled their
+words, and all three passed: it found nothing.
+
+**Observed since, off the gate (2026-10-08, the build container).** One whole pass of the gate on the head, every
+perturbation at once, and the failures then bisected. The instrument is outside the repository.
+
+| perturbed | how |
+|---|---|
+| the checkout path | `…/Urðr 4242 a private title the log must never hold focus pause capture blur foreground adopted/tree`: a space, a letter outside ASCII, the mock pid, the forbidden title, the five words about focus, the sealer's word |
+| the wall clock | moved to 2041, past 2³¹ seconds, where every millisecond value begins `224242` for the whole pass |
+| the time zone | `Pacific/Kiritimati`, fourteen hours ahead |
+| the locale | `tr_TR.UTF-8`, built for the pass; its decimal point is a comma |
+| the rest | umask 077; another home folder; Python's hash seed 4242 |
+
+The pass: 243 PASS / 4 FAIL, and the tree's tracked files the same after it as before. `input-tamper`,
+`input-not-authority`, `input-demo`: a walk's path is one word, and the path held a space (RUNGS, INPUT-0; G31).
+`reasoncourt-watch`: its four findings are the input program's refusals, endings no group of the register holds. One
+cause, four FAILs. Bisected with the rows run alone: a space, and nothing else, fails the three; `ð` alone passes.
+
+Everything else held, among it the corrected `refusalwhy1-log` with each of its seven records' clocks holding the
+pid's digits, and `mouselook-capture` and `presentexact-sealer` with their words in the path.
+
+So the reading of the path probe was wrong and its conclusion right: where the tree is checked out does reach a
+verdict. The probe that found nothing chose its rows by the hypothesis as well as its perturbation. The pass that
+found it chose the perturbation and watched every row. FULL×2 cannot see this, and is not broken by it: both of its
+runs share the folder. Nor can the host's re-run: the host's folder holds no space either.
+
+**Prior art, found by search.** Paraphrased; nothing rests on it.
+
+- Debian's `reprotest` builds a package twice with its surroundings varied — the time through faketime, the build
+  path, the order of files, the locale, the time zone, the umask, the home folder and more — and compares the two
+  builds. Debian's own continuous rebuild varies identity and environment between its two builds, no longer the
+  build path, and makes the second build without the package's tests. Both vary builds and compare what was built.
+  The verdict of a test is not what they compare.
+- Noninterference (Goguen and Meseguer, 1982): what one party does must not change what another observes. His
+  proposition has that shape, with the undeclared environment as the first party and a row's verdict as what is
+  observed. Such a property is refuted by a pair of runs; no single run can refute it.
+
+**What stays.** Accepted, and deferred. No row, no register, no entry. Whether it becomes a rung, and where, is his.
+
+**Grade.** DECLARED: his ruling. OBSERVED (the build container): one perturbed whole pass and its bisection.
+**On the host (later the same day).** One factor, the space, in a clone under `Verdandi space probe`: the four
+rows named before the run failed, and no other (RUNGS, INPUT-0). The verdict vector is the container's.
+
+**After the repair (INPUT-0a).** His ruling keeps the court deferred: *the G31 fix plus the two predicted perturbation
+passes give you a useful, targeted end-to-end test of the method without prematurely building the court.* The
+container's pass, run again on the repaired tree as predicted: 247 rows / 0 fail. The host's clone with a space, run
+twice by the witness: 247 rows / 0 fail, FULL×2.
+
+**does_not_show.** Any other factor on the host. A matrix: the container's pass changed seven things at once, and
+only the space was isolated. That a factor no pass changed is harmless.
+
+### A competitive arena — from a certified world to a map that matches are played on · **declared** (a text the owner brought, 2026-10-08); considered at his word; not registered, nothing built
+
+```text
+  the text's path     intent ─► canonical spatial state ─► derived world ─► executable constraints
+                             ─► adversarial tests ─► reproducible match
+
+  what stands today   design text ─► shell design-compile ─► batch ─► shell design ─► sealed session ─► picture
+                      cells of a 48 lattice · five tile classes · two stairs · one camera · an integer tick law
+                      no second actor · no shot · no height · no wire
+```
+
+One text, in three parts, and then the second part again by itself, as *the proposal*. His question: how does this
+become a map like *Terminal*, one that competitive matches are played on. A proposal. Then a correction of it, in
+another voice. Neither names its author. Nothing here is registered, nothing is built, and the order of the route
+is unchanged.
+
+**The proposal.** Its opening: a map like *Terminal* is made by visual iteration and playtesting, and this tree
+*would require mathematical proofs of competitive fairness before a map ships.* It keeps the three layers, history,
+identity and behaviour, and says of itself: *nothing new is invented — just extended to 3D space.* Its seven parts:
+
+| part | what it proposes |
+|---|---|
+| 1. geometry | a source language `VERDANDI-GEO 0`: `block`, `cut`, `void` (integer, axis-aligned volumes), `plane` (three integer points), `spawn TEAM`, `objective TYPE`. No float, no curve. The hash stays the SHA-256 of the exact bytes; statement order is volume order; amendments name the geometry files changed |
+| 2. fairness courts | four, each with a row: `sightline-balanced` (every spawn-to-objective path has equal average travel time), `spawn-safe` (no spawn sees an enemy spawn within two frames), `approach-diversity` (three distinct approaches to every objective), `raycast-consistent` (a ray is the same on every platform). Run by a ray server firing from a thousand or more sample points, with *exploit mutants*: a bot at every coordinate and a kill probability |
+| 3. the network | lockstep simulation in integers: fixed-point positions and velocities, box collision; the whole state hashed after every tick on Linux and on Windows, and a map rejected for competitive use if the hashes part |
+| 4. two phases | the gate's: the geometry text to a volume list and a collision mesh, with the fairness courts. Content time's: textures, light, the GPU mesh, unverified. A map changes its look without touching what is certified |
+| 5. a map's amendment chain | a small tweak is an amendment and the courts run again; a rebalance is a new version with a fresh chain; an exploit is a hotfix by amendment or a version bump. *Never edit an already-shipped map's geometry* |
+| 6. the map as an entry | an id, the geometry's hash, a digest of the courts' results, its amendments, a network version; a tournament licence embeds the digest, and a map whose hash does not match is disqualified |
+| 7. its roadmap | *immediately, in DIFF-0*: the new language, a geometry fence, a sightline court. Next: the integer lockstep engine and the cross-platform state hash. Later: a digest signed by an authority, and third-party maps certified by passing every court |
+
+What it says is lost: curved surfaces, floating-point movement, terrain destroyed in a match. What it says is
+gained: a *mathematical guarantee that the map cannot be "unbalanced" by geometry changes*, reproducibility across
+hardware, verifiable tournament integrity. Its contract lists four things verified (spawn-safe, sightline-balanced,
+raycast-consistent, network-lockstep) and three not (texture, light, sound).
+
+**The correction.** Its premise: *Verðandi should not try to mathematically prove that a map is "fair" in the
+absolute sense.* Quality in a competitive map comes from geometry, movement, weapons, visibility, spawn rules,
+objectives, timing and what people do with them. What the tree can do is make the map *a deterministic,
+inspectable competitive object whose measurable constraints are provable and whose human-play properties are
+experimentally falsifiable.* Its formulation: not *proves a map is fair*, but *makes the claims about a
+competitive map executable.*
+
+| the correction's point | in its words, or close |
+|---|---|
+| one source, many derived roles | a wall is at once a collision boundary, an occluder, a traversal boundary, cover and a landmark. Collision, visibility and navigation are *derived from the same canonical spatial source* and cannot drift apart |
+| topology before geometry | a competitive map is a graph of navigable regions and traversable connections embedded in space. Reachability and the number of distinct paths are questions about the graph |
+| sightlines as geometry | a visibility graph between regions, its edges annotated, in place of random rays |
+| constraints, not fairness | precise courts: spawn separation, objective access, approach diversity, lane separation, cover continuity, dead-end exposure |
+| three parts of quality | `CompetitiveMap = GeometricValidity ∧ ConstraintValidity ∧ EmpiricalFitness`, and *only the first two are theorem-like*. The third is match data and people, and *should never be falsely elevated into a mathematical theorem* |
+| the renderer comes later | *The renderer does not create the map. The renderer reveals a map that already exists as a deterministic spatial state.* What is drawn may be far richer than what is authoritative |
+| tactical compilation | a brief of intent (routes, layers, approaches, protected spawns, lane lengths), and the question whether a geometry satisfying it can be built |
+| mutation | plant geometric defects (a route removed, a spawn moved, a sightline opened) and require that a registered court catches each |
+| the network | derived from the same world. Not lockstep: a server that is the authority, deterministic collision and visibility, quantized state, a replayable simulation |
+| the certificate | evidence about one immutable map state: `MapHash → Certificate`, never the reverse |
+
+**Considered against the tree.** Each line is what the ledger or the code already says. None is a proposal.
+
+| the text asks for | what stands |
+|---|---|
+| a new source language, *immediately, in DIFF-0* (the proposal's roadmap) | DESIGN-IR/DIFF-0 is closed by the owner's own word (*stop adding architecture here*). A new statement kind is a new language and a new registration, and the meaning court registered behind the compiler (HERMENEUTICS-0) reads the language first |
+| spawns and objectives | identities that outlive admission. The world holds cells and five classes; once admitted, nothing names a room. Persistent objects are a court he deferred by name |
+| courts of constraints | constraints are a court he deferred by name. The design tool's *readings* (what is reachable from the camera) are views and are not certified. The text gives those two deferred courts their content |
+| boxes, planes and height | the picture's trust root is a frozen oracle for a lattice of cells. A new kind of geometry needs a reference to hold the kernel to, as the bearing camera needed its second tag |
+| integers only | the tree's already: the tick law, the bearing camera, the fold |
+| rays the same on every platform | one ray law exists and is held to the oracle on both machines by rows of the gate |
+| movement between cells | the world stays discrete. HOLD-WALK-0 records that this is not the free movement he wants |
+| a second player, a shot, a wire | none exists. A session has one camera |
+| lockstep, or an authoritative server | neither exists. What exists is one sealed, append-only log of typed events, replayed to a head; replay is the authority |
+| travel times, *two frames*, kill probability from samples | no time, no frame rate and no latency are claimed anywhere in the tree. A tick is the tree's unit |
+| a map's own amendment chain; never edit a shipped map | a session is never modified: an admission makes a child. Every admitted event carries the id of the design that made it |
+| a digest signed for a tournament | a seal here is a hash, not a signature (G16). The tree holds no key and no trust root |
+| geometric mutants against courts | the method stands: defects planted one at a time, survivors named by class, never a score |
+| human play as a separate measurement | the tree's grades already keep MEASURED apart from ESTABLISHED, and it adds no scalar |
+
+**Two outside pages, found by search.** Paraphrased and attributed; nothing rests on them.
+
+- *Visibility graph analysis.* The encyclopedia page on it: a way of analysing which parts of a plan's open space
+  see which, introduced by Turner and colleagues in 2001 out of space syntax; their paper's title says it starts
+  from the isovist. A visibility graph over open space is prior art. It would be carried here, not discovered.
+- *A level-design tutorial for Counter-Strike layouts* (worldofleveldesign.com): two or three main paths from the
+  attackers' spawn, each ending in a choke point; the time each team takes to reach a choke is measured and the
+  layout adjusted until the times are close, the defenders a little early; maps are judged by playing both sides.
+  So the practice the text wants to make executable already measures timings, by hand and by play.
+
+**Where he places it (a later text, the same day).** Not in this rung: *I would not let the arena material
+contaminate this rung.* The order he draws: the compiler's rung; then *harden observation semantics*, which is the
+correction of a row that read the clock (G30); then independent reconstruction on the host; then a spatial
+representation; collision, visibility and navigation derived from geometry; courts of competitive constraints; a
+playable arena. His reason for the order: *before Verðandi starts certifying spatial claims, the court machinery
+itself has to be trustworthy about what it observes.*
+
+**What stays declared.** All of it. Whether this becomes a rung, and where it sits against LIVE-AI-EDIT-0, a
+graphical editor, objects and constraints, is the owner's to rule.
+
+**Grade.** DECLARED: the text. OBSERVED: nothing; no arena was drawn and nothing was computed.
+**does_not_show.** That any of it can be built over a frozen oracle of cells. That a constraint which passes makes
+a map good to play. That two machines would agree on a match.
+
+### Self-optimizing code, and its correction to a layout court · **declared** (two texts the owner brought, 2026-10-04); considered at his word; not registered, nothing built
+Two texts, brought one after the other, and a review between them. Neither names its author, and both speak of the
+owner in the third person. Nothing here is registered, nothing is built, and the order of the route is unchanged.
+
+**The first text: *Microarchitectural Polymorphic Compilation (Self-Optimizing Immutable Code)*.** It starts from the
+Epistemic Invariance theorem and LOCALITY-0, and proposes a compiler toolchain that takes the rendering kernel and
+"continuously, dynamically mutates its memory layout, thread partitioning, and assembly instruction selection while
+running live production workloads". Its argument: because byte identity is a hard landing condition, thousands of
+such experiments can be tried safely under process isolation; a mutation that moves a single bit turns the gate
+red and is discarded; one that passes the byte-identity court and lowers latency is adopted by the machine itself.
+It says this moves optimization "away from human guesswork", and that the result is a permanently mutating
+substrate "completely invisible to memory-scraping cheat engines".
+
+**The owner's words.** *i think you should pause for this tool for this repo.* Asked in court what the pause meant
+for the route, he answered: *consider:*. On the form it would take if it were ever taken up, and on how its
+anti-cheat sentence should be recorded, he stated no preference. The review's reading is therefore recorded for
+both, as a reading and not as a ruling.
+
+**The review, as considered.** One thing fits and seven collide.
+
+- **What fits.** The tree already does a small version of this by hand. LOCALITY-0 built its layouts as separate
+  monomorphized binaries, held each byte-identical on the gate, timed them process-isolated and interleaved on the
+  host, and adopted one by a rule locked before the number, keeping the loser on the record. GAUNTLET-2's thread
+  sweep and BEARING-FAST-0's treads are the same shape. Enumerating a registered, finite space of such variants and
+  running that court for each is the existing method, mechanized.
+- **1. Live measurement contradicts the theorem it cites.** Epistemic Invariance says a layout's cost can be
+  extracted only while the execution boundary is held static: monomorphize, process-isolate, interleave. A live
+  loop taking a person's input is the opposite condition.
+- **2. A program that changes itself at content time is a program the gate did not certify.** The gate certifies
+  the machine; content time never runs it. Every saved session names the renderer it was made with, by the sha256
+  of the render sources. A binary that mutates has no such name.
+- **3. Automatic adoption meets `built ≠ adopted`, and the noise on record.** The same court has run 40–60% slower
+  on another run the same day (G13), and labels have flipped on three samples (G10). LOCALITY-0's adopted gain was
+  about 1.07×. Taking the best of thousands of trials at that noise selects the noise.
+- **4. Byte identity over a court set is evidence about that set.** A layout that is a bijection is also right by
+  construction, and a row checks the bijection. A mutated instruction sequence has no such backing.
+- **5. Generating or rewriting code at run time is not std-only.**
+- **6. The ruling of 2026-10-01.** The next work is chosen by what evidence is worth buying. The staircase reopens
+  only if a court misses its target, and layout and cache experiments are on that list as deferred, with no gain
+  claimed. The live loop's timing is not measured at all (G21).
+- **7. The security sentence has nothing under it.** This repository has no threat model and claims nothing about
+  an adversary. What a cheat reads is state, and the saved form keeps the world's state open and replayable on
+  purpose.
+
+**The second text.** It accepts the review point by point and offers a correction it calls a *Static Layout
+Synthesis Gate (SYNTH-LAYOUT-0)*, which is a declared name and not seated. Its three terms: it runs at compile
+time, as a pre-build step under `verify/`; it enumerates only structural data-layout variants and never mutates
+instructions, runs the interleaved courts, selects by a rule locked beforehand and bakes one static layout into the
+binary; and the winner carries a permanent content-addressed identity, so every session it makes names a fixed
+source hash. Nothing mutates at run time. On the security sentence it agrees with the review: the world's state is
+open by design, and diversity gives probabilistic mitigation of control-flow hijacking, not protection against
+reading data.
+
+**Where the correction still meets rules in force.** It is close. Six things in it are not this tree's.
+
+- **The gate does not time anything.** The correction puts the interleaved timing and the selection inside the
+  development gate. Here correctness is on the gate and speed is off it: no row reads a wall-clock number, and two
+  passes must be byte-identical on any machine. A gate that timed variants would give a different answer on every
+  host and on every run. What the gate can hold is that each variant is byte-identical and that the adopted one is
+  the one in the source. Timing is a host court with a sealer, as LOCALITY-0's was.
+- **A build does not choose the renderer.** If a pre-build step picked the winner, two hosts could build two
+  renderers from one tree, and a session's renderer identity would stop naming one program. Here the choice is
+  made once, on a named host, sealed as a record, and then committed as source by the owner's lock. The identity
+  follows from the committed source and needs no new stamp.
+- **"Selects the optimal" needs the same care as any adoption.** A margin declared beforehand, a confirming run on
+  fresh samples, the losers kept on the record, and the space small enough that the best of it is not just the
+  luckiest. ALLOC-REUSE-1's court is the model.
+- **The court set is not "the standard twenty witnesses".** Those are Urðr's, from the placement that preceded
+  this repository. Here a fast path is held to the corpus (six scenes, two tile sets) and the gate's adversarial
+  cameras, 19 cases for the facing emit, and the bearing camera has its own court set.
+- **Three of its terms are not in this tree.** `conventions.py`, an "Arbitrary-Boundary Law" and "Temporal Fidelity
+  Accounting" appear nowhere in Verðandi. They are recorded as the text's own terms and were not opened here. What
+  this tree has in their place is a registered entry that keeps its rejected alternatives (Morton, in LOCALITY-0)
+  and the ruling of 2026-10-01. Likewise there are no crates and no build macros here: a variant is a
+  monomorphization inside `kernel/fast.rs`, as the two layouts already are.
+- **Two readings of the evidence are stronger than the evidence.** FRAME-SPLIT-0 is not unmeasured: it was measured
+  twice, for the modelled loop; what is unmeasured is the live loop. And the outside sources are reported below in
+  their own terms: one found a bias, in its own benchmarks; neither proved a law.
+
+And one thing the correction does not change: it is still an optimization of the kernel. Being lawful does not make
+it next. By the ruling of 2026-10-01 it waits behind the measurement of the live loop, and it reopens when a court
+misses a target.
+
+**Outside sources (attributed; hypotheses, not claims of this repository).** Curtsinger and Berger's Stabilizer
+treats one binary as a single sample from the space of memory layouts, re-randomizes the layout during a run so
+that layout effects can be tested statistically, and reports that across its benchmark suite the difference
+between two compiler optimization levels could not be told from layout noise. Mytkowicz and others report that
+details of an experimental setup that look harmless can bias a performance measurement enough to reverse a
+conclusion, and recommend randomizing the setup. Schkufza and others' stochastic superoptimizer searches with test
+cases and accepts a rewrite only after a formal equivalence check, on loop-free code. Larsen and others'
+systematization of software diversity describes its protection as probabilistic and lists disclosure of the
+diversified implementation as an open problem. Read here in the first paper, in the authors' summary page, in
+Adrian Colyer's summary, and in the authors' publication page.
+
+**Grade.** DECLARED: both texts, and the name. OBSERVED: nothing; no variant was built and nothing was timed.
+**does_not_show.** That a wider layout space holds any gain on this host: LOCALITY-0 measured two layouts, and its
+gain was small beside the drift between runs. That any of this would matter to the live editor, whose timing is
+unmeasured. Anything about security. **What stands.** The order is unchanged: READER-COURT-0's build is next. If a
+layout court is ever taken up it is courted and registered like any rung, and the review's reading of its form
+(offline, a small registered space, byte identity on the gate, timing on the host, adoption by the owner's lock)
+is a reading and has not been ruled.
+
+**On the host (DANIELDILLBERG).** This record was applied, the gate passed with it (GATE PASSED, rowset
+`0b423b279a40c85c`, 218 rows, 0 fail, 0 skipped) and it was pushed, `25b5c17..b847810`. The owner's word after it:
+*take the next.* The next, by the order that stands, is READER-COURT-0's build.
+
+### GAME-0 — Urðr's game layer as frozen evidence · **landed**
+The seventeen discrete game-layer slices (`gamegen` … `cue`), their corpora, suites, briefs and the D24/D25 boundaries,
+carried verbatim from `urdr-oracle-1` into `oracle/game/`, each file listed with its sha256 and Urðr git blob id, and
+Urðr's own suites passing in place (`game-frozen`, `game-suites`, `game-plant`, `game-not-runtime`). Evidence, not a
+runtime dependency: the kernel, workshop and shell do not read it. **ORACLE-D0 (landed):** the same carried code,
+in place, recomputes the oracle's third hash `D_0` from the oracle's view on every gate (`oracle-d0`, with a plant),
+so all three oracle hashes are now checked; the studio still mints none of `D_0`.
+
+### SKYBOX-0 / PHYSICS-0 — the skybox beyond the oracle; physics already in the tag
+The skybox stays *beyond* the frozen oracle and is gated behind the new-semantics route (`SEMANTIC-0`'s machinery):
+named, courted, and not seated until that route exists. Physics is not in the same position. An earlier version of
+this roadmap said it was beyond the oracle, and that was wrong. `urdr-oracle-1` carries Urðr's exact ℤ/ℚ mechanics
+(rungs 1–4), its bounded Q32.32 real-time path (rung 5) and its lockstep/rollback netcode, all as earned CORE
+semantics with frozen corpora. They reach the studio by the `GAME-0` route, and only physics the tag does not carry
+needs the new-semantics route.
+
+### IMPOSSIBILITY-0 — measured negative results as level preconditions
+Some world states are *provably unreachable*; recording those impossibilities as level preconditions is itself a
+form of authored semantics, and a natural companion to `SEMANTIC-0`.
+
+---
+
+## The invariants that carry forward
+
+Everything above obeys the same discipline that carried the render campaign. *(These are the certified tree's
+invariants. By the owner's rulings of 2026-10-09 the graybox runtime stands beside that tree with its own checks —
+its floats, its WebGL renderers and its maps are not held by them — and the full gate runs at release checkpoints.)*
+
+- **Earn the authority.** CORE semantics come only from Urðr: carried verbatim from the tag already cited (as
+  `GAME-0` carries the game layer), or earned there and re-frozen under a new name. New VIEW semantics may be
+  Verðandi-local but must be pinned by rows here. The shell never mints truth.
+- **Byte-identity where an oracle exists; a pinned reference where one does not.** A rung with a frozen oracle proves
+  byte-identity against it; a rung inventing new semantics defines a reference and pins it, then defends *that*.
+- **The model may propose; only the verifier may admit** (declared, LLM-BUILDER-0). Anything that suggests a change —
+  a key, a mouse, a script, one day a model — reaches the world only as a typed event the session validates and
+  replays. Verðandi does not execute what a proposer writes; it records what the verifier admits.
+- **The gate certifies the program; content is admitted, not gated** (declared, 2026-10-03). The engineering gate
+  runs when the program changes. Content, which today means a session's events, is admitted by checks on the
+  artifact itself and never invokes the gate. A change to the laws content runs under is a program change.
+- **Preregister the method before the number,** including the failure condition and the null. Measure before
+  optimize; re-measure after. Correctness on the gate, speed off it. The record stores numbers; the reading
+  interprets.
+
+The render half proved this discipline scales to a hard optimization campaign. The authoring half is where it meets
+its more interesting test: proving that a *living, editable world* can be as honestly evidenced as a static picture.
+
+---
+
+## Sources (prior art the named rungs draw on)
+
+- [DXGI flip model — DirectX Developer Blog](https://devblogs.microsoft.com/directx/dxgi-flip-model/) and
+  [Reduce latency with DXGI 1.3 swap chains — Microsoft Learn](https://learn.microsoft.com/en-us/windows/uwp/gaming/reduce-latency-with-dxgi-1-3-swap-chains) (PRESENT-1)
+- [Multithreaded software rasterizer — Zach Bethel](https://zachbethel.wordpress.com/2012/11/28/multithreaded-software-rasterizer/) and
+  [Thread pool — Wikipedia](https://en.wikipedia.org/wiki/Thread_pool) (execution refinements; see [`GHOSTS.md`](GHOSTS.md) G1/G3)
+- [Roofline: an insightful visual performance model — CACM](https://cacm.acm.org/research/roofline-an-insightful-visual-performance-model-for-multicore-architectures/) and
+  [Roofline Performance Model — NERSC](https://docs.nersc.gov/tools/performance/roofline/) (the T=8 bandwidth question; see [`GHOSTS.md`](GHOSTS.md) G2)
+- [Working with authoring and runtime data — Unity Entities](https://docs.unity3d.com/Packages/com.unity.entities@1.0/manual/editor-authoring-runtime.html) (interactive capture; the authoring/runtime split)
+- [Conflict-free replicated data type — Wikipedia](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) and
+  [Delta-state replicated data types (Almeida et al.)](https://members.loria.fr/CIgnat/files/replication/Delta-CRDT.pdf) (MERGE-0's convergence theory)
+- [Scoped threads (`std::thread::scope`) — Rust](https://doc.rust-lang.org/std/thread/fn.scope.html) (structured concurrency; see [`GHOSTS.md`](GHOSTS.md) G1)
+- ADMIT-0 (outside sources, attributed; hypotheses, not claims of this repository):
+  [LangSec explained in a few slogans](https://sergey.cs.dartmouth.edu/langsec/occupy/),
+  [JSON interoperability vulnerabilities — Bishop Fox](https://bishopfox.com/blog/json-interoperability-vulnerabilities),
+  [RFC 8259](https://www.rfc-editor.org/rfc/rfc8259.txt),
+  [RFC 8785 (JCS)](https://www.rfc-editor.org/rfc/rfc8785.html),
+  [Canonicalization Failures as a Recurring Vulnerability Class (Brömme)](https://arxiv.org/abs/2608.06508),
+  ["YOLO" is not a valid hash construction — Trail of Bits](https://blog.trailofbits.com/2024/08/21/yolo-is-not-a-valid-hash-construction/),
+  Design Patterns for Securing LLM Agents against Prompt Injections (arXiv 2506.08837) and CaMeL: Defeating Prompt
+  Injections by Design (arXiv 2503.18813), both read in Simon Willison's summaries
+  ([patterns](https://simonwillison.net/2025/Jun/13/prompt-injection-design-patterns/),
+  [CaMeL](https://simonwillison.net/2025/apr/11/camel/)),
+  [The kernel and the De Bruijn criterion](https://bnaskrecki.faculty.wmi.amu.edu.pl/vietnam2026/book/peano/kernel.html),
+  [JSONSchemaBench](https://arxiv.org/html/2501.10868v2),
+  [Finding Consensus Bugs in Ethereum via Multi-transaction Differential Fuzzing (Fluffy, OSDI '21)](https://www.usenix.org/conference/osdi21/presentation/yang),
+  [Appending events — EventStoreDB](https://docs.kurrent.io/clients/tcp/dotnet/21.2/appending.html),
+  [Essential features of an Event Store](https://eventsandstuff.substack.com/p/essential-features-of-an-event-store),
+  [All File Systems Are Not Created Equal (ALICE, OSDI '14)](https://cs.uwaterloo.ca/~alkiswan/papers/alice-osdi14.pdf),
+  [MoveFileExA — Microsoft Learn](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexa),
+  [ReplaceFileW — Microsoft Learn](https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-replacefilew),
+  [Constraint Is All You Need (Xu et al.)](https://www.pcgworkshop.com/archive/xu2025constraint.pdf),
+  [Agentic PCG](https://zehua-jiang.github.io/AgenticPCG/),
+  [About Raw Input — Microsoft Learn](https://learn.microsoft.com/en-au/windows/win32/inputdev/about-raw-input).
+  For the self-optimizing-code texts (outside sources, attributed):
+  [Stabilizer: Statistically Sound Performance Evaluation (Curtsinger and Berger)](https://people.cs.umass.edu/~emery/pubs/stabilizer-asplos13.pdf),
+  [Producing Wrong Data Without Doing Anything Obviously Wrong! (Mytkowicz et al.)](https://sape.inf.usi.ch/publications/asplos09.html),
+  [Stochastic program optimization (Schkufza et al.), in Adrian Colyer's summary](https://blog.acolyer.org/2017/03/30/stochastic-program-optimization/),
+  [SoK: Automated Software Diversity (Larsen et al.)](https://ics.uci.edu/~perl/publication/diversity_sok).
+  The review's own citations, not opened here: the LangSec workshop page, SLSA provenance v1.2 and OWASP's AI Agent
+  Security cheat sheet.
+
+### DASHBOARD-0, the worlds half · **built, off the gate** (0250: `art/play.py`, `art/studio_queue.py`, `art/web/play.js`, `art/web/play.html`, `art/web/page_test.js`, `art/page_dash.py`, `art/selftests.py`; `art/director.py`, a docstring)
+
+**His word.** *"then build 0250 with the separate worlds-mode test rig."* (2026-10-17, the order he gave with 0249.)
+Built on 0249 (b5e75e7, his run of it not seen), so it applies after 0249. "As specified" is read as the settled design's
+recommended answers for this half: import makes a new world and never writes over one (R3: an existing name is
+`IMPORT-EXISTS`); a brief's tags go with it, and the stage lists them (R7); the first seeding refuses a checkout brief
+with an admission half written rather than recover the checkout, and runs the art checks (R9).
+
+**What it holds.** His fifth condition, *"Import is transactional. 'Import from the checkout' must not silently
+overwrite the desktop studio's active world. It should identify the source, validate it, create or update an isolated
+candidate, and preserve recoverability if validation or import fails."*; his first for the worlds (each world's state the
+host's read-back, never the page's); his case 6, *"import fails partway through"*; and his case 7 across two worlds.
+
+**What it changes.**
+- *The left panel* (`art/web/play.js`, `play.html`): Worlds (`GET /worlds.json`: `Hub.inspect` per world, kept per world
+  by a key of its files' stamps; verified with events and head, or not verified with the director's code, busy, fresh;
+  what an import recorded), Outline (`GET /outline.json`: the host's object rule over the scene a slot serves; search;
+  a press selects and frames, the inspector reads `/object.json`), Import (`GET /importable.json`; Stage, Commit,
+  Discard; every refusal with its code, the source and the name; Open offered after a commit, never taken), and a
+  collapse. Each panel is marked as 0249's are: the worlds panel by this world's ledger line and its files as last
+  compiled (the head served, the latest compile's head and its refusal), the outline by the scene its slot serves; the
+  worlds and import panels say they are of no one world's revision, and import's mark is current, unknown or refused,
+  never stale nor settling, with the time of its read.
+- *Import, transactional* (`art/play.py`): `stage_import` copies the brief's files into a folder of its own beside the
+  worlds (`.import-NAME-XXXXXXXX`, never listed nor opened), reads the source again, replays the ledger in the copy, runs
+  the exporter and the art checks, starts a ledger when there is none (its bytes recorded), and writes the record last; a
+  refusal removes the staging and checks its absence by a listing. `Hub.import_commit` checks the staging against its
+  record (every file, the started ledger, nothing the record does not name, of the build folder exactly its content
+  lock) and puts it in place by one rename, then logs
+  it (`IMPORTS.jsonl`; a log that cannot be written is said, never answered as a failed commit); `import_discard` removes
+  it. The worlds folder's lock (`worlds.lock`) is held by every writer that makes, renames or removes its folders, and by
+  the writers of `IMPORTS.jsonl` and `SEEDED.json`. Codes: `IMPORT-MODE`, `IMPORT-NAME`, `IMPORT-EXISTS`,
+  `IMPORT-SOURCE-PENDING`, `IMPORT-SOURCE-MOVED`, `IMPORT-SOURCE-BUSY`, `IMPORT-SOURCE-UNREAD`, `IMPORT-LEDGER`, `IMPORT-ART`, `IMPORT-CHECKS`,
+  `IMPORT-FAILED`, `IMPORT-LEFTOVER`, `IMPORT-BUSY`, `IMPORT-STAGE-GONE`, `IMPORT-STAGE-CHANGED`, `IMPORT-RENAME-BUSY`.
+- *Recovery at the start* (`recover_worlds`, before the first seeding): folders made aside and never put in place
+  removed, absence checked; a world put in place whose log line is missing given it from its record; a first seeding cut
+  off part-way said. What it cannot do is said, and never ends the start.
+- *Privacy*: the source's absolute path in the worlds folder's own records only; answers to the page carry its label, and
+  a text bound for the page that would carry the path carries the label instead.
+
+**Changed expectations, said.**
+- The first seeding (`seed_worlds`) now goes through the import's staging: a brief whose checkout holds an admission
+  half written is refused (`IMPORT-SOURCE-PENDING`), and so is one whose checkout ledger ends in a torn line
+  (`IMPORT-LEDGER`, `LEDGER-TORN`), where before the checkout was recovered, and so written; a brief the exporter or the
+  art checks refuse is refused at seeding; and a seeding cut off between two briefs (worlds it made, no `SEEDED.json`) is
+  finished at the next start, where before the rest were never seeded and nothing said so. Its STUDIO-2 rows assert no
+  folder made aside of any form left, where they asserted no `NAME.making`; no row was otherwise reworded.
+- A duplicate is made under the worlds folder's lock, in a folder of its own, its name checked under the lock; a
+  duplicate while the lock is held for 5 s is refused (`STUDIO-WORLD`, "being written").
+- `Hub.world` starts a ledger with the console swapped under `QUIET_LOCK` (found by reading: it swapped it without), its
+  refusal `STUDIO-WORLD` as before.
+- `Hub.inspect` says a ledger of no line (`LEDGER-EMPTY`: a first line that did not finish, its bytes set aside beside
+  it) where it raised, and `Hub.world` takes such a ledger away under the world's content lock and starts it again (it
+  was never started again: `cmd_genesis` refuses a ledger file that exists); `/worlds.json` reads the other worlds when one
+  cannot be read (`INSPECT-FAILED`), and its key holds the exporter and the code the checks read.
+- A duplicate's rename is retried while Windows holds a handle inside, as the commit's is.
+- `cmd_verify`'s docstring said the launcher's look was not deep; it is (`Hub.inspect` calls it deep). Nothing else in
+  `art/director.py` changed.
+- Each world made by an import or by the first seeding keeps its record (`IMPORTED.json`, `via` import or seed).
+
+**Decided here, said.** The world selects and Mark mode's world rows read the names `/live` lists, as before (the
+design had them read `/worlds.json`; the names are one list, `Hub.names`). An import's staging, a duplicate's and a
+seeding's are recovered by one rule (`ASIDE`). The collapse does not apply in Mark mode, whose navigator is its own.
+Stage is not pressed while a staged import is shown (commit or discard it first). The source busy follows the design:
+its ledger written, or come, while it was copied, or an admission of it begun there (`IMPORT-SOURCE-BUSY`, each said as
+it is); any other file changed is `IMPORT-SOURCE-MOVED`. PAGE-CARDS' case 1 (0249's) now leaves out a panel of no
+revision, the briefs to import, which is never settling, and requires it to say it is of none: its words read "every
+panel of the host's revision".
+
+**The tests.**
+- STUDIO-2 (`STUDIO-2 SELFTEST 46/46`, twenty-seven rows added): the routes; a source whose briefs cannot be listed
+  (`IMPORT-SOURCE-UNREAD`); a stage and a commit; `IMPORT-EXISTS` for a
+  world and for an empty folder; `IMPORT-SOURCE-PENDING` with the source's files byte for byte and its content lock not
+  taken; `IMPORT-LEDGER` (`UNLOGGED-CHANGE`); `IMPORT-CHECKS`, the check named; a ledger copied, then discarded;
+  `IMPORT-MODE`, `IMPORT-NAME`, `IMPORT-ART`, `IMPORT-STAGE-GONE` and `IMPORT-BUSY`; case 6 at the second file;
+  `IMPORT-SOURCE-MOVED` (the brief) and `IMPORT-SOURCE-BUSY` (the ledger); `IMPORT-STAGE-CHANGED` four ways (a file of
+  the record, the started ledger given another valid line, a file not named, a build file not the lock); two commits of
+  one name at once; a log that cannot be written at the commit; a duplicate while the lock is held; a ledger of no line,
+  said and started again at the world's opening, and a source's refused; an import's genesis and a command inside
+  `quiet()` meeting, the genesis paused inside its own console swap; the crash loop at nine points with the start's
+  recovery; recovery of a duplicate's and a seeding's folders made aside (by their literal names), an unreadable log and
+  a record that is not one; the pending checkout at seeding; a seeding cut off and finished; six plants (`import-recover-source`, `import-rename-first`, `import-keep-staging`, `import-no-exists-check`,
+  `import-quiet-unlocked`, `seed-names-guard`) each caught by the row it breaks.
+- PAGE-WORLDS (`python art/play.py --worlds-selftest`, `PAGE-WORLDS SELFTEST 16/16`), in worlds mode on its own rig:
+  twelve rows and four plants (a stage's refusal drawn without its code, caught by case 6's row; Validation read without
+  its world, and the other world's outline drawn, each caught by case 7's; the worlds panel's mark without the files'
+  refusal, caught by the row of this world's files refused), each caught with every row before it in its scenario passed,
+  at once (never by a wait running out).
+
+**A review of the patch** (three lenses read it, the host, the page and its tests, the claims against the code and the
+rules; each of their 32 findings was then put to a skeptic who tried to refute it from the code: 35 agents). None was
+refuted; 32 were confirmed in whole or in part, 25 of them distinct, and all are repaired:
+- *The host*: the commit checked the record's files only, not the ledger started at the stage nor a file added (now
+  both, and a staging holding an admission half written); a failed log after the rename was answered as a failed commit
+  (now said, and the next start writes it); the read-back's key held the stills' names, not their stamps; an exception's
+  text could carry the source's absolute path to the page (now its label, and a source file that cannot be read is
+  `IMPORT-SOURCE-MOVED` by its path in the source); one empty ledger made `/worlds.json` fail for every world; the
+  seeding's rename had no Windows retry; a seeding cut off part-way was never finished; a torn checkout ledger at
+  seeding was unsaid.
+- *The page*: the worlds panel's mark left out this world's files; import's mark could never be stale and drew a failed
+  read as current (now refused, and the time of its read said); Stage, Commit and Discard had no guard against a late
+  answer or a second press; the collapse squeezed Mark mode's navigator.
+- *The tests*: case 7's marker was a full sha the page never prints (now the twelve characters `short()` prints, with a
+  plant that draws the other world's outline); case 7 read its outline count before the first answer; the Refresh row
+  passed with Refresh unwired (now Refresh's own reads are counted by the page); "the page stays on its world" read a
+  document a navigation would not replace (now a navigation begun is counted); the quiet() row passed with the console
+  swapped unlocked (now the genesis pauses inside its own swap, with a plant); the commit race's loser was said kept and
+  never checked; the pending rows could not see a recovery or a lock (now a file in the pending folder and the lock's
+  absence checked).
+- *The docs*: the lock's holders (the queue's log holds its own lock); "no second copy of the object rule" (the page's
+  own copy still picks and frames); the codes no row reached (now rows reach all but three, named); the quiet() row's
+  words; the genesis's refusal code (kept); placeholders.
+
+**A second round** (the same three lenses over the patch as repaired, each finding put to a skeptic: 27 agents, the run
+cut off by the usage limit and resumed, the agents done before it kept) found 24, all confirmed in whole or in part,
+none refuted, about eighteen distinct, and all are repaired:
+- *The host*: the read-back's key left out the exporter (a change to it left a world verified); `LEDGER-EMPTY` promised
+  a start that never came (now made, under the world's content lock); the commit let in anything under the build folder
+  (now exactly its content lock); `/importable.json`'s unexpected answers, and two spellings of a path, could carry the
+  source's path; recovery could still raise out of the start on a log or a record it could not read; the duplicate's
+  rename had no retry; a ledger written during the copy was `IMPORT-SOURCE-MOVED`, where the design has it busy.
+- *The page*: the periodic read could overtake Refresh's, so Refresh's own read went uncounted; the worlds panel's mark
+  held the head served, which a refused compile does not move (now the latest compile's head and its refusal too); import's
+  read was never tried again after a failure, and its mark followed a revision it is no part of (now outside it); Stage
+  had no guard against a second press; the outline's search wiped a refusal's reason.
+- *The tests*: `IMPORT-CHECKS` did not hold the check's name; the codes, paths and recoveries no row reached (now rows for
+  `IMPORT-SOURCE-BUSY`, a build file, a ledger of no line, recovery's folders by their names, an unreadable log and a bad
+  record; a row and a plant for this world's refused files).
+- *The docs*: stale counts and lines in comments and docstrings; the second round's counts; the paths still read only
+  (below).
+
+**A third round** (the same lenses over the second round's repairs, each finding put to a skeptic: 21 agents) found 18:
+one refuted (that code the verification reads outside the exporter could leave a world verified: it is loaded once in
+the server's own process), 17 confirmed in whole or in part, about eleven distinct, and all are repaired:
+- *The host*: `/importable.json`'s new refusal (`IMPORT-SOURCE-UNREAD`) had its `ok` overwritten to true, so the page drew
+  "every brief is a world here"; a brief whose files could not be listed was answered with facts never read (now read,
+  and the page says it with no Stage); `Hub.world` took the content lock at every opening, and its Busy carried a path
+  (now only for an empty ledger, with the recovery's wait, naming none); `LEDGER-EMPTY`'s remedy was false in one tree
+  (now the one that holds); `/worlds.json`'s errors could carry the source's path in one tree; `IMPORT-SOURCE-BUSY`'s one
+  message said a ledger was written when an admission had begun (now each its own), and a ledger that came was MOVED.
+- *The page*: round two's revless import panel made PAGE-CARDS' case 1 fail in an honest run (said above); a forced read
+  of the worlds swallowed a change seen while it was out (now drawn stale, and read again); a record that is not one was
+  skipped in silence (now said, and the row holds it).
+- *The docs*: the measured block and line count; the binding's patch "his ruling", which no record holds.
+
+**Its falsifiers.**
+- A crash point after which recovery lists a half world, leaves a folder aside, or changes another world's bytes.
+- An import that writes, locks or recovers its source; a staging listed or opened before its commit; a commit of a
+  staging holding what its record does not name.
+- An answer to the page that carries the source's absolute path.
+- The worlds panel saying verified for a world `Hub.inspect` does not verify; an outline of another world drawn.
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 0249's commit
+under %TEMP%, never the checkout):
+- Alone: STUDIO-2 SELFTEST 46/46 in 61 s (its crash loop at nine points, its six plants caught); PAGE-WORLDS SELFTEST
+  16/16 in 20 s (its four plants caught, each at once); PAGE-CARDS SELFTEST 30/30 in 87 s; STUDIO APP SELFTEST 13/13.
+- The full check of the final tree, `python art/selftests.py --repeat 2`, twice: twenty-seven suites, 534.1 s and 545.6 s,
+  then 531.6 s and 538.1 s wall, ART SELFTESTS FAILED each time. What failed: the row that the browser ended and nothing
+  of it is left, PAGE-WORLDS' in all four runs (Edge's processes still standing at the last look, 62.3, 66.1, 68.9 and
+  62.2 s after it was ended, against the row's 60 s, and then ended by the test) and PAGE's in one (63.2 s) *(corrected
+  2026-10-18, 0251: written "gone"; `end_browser` stops looking at 60 s and ends what is left, so these are the last
+  look's times, and that the processes would have ended by themselves is not measured)*; PREVIEW-STUDIO's 10 s for a whole preview in three (16.05, 11.04,
+  14.56 s); STUDIO APP's plant of a silence taken as a close in one. Every other suite passed in every run, PAGE-WORLDS'
+  other fifteen rows among them, PAGE-CARDS 30/30 in all four.
+- The base, 0249's tree (b5e75e7), run straight after the first under the same conditions: twenty-six suites, 310.0 s and
+  324.0 s, ART SELFTESTS FAILED on PREVIEW-STUDIO's 10 s once (10.69 s); its browsers gone 17.3 and 34.0 s after
+  (PAGE), 0.9 and 1.0 s (PAGE-CARDS). The patch's run is slower than the base's under the same conditions: its own
+  suites load the machine (STUDIO-2 237 s against 111 s in the full check, with its nine processes ended and its
+  exports; PAGE-WORLDS a third browser), and the CPU-bound suites beside them take longer (the race test 519 s
+  against 229 s). That the browsers' standing past 60 s is that load is INFERRED from the next line; that Edge's processes
+  left the job, or would have ended on their own, is not measured *(corrected 2026-10-18, 0251: written as one
+  inference)*.
+- The design's fallback for this (§4.6: the browser suites one at a time in `art/selftests.py`), measured in a scratch
+  copy and not in this patch, since it is his to accept: twenty-seven suites, 512.0 s and 522.3 s, every browser suite
+  passing in both runs, each browser gone 0.8 to 3.1 s after it was ended; failing STUDIO APP's silence plant in both
+  runs and PREVIEW-STUDIO's 10 s in one (15.45 s), the rows the base fails too.
+- The classifier his pushed tree holds (2c70a71's `tools/rung.py`), over 0249 and 0250 together from his pushed tree:
+  the rung D on sixteen files, loosening nothing; *"272 planted defects refused by the old checker; 277 by the new"*, PLANTS HELD, no checker stopped early (and over 0250 alone, from 0249's tree: the rung D on
+  thirteen files, loosening nothing).
+- The gate: `GATE PASSED`, `RECONCILE  rowset 74db4c8d78625af5  251 rows / 0 fail / 0 skipped`, row for row as before
+  (834 s).
+
+**What it does not show.**
+- That a directory's rename is atomic for a reader that lists the folder: INFERRED; the crash loop holds the states at
+  its nine points, not between them.
+- A writer of the worlds folder's folders that does not take its lock (only `play.py`'s writers take it).
+- `IMPORT-RENAME-BUSY` and the duplicate's held handle, `IMPORT-LEFTOVER` outside its plant, a commit refusing a staging
+  that holds an empty pending folder, `Hub.world`'s genesis under `QUIET_LOCK` (the plant is the stage's),
+  `INSPECT-FAILED`, a brief of the source whose files cannot be listed, and a forced read of the worlds that the files
+  moved during: VERIFIED BY READING, no row.
+- Linux; browsers other than Edge; a person's reading of the page.
+
+**Not done.** His ruling on the design's fallback for browser suites under load (§4.6: run them one at a time), which
+the full check above measures; the binding (0251: the still's, the preview's and the undo's, refused on if he so rules:
+the design's R8) and the inverse's repair (0252); BLENDER-VIEW-0 after, its rulings made explicitly. His act after this patch: importing a brief into his
+desktop studio through the page (OBSERVED, never a test).
+
+NOT_MEASURED: the full check in his checkout. No row, rung, pinned source or oracle file changed. Docs: AGENTS.md (the
+dashboard's and the worlds' rows), art/STUDIO.md (a section, and the first start), docs/CAPABILITY-MATRIX.md (a dated
+note), docs/CORE.md (art 32,338 lines), this entry.
+
+### BROWSER-SERIALIZATION-0 — the browser suites one at a time, a law of the full check · **built, off the gate** (0251: `art/selftests.py`, `art/page_test.py`, `art/page_dash.py`)
+
+**His ruling.** *"LOCK: `PAGE`, `PAGE-CARDS`, and `PAGE-WORLDS` are mutually exclusive in the full check. All other
+suites remain parallel. The 60-second browser-end bound is unchanged."* (2026-10-18, in the brief he brought,
+"BROWSER-SERIALIZATION-0 — Turn the observed race into a scheduling law", whose contract is, for B the three suites,
+∀ i≠j ∈ B, lifetime(i) ∩ lifetime(j) = ∅: *"The browser suites must execute in the registered order, one at a time.
+Non-browser work must retain existing parallelism."*; its decision boundary *"REJECT: timeout inflation as the first
+remedy, blanket serialization, broad process killing, invented runner paths, and a log-order-only sentinel. DEFER:
+cross-platform claims, root-cause claims about Edge process ownership, and broader scheduler redesign unless
+measurements make them necessary."*) His word with it: *"prepare to give me the push sincew last"*. Built on 0250
+(c24ea8d; his runs of 0249 and 0250 not seen), so 0249, 0250 and 0251 are one sequence for him to apply. The binding is
+now 0252 and the inverse's repair 0253; BLENDER-VIEW-0 after.
+
+**Measured before it was built.**
+- The full check's one scheduler is `run_all` in `art/selftests.py`: one process, `--jobs` worker threads (the machine's
+  processor count by default), each suite a process of its own (`run_one`, `subprocess.run`, its 1800 s TIMEOUT), the
+  longest estimate first, no suite stopping another. The three browser suites are three entries of SUITES, flags of
+  `art/play.py` (`--page-selftest` to `page_test.selftest`, `--cards-selftest` and `--worlds-selftest` to `page_dash`'s),
+  none nested in another and nothing else in the tree starting them (VERIFIED BY READING; SCHEDULE's register row now
+  reads it from the code in every full check). Their estimates (150, 120 and 110 s) were among the longest, so with
+  sixteen workers all three started with the run (VERIFIED BY READING).
+- A browser suite starts Edge through `page_test.launch` (on Windows by a holder in a job of its own, KILL_ON_JOB_CLOSE,
+  no flag that lets a process break away) and ends it through `end_browser`: the holder's input closed, then a look every
+  second for 60 s for the processes whose command line names the test's profile, then what is left ended by that marker,
+  the row having failed (`page_test.py`, `end_browser`).
+- The failure, in 0250's full check, four runs: PAGE-WORLDS' row that the browser ended failed in all four, Edge's
+  processes still standing at the last look 62.3, 66.1, 68.9 and 62.2 s after the browser was ended, and then ended by
+  the test; PAGE's once (63.2 s) (MEASURED). That they would have ended by themselves, and when, is not measured. With the
+  browser suites one at a time (a scratch variant, two runs): every browser gone 0.8 to 3.1 s after it was ended, every
+  browser suite passing (MEASURED).
+- Not separated by these runs: whether three browsers at once, or the load of the whole check at their closing, held the
+  processes; the variant changed both. That Edge's processes leave the holder's job and end on their own: a hypothesis,
+  not measured, and nothing here rests on it (DEFER, his brief).
+
+**The alternatives, against that evidence.**
+- The three serialized at the runner's own seam (`run_all`): chosen. It is where all three start in the full check;
+  every other suite keeps `--jobs`.
+- A browser lock across processes (a file lock in `launch`): it would also hold two full checks at once, and a suite run
+  by hand beside one. Not built: inside the full check all three are started by one process, and his brief says not to
+  invent cross-process machinery then; what that leaves is said below.
+- The 60 s raised: refused by his ruling, and it would hide the measured standing processes.
+- Edge's processes killed after each suite: `end_browser` already ends what its marker names, after its row has failed;
+  any wider kill (every msedge.exe) would end processes that are not the test's (refused, his brief).
+- Every suite serialized: refused (twenty-five other suites would run one after another).
+
+**What it is.**
+- *The enforcement point.* `run_all`: the browser suites (BROWSER, the register: page-cards, page-worlds, page, the
+  order the estimates started them in before 0251, now written down; the order the variant ran them in, OBSERVED in its
+  log's lines in both runs) are one lane: one at a time, in that order, each taken first by the next free worker
+  whenever none runs; every other suite as before, longest first; at most `--jobs` at once, the browser suite counted.
+  A suite's failure stops no other, the browser suites' as before (the existing semantics his brief's requirement 4
+  names), and its exit status and whole output stay in the log.
+- *Why it covers every launch path.* SUITES is the full check's only list. At the point a browser starts:
+  `art/selftests.py` tells every suite it runs in the full check (VERDANDI_FULL_CHECK) and gives the run's token
+  (VERDANDI_LANE_TOKEN) only to the registered browser suites; `launch` refuses a page test's browser inside the full
+  check to a suite without it (BROWSER-OUTSIDE-LANE), whatever route reached it, a process of its own included, and a
+  profile not made by `page_test.scratch` and `profile_of` (BROWSER-UNTOKENED: its name must be
+  `page-test-profile-<its scratch folder>` and carry the token), so that every page test's browser is one the lane's
+  look can see. By hand, neither is set and nothing is refused. And before anything runs: SCHEDULE's register row reads,
+  from the code, the entries that reach `launch` and fails when that is not BROWSER, or an entry cannot be read (an
+  entry's every branch of its module's dispatcher that names its argument, or its whole module; every reference
+  followed through the art modules' top-level functions, classes and variables, never into a name a function binds for
+  itself, imports and aliases resolved, a main() called with constants read but for the branches that name only other
+  strings; what it does not follow is said in `browser_suites`, and the guard holds it).
+- *What remains parallel.* Every other suite, at `--jobs`, in the order it had.
+- *The law's record* (`Lane`): its own lock and state, entered by the worker just before every registered browser
+  suite's process starts, whatever the scheduler decided, and left just after it ends. A run fails when a browser suite
+  enters while another holds the lane, and when two spans meet (one fact read twice: from the holding, from the spans);
+  when this run's page-test browser processes stand at an entry or after the last browser suite (the look: a CIM query,
+  read only, for a page test's profile carrying the run's token, which `page_test.scratch` puts in the test's scratch
+  folder and so in its browser's profile); when a look cannot be made, twice (never nothing); when the order is not the
+  register's or a suite runs twice; or when a suite outside the lane prints that it ended a browser (the witness). Each
+  run's line names the spans (`the browser lane held, one at a time in order: page-cards 0.0-… s, …`), or `BROKEN` and
+  why; the last line names a run whose law broke.
+- *Its falsifier.* A full check whose log shows two browser suites' spans meeting, this run's page-test browser standing
+  at an entry or after the last, or the browser suites in another order, and that says `ART SELFTESTS PASSED`; an
+  entry that starts a page test's browser and is not registered, with SCHEDULE passing; a page test's browser started
+  inside the full check by a suite outside the lane, or with a profile without the run's token.
+
+**SCHEDULE SELFTEST 43/43** (`python art/selftests.py --schedule-selftest`, a suite of the full check): stand-ins
+through `run_all`'s and `main`'s own code, no suite of the full check and no browser; four rows use real processes of
+this machine. Browser stand-ins each hold until another is inside or 2 s pass, so that two dispatched together are
+certainly inside at once: the overlap induced, never read from a log's order. Three other stand-ins meet the same way
+(for up to 15 s), so that a scheduler that serialized them is seen. The rows:
+- the honest lane (one at a time, in order, others beside them, at most `--jobs`);
+- through `main`, the honest lane passing, and the browser suites run together failing (exit 1, FAILED, the law named,
+  seen both as one entering while another held and as spans that overlapped);
+- a failing browser suite (its status and output kept, the next run); a raising one (a failed result, the lane let go);
+  through `main`, `--only` with the suites listed out of the lane's order (the stand-ins are listed page, page-cards,
+  page-worlds, neither the lane's order nor its reverse, so that no row passes on the list's order); `--jobs 1`;
+- the register's reader on a fixture: the shapes an entry can take (an assignment, a wrapped call, `sys.exit`, a lambda,
+  a call across modules, an aliased import, a thread's target, `getattr`, a class's methods, a backslashed path, another
+  module's command, a command in `if __name__ == "__main__":`, a name bound at module level to launch or a partial of it,
+  the module named again, a delegated `main(argv[1:])` as art/scene_diff.py hands HELD on, `page_test.main(["selftest"] +
+  argv)`, a setup branch before the dispatch, a main whose command is its default path called with `["--quick"]` and
+  with `[]`, another module's `main(["page"])`), shapes that must not count (a method named as a builtin, a parameter
+  named as another function's nested def, a function's local named as a module-level binding, a call of play's
+  `main([])`, a module's other command, another module's `main(["selftest"])`), a flag with no branch reported as not
+  read; and on the tree, its answer required to be the register;
+- the witness; the look at an entry, after the last, and unmade;
+- in real processes: `run_one` giving every suite the full check's word and only a browser suite the run's token; the
+  guard (`launch` with a suite's environment: outside the lane BROWSER-OUTSIDE-LANE; a browser suite with a profile
+  `page_test` made let through; a browser suite with a profile made by hand, and with its scratch folder itself as the
+  profile, BROWSER-UNTOKENED; nothing started); the real look, the profile made by `page_test`'s own `scratch` and
+  `profile_of` in a process with a browser suite's environment, against three decoys (another run's token, a search
+  naming the prefix, this run's token without a profile).
+
+Twenty-seven plants, each in the code the full check runs (three in `art/page_test.py`, reached by VERDANDI_PLANT), each
+caught only by its own row, for its own reason (the words its row's detail must hold), with every row before it passed:
+the browser suites run as any other; the order reversed; the lane in the order the suites are listed in; every worker
+held while a browser runs; the verdict blind; the record blinded (its holding check and the spans' overlap, one fact
+read twice, so one plant); the lane stopped at a failure; the lane not let go on a raise; the reader inside one module;
+the reader's flat table (a name resolved to any function or method so named); the reader taking the first branch only;
+the reader skipping every main(); the reader blind to module-level bindings; the reader blind to `__main__` dispatch;
+the reader resolving a function's own local to a module-level binding; the reader reading of a main() called with
+constants only the branches they name; a suite left out of the register; the witness blinded; the look ignored; an
+unmade look read as nothing; the closing look skipped; a suite given this process's environment; the token given to
+every suite; launch's guard taken away; launch's check of the profile taken away; the look by the profile's prefix
+alone; a scratch folder made without the token.
+
+**Four reviews of the patch** (each finding put to a skeptic who tried to refute it): 17, 11, 13 and 5 agents; 14, 9, 11
+and 4 findings; 4, 0, 2 and 0 refuted, the rest confirmed in whole or in part, every one repaired. In short:
+- a look that could not be made counted as the lane held (now a failure, after one retry);
+- the look matched any process naming the profile's prefix, a search or another clone's page test (now only this run's
+  token in a page test's profile);
+- the register's reader missed ordinary shapes; then it counted wrongly through a flat table of names, walked every
+  branch of a reached main(), read whole modules where a dispatcher names the command, resolved a function's local to a
+  module-level binding of its name, and read nothing of a main()'s default path (each rule now with a fixture case and a
+  plant of its own);
+- a plant counted caught on any failure of its row (now only for its own reason), and two plants that blinded one fact
+  read twice (now one);
+- nothing held the token's producer: the environment `run_one` gives, the profile a page test makes (now a row each, and
+  `launch` refusing a profile not made by `scratch` and `profile_of`);
+- the lane's order held in the rows only because the stand-ins were listed in it (now listed otherwise, and `--only`
+  through `main`);
+- a row printed a claim its own data refuted; comments said more than the code.
+The fourth round's repairs were not reviewed again.
+
+**Evidence ledger** (his brief's list):
+- *The enforcement point and the files.* `run_all` in `art/selftests.py`; `art/page_test.py` (`lane_refusal`,
+  `lane_token`, `scratch`, `profile_of`, the guard in `launch`); `art/page_dash.py` (its two scratch folders and
+  profiles through `page_test`).
+- *The invariant, where it is registered.* No entry in verify/preregister.json and no row: the art layer has none, and
+  his sprint ruling stops the gate growing. The law is written where the art layer keeps its checks: BROWSER and `Lane`
+  in `art/selftests.py`, AGENTS.md's row for the full check, and SCHEDULE's rows, which every full check runs.
+- *The planted defects and their observed failures.* SCHEDULE's twenty-seven, each printed with the words its row failed
+  with (MEASURED, below); among them the brief's own, browser suites launched together, caught as "page-cards entered
+  while page held the browser lane; … page and page-cards overlapped".
+- *The browser suites one by one; the full check; host and scope.* Below.
+- *The gate.* Its two runs on this patch's own tree, the tree's identity and the sha256 of each compact output, are in
+  this patch's commit message: a record of them in the tree would change the tree they ran on.
+- *What is unresolved.* Below, under what it does not show, and the base's two timing rows, said with their rows.
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 0250's commit
+under %TEMP%, never the checkout; Edge headless):
+- SCHEDULE SELFTEST 43/43 alone, 254 s: its sixteen rows, and its twenty-seven plants each caught by its own row for its
+  own reason. The brief's own plant, the browser suites launched together, printed "the law BROKEN: page-cards entered
+  while page held the browser lane; page-worlds entered while page held the browser lane; page and page-cards overlapped
+  …"; the honest lane, "page-cards 0.0-2.0 s, page-worlds 2.0-4.0 s, page 4.0-6.0 s; the browsers met False; three others
+  met True; at most 4 at once (jobs 4); another beside a browser True".
+- The three browser suites alone, the final tree: PAGE SELFTEST 19/19 in 133 s, PAGE-CARDS SELFTEST 30/30 in 85 s,
+  PAGE-WORLDS SELFTEST 16/16 in 20 s, each browser gone 0.5 or 0.6 s after it was ended; and alone on each of the
+  patch's four earlier states, the same three summaries every time, the browsers gone in 0.5 to 0.7 s.
+- The full check of the final tree, `python art/selftests.py --repeat 2`: twenty-eight suites, 515.1 s and 511.9 s wall.
+  In both runs the browser lane held, one at a time in order: "page-cards 1.1-272.2 s, page-worlds 273.0-310.1 s, page
+  312.8-514.6 s" and "page-cards 1.0-268.2 s, page-worlds 270.0-308.6 s, page 309.3-511.4 s". Every browser suite passed in
+  both runs (PAGE-CARDS 30/30, PAGE-WORLDS 16/16, PAGE 19/19), each row that the browser ended passing with the browser
+  gone 0.6 to 2.2 s after it was ended; SCHEDULE 43/43 in both. ART SELFTESTS FAILED, on the base's two timing rows only,
+  each in one run, in suites this patch does not change:
+  - STUDIO APP 12/13 in the first: "[FAIL] plant: silence taken as a close while a request runs — the studio stops with
+    the request still running — the page has not spoken for 5 s";
+  - PREVIEW-STUDIO 13/14 in the second: "[FAIL] one candidate's preview well inside 10 s (B4-TIMING-BOUNDARY) — the whole
+    preview over HTTP 11.93 s (16 stills and the report); both sides' 960 ticks 613 ms".
+  Every other suite passed in both runs.
+- The base, 0250's tree (c24ea8d), the three browser suites at once, run straight after the same way: twenty-seven
+  suites, 512.6 s and 523.2 s wall, ART SELFTESTS FAILED: the row that the browser ended, PAGE-WORLDS' in both runs (one
+  msedge.exe still standing at the last look, 61.8 s and 64.9 s after the browser was ended, then ended by the test) and
+  PAGE's in the first (61.2 s); PREVIEW-STUDIO's 10 s in the second (20.51 s); STUDIO APP passing in both. Under the same
+  conditions the lane took the browser-end rows from three failures in six to none in six (MEASURED; two runs each, a
+  small sample).
+- Alone on the final tree, the two timing rows' suites: STUDIO APP SELFTEST 13/13 three times (its plant: "the page has
+  not spoken for 4 s; a request was still running"), PREVIEW-STUDIO SELFTEST 14/14 twice (the whole preview in 1.73 s and
+  1.74 s). That their failures in the full check are the load's is INFERRED: their code is the base's, the base failed
+  PREVIEW-STUDIO's row under the same conditions, and STUDIO APP's plant failed on base trees in 0248's, 0249's and 0250's
+  records.
+- With the lane, the browser suites are the run's longest path: 514.6 s and 511.4 s of 515.1 s and 511.9 s (MEASURED).
+  The walls are 0250's own order of size (531.6 to 545.6 s with the three at once, on another day: not a comparison).
+- The classifier his pushed tree holds (2c70a71's `tools/rung.py`), run from outside the checkout over 0249, 0250
+  and 0251 together, applied to a fresh clone of his checkout: the rung D on sixteen files, loosening nothing;
+  *"272 planted defects refused by the old checker; 277 by the new"*, PLANTS HELD, no checker said to have stopped
+  early.
+- The gate: in the commit message (above, in the evidence ledger).
+
+**What it does not show.**
+- Exclusion across processes: two full checks at once on one machine, or a browser suite run by hand beside a full check,
+  are not kept apart (the look sees only this run's token). NOT_MEASURED, and not built (his brief).
+- A browser that is not a page test's (the desktop studio's own window, `studio_app.py`, whose self-test uses a stand-in
+  browser), a process of the browser whose command line does not name its profile, or one started without `launch`: the
+  look and the guard see none of them. The register's reader does not follow a process started by a command line, a name
+  computed at run time or a method called on an object; the guard at `launch` is what holds those.
+- The cause of the processes outliving 60 s (Edge leaving the job, the load, or both): a hypothesis, untested (DEFER).
+- That the base's timing rows (STUDIO APP's plant of a silence taken as a close, PREVIEW-STUDIO's 10 s) pass under the
+  full check's load: they are said with their rows, not repaired here.
+- SCHEDULE's stand-ins hold the scheduler's logic and the record's, not a browser's behaviour under load; the full check's
+  own runs above are what show the lane with real browsers.
+- Linux, and browsers other than Edge: never run.
+- tools/rung.py's R5 reads four suites' plants, and SCHEDULE's is not one of them.
+
+**Not done.** The binding (0252: the still's, the preview's and the undo's, refused on if he so rules) and the inverse's
+repair (0253); BLENDER-VIEW-0 after, its rulings made explicitly. His acts: apply 0249, 0250 and 0251 in that order, run
+the full check and the gate in his checkout, push.
+
+NOT_MEASURED: the full check and the gate in his checkout. No row, rung, pinned source or oracle file changed. Docs:
+AGENTS.md (the full check's and PAGE-0's rows), art/STUDIO.md (the full check's lane), docs/CAPABILITY-MATRIX.md (two
+dated notes), docs/CORE.md (art 33,322 lines), this entry, and 0250's entry corrected in place (its browsers "gone"
+62 to 69 s after: still standing at the last look, then ended by the test), with a note.
+
+### BINDING-0 — the scene binding, registered before it is enforced · **registered, off the gate** (0252: `art/director/bindings/`, `art/director/binding.py`, `art/play.py`'s STUDIO rows)
+
+**His run of 0251** (2026-10-18, in his checkout, from his output): 0249, 0250 and 0251 applied, the tree
+`82ec9ee269033aab75ca60735b04285b4249cd0b`; SCHEDULE SELFTEST 43/43; `python art/selftests.py --repeat 2`: ART
+SELFTESTS PASSED, twenty-eight of twenty-eight suites in both runs, 328.9 s and 373.0 s wall, the browser lane held in
+both ("page-cards 1.9-166.8 s, page-worlds 167.4-188.9 s, page 189.4-328.5 s"; "page-cards 1.3-193.1 s, page-worlds
+193.7-218.3 s, page 219.1-372.6 s"), STUDIO APP 13/13 and PREVIEW-STUDIO 14/14 in both; the classifier his pushed tree
+held: the rung D on sixteen files, loosening nothing, *"272 planted defects refused by the old checker; 277 by the
+new"*, PLANTS HELD; the gate: `GATE PASSED`, `RECONCILE  rowset 74db4c8d78625af5  251 rows / 0 fail / 0 skipped`; his
+status listing his two untracked `art/ledger/*.tags.json` and nothing else; pushed `2c70a71..8902aa3`. What 0251 left
+NOT_MEASURED in his checkout, its full check and its gate, his run measured there.
+
+**His ruling** (2026-10-18), in his words: *"Ruling: LOCK — REFUSE on a scene-binding mismatch for 0252."* *"The reason
+is an authority boundary, not a UI preference: if an admission relies on a still, preview, or undo account tied to a
+different scene from the exact candidate being admitted, the evidence does not establish what was actually shown for
+that admission. Merely recording the mismatch leaves that gap unenforced."* The contract's five lines (still, preview,
+undo, mismatch or unknown, exact match), *"Keep the host authoritative. The dashboard reports the host's result; it must
+not implement a second admission policy."*, *"Before implementation, preregister the candidate-scene identity and the
+comparison rule. Then plant at least these failures:"* and his five cases; *"Decision boundary: LOCK refusal on
+mismatch; DEFER any broader freshness or authority rules not required to enforce this contract."* Then, asked where to
+register: *"My ruling: choose “Art-layer register first.” Keep 0252 registration-only, 0253 enforcement-only, and 0254
+repair-only."*, with RBAP, the Robust Binding Admission Principle, which he graded himself: *"This is a proposed
+engineering invariant, not an established mathematical theorem."* Asked about PREVIEW-0: *"Ruling: LOCK bound when relied
+upon; DEFER mandatory previews, global preview freshness, and broader admission-policy changes. Register that
+distinction in 0252 before implementing 0253."* Asked about case 2: *"- LOCK: STALE-first ordering; independent,
+binding-specific causal plant."* Of the options then put to him, he chose the undo bound to the world's scene it was
+shown over (`of` and `scene`), and the director's command line outside version 0, said. Every ruling is quoted whole in
+the contract, taken from his text by the generator, never retyped.
+
+**What it is.**
+- *The contract*, BINDING-0 version 0, `art/director/bindings/BINDING-0.v0.json` (34,941 bytes, sha256
+  `cb08e8ed3566f7d4aa19b38ad33fdaf79d1bfd2c21afe73a38576466815cdd85`): his rulings; RBAP and its four requirements
+  (precedence, fail-closed, determinism, auditability); its scope (the studio's admission and undo through the host, and
+  the accounts of them; outside, the director's command line and the dashboard); the identities (the candidate scene at
+  admission: the scene the admission's own evaluation exports, never the card's, a slot's or the page's; the undo target
+  and the scene at the undo); the evidence (the still, always relied on; a preview, only when the admission names it by
+  its id, its recorded candidate scene and the scenes named for its candidate-side stills compared, its content never
+  read; the undo's `of` and `scene`); the comparison (exact string equality, well formed or unknown, MATCH, MISMATCH and
+  UNKNOWN, their precedence, what is never done); the order (the binding check after every existing check, the commit's
+  own under the content lock included, before the admission's first write: every existing refusal keeps its code, and
+  0249's displayed account equals the press's first refusal under 0249's conditions; the account reports no binding as
+  checked or matched); his five cases word for word, each with its state, its expected result per kind and its
+  attribution (B2: STUDIO-STALE first, the binding's own refusal shown with STALE's comparison skipped by a plant, the
+  limitation said); the order states; the decision record, its fields and bytes defined; the plants 0253 must catch at
+  least; his acceptance gates and DEFER lines verbatim; what it does not show; its compatibility rule.
+- *Its register*, `art/director/bindings/register.jsonl`: one line, BINDING-0 version 0, the file, the sha256, patch
+  0252, 2026-10-18.
+- *Its reader*, `art/director/binding.py`: `python art/director/binding.py check` holds the files to the register (every
+  registered file present in its one byte form with its line's sha256; every line well formed; a version and a file
+  registered once; versions from 0 without a gap; no contract file unregistered; his five cases first, each with his
+  words, every case with an explicit expected result; the outcomes MATCH, MISMATCH and UNKNOWN). It reads and decides no
+  admission: until 0253 nothing in the program reads the contract.
+- *STUDIO's rows* (`binding_selftest` in `art/play.py`): the registration as it stands, and five plants, each refused with
+  its own code in a copy: a contract changed and its line not (BINDING-STALE), the same contract in another byte form
+  (BINDING-NOT-CANONICAL), a case left without an expected result (BINDING-CASES), a version registered twice
+  (BINDING-TWICE), a contract file no line registers (BINDING-UNREGISTERED).
+
+His acceptance gates against this patch: the registration committed before the implementation (this patch, before
+0253: history shows it); the self-test detects a modified contract or a stale digest (BINDING-STALE's row); each of the
+five cases with an explicit expected result (the reader requires it); repeated runs' identical decision records and
+Windows and Linux agreeing are 0253's, where records are first made (Linux NOT_MEASURED); the gate at its registered size
+(below).
+
+**Two reviews of the contract before it was frozen** (each finding put to a skeptic who tried to refute it): 55 and 23
+agents; 52 and 21 findings; 7 and 2 refuted; the rest confirmed in whole or in part and taken. In short: PREVIEW-0 had
+been written as amended in his name, where he said it survives; the preview's binding had gained a head, a base scene
+and base-side stills he did not rule (cut to his words); the undo's `from_head` bound the operation only (two choices put
+to him); the order rule could not be met as written (now after the commit's own checks, before the first write) and its
+0249 clause held only under 0249's conditions (now said); a plant no case could catch (now the order states, and a plant
+of a matched binding taken as sufficient); a preview named by its report's sha256, which two previews can share (now an
+id that commits to what it declared), and a blank `preview` read either way (now unknown); the decision record carrying
+the request's id, a clock (now without it, its fields fixed to the byte); his acceptance and DEFER lines paraphrased (now
+verbatim). The second round's repairs were not reviewed again; a defect found in version 0 now is a version 1,
+registered before the code it governs.
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 8902aa3 under
+%TEMP%, never the checkout):
+- `python art/director/binding.py check`: `BINDING-0 REGISTERED version 0 sha256
+  cb08e8ed3566f7d4aa19b38ad33fdaf79d1bfd2c21afe73a38576466815cdd85 (BINDING-0.v0.json)`, exit 0.
+- STUDIO SELFTEST 101/101 alone in 112 s: the 95 rows before, and BINDING-0's registration row and its five plants, each
+  refused with its own code ("BINDING-STALE: BINDING-0.v0.json is not the contract registered on line 1 …",
+  "BINDING-NOT-CANONICAL …", "BINDING-CASES: … case B4 has no explicit expected result", "BINDING-TWICE: line 2 registers
+  BINDING-0 version 0 … again", "BINDING-UNREGISTERED: BINDING-0.v1.json is in the folder and no line registers it").
+- The full check, `python art/selftests.py --repeat 2`: twenty-eight suites, 507.1 s and 514.7 s wall, the browser lane
+  held in both, STUDIO 101/101 in both; the first run twenty-eight of twenty-eight; ART SELFTESTS FAILED on one row of the
+  second, in a suite this patch does not change (no line of `art/play.py`'s diff is the preview's): PREVIEW-STUDIO 13/14,
+  "[FAIL] one candidate's preview well inside 10 s (B4-TIMING-BOUNDARY) — the whole preview over HTTP 15.21 s (16 stills
+  and the report); both sides' 960 ticks 1966 ms". Alone on this tree PREVIEW-STUDIO SELFTEST 14/14 twice (the whole
+  preview 1.74 s and 1.79 s). That the load fails that row is INFERRED: the base was not run again here; its row failed
+  under load in 0248's, 0249's, 0250's and 0251's records, and passed in both runs of his own full check of 0251.
+- The classifier his pushed tree holds (8902aa3's `tools/rung.py`, byte for byte 2c70a71's), run from outside the
+  checkout over 0252 applied to a fresh clone of his checkout: the rung D on nine files, loosening nothing;
+  *"277 planted defects refused by the old checker; 282 by the new"*, PLANTS HELD (the five more are BINDING-0's
+  plants, which R5 reads in STUDIO's rows).
+- The gate: its two runs on this patch's own tree, the tree's identity and the sha256 of each compact output, are in
+  this patch's commit message: a record of them in the tree would change the tree they ran on.
+
+**What it does not show.**
+- That the contract is right, or that 0253 will enforce it: a finite set of cases can only falsify an implementation, and
+  enforcement is 0253's.
+- That the pixels of a still or a preview are of the scene the page declared: the binding binds what the page says.
+- A register line rewritten together with its file: the files alone cannot show it; history does.
+- Linux.
+
+**Not done.** 0253, the enforcement (the five cases and the order states through the host, the plants the contract
+lists, the decision records, PREVIEW-0's row and art/STUDIO.md brought into agreement with his ruling); 0254, the
+inverse's repair against the same contract; BLENDER-VIEW-0 after, its rulings made explicitly.
+
+NOT_MEASURED: the full check and the gate in his checkout. No row, rung, pinned source or oracle file changed. Docs:
+AGENTS.md (a row for BINDING-0, the studio's count), art/director/README.md (§8), docs/CAPABILITY-MATRIX.md (two dated
+notes), docs/CORE.md (art 33,553 lines), this entry.
+
+### BINDING-0 enforced — the scene binding at the studio's admission and undo · **built, off the gate** (0253, two commits: the freeze, `art/director/binding_freeze.py`, `art/director/bindings/0253-matrix.json`, `0253-vectors.json`, `frozen-0253.jsonl`; the guard, `art/studio.py`, `art/director.py`, `art/binding_rows.py`, `art/play.py`, `art/flagship.py`, `art/studio_queue.py`, `art/page_dash.py`, `art/page_test.py`, `art/web/play.js`, `art/web/page_test.js`, `art/selftests.py`)
+
+**His rulings**, in his words. On the review of the plan (2026-10-18): *"My ruling: LOCK the two-sided causal plant as
+the first 0253 specification artifact."* Its four obligations: *"`BIND-CAUSAL-0` — two-sided proof"* (*"With enforcement
+removed, the motivating wrong-scene admission must reproduce. With enforcement restored, the same case must refuse for
+the binding-specific reason. A positive-only plant proves execution, not causality."*); *"`BIND-NOTSUFFICIENT-0` —
+matching is not authority"* (*"A correctly matched binding must not bypass existing admission checks. Use a concrete
+candidate that still fails an independent, registered requirement."*); *"`BIND-ORDER-0` — observable precedence"*
+(*"Define the relevant refusal precedence and plant a candidate that violates two checks at once. Require the earlier
+check’s result, preserving STALE-first behavior."*); *"`BIND-COUNT-0` — classifier visibility"* (*"Measure the
+classifier count before and after adding the registered binding plants. Require the expected increase and verify that
+every new plant is actually counted—not merely executed."*). His two safeguards: *"`not_checked` must be explicit. If
+STALE refuses first, the verdict should record that the binding check was not reached. Otherwise, downstream evidence
+can mistake an unexamined binding for a verified match."* *"The registered rule must remain the authority for comparison
+semantics. Before duplicating the comparison in production code, establish how conformance to the registered bytes is
+tested. The implementation must not quietly become the definition of what counts as a match."* The three layers: *"The
+0253 specification should distinguish registration errors, binding states (`MATCH`, `MISMATCH`, `UNKNOWN`), and host
+admission refusals before defining its enforcement matrix."* The window: *"Measure the affected legitimate routes and
+document the expected temporary refusal. Do not weaken 0253 to keep the chain green."* *"Then freeze the 0253 test
+matrix before implementing the guard."*
+
+On the spec's three questions (2026-10-19): *"My rulings are the first option in all three cases, with one important
+qualification on the preview path."* *"1. Register mismatch at Admit or Undo: LOCK the draft."* *"Do not add a runtime
+register-file read or a new refusal outcome at the press. Pin BINDING-0 v0 in the host, verify that the host pin matches
+the registered v0 line, and require the planted mismatched-pin case to refuse. Run `binding.py check` in the full check
+as proposed."* *"2. Should the page name a preview on Admit? LOCK the draft: never in 0253."* *"The named-preview path
+must still have direct row coverage. STUDIO-owned tests can exercise it without changing the normal page workflow."*
+*"3. Should FLAGSHIP-0 name the preview it verified? LOCK the draft: never."* *"Keep FLAGSHIP-0's rule that studio
+admission does not read its evidence. Do not amend the row to name the preview."* A later message of his, *"So my
+previous rulings should not be treated as the governing decisions."*, rested on a misreading of the agent's note ("He
+ruled the drafted option on all three questions", meaning he chose them); asked whether the three rulings govern 0253,
+he answered *"Yes, they govern (Recommended)"*. They govern; that message's order stands: *"The governing distinction:
+preparation can happen in parallel; the committed repair sequence remains 0253 → 0254 → subsequent repairs."*
+
+**What it is.**
+- *The freeze* (commit 1, before the guard): `art/director/bindings/0253-matrix.json` (sha256
+  `1eef856df803b038bd00b385b3f1fef4823baa4f7a851ee6df7513c4e9e50589`), the test matrix M1 to M25, every row's state,
+  switches, answer, director's code, decision record, ledger delta, brief and certificate, and its 34 plant rows by
+  name; `0253-vectors.json` (sha256 `eef1de71881518419a9c2add90479be9854d821d9e6b0880f10a0b4f29e6ba0b`), 80 conformance
+  vectors of v0's rule (the still's keeping, one field's comparison, the piece, the press, the record's bytes, the
+  preview's id); `frozen-0253.jsonl`, a line for each with its sha256, outside `register.jsonl`;
+  `art/director/binding_freeze.py check`, their reader. `binding.py check` and the register unchanged.
+- *The guard* (commit 2), in `art/studio.py`: the host pins BINDING-0 version 0 and sha256
+  `cb08e8ed3566f7d4aa19b38ad33fdaf79d1bfd2c21afe73a38576466815cdd85` and never reads the register at a press; the
+  evidence an Admit relies on (the still's kept scene; a preview the request names by its id, `preview`) and an Undo's
+  (`of` and `scene`) compared exactly with v0's identities (the scene the admission's own evaluation exports; the undo's
+  target and the world's scene), refused `BINDING-MISMATCH` or `BINDING-UNKNOWN` (never through
+  STUDIO-DIRECTOR-REFUSED); the check is a `gate` that `cmd_admit` passes to `commit_admission` (`art/director.py`),
+  called under the content lock after every check of the commit and before its first write (the command line passes
+  none). Every press, admitted, undone or refused, is answered and logged with `binding` (checked, or not reached and
+  `why`: his safeguard, `not_checked` explicit) and its decision record; `admit-refused` for every refused admission,
+  `undo-refused` new; `preview_id` on the preview's finish and line; `scene` on `GET /undo.json`. `BINDING_PLANT`, set
+  by STUDIO alone, with the eleven switches the matrix names.
+- *The callers declare their bindings* (the window, M22): the stills of HELD, IMPACT-STUDIO, PREVIEW-STUDIO, STUDIO-2,
+  FLAGSHIP and STUDIO send `scene`, the candidate's; the undos of STUDIO (and `page_dash.studio_rows`), FACADE, STRICT
+  and FLAGSHIP send `of` and `scene` as `GET /undo.json` gave them (`play.declared_undo`,
+  `flagship.Http.undo_declared`); the page's Undo (`art/web/play.js`) adds `scene` to `of`. No route names a preview
+  (his ruling 2), FLAGSHIP-0 none (his ruling 3). PAGE's driver (`art/page_test.py`, `art/web/page_test.js`), a change
+  to the harness and not to the product: the undo step reads the host's revision after the admission is served and
+  presses Undo only once the page has read Undo's account at it (M22).
+- *STUDIO's matrix rows*, `art/binding_rows.py`, run by `python art/studio.py selftest`: 89 rows (the matrix's 92 runs
+  less its three measurements of the delivery), 34 of them plants named "BINDING plant: …"; every row prints the
+  matrix's own name and is held to what the matrix says it must observe; BIND-CAUSAL-0's pairs built once and copied
+  byte for byte, the host's readings required equal across the copies before either press, the same press made with the
+  check removed in one and in force in the other; the conformance rows hold the host's pure functions to the frozen
+  vectors; the pin row and its plant (`pin-differs`, refused). A refused press is held, besides, to nothing of the
+  admission written: no durable point of the commit's writes reached (`admit:stills`, `pending:file-N`,
+  `pending:manifest`, `ledger:admit`, `install:file-N`) and the ledger's stills folder unchanged (v0 order.rule).
+- *Docs*: AGENTS.md's PREVIEW-0 row brought into agreement with v0's evidence.preview.content, as v0 requires of 0253;
+  the BINDING-0 row (the enforcement, the freeze and its reader), the studio's count and PAGE-0's undo step;
+  art/STUDIO.md (the preview's, the still's and the undo's binding, the refusal table, what is kept);
+  art/director/README.md §8; docs/CAPABILITY-MATRIX.md, a dated note; docs/CORE.md.
+
+**Repairs after a review of the guard** (three lenses, each finding put to a skeptic who tried to refute it; sixteen
+findings, several of them one defect seen by more than one lens, each confirmed in whole or in part, none refuted; the
+repairs not reviewed again):
+- The order rule had no row behind it: with the gate moved below `pending:manifest` (a measurement in a copy of the
+  tree, never the tree) the still and the pending folder were written before every binding refusal and every row still
+  passed, the recovery rolling the folder back. Now every refused press is held to no write point reached and the stills
+  folder unchanged (no row and no plant added: k stays 34). Its power MEASURED in a fresh copy with the gate moved: 14
+  of 78 rows of seven groups failed, each "the press refused after the admission's first write: admit:stills,
+  pending:file-0, pending:manifest"; on the tree STUDIO 190/190.
+- M22's change to PAGE's driver, frozen in commit 1, had not been built (the reviewers reproduced the race with each
+  `/undo.json` dry run slowed by 1.0 s: the page sent `of` "", BINDING-UNKNOWN, PAGE's undo row failed, three times in
+  four); built as the matrix states.
+- A record not reached could declare a still posted after the press was refused, its bytes then depending on timing: the
+  still the press found is taken in one snapshot with the candidate at the start of the press and never read again after
+  a refusal.
+- `page_dash.studio_rows`' decided state compared the account and the press across the undo's compile (STUDIO 189/190
+  once under load, "at the same revision False"; its cause INFERRED): the loop settled first, and in the
+  director-skipped plant's state as in state 6 (a harness repair).
+- Found by the full check after those repairs (its first run, STUDIO 180/198: every preview row "its state raised
+  RuntimeError: no request of four had a camera path (PREVIEW-NO-PATH)"; the second run 190/190): a request's camera
+  path is seeded by its id, which carries the UTC second, and in the rows' fixture about a third of ids give none
+  (MEASURED, 96 of 300 ids), so the preview state's four tries failed about once in a hundred builds, by the clock and
+  not the load. Now twelve tries (about once in a million). The same four tries in `page_dash.studio_rows`' preview row
+  (0249) are as they were: its odds the same, said.
+- The docs above; his BIND-CAUSAL-0 quoted with a word changed in `art/binding_rows.py` ("not cause", his "not
+  causality"); a comment naming a scratch file; a line of the strict check joined by accident (restored byte for byte);
+  STUDIO's estimate in `art/selftests.py` (30 s, now 315 s: only the order the full check starts suites in).
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 1381b31 under
+%TEMP%, never the checkout; each suite alone and one at a time unless said):
+- `python art/director/binding.py check`: `BINDING-0 REGISTERED version 0 sha256
+  cb08e8ed3566f7d4aa19b38ad33fdaf79d1bfd2c21afe73a38576466815cdd85 (BINDING-0.v0.json)`; `python
+  art/director/binding_freeze.py check`: `BINDING-0 0253 FREEZE FROZEN: 80 vectors, 36 matrix entries naming 92 rows (34
+  plant rows) against BINDING-0 version 0 sha256 cb08e8ed3566f7d4aa19b38ad33fdaf79d1bfd2c21afe73a38576466815cdd85;
+  nothing open`.
+- STUDIO SELFTEST 190/190 (324 s, and again after the last repair, 324 s): the 101 rows before and the matrix's 89. LIVE
+  30/30; BOUNDARY 9/9; FACADE 8/8; STRICT 11/11; IMPACT-STUDIO 8/8; FLAGSHIP 9/9; STUDIO-2 46/46; PREVIEW-STUDIO 14/14
+  (the whole preview 1.78 s); DIRECTOR SELFTEST PASSED; DIRECTOR CRASHTEST PASSED (15 cases); DIRECTOR RACETEST PASSED
+  (32 cases); VECTORS 65 / 65; CONFORMANCE 65 / 65; ART CHECKS PASSED; SCENE-DIFF SELFTEST PASSED: 20 of 20 plants
+  caught, HELD SELFTEST 8/8; SCHEDULE SELFTEST 43/43; then the browser suites one at a time: PAGE 19/19, PAGE-CARDS
+  30/30, PAGE-WORLDS 16/16, each browser ended in 0.5 to 0.7 s.
+- M22, the window, from those runs: no route answered BINDING-*. Admit only: HELD admitted (its compare row),
+  IMPACT-STUDIO admitted (over a budget, advisory), PREVIEW-STUDIO admitted, STUDIO-2 admitted in harbor-day. Admit and
+  undo: FACADE admitted and undone exactly; STRICT admitted and undone, its inverse receipt; FLAGSHIP admitted and
+  undone, the world as before; STUDIO's own (page_dash's undos among them) as its rows; PAGE admitted and undone,
+  "restored exactly"; PAGE-CARDS 5a undone NOT restored exactly (statements, not bytes) and 5b undone and NOT restored,
+  both bound, as the matrix expects (0254's subject is not a binding). PAGE-WORLDS neither admits nor undoes. M23's two
+  refusals, permanent and kept, are STUDIO's rows (Undo pressed before `/undo.json` is read: BINDING-UNKNOWN, the next
+  press after a fresh read undoes; Undo over a dead writer's pending folder: BINDING-UNKNOWN).
+- M21, R5: the classifier his pushed tree holds (1381b31's `tools/rung.py`, byte for byte the tree's), run from outside
+  the checkout over origin/main and this patch's tree (both commits, a throwaway branch made through a temporary index
+  and deleted after): the rung D on twenty files, loosening nothing; *"282 planted defects refused by the old checker;
+  316 by the new"*, PLANTS HELD: k = 34. By R5's own parser on STUDIO's output, STUDIO's keys 15 before and 49 after,
+  the 34 added exactly the matrix's plant names, each passing, the 15 kept and passing. (Two changes came after that
+  run: the preview state's tries, a constant of `art/binding_rows.py` that names no row and no plant, and this entry, a
+  doc.)
+- M25 (v0 acceptance 4): the 33 decision records STUDIO prints beside their cases, byte for byte the same in five runs
+  of STUDIO alone on this patch (three before the review's repairs, two after; their lines' sha256
+  `7c4eb20703cfac65fdbf0aed6d163285b3ab116b2f87c9565297b3a57b5943c9`): M1 `2c859fb76cbd…`, M3 `fa3bb2b1d080…`, M6
+  `39fa0f5d78ce…`, M6b `bcdbfe5b76cd…`, M8 `05e2ef7a3947…`, M9 `554c15ec7d0d…`, M24 `0745b07918eb…`, the rest in
+  STUDIO's output.
+- The full check, `python art/selftests.py --repeat 2`, twice. The first, before the last repair: twenty-eight suites,
+  687.4 s and 716.3 s, the browser lane held in both; run 1 STUDIO 180/198 (the camera path, above) and STUDIO APP 12/13
+  ("[FAIL] plant: silence taken as a close while a request runs — the studio stops with the request still running — the
+  page has not spoken for 4 s"), run 2 PREVIEW-STUDIO 13/14 (the whole preview 12.74 s against its 10 s), every other
+  suite passing in both. The second, on the final tree: 741.8 s and 737.9 s, the browser lane held in both, STUDIO
+  190/190 and every browser suite passing in both, ART SELFTESTS FAILED on PREVIEW-STUDIO's 10 s row alone, in both runs
+  (20.78 s and 18.55 s). Alone the same preview takes 1.78 s on this tree. Then the base and this tree back to back,
+  each `--repeat 2` on its own clone, the base first: the base (1381b31) 522.5 s and 533.2 s, run 1 twenty-eight of
+  twenty-eight (the whole preview 7.60 s), run 2 PREVIEW-STUDIO 13/14 (15.08 s); this tree 710.7 s and 699.7 s, run 1
+  twenty-eight of twenty-eight (9.24 s), run 2 PREVIEW-STUDIO 13/14 (11.32 s); the browser lane held in all four. So
+  the base fails that row the same way under the same load (MEASURED, one pair of runs); that STUDIO, now the longest
+  suite and started first, makes the load heavier than before is INFERRED. M25: the decision records STUDIO prints beside their cases
+  are byte for byte the same in both runs of the second full check and in the second run of the first (their lines'
+  sha256 `7c4eb20703cfac65fdbf0aed6d163285b3ab116b2f87c9565297b3a57b5943c9`, as in the STUDIO runs above); the first run
+  of the first printed 32 of them, M9's state having raised, each the same bytes.
+
+**What it does not show.**
+- That BINDING-0 is right, or that the guard enforces it everywhere: a finite matrix only falsifies; one author wrote
+  the rows, the guard and the vectors (his literal cases stand against a shared mistake).
+- That a still's or a preview's pixels are of the scene the page declared: the binding binds what the page says.
+- That every runtime decision re-reads the register (his ruling 1: the pin is held to the register by STUDIO's rows, not
+  at the press).
+- The order rule's check of no write before a refusal holds by a measurement, not by a plant row (one would change the
+  frozen matrix: his to rule).
+- Linux (v0 acceptance 5).
+
+**Not done.** 0254, the inverse's repair against version 0; after it, the REACH-1 finding reproduced on its own and the
+`tick_ref.py verify` door repair, in his order.
+
+NOT_MEASURED: the full check and the gate in his checkout; the gate on this tree; Linux. No row, rung, pinned source or
+oracle file changed. Docs: AGENTS.md (the BINDING-0, studio, PREVIEW-0 and PAGE-0 rows), art/STUDIO.md,
+art/director/README.md (§8), docs/CAPABILITY-MATRIX.md (a dated note), docs/CORE.md (art 36,013 lines), this entry.
+
+### The exact inverse — an admission undone byte for byte, recorded by position · **built, off the gate** (0254, two commits: the freeze, `art/director/inverse/` (`0254-spec.md`, `0254-vectors.json`, `0254-matrix.json`, `legacy/plaza-night.7dee210.ledger`, `frozen-0254.jsonl`) and `art/director/inverse_freeze.py`; the repair, `art/director.py`, `art/director/intent.py`, `art/director/conform.rs`, `art/director/vectors_source.py`, `art/director/vectors.json` (appended), `art/director/inverse_rows.py` (new), `art/director/inverse_freeze.py`, `art/certificate.py`, `art/studio.py`, `art/inverse_studio_rows.py` (new), `art/page_dash.py`, `art/studio_queue.py`, `art/play.py`, `art/selftests.py`)
+
+**His ruling** (2026-10-20), between 0244's options (a) and (b): *"Ruling: (a). 0254 records the inverse of = and - as the exact row at its position (and the trailing blank lines of +), applied only by undo, frozen first and built second, against BINDING-0 v0 unchanged."* The rulings that bound it, quoted
+in the same file: *"Keep 0252 registration-only, 0253 enforcement-only, and 0254 repair-only."* and *"0254 must repair the inverse against the existing registered v0 contract. If the repair exposes a genuine contract defect, register v1 before code governed by that new version; do not edit v0 in place."* (BINDING-0 version 0 is unchanged; no defect of
+it was found).
+
+**His rulings on the specification's open items** (2026-10-20), each the option the specification recommended:
+- OPEN-1: *"Ruling: Option (a) — Refuse: `STUDIO-NOT-UNDOABLE` with no search."*; *"Sub-question for `+`: Keep `- KEY` within your current syntax definitions. The known hazard is accepted and explicitly documented in the repository record, preventing any silent divergence in `FACADE`'s pinned output."*; *"Confirmation of Identity: Confirmed. The positional byte guard functions strictly as the revision language’s local applicability rule, not a secondary definition of identity."*
+- OPEN-2: *"Ruling: Option (a) — Freeze a pre-0254 verification fixture, then append a clean `5a` row."*
+- OPEN-3: *"Ruling: Defer."*
+- OPEN-4: *"Ruling: Defer."*
+- OPEN-6: *"Ruling: Record as Dated Findings, correct the single misleading comment, repair nothing else."*
+- OPEN-7: *"Ruling: Implement `evaluate/reevaluate FILE --inverse-of N`."*
+- OPEN-9: *"Ruling: Keep `VERDANDI-INTENT 0` and append the new vectors directly to the current matrix."*; *"The tension with the README documentation is recognized; the requirement for a translator tool is deferred until the first real structural format change occurs."*
+
+Where his text paraphrases an option (OPEN-1's "until the physical line geometry is restored by hand", OPEN-4's "held in
+scratch"), the option selected governs: the agent's reading, said in the session and recorded in the freeze. OPEN-5 and
+OPEN-8 decide nothing and stay open.
+
+**His word on the landing check** (2026-10-20): *"Yes: from 0254 on, include a landing check after git am that compares HEAD's tree id with the tree the commit message records, and stop if they differ."* AGENTS.md §7 carries it, with
+his command; this patch's last commit carries the `Gated-Tree:` line it reads.
+
+**His rulings of 2026-10-19 and 2026-10-20, recorded.** His word (2026-10-20): *"Yes: record my rulings of 2026-10-19 and 2026-10-20 verbatim, dated, in 0254's ROADMAP entry (the packet ruling and its order, VARIATION-0, ruling (a), the landing check), as records, not as changes to any contract."* They are
+records here: no contract, register, frozen file or row changes because of them.
+
+- *The review packet* (2026-10-19): his ruling, whole, with its execution order:
+
+> Ruling: the reconciler, the census, and the two proposals
+> My recommendation is to repair the existing evidence-producing mechanisms before adding new certification claims or feedback loops. The packet reports several concrete defects in the current checks, and it also explicitly distinguishes scratch-clone measurements from results reproduced in your checkout. That distinction must survive every ruling.
+> Nothing in the packet establishes that a full gate passed for these proposed changes, and none of the proposals should be treated as already registered or implemented.
+> 1. Floating-point reconciler
+> LOCK
+> R64 as the graybox reference.
+> Use the specified binary64 tick as the operational reference for RULES-1/2/3. Exact rational arithmetic remains an analysis instrument, not an alternative reference. Keep rigid-body and 3D contact reconciliation deferred until a reference is specified.
+> LOCK
+> No positive event-agreement claim from a generic margin.
+> The reported exact-real ties and binary64 residues are a concrete reason not to equate a small numerical error with preservation of discrete landing decisions. A contracting or reshaped producer gets no positive reconciliation claim merely because its error appears bounded.
+> DEFER
+> SHADOW-0 and EXACT-ADMIT-0.
+> Keep them as separate candidate courts. First establish that the reference verifier has a sound input contract and measure which operations and decisions actually control admission. Exact twins for admission checks should be a scoped follow-up, not a blanket demand to replace all floating-point operations.
+> REJECT
+> Trace self-consistency as reconciliation.
+> A producer's own logged function values cannot independently establish that its calculations were correct. Likewise, a trace's claimed engine identity is not proof of which engine produced it.
+> The first implementation target should be the missing `tick_ref.py verify` door. If a zero-run trace, truncated run, renamed stress run, forged start, or NaN input can receive a success result, then downstream measurements can be misleading even if the tick arithmetic itself is correct.
+> The second target is the reported REACH-1 omission. Its synthetic counterexample needs independent reproduction before the specific numerical claim is promoted to established fact. If confirmed, repair the reachable-surface model and add a hand-worked regression case.
+> 2. Twin census and ALIKE
+> LOCK the census follow-ups, but keep the census itself off the gate initially.
+> The reported 918-mutant result is useful evidence of weakness in the four hand-worked table checks. It is not an escape rate for real defects, and it does not establish that the JavaScript twin has the same weaknesses.
+> I would authorize these three bounded tasks:
+>
+> 1. Add hand-worked targets for the witnessed escapes: pitch clamp, rising ceiling, rider direction, and a shot passing above a wall.
+> 2. Add a Python-side RULES-1 table with predictions derived from the rules document before looking at implementation output.
+> 3. Register the census as an off-gate court only after the cases and expected outcomes are frozen.
+>
+> The strongest result is not the 56% mutation-kill rate. It is the observation that many mutants change behavior despite executing lines already covered by the existing tables. That points to a missing-oracle problem: the checks execute code without pinning down enough of its behavior.
+> For the 199 mutants without a witness, preserve the status as unwitnessed, not equivalent and not escaped. ALIKE should later compare both implementations against independent predictions, not merely compare the implementations with each other.
+> 3. ESCAPE-0
+> LOCK
+> Blindness in time, owner replay, owner equivalence ruling.
+> The proposed court is strongest when its seed is committed before the run, its outcome is independently replayed, and you—not the agent that created the plant—judge whether an escape is behaviorally equivalent. Keep it off the gate.
+> LOCK
+> An append-only escape ledger.
+> Record each escape with its plant, witnessed behavior, replay status, and owner disposition. Keep real defects, generated mutants, and equivalent mutants as different categories.
+> REJECT
+> A single aggregate escape rate or secrecy claim.
+> The proposal correctly acknowledges that a local agent cannot be trusted to keep a plant location secret from its own user. Do not replace that limitation with encryption theatre or a misleading percentage.
+> One important boundary: the census is not yet the full ESCAPE-0 court. It is an unseeded Python-side mutation experiment. The blind held-out protocol should be implemented only after the independent behavioral targets improve; otherwise, it would provide disciplined blindness to an inadequate oracle.
+> 4. Symbiotic proposal
+> This is where the FP-reconciler discussion directly touches creative output.
+> I recommend the following:
+>
+> * LOCK: GLUE-0 must stay out of provider feedback.
+> * LOCK: a refusal must not be passed to the provider as an instruction that tells it how to modify its next candidate.
+> * LOCK: no agent may align the twin, table, or digest to the implementation being tested.
+> * LOCK a repair task: GLUE-0's fingerprint must be independent of edit naming order if that is what its registered contract promises.
+> * DEFER: a re-ask mechanism until refusals have typed, meaningful reasons and a measured experiment demonstrates that re-asking can be useful without changing the design's meaning.
+> * REJECT: allowing the provider to choose the scope against which its own candidate is judged.
+>
+> The provider-controlled scope finding, F-3, deserves priority. If the provider can broaden the scope until its own leaky edit appears clean, the system is not independently checking the candidate.
+> The door-to-iron-lift example is an especially useful warning: automatic repair can satisfy a superficial check while changing the user's intended design. That is precisely the wrong behavior for a system intended to generate complex, distinctive art.
+> The reconciler should certify the properties it is responsible for—not teach the generator to avoid ambitious designs. If an unusual scene cannot be certified, return a typed refusal or an explicit unknown result. Do not silently simplify it or feed the failure back as a creative instruction.
+> 5. Execution order
+> I would accept the packet's general order, with one qualification: the three questions in the separate 0253 specification genuinely come first, and I cannot responsibly resolve questions whose text is not included here. The link did not yield its contents when I attempted to open it.
+>
+> 1. 0253 — BINDING-0 enforcement. Resolve its three blocking questions and freeze the matrix before implementation. This is already the stated priority.
+> 2. 0254 — inverse repair. Keep it ahead of unrelated new courts, as the packet proposes.
+> 3. Repair `tick_ref.py verify`. Make invalid or incomplete inputs refuse, then test the reported cases and add a planted defect. This protects the credibility of later reconciliation results.
+> 4. Reproduce and repair REACH-1. Independently reproduce the synthetic landing counterexample, then lock a rule-derived regression case if confirmed.
+> 5. Repair GLUE-0 order dependence. Add a paired test that reverses edit order and checks the registered contract.
+> 6. Improve the census oracle. Add witnessed escape cases and the missing RULES-1 Python table; register the mutation court off-gate.
+> 7. Run reconciler X1, then GUARD-0 pilot. Establish the vertical-arc table and frozen predictions before building the broader decision census.
+> 8. Register and exercise ESCAPE-0. Only after the behavioral targets and owner replay procedure are ready.
+> 9. Revisit the symbiotic loop. Fix GLUE-0, document the language bounds, and measure a typed-reason re-ask before considering registration.
+>
+> Final disposition
+> LOCK: R64 as the graybox reference; no generic-margin claim for event agreement; independent oracle targets; owner-controlled escape adjudication; no provider-controlled scope or refusal-driven repair.
+> DEFER: SHADOW-0, EXACT-ADMIT-0, a gate-integrated mutation court, and automated re-asking.
+> REJECT: self-log replay as reconciliation, one aggregate escape rate, positive claims for unreferenced contact physics, and automatic repair that can change design intent.
+> The first concrete work should be a repair of the checks that currently claim success too easily, not another general theorem or a new agent workflow. That gives the later numerical and creative systems a trustworthy basis without making artistic complexity pay for deficiencies in the verifier.
+
+- *VARIATION-0 and the distinct equivalences* (2026-10-19, pasted with the first): his ruling lines and the paragraph that
+  closes them. The body he pasted after them is kept outside the repository, partly abridged, and is not quoted as his.
+
+> LOCK: Identity, behavioral equivalence, and visual/design equivalence must remain distinct concepts.
+>
+> LOCK: Uncertainty and refusal must be property-specific; inability to certify a claim must not silently mutate the proposed design.
+>
+> DEFER: A general equivalence engine, a universal perceptual metric, and automatic tolerance selection.
+>
+> EXPLORE: VARIATION-0 as a small, preregistered measurement court.
+>
+> The architectural insight is that determinism need not mean visual uniformity. Determinism belongs in the rules, provenance, and reproducibility of the guarantees. Variety belongs in the space of designs that can satisfy those guarantees. The more precisely you separate those two, the more room you have for genuinely unusual art without weakening the kernel.
+
+- *The three 0253 questions, his confirmation, and the order of 0253, 0254 and the repairs after them* (2026-10-19):
+  quoted whole in 0253's entry above; cited, not repeated.
+- *Ruling (a), his open-item rulings and the landing check* (2026-10-20): above.
+
+**What it is.**
+- *The freeze* (commit 1, before any code): `art/director/inverse/0254-spec.md` (the hardened specification put to him,
+  byte for byte, his two ruling files embedded whole; sha256 `2c5fd6c33ffbe091caeeba8e383d87411ad31c66d3b1d379a3ea189f42bc7a0b`),
+  `0254-vectors.json` (115 vectors, 40 worked by hand; `97b823770c325802762812c5f607fbaaaf020a483bcffa2df37d0c57b10fe12e`),
+  `0254-matrix.json` (55 rows in five suites, 33 plants, each one named value of one switch with the row that catches it
+  and the later rows it fails; `85cadba8b06dfdaf123d7320a8e846030df950cb08f1a2eb5e954101502f66e1`),
+  `legacy/plaza-night.7dee210.ledger` (7dee210's ledger byte for byte, replayed only;
+  `acc10c008e5c63954b7baddc38b988e05a243a82fe76948205317fe15236c149`), each held to its sha256 by a line of
+  `frozen-0254.jsonl` (`fa9715a13e8f79ec321e79ed3c4012b7eacab78a1d6a2996438341f0cc487215`); and their reader,
+  `art/director/inverse_freeze.py check`.
+- *The repair* (commit 2). `apply_revision` applies `=`, `+` and `-` byte for byte as at 7dee210 and records the exact
+  row at its position: an `=` at row I records `@= [I,W,R]` (the row as written, the old row), a `-` of row I records
+  `@+ [I,R,S]` (the row, and the row that followed it or `false`), a `+` records `- KEY` and, when the parent's rows did
+  not end in exactly one empty row, `@~ ["1","K"]`. The three forms are applied only by an undo (`undo=True`), each under
+  its guard (`INTENT-APPLY` naming the form, the position and what it found, never searched for by key: his OPEN-1), and
+  refused whole anywhere else (`INTENT-INVERSE-ONLY`). `inverse_of_ok`, one predicate for the evaluation, the admission
+  and replay; `evaluate_doc(undo_of)` replays the ledger to #N before anything is applied; `--inverse-of N` on `evaluate`
+  and `reevaluate` (his OPEN-7), and the HEAD-MOVED message naming it; replay refuses an admission applying a form that
+  is not a recorded undo (`LEDGER-INVERSE-ONLY`) and a stored `@` inverse that is not the one its revision records over
+  the text it was admitted on (`LEDGER-INVERSE`), and replays old ledgers as they are. `intent.py`'s `validate` and
+  `conform.rs` learn the forms' syntax (the Rust twin never applies them: his OPEN-4); `vectors.json` keeps its 65
+  expected outputs byte for byte and appends 32 intents under `VERDANDI-INTENT 0` (his OPEN-9). `art/certificate.py`
+  reads its keys and rows from the freeze (CT1 to CT7), its plant loop tightened, its comment on `statements` corrected
+  in place (his OPEN-6). The studio's Undo evaluates as the undo of #N and answers a `LEDGER-INVERSE` as the director's
+  refusal; a kept certificate counts as the admission's own only when its inverse is the event's (`_kept_is_own`).
+  Pre-0254 admissions are written in the self-tests by the director's own writer, `selftest_admission`, their inverse
+  7dee210's from the freeze (his OPEN-2): CT2, ST2 and PAGE-CARDS 5a; 5a-exact beside it. The rows: the director's 31
+  in `art/director/inverse_rows.py` (27 plants on `director.INVERSE_PLANT`), STUDIO's ten (`art/page_dash.py`'s ST1 and
+  ST2, `art/inverse_studio_rows.py`'s ST4 to OU5, the plant kept-inverse-unbound), STUDIO-2's IM1, PAGE-CARDS' 5a-exact.
+- *The reader changed after commit 1 recorded it*: `art/director/inverse_freeze.py` (sha256
+  `8352ce5efafc354d4e8e042eb956b49eb66466b6aff754568d425092449ff77f` at commit 1, `a0ed53bee3f8a9906faa4aa4b4c4235ee4f0f7f9ae0cb827c58f6522aad8f3ef`
+  now) gained `PLANT_OF`, read only in `frozen()` to let the plant inverse-vectors-edited past FREEZE-STALE: the matrix
+  frozen in commit 1 already names that plant (switch `director.INVERSE_PLANT`, caught by FZ1), and commit 1's reader
+  could not serve it. It is set only by `inverse_rows.set_plant`, during the director's self-test, and put back after.
+  The reader is not a frozen file (`frozen-0254.jsonl` names four others), and the hook changes nothing `check` prints
+  outside those rows; the lines that differ from commit 1's `check` come from `director.py` and `vectors.json`, as
+  spec §6.3 intends. A departure from spec §11, whose commit-2 list does not name the reader.
+
+**Repairs after a review of the build** (three lenses, exactness, authority and the repository, each finding put to a
+skeptic who tried to refute it; 21 findings, 8 confirmed and 13 confirmed in part, none refuted; the repairs not reviewed
+again):
+- *An admission read the brief twice* (confirmed): `admit_checks` took the head from one read and the application, and
+  so the stored inverse, from a second. A writer outside the content lock (an editor saving) that changed the brief
+  between the two reads, in a way that leaves the child the same (the spacing of the row a `-` deletes, the row an `=`
+  replaces, the trailing empty rows of a `+`), and changed it back before the commit's fence, left an admit event whose
+  inverse replay recomputes otherwise: every later evaluation, admission, rebase and undo refused `LEDGER-INVERSE` for
+  good (MEASURED by the reviewer and again here). At 7dee210 the same race was harmless: nothing compared a stored
+  inverse. Now the brief is read once, and the head, the application and the stored inverse are of those bytes
+  (`selftest_admission` the same). Its row is in the race court, not in a new 0254 freeze: two cases, an editor's save
+  between the admission's read and its commit, put back before the fence (the admission's stored inverse verifies), and
+  the plant `admit-reads-twice` (the second read restored: admitted, then `LEDGER-INVERSE`): `DIRECTOR RACETEST PASSED
+  (34 cases)`. This departs, for that pair, from "frozen first and built second": the race court is not frozen and holds
+  the writers' races; a new freeze with the row is his to ask for.
+- *An old ledger no longer replayed* (confirmed): `inverse_of_ok` read `--inverse-of` as ASCII digits only, where 7dee210
+  read it with `isdigit()` and `int()`, so a ledger 7dee210 wrote and verified with `--inverse-of` given in other decimal
+  digits (U+0665) was refused `LEDGER-EVIDENCE` (MEASURED). Now `isdecimal()`, exactly the strings both accept, at the
+  predicate and at `evaluate_doc`'s two replay gates; that ledger verifies again (MEASURED here); ASCII unchanged.
+- *Comments that said more than the check backs* (confirmed): `evaluate_doc`'s docstring and `Gateway._undoing`'s comment
+  said any forged stored inverse is refused `LEDGER-INVERSE`; replay compares only one holding an `@` line, and a
+  malformed one escapes the studio's Undo before it (OPEN-5). Narrowed; `apply_revision`'s docstring now states the
+  theorem's scope (below).
+- *The repository* (confirmed or in part): the counts (VECTORS and CONFORMANCE 97, CERT 11/11, STUDIO 200/200, STUDIO-2
+  47/47, PAGE-CARDS 31/31, RACETEST 34) and a row for the exact inverse in AGENTS.md, with its never-rules and the rule
+  against the word plant over every STUDIO row; his landing check in AGENTS.md §7; art/director/README.md (the forms,
+  the codes, the command line's undo, §9); art/STUDIO.md (the `statements` claim corrected, the `+` hazard, case 5a, the
+  refusal table); docs/CAPABILITY-MATRIX.md (F-8 closed for admissions since, F-11 the findings below, his ruling in §8);
+  art/README.md's STUDIO-2 count, stale since 0250; docs/CORE.md's count; this entry, its quotes generated and checked
+  against the part of each file that is his; the gate run on the tree `git am` gives and recorded in the message, with
+  the `Gated-Tree:` line.
+
+**Found and recorded, not repaired** (docs/CAPABILITY-MATRIX.md F-11, 2026-10-20): his OPEN-6's five; the theorem's
+scope; a stored inverse rewritten in the statement form is not compared (inside spec §9's limit, as at 7dee210); OPEN-5
+measured (a malformed forged `@` inverse answered 500 `STUDIO-INTERNAL` with no record, nothing written); a forged `@~`
+count at the command line's admission raises an unmapped `MemoryError` before any replay of #N, nothing written (the
+step that would refuse it changes the frozen §2.4's order: his to rule, and a new freeze).
+
+**The theorem (T-0254), as it holds.** For a parent P and a revision r whose ordinary lines pass `intent.validate` and
+whose `+` lines add no lone verb outside SINGLE, moon and sun, `apply_revision(P, r)` accepted gives a child C and an
+inverse whose undo over C returns P byte for byte; the undo's own inverse redoes C byte for byte. The frozen
+specification's §5 states it for any revision `apply_revision` accepts; its own first falsifier refutes that (`+ tower`
+records `- tower `, whose undo names no row; `+ lamp b#c 1,2,3 100 1` is accepted and its undo refused), MEASURED by the
+review. No admission reaches either case: every caller passes a validated revision and the exporter refuses every lone
+verb (`ART-REFUSED`).
+
+**Measured on his machine, by the agent** (Windows 11, Python 3.14.5, rustc 1.96.1; a scratch clone of 7dee210 under
+%TEMP%, never the checkout; `PYTHONHASHSEED=0`, `PYTHONUTF8=1`, `python -B`):
+- `python art/director/inverse_freeze.py check`, its last three lines: `legacy recomputation not reached (director.py is not 5300fb78…)`; `art/director/vectors.json cut to its intents at 7dee210 is 7dee210's byte for byte: equal; 32 intents appended after them`; `INVERSE-0254 FREEZE FROZEN: 115 vectors (40 by hand), 55 matrix rows in 5 suites, 33 plants (28 new keys for R5), against BINDING-0 version 0 sha256 cb08e8ed3566f7d4aa19b38ad33fdaf79d1bfd2c21afe73a38576466815cdd85; children equal to director.py d399923e1a6ebbf779c0f41507cfb8ed61c4694600407bfb997a531091957dfe's: 69; nothing open that a row or a vector decides (open, deciding nothing: OPEN-5, OPEN-8)`. `python art/director/binding.py check` and `binding_freeze.py check`: their lines unchanged.
+- `VECTORS 97 / 97`; `rustc -O art/director/conform.rs`, then the runner: `CONFORMANCE 97 / 97`. The mutants of spec §6.2, in scratch copies (never the tree): the Rust twin with the forms' acceptance taken out, `CONFORMANCE 89 / 97`, failing F-A1 to F-A8; with the canonical check taken out, `94 / 97`, failing F-R1, F-R21 and F-R23; as built, `97 / 97`; the Python reference likewise, 31 of 39 intents (F-A1 to F-A8), 34 of 39 (F-R1, F-R17, F-R18, F-R21, F-R23), and 39 of 39.
+- `DIRECTOR SELFTEST PASSED` (123 rows passing and none failing, 38 of them plants; 465 s, beside STUDIO); `DIRECTOR CRASHTEST PASSED (15 cases)`; `DIRECTOR RACETEST PASSED (34 cases)` (172 s alone; its two new cases "admitted #2; verify passes" and, under the plant, "admitted #2; verify: LEDGER-INVERSE: #2's stored inverse is not the one its revision records over the text it w…"); `MEMO SELFTEST PASSED`; `CERT SELFTEST 11/11`; `STUDIO SELFTEST 200/200` (416 s, beside the director's); `STUDIO-2 SELFTEST 47/47`.
+- EX5, spec §1.2's census re-run (outside the suites, never a row: `census.py` with the one adaptation that a list holding an `@` line is applied with `undo=True`), against this tree and against a clone of 7dee210, side by side: on this tree 6,765 single-line round trips and 89,311 multi-line ones, every one exact (none statements-only, none refused on the undo), 6,765 redos each the child again, the same 7 and 185 refused on the forward step as at 7dee210; on 7dee210, 2,397 and 6,632 exact, 4,368 and 82,679 statements-only, 289 redos not the child; every forward application of the census (96,075 calls holding no `@` line) the same child, or the same refusal, on both trees (0 differing).
+- `python art/director.py verify plaza-night`, once, in the scratch clone, on 7dee210's plaza-night ledger (`art/ledger/plaza-night.ledger`, the freeze's legacy copy byte for byte): `LEDGER REFUSED: UNLOGGED-CHANGE: the head is df8b640defd8, the ledger's 9e7811343bcf` on this tree and on 7dee210 alike (F-1, the checkout's world since 0237's exporter change, his decision 2): the replay reaches the ledger's head on both; nothing written.
+- A ledger written and verified by 7dee210 with `--inverse-of` given in Arabic-Indic digits (U+0665): this tree's `verify` passes (it refused `LEDGER-EVIDENCE` before the review's repair).
+- The full check (`python art/selftests.py --repeat 2`), the classifier his pushed tree holds (`classify` and R5's `plants`) and the gate twice are run on this patch's tree once committed, and recorded in the commit message.
+
+**What R5's `PLANTS HELD` covers.** R5 reads four suites (`tools/rung.py`'s `SUITES`: QUALITY, ART CHECKS, the director's
+self-test, STUDIO). Of the 33 frozen plants it reads 29: 28 as new keys (the director's 27 and STUDIO's kept-inverse-unbound;
+its line goes from 316 to 344) and one under an old key, `art/studio.py selftest | plant restoration-from-own-certificate`,
+whose words are 7dee210's and whose fixture is now L-ST2's pre-0254 admission (R5 compares words and cannot see that).
+CERT's four (keys-misread new) are held only by `art/certificate.py selftest`'s own loop, outside R5. PAGE-CARDS' seven,
+older plants and none of the 33, only by `--cards-selftest` (cards-undo-toast-only now caught over the legacy 5a). The
+race court's admit-reads-twice only by `racetest`. The Rust twin's `@` rule has no standing plant: the mutant
+measurement above holds it. The classifier's line on `vectors.json`, *"LOOSENS: art/director/vectors.json changed: an
+expected output changed is a new protocol version, never a fix"*, fires on any change of that file's bytes, an append
+among them (`tools/rung.py`); that no existing output changed is held by `inverse_freeze.py check` ("cut to its intents
+at 7dee210 is 7dee210's byte for byte: equal; 32 intents appended after them") and by GR0. It is his to read and accept.
+
+**What it does not show.** That the repair is right beyond its frozen vectors and rows (one author wrote the
+specification, the model, the code and the rows; the 40 vectors worked by hand stand against a shared mistake); an undo
+over a moved world restores anything (refused where a recorded row moved, otherwise applied and reported); a `+`'s undo
+keeps an edit of the added row (it discards it, and reads exact); the forward ops' own defects repaired; a stored inverse
+with no `@` line authenticated (the ledger is a keyless chain); a coordinated edit of a frozen file and its line in
+`frozen-0254.jsonl` caught; his own worlds (the ledger in his checkout); Linux.
+
+**Not done.** In his order: the `tick_ref.py verify` door, then REACH-1 reproduced and repaired, then GLUE-0's order. *(Corrected in place, 2026-10-20, by 0255's review: "In his order" is the agent's reading of his packet ruling's
+execution order, which puts the door first. His two later texts list the REACH-1 finding first, and no ruling of his
+settles which comes first; 0255's entry quotes all three. The 0253 entry's line above, which follows his later texts, is
+not rewritten.)*
+His to rule, each with a new freeze where it changes one: the admission's replay of #N before it applies an undo (the
+forged `@~` count); a stronger check of a stored inverse in the statement form; OPEN-5's repair.
+
+NOT_MEASURED: the full check and the gate in his checkout; Linux; his worlds. The gate on this tree, twice, is recorded
+in the commit message beside the `Gated-Tree:` line, not here, so that the tree is the one the gate ran on. No row, rung,
+pinned source, oracle file, registered entry, BINDING-0 file, 0253 frozen file, 0254 frozen file or
+art/references.jsonl changed in commit 2. Docs: AGENTS.md (the exact inverse's row, the counts, the plant word, §7's
+landing check), art/README.md, art/STUDIO.md, art/director/README.md, docs/CAPABILITY-MATRIX.md, docs/CORE.md (art 38,132
+lines), this entry.
+
+### VERIFY-DOOR-0 — `tick_ref.py verify` holds a trace at its door before it compares · **built, off the gate** (0255: `graybox/tick_ref.py`)
+
+**His rulings** (2026-10-19), quoted from his saved files (through `e255/his-run-0254.txt`, where the agent copied them):
+the review packet, *"The first implementation target should be the missing `tick_ref.py verify` door. If a zero-run trace, truncated run, renamed stress run, forged start, or NaN input can receive a success result, then downstream measurements can be misleading even if the tick arithmetic itself is correct."* and *"3. Repair `tick_ref.py verify`. Make invalid or incomplete inputs refuse, then test the reported cases and add a planted defect. This protects the credibility of later reconciliation results."*; on 0253's questions, *"the verify-door repair must demonstrate that the previously accepted invalid inputs now refuse, while valid registered traces still pass."*; and his correction, *"Keep both investigations in scratch until their evidence is ready. Don't let either silently change the 0253/0254 contract, and don't call either repair complete merely because the original failure reproduces."*. Of trace
+self-consistency, in the same packet: *"Likewise, a trace's claimed engine identity is not proof of which engine produced it."*
+
+**The order, as he ruled it (2026-10-20, asked before this patch was delivered).** *"LOCK: 0255 door first, then REACH-1 repair."* *"3. Deliver the patches after 0254 in the packet’s stated implementation order: door repair first, then reproduce and repair REACH-1."* *"The phrase “deliver the independently reproduced REACH-1 finding and the tick_ref.py verify door repair, in order” was ambiguous, but it does not explicitly reverse the packet’s implementation sequence."* *"No change to the release sequence. Finish 0255’s release certification, then proceed to the REACH-1 repair."* The three texts he ruled over, the packet's prose: *"The first implementation target should be the missing `tick_ref.py verify` door."* and *"The second target is the reported REACH-1 omission."*; its execution order: item 3, above,
+and *"4. Reproduce and repair REACH-1. Independently reproduce the synthetic landing counterexample, then lock a rule-derived regression case if confirmed."* On 0253's questions: *"2. Reproduce the REACH-1 counterexample independently."* *"3. Prepare the `tick_ref.py verify` door repair in scratch."* *"4. Deliver the patches after 0254 in the stated order."* His correction: *"3. After 0254: deliver the independently reproduced REACH-1 finding and the `tick_ref.py verify` door repair, in order."* Before his ruling the agent had
+read the packet as the door first and said so to him; that reading was not a ruling, and his is the one recorded here.
+The 0254 entry's "In his order" is corrected in place with a note.
+
+**What the door does.** Before it compares a snapshot, `verify` makes from the map alone every run the browser was to
+play (`makeRuns`' set: the walk if `bot_ref.py`'s walk-1 walks a route, the fight if the reading of `lines()` finds a
+shot, the stress run always) and refuses, each with its own code and in this order: VERIFY-MAP (the map not converted
+here, or not the manifest's), VERIFY-FORM (the rules-1 section, a run, a start, a snapshot or an input not of the
+writing's form, or nested deeper than it; a start's or snapshot's targets not a list of objects; a string the readers
+take for a number and cannot read; `inputs_from` malformed: no row follows it), VERIFY-NO-RUNS, VERIFY-RUN-SET (the
+names, in order and each once), VERIFY-GIVEN (`inputs_from` not the sha256 of the runs held), VERIFY-NONFINITE (a
+number not finite, as the readers read it, or a bare JSON NaN or Infinity), VERIFY-START, VERIFY-LENGTH, VERIFY-INPUTS
+(each byte for byte what was made here) and VERIFY-PLAY (a run played only when its name, start and inputs are the
+ones made here, otherwise a FAIL row, not played; then the comparison as before the door, a run that cannot be played a
+FAIL row). VERIFIED only when every row passes; every line it prints legible (`legible`), the verdict alone and last.
+The starts and inputs are never read from the trace. The tick, `RULES-1.md`, `RULES-2.md`, `RULES-3.md`, `sim.js` and
+`bot_ref.py` are unchanged: by AST, the names changed against e759213 are `MAKES`, `check_trace`, `cmd_selftest`,
+`cmd_verify`, `engine`, `fields_of`, `load_trace`, `main`, `show` and `verify`, none a tick function.
+
+**His reported cases.** MEASURED here, at e759213 (a `git archive` of it, in scratch on his machine; Windows 11, Python
+3.14.5; `PYTHONHASHSEED=0`, `PYTHONUTF8=1`, `python -B`): a trace of no runs, `TICK REFERENCE VERIFIED  0 ticks of 0
+runs`; the walk and the fight cut to 10, 3,620 ticks; the stress run renamed and cut to 2, 2,265; the fight's start
+forged, 5,863; the fight from x = NaN, 5,863: each exit 0. The packet reported the NaN case as a start with x = NaN;
+that is how his "NaN input" is read here (the agent's reading). Through the door: VERIFY-NO-RUNS, VERIFY-LENGTH,
+VERIFY-RUN-SET, VERIFY-START and VERIFY-NONFINITE, each exit 1. A NaN in an input record (a11), added by the
+preparation and not reported, was never VERIFIED: at e759213 it ended in a traceback, `InputRefused:
+INPUT-NOT-FINITE`, exit 1, because the input contract refuses it inside the tick; through the door, VERIFY-NONFINITE.
+
+**Valid registered traces still pass.** The twelve recorded rules-1 files under `graybox/build/trace/tactical/` are four
+distinct traces (sha256 b1113d80…, its page reporting Edge 155, under `chromium`, `edge-155-windows` and `latest`;
+64fdd04e…, its page reporting Firefox 157, under `firefox`, `firefox-157-windows` and `firefox-contract`; 3555ede9… and
+32bbb5a6…, the given walk, their pages reporting the same), each under three names: `trace.py` writes one trace under
+its engine tag, its family, its label and `latest.json`, and a trace holds no clock, so the bytes cannot say whether one
+run or several wrote each name. Each VERIFIED (5,863 ticks of 3 runs; 1,787 of 1), the output byte for byte the door's
+before this review. The two traces of the browser's own runs are equal in everything the door reads (their rules-1
+sections); they differ in their runtime and rules 0. Wherever an engine is named it is the page's own report.
+
+**The review of the door's repair** (2026-10-20): three lenses (a forger, compatibility, the repository), 23 findings,
+each put to a skeptic: 13 confirmed, 10 confirmed in part, none refuted; each repaired as its verdict corrected it.
+- *A start the door refused was played, and hung.* A start at x = 1e17, or ±Infinity, never ended in `cells_near` (its
+  `i += 1` stops changing `i` past 2^53 and at infinity): the door's rows were written and never printed, and `selftest`
+  and `doortest` hung on such a trace. Older than the door (at e759213 the same). Now a run is played only when its name,
+  start and inputs are the ones made here, otherwise `FAIL VERIFY-PLAY … not played`; `selftest` stops before its plants
+  when the trace does not verify; doortest's bounds play under a guard that raises when the tick is given a start or
+  inputs not made here, so that a regression fails a row and does not hang.
+- *Values the readers cannot read ended in a traceback.* A string of 17 characters beginning "f" that is not a number
+  of the writing, or targets that are not a list of objects, passed FORM and NONFINITE and raised in VERIFY-START's or
+  VERIFY-PLAY's detail (at e759213 too). Now VERIFY-FORM refuses both; `show`, `ulp_note` and `fields_of` read through
+  `as_double` and never raise, and a ulp count is given only for two numbers of the writing (a string "fxyz" or "f" in a
+  snapshot is refused by VERIFY-PLAY with no count).
+- *A trace's text was printed raw.* A run's name or the userAgent could print a line beginning `TICK REFERENCE
+  VERIFIED` before the real verdict, a carriage return or an escape, or raise on a lone surrogate. Now every line passes
+  through `legible` (a character that is not printable written `\uXXXX`, `\UXXXXXXXX` past U+FFFF), the verdict alone
+  and last.
+- *The self-test held less than the door.* Eight of nine one-line weakenings of the door left doortest at 27/27, and
+  under five of them a forged trace read VERIFIED; eight attacks now hold the stress run's start and inputs, the walk's
+  inputs, a snapshot dropped, a given trace's set, a run's keys, `inputs_from` and a bare NaN.
+- *A plant of the reading changed only the pitch.* On tactical every aim of `lines()` from about 0.52 m to 5.02 m finds
+  the same cell; the plant is split, `lines()` aimed 0.5 m and makeRuns' pitch aimed 1.0 m, each refused at VERIFY-START.
+- *An honest witness trace failed doortest.* There the column search finds the same cell as the row search. A plant
+  measured to be an equivalent mutant on a map is declared so in `READING_PLANTS`, not run there, and says so; any other
+  plant that changes nothing, or one declared and not equivalent, is a FAIL; at least one must run.
+- Words corrected: VERIFY-PLAY's line in the codes' table; the harness's docstring (the two walk inputs of dyaw NaN ended
+  in a traceback at e759213, where the harness writes a FAIL row); the SKIP row's pointer; the comment on the fight's
+  reading (a recorded trace refuses a reading that makes another start or none, not a wrong one that makes the same
+  start, as a two-argument hypot does on tactical and on witness).
+
+**MEASURED here** (the scratch clone of e759213 with this patch uncommitted, his recorded traces copied in; Windows 11,
+Python 3.14.5): `doortest`, `DOOR SELFTEST 64/64` on each of the six names holding the browser's own three runs (two
+distinct traces), and `63/64  (1 not run, said above)` on a witness trace that `sim.js`'s own `record()` made under node
+v24.19.0 (OBSERVED: no browser; it verifies, 5,247 ticks of 3 runs); `verify` on the twelve recorded files, VERIFIED;
+`selftest`, `TICK-REF SELFTEST PASSED` on `chromium.json` and `firefox.json` (on `chromium-given.json` FAILED as before
+the door: four of the six plants in the reference are not found on the walk alone, and the door's plant a SKIP); the
+review's 43 attack files, each judged within seconds: 42 refused, exit 1, each by its own code (seven Windows device
+names as the map, and witness named over tactical's manifest, by VERIFY-MAP), and one, the userAgent with a lone surrogate over an honest
+trace, VERIFIED with its header escaped; none hanging and none ending in a traceback, and the 77 attack
+files of the preparation and its checker each at the door's exit and first code as before this review; 21 one-line
+plants of the door and of doortest, each turning its own row or rows red (doortest exit 1) and none hanging; `cases`,
+`rules2`, `rules3`, `ort_ref.py`, `bot_ref.py make`, `check` and `selftest` and `rules_ref.py`, with and without their
+traces, byte for byte as before this review; `graybox/check.py --compile`, `GRAYBOX MAP CHECKS PASSED`; `art/check.py`,
+`ART CHECKS PASSED`, its rows those of e759213; `art/motion.py selftest`, `PREVIEW SELFTEST 12/12` (the tick unchanged,
+so no entry in `SEMANTICS`).
+
+**What R5's `PLANTS HELD` covers.** Nothing of the door. `graybox/tick_ref.py` is outside `tools/rung.py`'s `SUITES`; were
+it added, R5 would read only selftest's two rows that open `plant: ` (the browser's x one bit off at tick 1000, an input
+of the walk turned at tick 300) and none of the door's: `plant at the door: …`, `plant in the door's reading: …`, the
+`harness plant: …`, the bounds and the readers, which print unbracketed (MEASURED by the pushed `parse_rows` over their
+output: 2 keys and 0). They are held only by `selftest` and `doortest`, run by hand; no gate row and no suite of
+`art/selftests.py` runs either (ART CHECKS and PREVIEW import the tick, never `verify`). R5's line for 0255 is predicted
+unchanged, 344 and 344: NOT_MEASURED until the classifier runs on the committed tree.
+
+**What it does not show.** That the engine a trace names is the engine: the page's own report, which the door holds
+nothing of. That the fight's reading is the rules' text: one author wrote it and its plants; the browsers' fight starts
+show agreement with `sim.js`, not truth (a two-argument hypot makes the same start on both maps and is not refused).
+Any map but tactical against a browser through the door: no browser's runs of witness have been compared through it
+(NOT_MEASURED; the build container's witness traces of 2026-10-11 predate it). Any run that
+`makeRuns` would not make, a person's play among them: the door refuses it. That `legible` hides the phrase from a
+search anywhere in a line, or from a terminal that wraps a long line: it makes the start of every line and the exit
+status honest. That the 0.5 m plant refuses but in this map's state (about 0.018 m below its bound). Linux.
+
+**Not done.** A trace made at this tree with a browser (`python graybox/trace.py run tactical --browser msedge`, after
+setting aside `chromium.json`, `edge-155-windows.json` and `latest.json`, which it overwrites); the full check
+(`python art/selftests.py --repeat 2`); the classifier his pushed tree holds over the commit (`classify`, `plants`); the
+gate twice on the committed tree, and the `Gated-Tree:` line. These are run on the committed tree and recorded in the
+commit message. Next, by his ruling: the REACH-1 repair; then GLUE-0's order. (Note, 2026-10-21: his later ruling,
+quoted in 0256's entry, puts GLUE-0 first, then the `kill_tree` repair, then REACH-1.)
+
+NOT_MEASURED: the gate on this tree; the full check; the classifier; a browser at this tree; his checkout; Linux. No row,
+rung, pinned source, oracle file, registered entry, BINDING-0 file, frozen file, `art/references.jsonl`, `sim.js` or
+rules document changed. Docs: AGENTS.md (the tick's and the bot's rows), graybox/README.md, docs/BOUNDARIES.md (its
+`tick_ref.py` row, :35 and :50), docs/CAPABILITY-MATRIX.md (F-12, §9's note), docs/CORE.md (graybox 9,923 lines), the
+0254 entry's order (a note), this entry.
+
+### GLUE-0 in its canonical form — two edits judged alike whichever is named first · **built, off the gate** (0256, commit 1 of 2: `art/glue.py`)
+
+**His run of 0255** (2026-10-21, his checkout, pasted to the agent). `git am`, then `TREE HELD
+6981d3140cb20e0784e2246ee2379f331ad49ad0`; `DOOR SELFTEST 64/64`; `TICK REFERENCE VERIFIED` twice; `TICK-REF SELFTEST
+PASSED`; `python art/selftests.py --repeat 2`, **`ART SELFTESTS FAILED`**: run 1 twenty-eight of twenty-eight (536.5 s),
+run 2 twenty-seven of twenty-eight (559.0 s), `STUDIO SELFTEST 199/200`, its row "a cancelled provider's own children
+killed with it" FAIL, "the child outlived the cancellation" (log `art/build/selftests/20261021T030736Z.log`); the
+classifier his pushed tree held (e759213's), the rung D on seven files, four of them D? (escalated by computed paths),
+"loosens nothing this classifier knows to look for"; "344 planted defects refused by the old checker; 344 by the new
+(344 rows)", `PLANTS HELD`; the gate once, `GATE PASSED`, `RECONCILE rowset 74db4c8d78625af5 251 rows / 0 fail / 0
+skipped`; pushed `e759213..ab2a535`, HEAD and its upstream `ab2a535`. The full check was not clean and is not recorded
+as clean; the gate passed.
+
+**The failed row is not 0255's.** `git diff e759213 ab2a535 -- art/ tools/` is empty (MEASURED): the row, `kill_tree`,
+`run_provider` and the test's spawner are 0254's byte for byte; it had passed in all 31 earlier runs in his logs. It
+rests on a defect older than 0255, in `kill_tree` (`art/studio.py`, unchanged since 0205), measured on his machine in
+scratch with the program's own code. `taskkill /T` walks one snapshot of parent IDs, so:
+- a grandchild whose parent has already exited outlives the kill: 3 of 3 by the agent, 5 of 5 by a reviewer; under a
+  holder in a job object (`studio_app.Job`), 0 of 3 and 0 of 5;
+- a child created during the walk outlives it: a race, seen under load.
+
+Since 0243 the provider starts after the camera path, with no cancel check before it, so the row's kill lands at the
+provider's birth. Which mechanism failed his run 2 is NOT_MEASURED: the self-test removes its folder, and `kill_tree`
+discards taskkill's output. The repair is his ruling's item 3, below; nothing of it is in this patch.
+
+**His ruling on the order** (2026-10-21, pasted, answering where the `kill_tree` repair goes), verbatim:
+
+> LOCK: repair `kill_tree` after GLUE-0, before REACH-1.
+> That preserves the already-established order while putting the provider-cancellation defect ahead of the next physics investigation.
+>
+> 1. 0255 release certification — record the failed STUDIO row accurately; do not attribute it to 0255 or claim a clean full gate.
+> 2. GLUE-0 — repair the edit-order fingerprint asymmetry under its own contract.
+> 3. `kill_tree` repair — replace best-effort `taskkill /T` termination with a per-provider Windows Job Object holder, reusing the existing `Job` implementation where appropriate.
+> 4. REACH-1 — resume the discrete reachable-set investigation after the process-lifecycle repair is gated.
+>
+> Conditions for the `kill_tree` repair
+>
+> * Preserve provider stdin/stdout/stderr behavior and exit status.
+> * Make cancellation cover descendants, including orphaned grandchildren and children created during cancellation.
+> * Rewrite the existing cancellation test as an ordered handshake: child starts → cancellation occurs → termination completes → descendants are checked.
+> * Add the orphaned-grandchild regression and the two specified mutation plants.
+> * Keep Linux behavior explicitly unverified until tested; do not infer platform equivalence from reading its process-group semantics.
+> * Update the documented capability and test counts only after the relevant tests and gates establish them.
+>
+> One important distinction: the evidence supports a pre-existing defect, but the mechanism behind the single failed release run remains `NOT_MEASURED`. Preserve both facts rather than claiming that this specific failure was conclusively caused by an escaped grandchild.
+> This is the right placement: GLUE-0 keeps its priority, the known process-lifecycle defect is repaired before REACH-1, and neither repair gets silently folded into the other.
+
+The numbered list moves GLUE-0 ahead of REACH-1, against his *"LOCK: 0255 door first, then REACH-1 repair."* (0255's
+entry, where GLUE-0's order came after REACH-1). The later, numbered LOCK is taken as governing, as the agent said to
+him in the session; 0255's entry carries a note.
+
+**The defect** (found 2026-10-19 in the review packet, "GLUE-0's fingerprint depends on which edit is named first",
+MEASURED there). MEASURED again on ab2a535, here: every pair of the census judged named both ways, 42 judgments.
+`judge` worked in the order named, then swapped the edits' labels back in its obstruction by a string replacement:
+- *An obstruction and its fingerprint depended on the naming.* The face panelled against the warehouse raised to 16 m:
+  the two orders differ (33 sections), and `not_their_union` was taken of whichever composite was named first. Named as
+  the census names them, its `lost` held the bays' sections; named the other way, the building's section alone.
+- *A glued text depended on the naming.* Two bays added (`panel b3` with `panel b4`, and `blank b3` with `panel b4`):
+  `glued_text_sha256` was the text of the order named. The self-test's first row printed `18f06419ea6d`, the text with
+  b3's statement first.
+
+The other 18 pairs were the same both ways in every field. The verdict, `commutes` and `glues` were the same both ways
+in all 21. 0244's entry said the obstruction's sha256 is the same whichever edit is named first; corrected in place with
+a note.
+
+**The repair.**
+- `judge` sorts the pair first, by the sha256 of each edit's canonical form (the order the fingerprint's `pair` already
+  used), and judges that canonical pair. The verdict, the obstruction (in its canonical labels, as before), its
+  fingerprint and the glued text are the canonical pair's; only the support is given back in the caller's names.
+- The string replacement is kept only under the plant.
+- `FORMAT` and `VERSION` are unchanged (`VERDANDI-GLUE`, `0`): the census table is byte for byte as before (sha256
+  25195afc…), since the census names its one order-dependent pair in the canonical order.
+- What changes is the other naming of that pair (now the census's obstruction) and the glued text of the two pairs
+  named against the sorted order. The first row now prints `d5cc88e39c2c`, the text with b4's statement first.
+
+**Rows.** `GLUE SELFTEST 12/12` (9/9 before):
+- *"named either way, the face and the raised building (their orders differ) and two bays added: one obstruction, one
+  fingerprint, one glued text, the support's names swapped (the pair judged in its canonical form)"*;
+- *"every pair of the census named both ways: every field of the judgment the same, the support's names swapped"*: 42
+  judgments, run once and not under the plants, as the census row is;
+- the plant `glue-judged-in-named-order`: the judgment before 0256 exactly (the order named, the roles swapped back by
+  the string replacement), caught by the first new row alone;
+- the three plants before, each caught as before; `glue-fingerprint-ordered` by the first new row too.
+
+GLUE's plants are not R5's: `art/glue.py` is outside `tools/rung.py`'s `SUITES`, so R5's line is predicted unchanged
+(344 and 344).
+
+**MEASURED here** (a scratch clone of ab2a535 with this patch; Windows 11, Python 3.14.5; `PYTHONHASHSEED=0`,
+`PYTHONUTF8=1`, `python -B`): `GLUE SELFTEST 12/12`, 38 s alone; the census at ab2a535 and with the repair, the same
+bytes; the 21 pairs both ways, every field the same, the support's names swapped. ab2a535's `GLUE SELFTEST 9/9` is
+unchanged in what it held: the pair its second row names, two values for one bay, has orders that apply in neither
+order, where the swap was right.
+
+**What it does not show.**
+- That the census's seven edits are every kind of edit: the ROWS audit's gap stands.
+- An account of both orders for a pair whose orders differ: its `not_their_union` is of one composite, the canonical
+  one, a fixed choice.
+- That glue decides anything: the studio's admission does not read a glue verdict (his rule, unchanged).
+- Linux.
+
+**Not done.** The full check, the classifier his pushed tree holds over the commit, and the gate twice on the committed
+tree with the `Gated-Tree:` line: run on the tree of both commits and recorded in the patch's last commit's message.
+Next: the `kill_tree` repair, commit 2 of this patch by his word (the entry below); then REACH-1, by his ruling.
+
+NOT_MEASURED in this entry: the full check; the classifier; the gate; his checkout; Linux. No row, rung, pinned
+source, oracle file, registered entry, BINDING-0 file, frozen file, `art/references.jsonl` or `art/director/vectors.json`
+changed. Docs: AGENTS.md (the certificate's and glue's row), docs/CAPABILITY-MATRIX.md (F-13), docs/CORE.md (art 38,163
+lines), the 0244 entry (a note), the 0255 entry (a note on the order), this entry.
+
+### PROVIDER-JOB-0 — a cancelled provider ended with every process it started · **built, off the gate** (0256, commit 2 of 2: `art/studio.py`, `art/studio_app.py`, `art/play.py`)
+
+**His word** (2026-10-21, typed in the session after the agent said GLUE-0's release checks were running): *"just fold
+the fix for the failed STUDIO row into the next push"*. Read, as said to him: one 0256 patch file of two commits,
+GLUE-0's (the entry above) and this one, each its own commit and record, so that neither is silently folded into the
+other (his ruling, quoted whole above: *"neither repair gets silently folded into the other."*). The full check, the
+classifier and the gate run once, on the tree of both. His ruling's conditions for this repair are quoted in the entry
+above; each is answered below.
+
+**The defect** (his run 2 of 0255, the entry above). MEASURED in scratch on his machine, with the program's own code:
+`kill_tree` on Windows ran `taskkill /T /F`, which walks one snapshot of parent ids.
+- A grandchild whose parent had exited was never killed: 3 of 3 by the agent, 5 of 5 by a reviewer.
+- A child made during the walk outlived it: with a provider making a child about every 58 ms, 18 of 30 trials idle and
+  24 of 30 under 18 busy loops.
+
+The old row checked 3 s after the cancellation was marked, not after the kill. It also passed with no child ever made,
+when the kill came first. Which mechanism failed his run 2 is NOT_MEASURED: the self-test removes its folder, and
+taskkill's output was discarded.
+
+**The repair.**
+- *On Windows a provider runs in a job object of its own from its first instruction.* `run_provider` makes the job
+  (`studio_app.Job(own=False)`: no limit set, nothing joined). It starts the provider suspended (`CREATE_SUSPENDED`,
+  beside `CREATE_NEW_PROCESS_GROUP` and `CREATE_NO_WINDOW`), joins it to the job and resumes it (`Job.hold`). Every
+  process the provider starts is born in the job, an orphan included. A job that cannot be made, or a provider that
+  cannot be joined, refuses the request (`STUDIO-PROVIDER-START`); the suspended provider is ended unrun.
+- *`kill_tree` ends the job* (`Job.end`): the job is closed to new processes (its active process limit 1), its
+  processes are listed and a handle is held to each (each checked to be in the job), the job is terminated, and each
+  handle is waited for.
+  - The job's count of active processes falls to none 2.6 to 24 ms before its processes have ended (MEASURED, eight
+    trials), so the count is not what the kill waits for.
+  - A kill that leaves any process says so in the cancellation's message.
+- *The provider is still the studio's own child.* Its standard input, output and error and its exit status are as
+  before: an exit of 3, and one of 3221225786, read exactly (MEASURED). After an exit of its own, the job is let go and
+  ends nothing (no `KILL_ON_JOB_CLOSE`). A provider's child left running after the provider exits by itself is left as
+  before 0256: not a cancellation, outside his ruling, recorded and not changed.
+- *POSIX is unchanged:* its process group (`killpg`). Not measured: no Linux run since 0256, by his ruling's *"Keep
+  Linux behavior explicitly unverified until tested; do not infer platform equivalence from reading its process-group
+  semantics."*
+- `studio_app.Job()` itself, own=True (the desktop studio's job and PAGE-0's holder), is as before.
+
+**Rows** (the studio self-test in `art/play.py`, his ordered handshake: *"child starts → cancellation occurs →
+termination completes → descendants are checked"*):
+- *"a cancelled provider's own children killed with it"*, the row his run 2 failed, rewritten. The provider's child
+  writes its pid once it runs, and the request is cancelled only then. The kill is done when the request's record line
+  is written (after `kill_tree` returns). The child, held by a handle from before the cancellation, has ended by then:
+  no wait. A child that has not started 90 s after the ask fails the row.
+- *"a cancelled provider's orphaned grandchild killed with it (its parent had exited before the cancellation)"*, new:
+  the same handshake, the provider's child starting a grandchild and exiting before the cancellation.
+- `kill plant kill-tree-walked-by-taskkill caught` (the kill before 0256), caught by the orphan's row; and `kill plant
+  kill-only-the-root caught`, caught by the children's row. Each is the handshake run under its plant: the descendant
+  outlives the kill, and the row ends it after. Windows only. Two new R5 keys.
+  - *Note, 2026-10-21 (0258):* these two rows counted a catch whenever their row was not held, so a timeout, no record
+    line, another code or a changed world would have read as caught. Their record line was any line bearing the
+    request's id, which two gateways asked within one second share (F-16): his full check of 0257 failed the orphan's
+    row so, run 2. The catches recorded here printed the descendant outliving the kill, the defect's own witness (under
+    the taskkill plant 0.3 s after the cancellation, not at once), but the predicate did not require it. Since 0258 it
+    does.
+- `STUDIO SELFTEST 203/203` on Windows (200 before: four rows more, two of them plants). Elsewhere the two plant rows are
+  not run, by the code: NOT_MEASURED.
+
+**MEASURED here** (a scratch clone of ab2a535 with 0256; Windows 11, Python 3.14.5; `PYTHONHASHSEED=0`, `PYTHONUTF8=1`,
+`python -B`), the harness itself inside a job, so the provider's job nested:
+- `STUDIO SELFTEST 203/203` alone, 329 s. Its four kill rows: the kill done 0.1 s after the cancellation (its record
+  line) and each descendant ended by then; under the taskkill plant the orphan outlived the kill (0.3 s), under the
+  root-only plant the child did. `STUDIO APP SELFTEST 13/13`, 64 s.
+- The kill through the program's own `run_provider` and `kill_tree`, on fixtures in scratch, twelve trials each: a child
+  0 of 12 alive after the kill; an orphaned grandchild 0 of 12; a provider making a child every 15 ms, cancelled 0.4 to
+  1.0 s after it started, no child outliving it in 12 runs. Under the taskkill plant the orphan was alive 3 of 3 (a
+  direct child 0 of 3); under the root-only plant both 3 of 3. An exit of 3 and one of 3221225786 read exactly, standard
+  error's last line kept.
+- The job's count against its processes, eight trials: the count 0 right after `TerminateJobObject`, the child's
+  handle signaled 2.6 to 24 ms later. With `Job.end` waiting on the handles, the child's handle was signaled when it
+  returned (0.0 ms after), eight trials.
+
+**What it does not show.**
+- A process a provider has another service start (a scheduled task, a COM or WMI server): not its descendant, not in
+  its job.
+- A child left by a provider that exits by itself: unchanged.
+- Linux.
+- The sibling row, *"a request cancelled: the provider killed, nothing drawn"*: it checks a mark due 20 s after the
+  provider starts, 0.5 s after the cancellation, so it cannot see a survivor. Not changed: outside the ruling's
+  conditions.
+- Under the full check's load, the handshake waits as long as its descendant takes to start, at most 90 s.
+
+**Not done.** The full check, the classifier his pushed tree holds over the two commits, and the gate twice on the
+committed tree with the `Gated-Tree:` line: run on that tree and recorded in this commit's message. Next, by his ruling:
+REACH-1.
+
+NOT_MEASURED in this entry: the full check; the classifier; the gate; his checkout; Linux. No row, rung, pinned source,
+oracle file, registered entry, BINDING-0 file, frozen file, `art/references.jsonl` or `art/director/vectors.json`
+changed. Docs: AGENTS.md (the studio's row), art/STUDIO.md (its boundary), docs/STUDIO-APP.md (a note),
+docs/CAPABILITY-MATRIX.md (F-14), docs/CORE.md (art's lines), this entry.
+
+### REACH-1 by the tick — the pair test played as the graybox plays it · **built, off the gate** (0257: `art/dress.py`, `art/check.py`, `art/fixtures/reach/`)
+
+**His rulings** (2026-10-21, pasted; quoted whole from the agent's copies of his texts).
+- On the shape, asked "Which shape for REACH-1's repair?":
+
+> Choose Shape B as the preferred correctness target, but require one bounded implementation experiment before committing to it. Shape A is a reasonable fallback if B’s runtime or maintenance cost is disproportionate. I would not choose C without evidence that the simulation’s actual movement rule is wrong.
+> The key distinction is that REACH-1 is supposed to model the simulation, not merely approximate it conservatively.
+> OODA ruling
+> Observe — cause established
+> Based on your reported results, walk-before-height-update creates a one-tick reachability discrepancy. The head-side bound remains sound, and the planted reproduction catches the existing defect.
+> Orient — distinguish fidelity from conservatism
+>
+> * A: simple, conservative, but can classify an unreachable surface as reachable.
+> * B: models the actual tick transition and avoids the deliberate over-reach, provided the implementation reproduces the simulation’s arithmetic and phase ordering exactly.
+> * C: changes gameplay semantics and expands the migration surface unnecessarily.
+>
+> Decide — prototype B in isolation
+> Compare B against a direct, straightforward tick-by-tick reference implementation over the full supported input domain. Do not optimize or cache until equivalence is established.
+> The acceptance conditions
+> Before accepting B, require:
+>
+> 1. Exact phase parity: horizontal movement, height update, and step acceptance follow the simulation’s actual order.
+> 2. Boundary coverage: test equality at the step limit, immediately below and above it, zero drop, maximum supported drop, and the 1/256 m witness.
+> 3. Differential testing: B agrees with the direct reference for every tested height difference and tick boundary.
+> 4. Performance measurement: measure the cached iteration against the uncached reference. Do not assume caching is necessary or costly.
+> 5. Preserved invariants: both copies agree, head clearance remains valid, and the planted old implementation fails the regression.
+> 6. Scope discipline: no changes to `sim.js`, no rules-version bump, and no world or trace changes unless evidence demonstrates that the simulation itself is defective.
+>
+> One caveat: a finite differential test does not prove equivalence for every possible input. The proof should establish why the iteration terminates and why its acceptance condition matches the simulation; the tests then check the implementation against that argument.
+> Why not freeze A immediately?
+> A’s bound is attractive: the extra horizontal travel is at most one tick, and your measurements report no changes to the four briefs. But the zero-world-change result does not establish that the approximation is semantically exact. If REACH-1 feeds future admission or ceiling decisions, a 0.05 m conservative expansion could eventually admit a surface that the simulation cannot reach.
+> If B proves too expensive or too tightly couples the test to implementation details, A remains a defensible alternative—but register the deliberate conservative bias explicitly and retain the witness test.
+> Before either shape is frozen
+> Keep the exporter-reference failures separate from the reachability verdict. Your reported throwaway run says the four reference checks fail despite no changed fields, while the existing plaza ledger already has an unlogged-change discrepancy. That means the exporter hash and ledger state need their own accounting; neither should be silently repaired as part of REACH-1.
+> Also leave the proposed CC-0 v0.1 amendment untouched pending your ruling, and retain the Linux and mover cases as explicit outstanding coverage.
+> Next action: prototype B against the direct tick reference, measure its cost, and report the differential result. Then choose B if it is equivalent and operationally reasonable; otherwise use A with its conservative over-reach documented. No production patch or reference freeze yet.
+
+- On 0257, asked "Build B with its per-call memo as 0257?", his own word first, *"minimum:"*, then:
+
+> Yes—build Shape B with the per-call memo as 0257, but make the tie behavior and floor termination explicit parts of the contract. The experiment is strong enough to proceed to implementation, not to claim universal equivalence.
+> The important correction is that B is not simply a tighter version of A. It aligns REACH-1 with the simulation’s tick semantics, including a lower climb limit and a floor-bounded flight. Those are meaningful model changes even though your four existing worlds remain byte-identical.
+> 0257 implementation contract
+> 1. Tick-faithful reachability
+> Replace the parabola-only reachability estimate in both `art/dress.py` and `art/check.py` with Shape B. Read the tick length from `sim.js`; do not introduce another independent timing constant.
+> 2. Per-call memoization
+> Memoize repeated height-difference calculations within a single call. Preserve B’s uncached output exactly. Keep the cache local rather than introducing persistent state or cross-call invalidation complexity.
+> 3. Exact ties and floor termination
+> Preserve the measured tie policy: exact ties count as reachable. Terminate the flight at the floor, since the tick cannot descend below zero. Document the binary64 rounding qualification rather than describing B as perfectly equivalent at every boundary.
+> 4. Witness regression
+> Add the derived witness as a permanent ART CHECKS fixture. Assert that the tick lands on the box, both twins accept the surface and preserve head clearance, and the old pair-only implementation fails the witness.
+> Required release checks
+>
+> 1. Re-run the 41,160-height differential and preserve the tie cases as an explicit result category.
+> 2. Test the below-floor case and the exact step-limit neighbors.
+> 3. Verify both twins agree on the witness and all four existing briefs.
+> 4. Confirm every existing REACH-1 plant is still caught.
+> 5. Search the simulation against the new ceiling, and update documentation for the 1.7458 m climb limit, floor termination, and tie semantics.
+> 6. Run the normal art checks and compare canonical output. Target the measured baseline of approximately 45 seconds with memoization, but treat timing as diagnostic rather than a correctness criterion.
+> 7. Keep the four exporter-reference failures and the plaza ledger’s pre-existing `UNLOGGED-CHANGE` separate from the reachability result.
+>
+> Two limits to preserve
+>
+> * Do not freeze references as part of 0257. First review the implementation and its output; then freeze the four references in a separate, explicit action.
+> * Do not claim full simulation equivalence yet. Targets, moving movers, off-axis approaches, and Linux remain untested. Track them as outstanding coverage rather than expanding 0257 into a broader simulation change.
+>
+> One subtlety: counting all exact ties as reachable deliberately accepts some ties the floating-point tick misses. That is a conservative choice for dressing coverage, but it is not exact behavioral equivalence. Keep that distinction in the contract and regression output.
+> Decision: proceed with 0257 as an implementation-only patch. No `sim.js` change, no rules-version bump, no trace migration, no reference freeze, and no ledger repair bundled into it.
+
+- On what REACH-1 certifies, asked "Does REACH-1's \"reachable\" certify the sound envelope?":
+
+> REACH-1 should certify a sound envelope, not exact attainability. I agree with that contract. I would sharpen the theorem before locking it, though: the central claim is not merely that B counts every tie. It is that the envelope is a sound over-approximation of every surface the discrete simulation can reach.
+> The theorem to lock
+> Let \(T\) be the set of surfaces a body can actually reach under any permitted tick trajectory and input, and let \(E_B\) be the set of surfaces REACH-1's rule B does not exclude.
+> The required property is:
+> \[ \boxed{T \subseteq E_B} \]
+> Equivalently:
+> \[ \forall s,\quad \operatorname{TickReachable}(s) \implies \operatorname{IncludedByB}(s) \]
+> This is one-directional. B may include surfaces the tick never reaches; those are false positives that make the safety ceiling conservative. Excluding even one surface the tick can reach is a false negative and violates soundness.
+> What the current evidence establishes
+>
+> * Axis-aligned cases: the reported differential supports B's agreement with the prototype away from exact ties, and B includes the ties.
+> * The 3.0 m, 46-tick counterexample: demonstrates that geometric eligibility does not imply discrete landing. It does not refute envelope soundness; the envelope is supposed to include such a surface.
+> * Off-axis cases: soundness remains open. Irrational gaps and arbitrarily small margins mean the axis-aligned rounding argument cannot establish the general case.
+> * The broader over-approximations: ignoring intervening surfaces, using swept travel, replacing a round column with a square, and counting all approach directions are plausible sources of conservatism. Each still needs to be checked against the actual implementation and the theorem's assumptions.
+>
+> The improvement I would make
+> Do not define the theorem as “B counts every geometrically eligible surface” unless that geometric predicate is itself proved to contain every tick-reachable surface. That formulation could simply move the unproven assumption one layer upstream.
+> Instead, state the contract in terms of the actual tick system, then establish a chain of lemmas:
+>
+> 1. Every permitted tick trajectory is contained in the continuous or discrete motion envelope used by REACH-1.
+> 2. Every surface that envelope can reach is included by B's geometric test.
+> 3. Numerical evaluation cannot shrink that envelope at a boundary—including off-axis cases.
+>
+> The third lemma is the exposed gap. A fixed epsilon is not automatically a solution: it must be derived from a bound on the numerical error, or replaced by a conservative comparison that cannot exclude a truly reachable surface.
+> My ruling: retain 0257 as the candidate implementation; do not broaden its contract to exact attainability. Keep REACH-1's soundness claim unproved off-axis until the numerical-boundary argument and adversarial tests support it. The theorem is better stated as a containment guarantee over the actual tick system, with geometric eligibility serving as the proof technique—not as the definition of truth.
+
+**The contract, by that ruling: containment over the tick, T ⊆ E_B.** T is every surface a body can reach under any
+tick trajectory and input; E_B is every surface REACH-1 does not exclude. Geometric eligibility is the proof technique,
+not the definition: a box 3.0 m off the floor and 1.734375 m high is eligible (the gap is 2r + 46 steps exactly), and
+the tick from the farthest start along x misses it (MEASURED). In the differential below, the ties fell every fifth tick
+from 46 to 421; the tick missed every tie from 46 to 91 ticks and landed at every one from 96 on. The lemmas:
+1. every tick trajectory lies within REACH-1's motion: shown by hand for a flight between static surfaces. **A mover's
+   push is outside it, and unproved:** a deck that carries or shoves a body in flight may take it farther than its
+   walk;
+2. every surface that motion reaches is counted: the same proof;
+3. rounding cannot shrink the envelope at a boundary: along an axis on the 1/256 m grid, a gap and 2r + n·step are equal
+   (a tie, counted) or at least 1/1280 m apart, far beyond binary64's error. **Off an axis it is unproved:** a gap is
+   then an irrational distance, and rounding may cross the boundary either way.
+
+REACH-1's other over-approximations (what lies between, a mover's swept travel, a target's square, every direction)
+are not checked against this contract.
+
+**The cause** (confirmed before the repair, MEASURED in scratch on his machine with the program's own code at a4f14c3).
+- **The mechanism:** REACH-1 timed a jump on the parabola. The tick walks before it moves the feet (`walk3` before
+  `height3`), and lets a body onto a surface by the feet it started at (`before`), so a body walks one tick more than
+  the parabola allows.
+- **The plant:** on the witness world, 1 of 690 jump starts lands on the box with the tick as it is, and 0 of 690 with
+  `height3` run before `walk3`.
+- **The size:** over every drop to 100 m by 1/256 m, the tick outreached the parabola at 10,354 of 26,055 drops (a step)
+  and 10,251 of 25,914 (a target), by at most 0.0222 m. The head side was sound at every tick.
+
+**The repair** (shape B, by his ruling).
+- **The pair test plays the tick.** `last_tick` in the exporter and `ticks_onto` in the checks, each written apart, step
+  the tick's own arithmetic: the jump at tick 1, then `vy = vy - gravity * TICK` and `feet = feet + vy * TICK`. A
+  surface is reached when, at some tick n's start, its lowest is within its allowance of the feet (`lowest <= feet +
+  allowance`, the tick's own form: the operand audit below), and the gap is at most 2r + n ticks of walking.
+- **The floor ends the flight:** the tick's ground is nowhere below 0, and the flight stops at the first tick at or below
+  it. Without that stop, a first prototype over-reached for surfaces lower than 0.55 m, where the floor catches the body
+  first.
+- **An exact tie counts as reached.** This is his ruling's conservative count, not the tick's own verdict: the tick's
+  verdict at a tie turns on the binary64 rounding of its start and of its summed steps.
+- **The climb** is the tick's own apex and a step, 1.745833 m: its apex is 1.195833 m, the parabola's 1.225 m.
+- **The tick comes from `sim.js`.** The checks read `TICK` there (`sim_tick`); the exporter keeps its `TICKS = 120`. No
+  new timing constant is added, and the twins' equality row catches any disagreement.
+- **A per-call memo:** each (a surface's highest, another's lowest, its allowance) is played once per call. Its
+  output is B's uncached output exactly: on the four briefs and the witness, the ceilings, the standable surfaces and
+  the scenes are the same.
+- **The plant switch:** `REACH_PLANT = "pair-parabola"` in each twin, set by the witness's plant alone, gives the pair
+  test before 0257.
+
+**The witness** (`art/fixtures/reach/`: a map, a brief, a README; ART CHECKS' `== reach-witness`, after the briefs, when
+no brief is named).
+- The box's gap, 6.3984375 m, is derived from the rules: the farthest on the 1/256 m grid inside 2r + 114 steps = 6.4 m.
+- The tick lands on the box at tick 114.
+- Both twins count it, their ceilings equal, and the head from the box (4.995833 m over 5,1) is under the ceiling less
+  the margin (5.275 − 0.25).
+- An exact tie, a box 5.25 m off and 0.09375 m higher (2r + 91 steps), is counted by both twins, while the tick from the
+  farthest start does not land on it. The row says so: the contract's conservative count.
+- A plant, the pair test before 0257, misses the box: the head is above the ceiling less the margin (4.2431). One new R5
+  key.
+
+**The release checks he named.**
+1. *The differential, re-run on this tree:* 41,160 height differences on the 1/256 m grid, from platforms at 0,
+   3.8125, 50 and 100 m, each played by `tick3` at B's farthest gap and 1/256 m farther (MEASURED, 872 s). Results by
+   category:
+   - not a tie: the tick lands at B's farthest gap, and not 1/256 m farther, at every one: 0 disagreements;
+   - exact ties: 8,126, all counted by B. The tick landed at 7,783 and missed 343, every miss at 46, 51, … 91 ticks;
+   - cells: 23 (platform, gap) pairs; the 19 that are not ties agree, and the four 4 m gaps are ties.
+2. *The below-floor case and the step limit's neighbours:* each agrees with `tick3`:
+   - the step limit exactly (cells, the tick's apex + step), and its grid neighbours 446/256 (climbed) and 447/256
+     (not; REACH-1 as built said yes);
+   - zero drop;
+   - the largest drop (100 m, 424 ticks);
+   - the witness at three gaps;
+   - below the floor's reach, boxes 0.1484375 m and 1/256 m high, at B's farthest gap 7.046875 m: both landed at
+     tick 127. Before the floor's stop was added, the first prototype over-reached there.
+3. *Both twins agree* on the witness and all four briefs: ART CHECKS' row on each brief, and the witness's row.
+4. *Every existing REACH-1 plant is still caught:* ART CHECKS' 202 plant rows, each as at a4f14c3, and one more.
+5. *The search of the simulation* against the new ceiling: 150,048 tries in each of the five worlds, the four briefs
+   and the witness (MEASURED; a search and not a proof, as 0229's). Its method: breadth-first over landings and walk
+   ends from every spawn; 24 yaws; a jump at once, after 3 or 8 ticks, or a walk with no jump; with movers, waits of 0,
+   60 or 150 ticks first. Every tick's head over the cells under the body was compared with 0257's ceiling less its
+   margin:
+   - no head above it in any world;
+   - the closest 0.029167 m under it, everywhere: the parabola's apex (1.225 m) less the tick's (1.195833 m);
+   - its reach is bounded: about 160 of a map's 1,536 cells had a head, with over 5,000 places left unexplored at the
+     cap;
+   - foundry-yard, harbor-day and plaza-night gave identical numbers, sharing their spawns and play map.
+   The search is in the agent's scratch, not the repository.
+6. *The art checks against a4f14c3, row for row* (the exporter's id masked): they differ in exactly the four reference
+   lines and the witness's section. Timing, as diagnostic only: alternating runs here, quiet, a4f14c3 46.5 s and 0257
+   45.2 s; loaded, 62.4 s and 64.8 s.
+7. *Kept apart.*
+   - The four reference lines fail ("no reference at exporter …; the fields that moved: none (the bytes are the same)").
+     They are his to freeze, in a separate act after he has read this.
+   - The checkout's plaza ledger is refused at a4f14c3 already, `UNLOGGED-CHANGE` (F-1's state), and this does not
+     repair it.
+
+**The operand audit before delivery.** B as first written tested `feet >= lo - allowance`, where the tick tests
+`top <= before + step`. In binary64 the two can round apart at equality. Over 778,435 feet heights the tick produces
+(jumps from tops by 1/16 m and 0.1 m), the first form refused the highest top the tick accepts 16,870 times: from the
+floor, at tick 2, the feet at 0.05694444444444444 m and the top 0.6069444444444445 m. Those were false negatives at the
+exact step boundary (MEASURED). Both twins now test `lo <= feet + allowance`, the tick's own form, and the memo is keyed
+by (highest, lowest, allowance). On the four briefs and the witness nothing moved (ceilings, standable surfaces, scenes),
+so the search above stands. The differential and the art checks were run again on the fixed code: the same results, and
+the checks row for row the same.
+
+**His ruling on the sequence** (2026-10-21, pasted; its ruling paragraph quoted whole):
+
+> Ruling: deliver 0257 on its own evidence; keep the off-axis proof and mover-push attack off-gate and independent. If either attack finds a reachable head excluded by the envelope, preserve the smallest counterexample and reopen REACH-1 soundness. If both survive, update the evidence only to the strength actually established—without claiming the whole theorem proved merely because the adversarial tests passed.
+
+**What it does not show.**
+- Equivalence with the simulation: B is the tick's at every case tested but the ties, where it counts more.
+- Soundness off an axis (lemma 3 there) and under a mover's push: unproved. By his ruling on the sequence, each is
+  attacked apart, in scratch and off the gate; the search's harbor-lift tries are the only evidence for a push.
+- Targets (REACH-1 uses the column's bounding square) and Linux: untested.
+- Any brief beyond the four and the witness.
+
+**Not done.**
+- The four references: his to freeze (`python art/quality.py freeze NAME --note TEXT`). Then, as after every exporter
+  change, each world he admits in takes one `rebase`.
+- The full check, the classifier his pushed tree holds, and the gate twice on the committed tree, with its
+  `Gated-Tree:` line: in the commit message.
+
+No row, rung, pinned source, oracle file, registered entry, BINDING-0 file, frozen file, `sim.js`, rules document,
+trace, `art/references.jsonl` or ledger changed. Docs: AGENTS.md (the art row's REACH-1), art/README.md (REACH-1, its
+claims, the fixtures), art/fixtures/round/README.md (a note), docs/CAPABILITY-MATRIX.md (F-15), docs/CORE.md (art's
+lines), the 0228 and 0229 entries (notes on the climb), this entry.
+
+### KILL-WITNESS-0 — a kill plant caught only by its causal witness, read from its own record line · **built, off the gate** (0258: `art/play.py`)
+
+**His rulings** (2026-10-21, pasted; each quoted whole from the agent's copies of his texts).
+- On 0256's two plant rows, after the finding that they counted any failure of their row as a catch:
+
+> Repair 0256’s kill-plant witness before any further R5 promotion. I would put it ahead of the next gate, but not interrupt 0257’s current search if that would disturb its registered run. The defect is in the evidence apparatus, and the affected rows are R5 keys; leaving it in place means the gate can certify a false catch.
+> Decision order
+>
+> 1. Finish 0257 exactly as registered. Let the witness search finish, then commit and run its required full check, classifier, and gate twice. Preserve both outputs and any failures. Do not let the 0256 repair contaminate the current 0257 evidence.
+> 2. Repair the two 0256 kill-plant rows. A catch must require the specific causal witness: the record line was written, cancellation/kill completed, and the descendant was still alive at the required observation point. A timeout, missing record, wrong refusal code, changed world, or harness exception must not count as a catch.
+> 3. Add adversarial tests for the verdict logic. At minimum, inject a missing record, a delayed handshake, the wrong refusal code, a changed world, a harness exception, and the genuine descendant-survives-kill condition. Only the final condition may satisfy the catch predicate.
+> 4. Rerun the affected evidence and then the full gate twice. Keep the old results as historical evidence; do not silently rewrite them as though the repaired predicate had always existed.
+> 5. Run the registered silence experiment on a quiet machine. Keep the arms and trial order as preregistered. Its purpose is to test the proposed load/memo/heartbeat explanation, not to retroactively excuse earlier failures.
+>
+> What I accept from IVD-0
+> The most important result is not the name of a new theorem. It is the distinction between a failed test row and evidence that the planted defect caused that failure.
+> The proposed three cases are useful detection conditions:
+>
+> * A pure, deterministic suite where the plant has no relevant environmental side effects.
+> * A defect-specific witness that unrelated failures cannot produce.
+> * A control that reproduces the plant's relevant side effects under equivalent conditions.
+>
+> For the kill rows, the third option is not necessary if the causal witness is implemented correctly. The descendant-survives-kill observation is much stronger than treating an arbitrary handshake failure as detection.
+> I would also retain the subagent’s caution about repeated trials: interleaving controls can expose environmental interference, but it does not magically establish soundness if the control fails to reproduce relevant side effects or the verdict rule permits unrelated causes.
+> Scope of the repair
+> I would not use this finding to declare every other plant row invalid automatically. Instead, audit each row's actual `caught` predicate and classify its evidence:
+>
+> * Strong: defect-specific witness or a properly matched control.
+> * Conditional: failure is attributed to the plant, but unrelated causes have not been excluded.
+> * Unsound: a timeout, arbitrary row failure, harness exception, or unrelated state change can produce `caught`.
+>
+> The report that roughly a dozen suites have broad catch predicates is a reason to audit them, not enough by itself to identify every offending line or determine each row's final status.
+> Bottom line: preserve the 0257 run; repair 0256’s two false-catch paths immediately afterward; verify the verdict predicate with deliberate counterexamples; then rerun the full gate. Until that repair is gated, those two R5 rows must not be cited as reliable evidence that cancellation killed descendants.
+
+- On the order after 0257's delivery, asked "Build 0258 now, or after your 0257 run so its checks don't share the
+  machine?":
+
+> Build 0258 after the 0257 run, on an otherwise quiet machine. Don't overlap their checks.
+> The order I would use is:
+>
+> 1. Finish 0257’s release bookkeeping. Preserve the two identical gate outputs, the 346 → 347 plant result, and `TREE HELD`. Keep the full-check red status accurately attributed to the four unfrozen reference lines; do not describe the full check as green.
+> 2. Freeze the four references as a separate, explicit decision. Read each reference's actual lines before running `python art/quality.py freeze NAME --note TEXT` for `foundry-yard`, `harbor-day`, `harbor-lift`, and `plaza-night`. Freezing is an intentional baseline decision, not routine cleanup. Preserve the existing plaza `UNLOGGED-CHANGE` finding; 0257 did not introduce or resolve it.
+> 3. Rebase each world you intend to admit, one at a time, after the references are frozen. Verify the resulting ledger state for each world; do not assume freezing automatically makes its ledger admissible.
+> 4. Apply 0258 and run its targeted adversarial tests. The kill-plant predicate must count a catch only when the record line exists and the descendant demonstrably outlives the completed kill. Missing records, timeouts, wrong refusal codes, changed worlds, and harness exceptions must remain failures—not catches.
+> 5. Run the full required checks twice, serially, and compare the outputs byte-for-byte. Retain the pre-0258 results as historical evidence.
+>
+> One important distinction: if the machine is already quiet and the 0257 evidence is fully captured, the reference-freeze decision need not wait for 0258. But do not run 0258's tests concurrently with 0257's checks. The kill-plant witness is an R5 evidence-integrity repair, so it should be gated before its rows are relied on again as proof of successful cancellation.
+
+**0257's release, on his checkout** (2026-10-21, his run, pasted).
+- `git am` and the landing check: `TREE HELD 329f90d6967f517acee8013a0860c7292c8af776`.
+- `art/check.py`: `ART CHECKS FAILED (4)`, the four reference lines alone ("the fields that moved: none (the bytes are
+  the same)"), the witness's five rows passing.
+- His freeze, a separate act: the four references at exporter `e926f9f16f58` (foundry-yard `9743e35c7303`, harbor-day
+  `e7a6dcc28a46`, harbor-lift `25637f1d56bc`, plaza-night `08b1b5981285`), then `ART CHECKS PASSED`; his commit
+  `27bc15e`.
+- His rebase of the checkout's plaza-night: `rebased: 9e7811343bcf -> 2c9a23d7ebd8 (ledger #26; 9 art checks passed)`,
+  then `LEDGER VERIFIED  27 events … the files are the head 2c9a23d7ebd8`; his commit `411ee42`. F-1's
+  `UNLOGGED-CHANGE` in the checkout is resolved by that act of his, not by 0257; F-1 stays recorded as found.
+- The full check (`20261021T215118Z`): run 1 twenty-eight of twenty-eight (681.8 s); run 2 twenty-seven of twenty-eight
+  (682.6 s), `STUDIO SELFTEST 202/203` on *"a cancelled provider's orphaned grandchild killed with it … the kill done
+  0.0 s after it (its record line); the descendant outlived the kill"*. Not 0257's: 0257 changed neither `art/play.py`
+  nor `art/studio.py`. Its cause is below; it is repaired here.
+- The classifier his pushed tree held (a4f14c3's): 14 files, the rung D, loosening nothing; `346 planted defects refused
+  by the old checker; 347 by the new (347 rows)`, `PLANTS HELD`.
+- The gate twice: `GATE PASSED`, `RECONCILE  rowset 74db4c8d78625af5  251 rows / 0 fail / 0 skipped`, the two outputs'
+  hashes equal. Pushed `a4f14c3..411ee42`.
+
+**The defects** (both in 0256's own rows, the agent's code).
+1. *The plant rows' predicate* (read from the code, a4f14c3 `art/play.py`:3553-3620). The two plant rows,
+   `kill plant kill-tree-walked-by-taskkill caught` and `kill plant kill-only-the-root caught`, were scored `not held`:
+   the handshake's row under the plant, negated. That row was held only when every one of its checks held, so the plant
+   read as caught when any one failed:
+   - a descendant whose pid was not written 90 s after the ask (nothing cancelled after it);
+   - a record line not written 90 s after the cancellation;
+   - an answer other than `STUDIO-CANCELLED`, or none;
+   - a changed world;
+   - no handle to the descendant (`OpenProcess` failing read as the descendant alive).
+
+   A harness exception ended the suite rather than reading as caught. The catches 0256 recorded printed the descendant
+   outliving the kill, the defect's own witness, but the predicate did not require it. Those rows are R5 keys, so a
+   false catch would have counted toward `PLANTS HELD`.
+2. *The record line was not known to be the request's own* (MEASURED in scratch on his machine, on copies of 411ee42).
+   - The mechanism: a request's id is the second of the clock and a count each gateway starts again at 1
+     (`art/studio.py`, `Gateway.ask`). Each handshake starts a gateway of its own on one record (`requests.jsonl`), and
+     the handshake took any line with its id and `STUDIO-CANCELLED` as its record line. Two handshakes asked within one
+     second share an id, so the second read the first's line, at once ("0.0 s"), and checked its descendant before its
+     own kill.
+   - With the gateways' clock held still, every handshake shared one id (`20261021T120000-1`). The orphan's row failed
+     as in his run 2 ("the kill done 0.0 s after it … outlived the kill", `STUDIO SELFTEST 202/203`), and both plant rows
+     read caught at 0.0 s from the wrong line: a false-catch path.
+   - With the clock free, alone, the four handshakes asked 0.59 s, 0.72 s and 0.93 s apart: each pair can share a
+     second. That run passed 203/203. How often the full check's load puts two asks in one second is NOT_MEASURED.
+
+**The repair.**
+- *The handshake's observations are kept whole.* `cancelled_tree` returns what it saw: whether the descendant started,
+  its pid, the time to the record line, whether the record line was written, the request's id and code, whether a line
+  before the cancellation already bore its id, whether the world was as before, and the descendant's state when the
+  kill was done. It no longer decides anything.
+- *The record line is the request's own.* The record's length is read before the cancellation, and the record line is
+  a line appended after it with the request's id and `STUDIO-CANCELLED`. A line from before it, bearing the same id, is
+  never taken.
+- *The descendant names itself exactly.* On Windows it writes its creation time beside its pid (`GetProcessTimes`). The
+  harness's handle, opened before the cancellation, is the descendant's only when the process it holds was created at
+  that time, so a pid that names another process is not read as the descendant's.
+- *Its state is read, not inferred.* `WaitForSingleObject(h, 0)` answering 0 is ended and `WAIT_TIMEOUT` (0x102) is
+  alive; anything else, or no handle, is not known. Only a process known to be the descendant, and alive, is ended by
+  the harness after the row.
+- *One verdict* (`kill_verdict`). Held: every check, and the descendant ended when the kill was done. Caught: the
+  descendant started, the handle its own, its own record line written (the kill had returned), `STUDIO-CANCELLED`, the
+  world as it was, and the descendant alive then. Anything else is neither.
+- *A harness exception is no catch.* The plant rows run through `kill_catch`, which judges a raising handshake by the
+  same verdict (no catch) and puts the plant back after.
+
+**Rows** (the studio self-test in `art/play.py`).
+- The two held rows and the two plant rows, under their names as before (R5's keys unchanged).
+- Ten rows of the verdict on observations made up here, none of them a plant row, each named "the kill's verdict: …":
+  - His minimum is among them: a missing record line, a delayed handshake, the wrong refusal code, a changed world and a
+    harness exception, each no catch; and the witness whole, the one catch.
+  - Three more are no catch: no answer to the request, a handle not known to be the descendant's, a descendant the kill
+    ended.
+  - Each row says what the rows before 0258 did with its case: six were counted as a catch by their predicate,
+    `not held`; a raising handshake ended the suite; a descendant the kill ended was not counted.
+  - The harness exception is also driven through the plant rows' own path (`kill_catch` with a handshake that raises).
+- One row of the record line: *"the kill's record line is its own request's: two requests given one id (the gateways'
+  clock held still), each kill read from the line after its own cancellation"*. The second's id was already on a
+  cancelled line from before its cancellation, the line the reading before 0258 took; each handshake is held.
+- `STUDIO SELFTEST 214/214` on Windows (203 before: eleven rows more, none of them a plant row). Elsewhere the two
+  plant rows are not run, by the code: NOT_MEASURED.
+
+**MEASURED here** (scratch clones of 411ee42 on his machine; Windows 11, Python 3.14.5; `PYTHONHASHSEED=0`,
+`PYTHONUTF8=1`, `python -B`).
+- `STUDIO SELFTEST 214/214` alone. The four handshake rows held and caught as before: the kill done 0.1 s after the
+  cancellation, 0.4 s under the taskkill plant. The ten verdict rows pass. The own-line row shows ids
+  `20261021T120000-1` and `20261021T120000-1`, the second's id already on a cancelled line from before its cancellation.
+- Each repair undone in a copy of its own; the rows catch it:
+  - the record line read from the whole record again: `STUDIO SELFTEST 213/214`, the own-line row alone failing;
+  - the predicate before 0258, a catch whenever the row is not held: `206/214`. The eight verdict rows whose cases that
+    predicate counts as a catch fail: seven made-up cases, and the raising handshake through the plant rows' path.
+    Nothing else fails.
+- The release (the full check twice, the classifier and plants, the gate twice): in the commit message.
+
+**Found and recorded, not repaired** (docs/CAPABILITY-MATRIX.md; his to place).
+- F-16: request ids repeat across gateways asked within one second. The record then holds two requests under one id,
+  and `Gateway._record` writes a request's files under `records/<id>/`, so the later request's files overwrite the
+  earlier's (by reading; the self-test's handshakes share them, MEASURED above).
+- F-17: `art/director.py verify` (and `rebase`) on a world with no ledger ends in a traceback, `IndexError` at
+  `replay`'s `events[0]`, not a refusal with its own code (MEASURED on a copy of his checkout: harbor-lift, harbor-day
+  and foundry-yard). Such a world needs `genesis` first. Also: `rebase` holds the 9 art checks an evaluation runs, not
+  the frozen reference, so it passes before a freeze (MEASURED).
+
+**What it does not show.**
+- The verdict rows are made-up observations: they hold the predicate, not the harness's collection of what it saw,
+  which the five handshake rows exercise.
+- A pid reused between the descendant's write and the harness's open is refused by its creation time, not by a test
+  that makes one: no row reuses a pid.
+- Linux: the plant rows are not run there, by the code; nothing is inferred of it.
+- The other suites' plant predicates: not audited here. His ruling asks that each be classified (strong, conditional,
+  unsound) by reading its actual `caught` predicate, and that the finding not be read as making every other plant row
+  invalid.
+
+**Kept as history.** 0256's entry, its records and its counts stand as written, with a note that their predicate was
+`not held` and their record line any line bearing the request's id; F-14 in docs/CAPABILITY-MATRIX.md has the same
+note. Until this repair is gated, by his ruling, those two rows are not cited as reliable evidence that cancellation
+killed descendants.
+
+**His rulings on batching (BATCH-0), recorded here; they govern from 0259** (2026-10-21, pasted; each quoted whole).
+- On the agent's draft of the protocol:
+
+> I’d harden this before adopting it. The core idea is sound: batch independent, low-risk changes; retain per-commit attribution; pay for the expensive gate once at the batch tip. The weak point is that per-item green checks do not establish that the combined tree is green, and a final gate cannot always tell you which item caused a regression.
+> I would approve the approach with the following amendments.
+> Hardened batch contract
+> 1. Batch sheet is a precondition, not documentation after the fact
+> Before any edit, every item must declare:
+>
+> * Exact files it may modify, create, or delete.
+> * The obligation it addresses and its explicit non-claims.
+> * Its dependencies and expected rung.
+> * Targeted checks, exact expected outputs, and failure conditions.
+> * Each plant and its causal witness—what observation uniquely qualifies as detection.
+> * Its rollback or forward-repair plan.
+> * Whether it changes registered evidence, reference baselines, admission rules, or the gate itself.
+>
+> No undeclared write. If implementation discovers that another file must change, stop and submit a revised sheet for adjudication. Do not silently expand the item.
+> 2. Composition must be checked, not asserted
+> Disjoint write sets are necessary but insufficient. Two items can write different files while one changes the assumptions under which the other's checks operate.
+> For each pair of items \(A,B\), require:
+> \[ W_A \cap W_B = \varnothing \]
+> and, for their targeted checks,
+> \[ R_A \cap W_B = \varnothing,\qquad R_B \cap W_A = \varnothing \]
+> where \(W\) is the declared write set and \(R\) is the actual read set, including imported modules, generated files, configuration, fixtures, and reference ledgers.
+> Static declarations alone can miss dynamic reads. Record observed file access where feasible, and fail closed on undeclared accesses to protected inputs. If the checks or runtime dependencies cannot be established sufficiently, order the items or split the batch.
+> 3. Every commit gets attributable evidence
+> For each item:
+>
+> 1. Build only the approved change.
+> 2. Commit it separately.
+> 3. Run its targeted checks at that exact commit.
+> 4. Record the commit hash, dirty-tree status, command, exit code, output digest, plant witnesses, and rung.
+> 5. Preserve failures. Repair forward in a new commit; never rewrite a failure into a green result by rerunning the same commit until it passes.
+>
+> A targeted pass proves only the targeted obligations. It does not establish batch integration.
+> 4. The batch tip gets the full gate
+> At the last commit, record `Gated-Tree` as the exact tree identity, then run the prescribed full check, plant suite, and gate twice, serially.
+> Require:
+>
+> * The same source tree and relevant environment for both runs.
+> * Byte-identical outputs where the protocol requires them.
+> * Zero unexplained failures, skips, or missing evidence.
+> * Explicit accounting for every expected plant and its causal witness.
+> * No concurrent research or other machine-intensive check during the window.
+>
+> If the final gate fails, do not automatically blame the last item. The failure is attributed using the per-commit evidence; then reproduce and isolate the interaction with targeted tests or a smaller follow-up batch. Preserve the red batch result until a forward repair passes the required checks.
+> 5. Define the limit honestly
+> A clean batch does not prove that every interaction between its items was tested. Disjoint files and independent targeted checks reduce the risk; they do not eliminate it.
+> Add an explicit interaction obligation to each batch sheet:
+>
+> * Which cross-item interactions are expected?
+> * Which check exercises each interaction?
+> * Which interactions remain untested?
+> * Does any untested interaction affect safety, admission, provenance, or gate integrity?
+>
+> Any untested interaction touching a critical boundary must either receive a targeted test or be separated into another batch. Noncritical residual risk may be accepted, but must be recorded rather than silently treated as zero.
+> Batch adjudication sheet
+> This is the format I would require before approving any batch.
+> Batch contract
+> Batch number / patch filename
+> Items and intended order
+> 1
+> Files per item (read/write sets)
+> Obligations, non-claims, expected rung
+> Targeted checks and exact expected outcomes
+> Plants and causal witnesses
+> Dependencies and commit order
+> Cross-item interactions and residual risks
+>  Copy batch sheet
+> My ruling
+> CHANGE, then adopt. The batching policy is worth using, but three requirements are non-negotiable:
+>
+> 1. Observed dependency/read-set conflicts must be considered, not just overlapping writes.
+> 2. A batch-level failure must remain red until its cause is resolved; per-commit green results cannot override it.
+> 3. The batch sheet must expose critical untested interactions before the build, not after the gate fails.
+>
+> This preserves your intended payoff—one expensive full cycle per batch—without pretending that independent item checks prove the composition. The batch sheet comes first; I adjudicate each item before implementation.
+
+- On 0258 and 0259, asked "Ship 0258 alone, then make 0259 the first agreed batch?":
+
+> Yes: ship 0258 alone, then make 0259 the first agreed batch. That is the safer sequence because 0258 repairs an existing evidence-integrity defect in two R5 kill-plant rows, while the proposed 0259 items are still awaiting design and interaction review.
+> One qualification: 0258 passing STUDIO 214/214 is a targeted result, not release clearance. Its full release checks have not run, and the two mutation comparisons are still pending. Keep those distinctions explicit.
+> Release order
+>
+> 1. Finish the two scratch mutation comparisons. Confirm that the repaired predicate rejects the old false-catch cases and accepts only the genuine descendant-survives-kill witness.
+> 2. Complete 0258’s release checks at its own commit, including the required full checks, plants, and gate twice. Preserve the exact outputs and any failures; do not call it released before those checks finish.
+> 3. Keep the read-only plant audit and web research separate from the release check window.
+> 4. Once 0258 is settled, review the 0259 batch sheet before any 0259 implementation begins.
+>
+> 0259 admission criteria
+> The candidates are reasonable, but I am not pre-approving them as one batch. The batch sheet must establish:
+>
+> * F-17: the no-ledger case returns an explicit refusal code, and verify/rebase cannot silently create or assume missing authority.
+> * F-16: request IDs are unique across gateways, and saved records cannot overwrite earlier requests. Define the uniqueness scope and test collisions, retries, and persistence.
+> * Plant-predicate repairs: one item per suite where write/read-set analysis permits. Each repaired predicate needs a specific causal witness and negative controls.
+> * DES-0 leak: demonstrate that the plant variable no longer leaks into `play.py` in a way that changes unrelated test behavior. Test both the plant and its control.
+>
+> For every item, require the exact files, dependencies, targeted checks and expected results, plants and witnesses, and expected rung. In particular, check whether F-16 and F-17 touch shared ledger or gateway code; if their checks read files changed by the other item, order them or split them.
+> The research may improve the batching policy, but it cannot override observed file conflicts or weaken the evidence rules. Any proposed optimal batch size is an estimate under your actual cycle costs—not a correctness theorem.
+> Final ruling: BUILD 0258 alone; DEFER 0259 implementation until I adjudicate its complete batch sheet. Keep the research and plant audit off the release check window. Once 0258 is clean on its own release criteria, 0259 can become the first batch under the agreed protocol.
+
+- On the agent's three refinements, asked "Add the three refinements to BATCH-0 as written?":
+
+> Yes—with one tightening amendment. I approve all three refinements for BATCH-0, subject to the exact rules below. The 0258 mutation results are useful targeted evidence, but they do not substitute for its pending release gate.
+> BATCH-0 — amended ruling
+> 1. Shared documentation — APPROVE
+> Each item may edit only its own designated sections in `docs/ROADMAP.md`, `AGENTS.md`, and `docs/CAPABILITY-MATRIX.md`, plus its own art entry in `docs/CORE.md`. The shared line count is updated once, in the batch's last commit.
+> The exemption applies only to documentation that no check reads. If a check consumes a shared document, that document is a measured input and its edits must participate in the dependency analysis.
+> 2. Measured read sets — APPROVE
+> Use the Python audit hook in scratch to record opened files across every Python process spawned by each targeted check. Record non-Python readers separately, including the conformance binary and its inputs.
+> The measurement must identify subprocesses and normalize paths consistently. If a child process escapes instrumentation, or a read cannot be attributed, mark the read set incomplete—not independent. Measured reads supplement declared dependencies; they do not prove that an unexecuted branch could never read another file.
+> 3. Ordered pairs — APPROVE
+> If B changes a file read by A's checks, and A precedes B, rerun A's affected targeted checks at the batch tip.
+> The batch sheet must list every such rerun explicitly. Checks already covered by the full check need not be duplicated, but only when their coverage is demonstrated. Otherwise run them separately, including the conformance runner, doortest, freeze readers, and rung self-test where applicable.
+> 4. Output comparison — CLARIFIED
+> Byte identity is required for the two gate outputs where the existing protocol requires it. Full-check outputs may differ in timings: compare suite verdicts and counts, then explain every difference. Do not normalize away unexplained differences or treat matching counts alone as proof of equivalent execution.
+> One additional enforcement rule
+> The measured dependency graph must be frozen into the batch evidence before the expensive batch gate. If actual reads contradict the planned order, stop and revise the sheet before proceeding. Do not discover a conflict, continue anyway, and rationalize it after the gate.
+> For F-16 and F-17, for example, if F-17 writes `director.py` and F-16's STUDIO checks read it, the sheet must capture that dependency even though their implementation write sets do not overlap.
+> Execution decision
+>
+> * 0258: wait for the web research and plant audit to finish, then open its isolated release window. Preserve the reported `214/214`, `213/214`, and `206/214` targeted results as measured evidence; do not yet label the release fully gated.
+> * BATCH-0: record these amendments in the protocol before building 0259.
+> * 0259: no implementation until the complete item-level batch sheet is submitted and adjudicated.
+>
+> The key principle is now explicit: batching saves repeated full gates, not evidence about changed dependencies. Every item retains its own commit-level attribution, and every affected obligation is checked again at the final tree.
+
+The protocol's text, as amended, is the first item of 0259's sheet; this entry records his words, not the protocol.
+
+No row, rung, pinned source, oracle file, registered entry, BINDING-0 file, frozen file, art/references.jsonl or ledger
+changed. Docs: AGENTS.md (the studio's row), docs/CAPABILITY-MATRIX.md (F-14, a note; F-16 and F-17), docs/CORE.md
+(art's lines), 0256's entry (a note), this entry (with his rulings on batching, recorded).
+
+### Batch 0265 — five repairs, the first batch agreed by its sheet before it was built · **built, off the gate** (0265, five commits: I-0 `docs/BATCH-0.md` (new), `AGENTS.md`; I-1 `art/glue.py`; I-2 `art/check.py`; I-3 `art/director.py`, `art/play.py`; I-4 `art/director/durable.py`, `art/director.py`, `docs/CORE.md`)
+
+The 0259 batch of the agreed order, numbered 0265 (0259 to 0264 were taken meanwhile), built under BATCH-0
+(`docs/BATCH-0.md`). Its sheet, version 10, its dependency graph and the protocol for a red row at its tip were each
+ruled before the build, and the graph was frozen by his ruling (the agent's records, kept in scratch: the sheet
+`65ae20e0…`, the graph `5b5c60ab…`, the frozen record `d7f19b75…`). Each item below is one commit, its checks run at that
+commit and a write guard held over its files; the tip ran as the build request he authorized states it. His ruling of
+2026-10-25 on the four decisions:
+
+> Rulings: accept SHEET-v10.md as written; freeze graph-v10-proposed.json (5b5c60ab…); adopt PROTOCOL-FLAKY-ROWS-v2.md, strict; authorize the build as BUILD-REQUEST.md (corrected) states it.
+
+Goal lines (GOAL-LINE-0, proposed): all five items are maintenance and none names a clause of the goal. His caution on
+that count: *"a useful review trigger, not an automatic failure condition or a new gate."*
+
+**His plan-hardening ruling** (2026-10-22, his message of 19:01 UTC, answering "how many future rungs are planned?";
+recorded in this entry only, as his placement ruling requires: *"Record the plan in the 0259 ROADMAP entry only."*):
+
+> Yes. I would harden the plan around the recent pivots, not merely add more items to the queue. The biggest change is that the work now has three distinct purposes—repairing the plant harness, auditing correctness boundaries, and investigating the simulation—and the plan should prevent evidence from one purpose being mistaken for proof of another.
+>
+> The October 9 decision to hold the gate at 251 rows and shift attention toward FPS design is especially important. The plan should not quietly turn the plant audit into another gate-expansion project.
+>
+> ## 1. Make these five changes to the plan
+>
+> A. Establish a hard 0259 release boundary
+>
+> Finish the revised read-set measurement, freeze the graph, resolve the I-2 assertion and I-3 studio-ledger regression, then execute the authorized batch. Keep the 251-row gate unchanged.
+>
+> The new STUDIO regression is a targeted contract check, not permission to expand the gate. Any graph conflict stops the build and requires a revised sheet before proceeding.
+>
+> B. Split harness integrity from product correctness
+>
+> Treat F-16, C-A–C-F, Q2, D-A/D-B, memo plants, D-D/CERT, S-D, and the eight-suite audit as a bounded audit-and-repair track.
+>
+> Every finding gets its own obligation, failure mechanism, plant, honest control, and targeted check. A green plant suite demonstrates only what its tests establish; it does not prove the underlying product contract is correct.
+>
+> C. Make research findings—not the backlog—authorize new patches
+>
+> GEOMETRY-0, MOVER-0, and ROUNDING-0 remain independent investigations. Each must produce a preregistered question, discriminating test, and explicit verdict before any patch is proposed.
+>
+> The silence failure remains `NOT_MEASURED`; investigate it only with a new registration. Do not merge it with the plant allowlist fix or use the unsuccessful reproduction as evidence that the failure is gone.
+>
+> D. Restore a separate FPS-design milestone
+>
+> The previous direction toward `FPS-GRAYBOX-0` should remain visible rather than being displaced indefinitely by harness cleanup.
+>
+> Keep the verified-core/runtime/renderer boundary explicit, require deterministic replay with fixed ticks and saved commands for motion replay, and make rendering noninterference and defect-directed conversion mutations explicit tests. These are design-track goals, not claims that the current repository already satisfies them.
+>
+> E. Add evidence-based batch sizing and gate escalation
+>
+> Keep 3–5 items per batch as a planning heuristic, not a quota. Use lightweight checks for low-risk changes; use the full gate at release and contract-risk checkpoints. Split a batch when an interaction is critical but not covered by targeted tests.
+>
+> Never relax a bound, widen a predicate, or add gate rows merely to make a failing run green.
+>
+> ## 2. Reorder the post-0259 backlog by dependency and value
+>
+> I would not treat the ten listed items as ten guaranteed patches.
+>
+> | Phase | Work                                                                   | Exit condition                                                                                                     |
+> | ----- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+> | 0     | 0259                                                                   | Batch-tip checks and unchanged 251-row gate pass under the agreed release protocol.                                |
+> | 1     | F-16 and F-3                                                           | Uniqueness scope and provider self-scope contract are explicitly ruled; then decide whether each requires a patch. |
+> | 2     | Plant audit: C-A–C-F, Q2, D-A/D-B, memo plants, eight unaudited suites | Each predicate is classified as sound, unsound, or unresolved with evidence.                                       |
+> | 3     | Reference-dependent work: D-D/CERT, S-D                                | Required 0254 and 0253 reference conditions are satisfied before code changes.                                     |
+> | 4     | B4-TIMING-BOUNDARY                                                     | A falsifiable design distinguishes the timing failure modes while preserving the 10-second bound.                  |
+> | 5     | Research tracks                                                        | GEOMETRY-0, MOVER-0, ROUNDING-0 each produce an independent verdict.                                               |
+> | 6     | FPS-GRAYBOX-0                                                          | A separately reviewed design slice establishes and tests its contracts.                                            |
+> | Later | REACH-3                                                                | Enforcement layer only; it never becomes the authority for the evidence it enforces.                               |
+>
+> The order between phases 1 and 2 is provisional. If the audits reveal a shared prerequisite or a critical interaction, re-order before assigning items to a batch.
+>
+> ## 3. Add one rule that prevents the plan from drifting
+>
+> Every new work item should have a short admission record:
+>
+> - Question: what uncertainty or failure are we addressing?
+> - Evidence: what observation supports the concern?
+> - Discriminator: what result would separate competing explanations?
+> - Scope: what files, contracts, references, and tests may change?
+> - Exit condition: what exact result allows the item to close?
+> - Non-claims: what will still remain unproved?
+>
+> This applies to research as well as code. A finding that does not justify a patch can still be a successful result.
+>
+> ## My recommendation
+>
+> Harden the plan now in three concrete ways: freeze the 0259 release boundary, turn the remaining plant work into an audit with explicit verdicts rather than a patch quota, and reserve a distinct milestone for FPS design.
+>
+> That keeps the engineering rigor you've built without allowing the harness to become the project’s permanent center of gravity. The immediate action remains finishing the revised 0259 graph and sheet; no later item is authorized merely because it appears in this roadmap.
+
+**His GOAL-LINE-0 ruling** (2026-10-25, answering "Add a goal line to every admission record from now on?"; recorded
+here, D7, as he accepted it):
+
+> Yes—with one important constraint: every admission record should carry a goal line, but the goal line must be descriptive and auditable, not a second authority mechanism.
+> Given your reported findings, the problem is not a shortage of cryptographic machinery. It is drift: security mechanisms and architectural rules can accumulate without a recorded connection to the goal they are supposed to serve. A required goal line gives each admission a direct, reviewable answer to “Why does this change belong?”
+> I would make this a requirement for new admission records, not a retroactive rewrite of the existing chain.
+> Proposed rule
+> GOAL-LINE-0: Every new admission record MUST state the goal the transition serves, the intended observable outcome, and the scope of the change. The goal line is immutable with the admission record. It does not itself authorize the transition or establish that the goal was achieved.
+> A compact record could look like this:
+>
+> ```
+> goal_line:
+>   goal: <stable goal reference, if one exists>
+>   outcome: <observable intended result>
+>   scope: <what this transition may change>
+>   basis: <charter, decision, issue, or explicit maintenance rationale>
+> ```
+>
+> Four rules to keep it useful
+>
+> 1. No invented goals after the fact. The author declares the goal when preparing the admission; the record preserves it.
+> 2. No goal laundering. A plausible goal does not override failed predicates, missing evidence, or insufficient authority.
+> 3. No vague boilerplate. “Improve security” is insufficient without saying what observable property changes.
+> 4. No forced retroactive migration. Existing admission records remain as they are. Add goal lines to new records, and to historical records only when they are deliberately reviewed or re-admitted.
+>
+> A maintenance change may legitimately say that its goal is to preserve existing behavior, reduce a measured cost, or correct a specified defect. It should not need to pretend every small change advances a grand strategic objective.
+> What this gives you
+> The goal line creates a lightweight traceability chain:
+> Project goal → intended outcome → admitted transition → supporting evidence.
+> That helps reviewers identify scope drift without adding signatures, quorum requirements, or another policy engine. Where the goal is disputed, record the dispute; don't let the goal field silently settle it.
+> Ruling: Adopt GOAL-LINE-0 as a proposed requirement for new admission records. Keep it small, and evaluate whether it catches real drift before expanding it into a more elaborate goal registry.
+
+#### I-0 · BATCH-0's text into the repository (commit 1 of 5: `docs/BATCH-0.md`, `AGENTS.md`, this entry)
+
+- `docs/BATCH-0.md` (new) holds the protocol as he amended it and his three BATCH-0 rulings, each quoted whole. It takes
+  in neither the plan-hardening ruling (his: *"Do not fold it into `docs/BATCH-0.md`."*) nor the GOAL-LINE-0 ruling;
+  both are recorded in this entry, and neither widens this item's writes.
+- `AGENTS.md` §1: one row pointing to it.
+- Its check, the check of the words (scratch, no row): every quotation of his in `docs/BATCH-0.md` and in this entry
+  held to his saved text, and both rulings of this entry present whole. Its output is in the commit's message. It
+  enforces nothing in the program; documentation alone enforces nothing.
+
+#### I-1 · GLUE's plants caught by their own rows (commit 2 of 5: `art/glue.py`, `AGENTS.md` GLUE's row, this section)
+
+- **The defect** (the plant-predicate audit of 2026-10-22): a GLUE plant counted caught when any row of the planted run
+  failed, or when the run raised (`art/glue.py`, the plant loop before 0265).
+- **Now:** each plant names its own row (`DESIGNATED`), and `scored` counts it caught only when that row passed in the
+  honest run and fails under the plant. Another row failing is no catch, and an exception is no catch.
+- **Three scorer rows**, on made-up observations: another row failing under a plant; the named row failing in the honest
+  run; a plant run that raises. Each is no catch. They hold the scorer, never a plant trial.
+- **The mapping, confirmed at this commit by running each plant:** `glue-sections-unchecked` by "the building's face and
+  one of its bays"; `glue-fingerprint-ordered` by "one bay, two values: OBSTRUCTED"; `glue-repeat-refused` by "one bay,
+  the same value twice"; `glue-judged-in-named-order` by "named either way".
+- `GLUE SELFTEST 15/15` (12 before). GLUE stays outside R5's suites: `PLANTS HELD` says nothing of it, and nothing here
+  says R5 proves GLUE correct.
+
+#### I-2 · The reach witness's plant caught by its witness (commit 3 of 5: `art/check.py`, this section)
+
+- **The defect** (the plant-predicate audit of 2026-10-22): the plant row read caught whenever both parabola ceilings
+  failed to cover the head, and `covered()` is false when no head was measured. MEASURED on the tree before this commit,
+  the tick made never to land: the verdict computed caught, and printing the row raised `TypeError`.
+- **Now** (`witness_caught`): the plant row's verdict is the conjunction of four values, each computed in the row, never
+  a line only printed:
+  1. the tick landed on the box;
+  2. both twins' current ceilings cover the head measured from it;
+  3. both parabola ceilings do not;
+  4. the honest rows passed in the same run, so that the row that fails under the plant is its own predicate.
+- **Three rows score the verdict on made-up observations:** no landing counts nothing; the current ceilings not
+  covering count nothing; all four held count the miss. They hold the scoring only, never a trial of the live plant.
+- `== reach-witness` 8 rows, every one PASS (5 before). The R5 key is kept, word for word: check.py's keys stay 203.
+
+#### I-3 · F-17: an empty ledger refused (commit 4 of 5: `art/director.py`, `art/play.py`, `AGENTS.md` STUDIO's row, `docs/CAPABILITY-MATRIX.md` F-17, this section)
+
+- **The defect** (F-17, found 2026-10-21; MEASURED again at `b441a1e`): `verify` and `rebase` on a world with no ledger
+  ended in `IndexError` at `replay`'s first event.
+- **Now:** `replay` refuses a ledger with no event, `LEDGER-NONE`, the code `held_head` already gives on the append path.
+  So `verify` and `rebase` answer `LEDGER REFUSED: LEDGER-NONE …` with exit 1, write no ledger, append nothing and leave
+  the world's files byte for byte as they were. The behaviour changes only for an empty ledger; valid ledgers replay as
+  before.
+- **The director's rows** (four, one a plant): verify refused; rebase refused; the frozen 0254 legacy ledger replaying to
+  the head its freeze records and the self-test genesis to its own head; the plant `replay-empty-unchecked` (the
+  `IndexError` of before), caught only by the verify row's `LEDGER-NONE`. `DIRECTOR SELFTEST` 127 rows, 39 of them R5's.
+- **STUDIO's row** (his design A): after the studio's own admissions, its refusal and its two undos, the ledger it wrote
+  replays to the head of its files. It is no plant row. `STUDIO SELFTEST 215/215`.
+- **An unresolved admission-boundary question, recorded (his D6, *"Accept as a scoped deferral, not as approval of the
+  behavior"*):** the studio's open path takes an empty ledger away and starts it again (`art/play.py:762-764`), and
+  starts a genesis on a world with no ledger (`:771-775`). After this commit `verify` and `rebase` refuse that world,
+  while opening it in the studio gives it a ledger silently. Nothing here says that is safe or authorized.
+
+#### I-4 · DES-0: the plant variable reaches only the names compared (commit 5 of 5, the batch's last: `art/director/durable.py`, `art/director.py`, `AGENTS.md` the director's memotest wording, `docs/CAPABILITY-MATRIX.md` DES-0, `docs/CORE.md` art's count, this section)
+
+- **The defect** (DES-0, found 2026-10-21; MEASURED again at `b441a1e`): `durable.PLANT` took `VERDANDI_PLANT` whatever
+  its value, and any value turned the export memo off. STUDIO APP's `ignore-busy`, inherited by the plaza it starts, ran
+  that plaza's director with the memo off.
+- **Now:** `durable.from_env` takes the variable only for a name on `durable.NAMES`, the eight names compared with
+  `durable.PLANT` in `art/`. The two resets in the director's self-test take it the same way.
+- **The rows** (five, two of them plants, in the memo's rows and so in both `memotest` and `selftest`):
+  - a foreign name (`ignore-busy`): a fresh process reads `durable.PLANT` empty, and the memo stays on;
+  - a recognized name (`no-fence`): it reaches `durable.PLANT`, and the memo is off;
+  - the census: `durable.NAMES` is every name compared with `durable.PLANT` in `art/` (8 names at 12 sites);
+  - the plant `durable-plant-any-name` (every value taken, the reading before), caught by the foreign-name row through
+    the memo's counter;
+  - the plant `durable-plant-list-short` (`queue-forgets` taken off the list), caught by the census, which names it.
+- `MEMO SELFTEST` 18 rows (13 before); `DIRECTOR SELFTEST` 132 rows, 41 of them R5's; `STUDIO APP SELFTEST 13/13`.
+- **Not claimed:** that the leak caused the earlier silence failures (their cause NOT_MEASURED, as he ruled: *"The
+  allowlist may fix the identified plant-propagation behavior. It does not establish that this behavior caused the
+  earlier silence failures."*), or anything of racetest.
+- **`docs/CORE.md`, written once by this last commit (BATCH-0 §3, his D4):** `art/`'s lines are 40,223, the newlines of
+  every tracked `.rs`, `.py`, `.js` and `.html` file under `art/` at this tip (39,971 at `b441a1e`, of which LOCALITY-1's
+  1,218 had not been counted; this batch adds 252). Every other folder's count is as recorded.

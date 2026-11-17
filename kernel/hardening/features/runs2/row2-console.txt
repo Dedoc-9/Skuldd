@@ -1,0 +1,42 @@
+== inputs
+30ca2d2e42b9460ff0bec12dc0af0263b2c8284963ea140af13c1ca28944746d  ext-work/harden-r4/features/PREDICTIONS-row2-2026-11-17.md
+3e4bc3917554c51ff9c0b3be2c20f946a90ec2a48149983b4751749a17a484ab  ext-work/harden-r4/features/feature_row.py
+e009d57812a2ed53b66951b2b8dce5bd8a4cdefc895db057fbe3ccd481c60494  ext-work/harden-r4/features/feature_row2.py
+fee9f57d20c52909dff2b880dd9b23283a5ddd515d9a5a2ae2ce433c8bf777b1  ext-work/harden-r4/features/make_feature_plants2.py
+7f495003db181348e58cba7f1fa315a7d843cb45e4a6ba5467133702c64cfaa4  ext-work/harden-r4/features/plants2/decoy_split_string.v
+81c25c7ad7d59899b78f683b9aecab78c5aae33b23084187b54d2d5e332576cc  ext-work/harden-r4/features/plants2/decoy_string_in_comment.v
+19ce9342c3e43f0749e3756ba328bd69b388f9f9b2f7f088cf15f1a4d0e08b26  ext-work/harden-r4/features/plants2/evade_hidden_fixpoint.v
+5f77fa0f5cc45effff8a7c2c917ea40858fb331727607e53a248fe74bc771f47  ext-work/harden-r4/features/plants2/evade_split_definitional_uip.v
+b4c0ce542e54e9a516036624eaaae02f9e8b7090fb3ab247cb15b849118fb1f6  ext-work/harden-r4/features/plants2/evade_split_unset_guard.v
+edc8a6bc7d9695727cc5eb637bb9fc97fa3506c1cdfa85f9034aaa1ca73222a4  ext-work/harden-r4/features/plants2/evade_string_in_comment.v
+== P1, P3: version 1 and version 2 on plants2
+  decoy_split_string.v: version 1 exit 0, version 2 exit 0
+  decoy_string_in_comment.v: version 1 exit 0, version 2 exit 0
+  evade_hidden_fixpoint.v: version 1 exit 0, version 2 exit 1
+      v2   REFUSED evade_hidden_fixpoint.v line 2: checking flag (Unset Guard Checking)
+      v2   REFUSED evade_hidden_fixpoint.v line 3: recursive definition (Fixpoint)
+  evade_split_definitional_uip.v: version 1 exit 0, version 2 exit 1
+      v2   REFUSED evade_split_definitional_uip.v line 1: checking flag (Set Definitional UIP)
+  evade_split_unset_guard.v: version 1 exit 0, version 2 exit 1
+      v2   REFUSED evade_split_unset_guard.v line 1: checking flag (Unset Guard Checking)
+  evade_string_in_comment.v: version 1 exit 0, version 2 exit 1
+      v2   REFUSED evade_string_in_comment.v line 2: checking flag (Unset Guard Checking)
+== P4: version 2 against version 1 on version 1's plants
+  same verdict: 14; different: 0
+== P5: version 2 on the tier
+-- the closure of sincos32z (its FROZEN4 list, plants excluded)
+  reported, not refused (occurrences): inductive type 2
+FEATURE ROW 2 HELD: 54 file(s), no recursive definition and no checking-flag change
+exit 0
+-- the closure of sincos32i (its FROZEN4 list, plants excluded)
+  reported, not refused (occurrences): inductive type 2
+FEATURE ROW 2 HELD: 50 file(s), no recursive definition and no checking-flag change
+exit 0
+-- law statement draft M
+  reported, not refused (occurrences): none
+FEATURE ROW 2 HELD: 1 file(s), no recursive definition and no checking-flag change
+exit 0
+-- every .v of mkf-ext outside plants/ and out4/
+  reported, not refused (occurrences): inductive type 2
+FEATURE ROW 2 HELD: 62 file(s), no recursive definition and no checking-flag change
+exit 0

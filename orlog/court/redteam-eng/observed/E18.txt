@@ -1,0 +1,12 @@
+$ -B court/redteam-eng/door_retraction.py
+raw     '\xa0Note:"\xa0"'
+pass 1  None  events [('REPAIR', 'R-SPACE'), ('REFUSE', 'QUOTE-BOUNDARY'), ('REPAIR', 'R-FINAL-NEWLINE')]
+Traceback (most recent call last):
+  File "{session}\scratchpad\orlog\court\redteam-eng\door_retraction.py", line 28, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "{session}\scratchpad\orlog\court\redteam-eng\door_retraction.py", line 21, in main
+    c2 = canonicalize(c1.text.encode("utf-8"))
+                      ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'encode'
+[exit 1]

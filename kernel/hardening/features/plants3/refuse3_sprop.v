@@ -1,0 +1,1 @@
+Inductive sTrue : SProp := sI.

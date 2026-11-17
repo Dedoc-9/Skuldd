@@ -1,0 +1,29 @@
+coqc Big106.v exit 0 (5 s)
+examples: 32
+Print Assumptions run exit 0
+Print Assumptions: 0 closed, 32 with axioms; names that occur:
+     32 ClassicalDedekindReals.sig_forall_dec
+     32 ClassicalDedekindReals.sig_not_dec
+     32 Classical_Prop.classic
+     32 FunctionalExtensionality.functional_extensionality_dep
+recursive coqchk R106.Big106 exit 0 (23 s); its summary:
+CONTEXT SUMMARY
+===============
+
+* Theory: Set is predicative
+  
+* Theory: Rewrite rules are not allowed
+  
+* Axioms:
+    Coq.Logic.FunctionalExtensionality.functional_extensionality_dep
+    Coq.Reals.ClassicalDedekindReals.sig_not_dec
+    Coq.Reals.ClassicalDedekindReals.sig_forall_dec
+    Coq.Logic.Classical_Prop.classic
+  
+* Constants/Inductives relying on type-in-type: <none>
+  
+* Constants/Inductives relying on unsafe (co)fixpoints: <none>
+  
+* Inductives whose positivity is assumed: <none>
+  
+BIG106 EXAMPLES CHECKED

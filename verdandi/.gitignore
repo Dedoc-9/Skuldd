@@ -1,0 +1,25 @@
+# build outputs of the gate and the drivers
+verify/build/
+# LIVE-SESSION-0: the shell's saved live sessions and their journals (a sealer commits a copy under shell/attest/)
+build/sessions/
+*.exe
+*.pdb
+*.o
+# never committed
+.env
+__pycache__/
+*.pyc
+.gate-*/
+# redirected gate / measurement output (sealed records under */attest/ are committed; raw logs are not)
+*.log
+# off-gate eyeball images from `kernel --write-png` etc. (the project commits digests, never images)
+*.ppm
+*.png
+*.bmp
+# the design tool's own project: sessions, previews, logs (content time; never committed)
+design/work/
+# FPS-GRAYBOX-0: each map's manifest, written by graybox/check.py (rebuilt on every run; never committed)
+graybox/build/
+# ART-GENERATION-0: the scenes art/dress.py writes (rebuilt from their inputs; never committed), and the Unreal project made in art/unreal/
+art/build/
+art/unreal/*/

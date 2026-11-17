@@ -1,0 +1,30 @@
+LICENSING
+
+This repository is offered under two licences. You may choose either.
+
+1. The GNU Affero General Public License, version 3 only (AGPL-3.0-only).
+
+   The full text is in the file LICENSE. Under it you may use, study, share and change the software, on its
+   terms. Among them: if you modify the software and let users interact with your modified version over a network,
+   you must offer those users its corresponding source code (section 13 of the licence).
+
+2. A separate commercial licence.
+
+   It is for anyone who wants to use the software on terms other than the AGPL-3.0, for example inside a product or
+   service whose source code they do not publish. Its terms are agreed case by case with the copyright holder.
+
+To ask about a commercial licence, write to:
+
+    Daniel J. Dillberg
+    bigdilly95@gmail.com
+
+Notes
+
+- The copyright holder offers the whole repository under both licences. The SPDX tags in its files name the public
+  licence, AGPL-3.0-only; the commercial licence is a separate written agreement and needs no tag.
+- THIRD-PARTY.md lists what the repository uses from other authors and under which licences. None of it is copied
+  into this repository; that file says what was checked.
+- Contributions: until the copyright holder sets contribution terms that let him offer every contribution under
+  both licences, this repository accepts no outside contribution.
+- Nothing in this file changes the terms of the AGPL-3.0 for anyone who receives the software under it.
+- This file describes the offer. It is not legal advice.

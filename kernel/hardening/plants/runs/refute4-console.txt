@@ -1,0 +1,118 @@
+coqc R4Lib.v exit 0 (5 s)
+coqc i_shape_arg_4/S.v exit 0 (2 s)
+coqc i_shape_arg_4/Refute.v exit 0 (2 s)
+coqc i_shape_c_no_abs/S.v exit 0 (1 s)
+coqc i_shape_c_no_abs/Refute.v exit 0 (2 s)
+coqc i_shape_cos_big_0/S.v exit 0 (1 s)
+coqc i_shape_cos_big_0/Refute.v exit 0 (4 s)
+coqc i_shape_n_add/S.v exit 0 (3 s)
+coqc i_shape_n_add/Refute.v exit 0 (2 s)
+coqc i_shape_narrow_add/S.v exit 0 (1 s)
+coqc i_shape_narrow_add/Refute.v exit 0 (2 s)
+coqc i_shape_poly_swap/S.v exit 0 (1 s)
+coqc i_shape_poly_swap/Refute.v exit 0 (1 s)
+coqc i_shape_q_1f/S.v exit 0 (1 s)
+coqc i_shape_q_1f/Refute.v exit 0 (2 s)
+coqc i_shape_sin_sel_k1/S.v exit 0 (2 s)
+coqc i_shape_sin_sel_k1/Refute.v exit 0 (2 s)
+coqc i_shape_sinturn_no_narrow/S.v exit 0 (1 s)
+coqc i_shape_sinturn_no_narrow/Refute.v exit 0 (2 s)
+coqc i_ieee_sub_is_add/S.v exit 0 (2 s)
+coqc i_ieee_sub_is_add/Refute.v exit 0 (1 s)
+coqc i_ieee_neg_is_abs/S.v exit 0 (3 s)
+coqc i_ieee_neg_is_abs/Refute.v exit 0 (2 s)
+coqc i_ieee_sel_le_is_lt/S.v exit 0 (2 s)
+coqc i_ieee_sel_le_is_lt/Refute.v exit 0 (2 s)
+coqc i_cst_0_ulp/S.v exit 0 (2 s)
+coqc i_cst_0_ulp/Refute.v exit 0 (2 s)
+coqc i_cst_1_ulp/S.v exit 0 (2 s)
+coqc i_cst_1_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_110_ulp/S.v exit 0 (2 s)
+coqc i_cst_110_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_156_ulp/S.v exit 0 (2 s)
+coqc i_cst_156_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_20_ulp/S.v exit 0 (2 s)
+coqc i_cst_20_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_210_ulp/S.v exit 0 (2 s)
+coqc i_cst_210_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_4_ulp/S.v exit 0 (2 s)
+coqc i_cst_4_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_42_ulp/S.v exit 0 (2 s)
+coqc i_cst_42_ulp/Refute.v exit 0 (2 s)
+coqc i_cst_6_ulp/S.v exit 0 (2 s)
+coqc i_cst_6_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_72_ulp/S.v exit 0 (2 s)
+coqc i_cst_72_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_BIG_2p22/S.v exit 0 (2 s)
+coqc i_cst_BIG_2p22/Refute.v exit 0 (1 s)
+coqc i_cst_BIG_ulp/S.v exit 0 (2 s)
+coqc i_cst_BIG_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_CN_odd/S.v exit 0 (1 s)
+coqc i_cst_CN_odd/Refute.v exit 0 (2 s)
+coqc i_cst_CN_ulp/S.v exit 0 (3 s)
+coqc i_cst_CN_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_HH_ulp/S.v exit 0 (3 s)
+coqc i_cst_HH_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_KK_ulp/S.v exit 0 (1 s)
+coqc i_cst_KK_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_MM_ulp/S.v exit 0 (2 s)
+coqc i_cst_MM_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_PH_ulp/S.v exit 0 (2 s)
+coqc i_cst_PH_ulp/Refute.v exit 0 (1 s)
+coqc i_cst_TT_ulp/S.v exit 0 (2 s)
+coqc i_cst_TT_ulp/Refute.v exit 0 (1 s)
+coqc i_prem_sin_no_finite/S.v exit 0 (2 s)
+coqc i_prem_sin_no_finite/Refute.v exit 0 (1 s)
+coqc i_concl_cos_is_sin/S.v exit 0 (2 s)
+coqc i_concl_cos_is_sin/Refute.v exit 0 (1 s)
+coqc i_core_bound_2p200/Refute.v exit 0 (2 s)
+coqc z_sin_step_none/S.v exit 0 (0 s)
+coqc z_sin_step_none/Refute.v exit 0 (2 s)
+coqc z_sin_step_abs/S.v exit 0 (1 s)
+coqc z_sin_step_abs/Refute.v exit 0 (1 s)
+coqc z_zero_sin_opposite/S.v exit 0 (1 s)
+coqc z_zero_sin_opposite/Refute.v exit 0 (1 s)
+coqc z_zero_sin_plus/S.v exit 0 (1 s)
+coqc z_zero_sin_plus/Refute.v exit 0 (1 s)
+coqc z_cos_step_none/S.v exit 0 (1 s)
+coqc z_cos_step_none/Refute.v exit 0 (1 s)
+coqc z_cos_step_sub/S.v exit 0 (1 s)
+coqc z_cos_step_sub/Refute.v exit 0 (2 s)
+coqc z_cos_step_no_abs/S.v exit 0 (1 s)
+coqc z_cos_step_no_abs/Refute.v exit 0 (1 s)
+coqc z_zero_cos_minus/S.v exit 0 (1 s)
+coqc z_zero_cos_minus/Refute.v exit 0 (1 s)
+coqc z_zero_sin_no_finite/S.v exit 0 (1 s)
+coqc z_zero_sin_no_finite/Refute.v exit 0 (1 s)
+coqc z_value_cos_is_sin/S.v exit 0 (1 s)
+coqc z_value_cos_is_sin/Refute.v exit 0 (1 s)
+coqc z_nonfinite_cos_unstepped/S.v exit 0 (1 s)
+coqc z_nonfinite_cos_unstepped/Refute.v exit 0 (1 s)
+refutations compiled: 45; failed: 0
+coqc Check.v exit 0 (31 s)
+Print Assumptions: 45 with axioms, 0 closed; names that occur:
+     45 ClassicalDedekindReals.sig_forall_dec
+     45 ClassicalDedekindReals.sig_not_dec
+     45 Classical_Prop.classic
+     45 FunctionalExtensionality.functional_extensionality_dep
+recursive coqchk R4PL.Check exit 0 (66 s); its summary:
+CONTEXT SUMMARY
+===============
+
+* Theory: Set is predicative
+  
+* Theory: Rewrite rules are not allowed
+  
+* Axioms:
+    Coq.Logic.FunctionalExtensionality.functional_extensionality_dep
+    Coq.Reals.ClassicalDedekindReals.sig_not_dec
+    Coq.Reals.ClassicalDedekindReals.sig_forall_dec
+    Coq.Logic.Classical_Prop.classic
+  
+* Constants/Inductives relying on type-in-type: <none>
+  
+* Constants/Inductives relying on unsafe (co)fixpoints: <none>
+  
+* Inductives whose positivity is assumed: <none>
+  
+R4 REFUTATIONS CHECKED

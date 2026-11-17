@@ -1,0 +1,13 @@
+harness 88c98855ed588af8a60b64ec4a98a8ea8b9f04e7f7dd2dce07b072743e7c2d9a (author-written; graded as the author's)
+coqc: The Coq Proof Assistant, version 8.20.1 | coqchk binary sha256 575eba6327098bea9cb524cbb810fca87b12e461303e859810498b445126c41e | coqc binary sha256 39729d7e2aa4ef71fcdbb336282b460f52fc67abb90c5ca62abad54f403d1bfa
+  1 freeze list is the owner's anchor                                ok  list 7690d40452eb5c402ba5a86fd3cefd36062550d83ad5261634a18feb36f908d6, given 7690d40452eb5c40
+  2 every line readable, no path twice                               ok  95 entries
+  3 every listed file present with its listed sha256                 ok  95 files
+  4 the list covers the closure                                      FAIL  imported but not listed: ['sincos32z/Zero.v']; required but not listed: []
+  5 fresh root holds exactly the listed sources                      ok  53 sources
+  6 every source compiles, in import order                           FAIL  failed at sincos32z/Closed.v exit 1: File "/build/root/sincos32z/Closed.v", line 11, characters 63-67: Error: Cannot find a physical path bound to logical path Zero with prefix MKF.sincos32z.
+  7 own check file: type and Print Assumptions exactly the axioms    FAIL  exit 1: File "/build/root/hcheck/HarnessCheck.v", line 1, characters 56-72: Error: Cannot find a physical path bound to logical path sincos32z.Closed with prefix MKF.
+  8 recursive coqchk, summary read strictly                          FAIL  exit 1: Fatal Error: User error: Cannot find library MKF.hcheck.HarnessCheck in loadpath.
+  compiled .vo files: 51; digest of their sorted "sha256  path" lines 797a56b36427da63352a48c78b0829d33267c05f2a502a4291dcfd5f328733e7
+  outside libraries loaded: 0 (0 located); digest of their sorted "library sha256" lines e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+HARNESS sincos32z FAILED: 4 of 8 rows  [anchor 7690d40452eb5c40]

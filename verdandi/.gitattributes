@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.lvl binary
+*.tiles binary
+*.bin binary
+*.png binary
+oracle/game/** -text

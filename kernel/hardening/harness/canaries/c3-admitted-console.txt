@@ -1,0 +1,13 @@
+harness 88c98855ed588af8a60b64ec4a98a8ea8b9f04e7f7dd2dce07b072743e7c2d9a (author-written; graded as the author's)
+coqc: The Coq Proof Assistant, version 8.20.1 | coqchk binary sha256 575eba6327098bea9cb524cbb810fca87b12e461303e859810498b445126c41e | coqc binary sha256 39729d7e2aa4ef71fcdbb336282b460f52fc67abb90c5ca62abad54f403d1bfa
+  1 freeze list is the owner's anchor                                ok  list f273cdb7d151d79556cb9e69ac09dff5d1549b509678773e2a8e731d6b4b7421, given f273cdb7d151d795
+  2 every line readable, no path twice                               ok  96 entries
+  3 every listed file present with its listed sha256                 ok  96 files
+  4 the list covers the closure                                      ok  54 sources, imports all listed; statement, theorem module, Identity, Closed, axioms listed
+  5 fresh root holds exactly the listed sources                      ok  54 sources
+  6 every source compiles, in import order                           ok  54 files, 60 s
+  7 own check file: type and Print Assumptions exactly the axioms    FAIL  unexpected assumption: Closed.sincos32_ieee_zero_holds : SINCOS32_IEEE_Zero_Statement.SINCOS32_IEEE_ZERO; expected assumption absent: ClassicalDedekindReals.sig_forall_dec : forall P : nat -> Prop, (forall n : nat, {P n} + {~ P n}) -> {n : nat | ~ P n} +; expected assumption absent: ClassicalDedekin
+  8 recursive coqchk, summary read strictly                          FAIL  axioms differ: extra ['MKF.sincos32z.Closed.sincos32_ieee_zero_holds'], absent []
+  compiled .vo files: 55; digest of their sorted "sha256  path" lines a0a99b40393673dcbf8ebb4151743534c55d220cba275152b8be49a85e756269
+  outside libraries loaded: 309 (309 located); digest of their sorted "library sha256" lines e7007831c6ec64dbbc80737f8b8b440b8efde732cb6f6d8334898ca6752b7301
+HARNESS sincos32z FAILED: 6 of 8 rows  [anchor f273cdb7d151d795]

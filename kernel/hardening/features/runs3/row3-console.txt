@@ -1,0 +1,67 @@
+== inputs
+aeadf2eb0351b4d97e18c29761755c864643ca6e2f681c4b66e44c83cc660583  ext-work/harden-r4/features/PREDICTIONS-row3-2026-11-17.md
+e009d57812a2ed53b66951b2b8dce5bd8a4cdefc895db057fbe3ccd481c60494  ext-work/harden-r4/features/feature_row2.py
+498bfc1a155a3809ebd0cef7abfe79ffc83b1b2fc5ac170230c81abfee7456fb  ext-work/harden-r4/features/feature_row3.py
+0eb59e12a37f1a9c7232e591d2087525f9c21b9bd6eaadeb55b1cfc457d4c1d9  ext-work/harden-r4/features/make_feature_plants3.py
+== Q1, Q2: version 3 on plants3
+  ok  decoy3_comment.v  exit 0  
+  ok  decoy3_identifiers.v  exit 0  
+  ok  decoy3_plain_inductive.v  exit 0  
+  ok  decoy3_qualified_name.v  exit 0  
+  ok  decoy3_vm_compute.v  exit 0  
+  ok  refuse3_abstract.v  exit 1  abstract or Proof using (abstract);
+  ok  refuse3_admitted.v  exit 1  assumption (Admitted);
+  ok  refuse3_axiom.v  exit 1  assumption (Axiom);
+  ok  refuse3_coinductive.v  exit 1  coinductive type (CoInductive);
+  ok  refuse3_functor.v  exit 1  module type or functor (Module F ();
+  ok  refuse3_let_in_inductive.v  exit 1  let-in in an inductive declaration (Inductive i : Type := C : let);
+  ok  refuse3_let_in_record.v  exit 1  let-in in an inductive declaration (Record r := { a : nat; b : let);
+  ok  refuse3_module_type.v  exit 1  module type or functor (Module Type);assumption (Parameter);
+  ok  refuse3_native_compute.v  exit 1  native compiler (native_compute);
+  ok  refuse3_parameter.v  exit 1  assumption (Parameter);
+  ok  refuse3_plugin.v  exit 1  plugin (Declare ML Module);
+  ok  refuse3_polymorphic.v  exit 1  universe polymorphism (Polymorphic);
+  ok  refuse3_primitive.v  exit 1  primitive declaration (Primitive);
+  ok  refuse3_primitive_type.v  exit 1  primitive type (PrimFloat);primitive type (PrimFloat);
+  ok  refuse3_proof_using.v  exit 1  abstract or Proof using (Proof using);
+  ok  refuse3_section.v  exit 1  section (Section);assumption (Variable);
+  ok  refuse3_sprop.v  exit 1  SProp (SProp);
+  ok  refuse3_universe.v  exit 1  universe declaration (Universe);
+== Q3: version 3 against version 2 on version 2's plants
+  same  plants/decoy_comment.v  version 2 exit 0, version 3 exit 0
+  same  plants/decoy_identifier.v  version 2 exit 0, version 3 exit 0
+  same  plants/decoy_string.v  version 2 exit 0, version 3 exit 0
+  same  plants/refuse_anonymous_fix.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_bypass_check.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_cofixpoint.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_definitional_uip.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_fix_tactic.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_fixpoint.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_local_unset_pos.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_program.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_scheme.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_unset_guard.v  version 2 exit 1, version 3 exit 1
+  same  plants/refuse_unset_universe.v  version 2 exit 1, version 3 exit 1
+  same  plants2/decoy_split_string.v  version 2 exit 0, version 3 exit 0
+  same  plants2/decoy_string_in_comment.v  version 2 exit 0, version 3 exit 0
+  same  plants2/evade_hidden_fixpoint.v  version 2 exit 1, version 3 exit 1
+  same  plants2/evade_split_definitional_uip.v  version 2 exit 1, version 3 exit 1
+  same  plants2/evade_split_unset_guard.v  version 2 exit 1, version 3 exit 1
+  same  plants2/evade_string_in_comment.v  version 2 exit 1, version 3 exit 1
+== Q4: version 3 on the tier
+-- the closure of sincos32z
+  reported, not refused (occurrences): inductive or record (allowed: plain declarations) 4; vm_compute (allowed; coqchk re-checks it without the VM) 6
+FEATURE ROW 3 HELD: 54 file(s), none of the refused constructs
+exit 0
+-- the closure of sincos32i
+  reported, not refused (occurrences): inductive or record (allowed: plain declarations) 4; vm_compute (allowed; coqchk re-checks it without the VM) 4
+FEATURE ROW 3 HELD: 50 file(s), none of the refused constructs
+exit 0
+-- law statement draft M
+  reported, not refused (occurrences): none
+FEATURE ROW 3 HELD: 1 file(s), none of the refused constructs
+exit 0
+-- every .v of mkf-ext outside plants/ and out4/
+  reported, not refused (occurrences): inductive or record (allowed: plain declarations) 4; vm_compute (allowed; coqchk re-checks it without the VM) 6
+FEATURE ROW 3 HELD: 62 file(s), none of the refused constructs
+exit 0
