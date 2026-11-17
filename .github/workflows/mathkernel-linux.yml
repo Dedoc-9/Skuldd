@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # MathKernel on Linux: the thirteen folder gates, each its own job, on GitHub-hosted Ubuntu 24.04, in a container built
-# from ci/mathkernel/Dockerfile (OCaml 4.14.2, Coq 8.20.1, Flocq 4.2.1 from opam), --network none. Each gate is given
-# its folder's anchor from a repository Actions variable that the owner sets from the owner's own sha256 of the folder's
-# FROZEN4.txt; a missing or malformed anchor fails that job before its gate starts (never a hash taken from this
-# checkout). What a green run shows and does not show: docs/engineering/MATHKERNEL-LINUX-CI.md.
+# from ci/mathkernel/Dockerfile (OCaml 4.14.2, Coq 8.20.1, Flocq 4.2.1 from opam), --network none; and the
+# floating-point state guard's gate on x86-64 and arm64. Each gate is given its folder's anchor from a repository Actions
+# variable that the owner sets from the owner's own sha256 of the folder's FROZEN4.txt; a missing or malformed anchor
+# fails that job before its gate starts (never a hash taken from this checkout), and a gate whose output does not show
+# the anchored row passing fails the job. The anchor binds only when this file and kernel/coq/gate/gate4.py are the
+# reviewed ones: both come from the commit being judged. The manifests and feature rows run in integrity.yml, on every
+# change. What a green run shows and does not show: docs/engineering/MATHKERNEL-LINUX-CI.md.
 name: MathKernel on Linux
 
 on:
@@ -11,19 +14,11 @@ on:
     paths:
       - "kernel/**"
       - "ci/mathkernel/**"
-      - "tools/check_manifests.py"
-      - "MANIFEST.*.txt"
-      - "PROVENANCE.md"
-      - "CHANGES-AFTER-IMPORT.md"
       - ".github/workflows/mathkernel-linux.yml"
   pull_request:
     paths:
       - "kernel/**"
       - "ci/mathkernel/**"
-      - "tools/check_manifests.py"
-      - "MANIFEST.*.txt"
-      - "PROVENANCE.md"
-      - "CHANGES-AFTER-IMPORT.md"
       - ".github/workflows/mathkernel-linux.yml"
   workflow_dispatch:
 
@@ -41,22 +36,6 @@ env:
   IMAGE: skuldd-mathkernel-ci:local
 
 jobs:
-  integrity:
-    name: Manifests and feature rows (no Coq)
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - name: The import's manifests reconciled with CHANGES-AFTER-IMPORT.md
-        run: python3 -B tools/check_manifests.py .
-      - name: The feature row on each of the thirteen freeze lists
-        run: |
-          set -euo pipefail
-          for f in f32 p32 p32r exp32 exp32r ieee64 sin32 cos32 sincos32 log32 sincos32i sincos32z compose; do
-            echo "== $f"
-            python3 -B kernel/hardening/features/feature_row3.py kernel/coq --list "kernel/coq/$f/FROZEN4.txt"
-          done
-
   fpenv:
     name: Floating-point state guard (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
@@ -70,11 +49,14 @@ jobs:
       - name: mk_fpenv's self-test, plants and mutants with GCC and clang
         run: |
           set -euo pipefail
-          for cc in gcc clang; do command -v "$cc" >/dev/null || { echo "REFUSED: $cc is not on this runner" >&2; exit 2; }; done
-          python3 -B kernel/runtime/check_fpenv.py --cc gcc --cc clang
+          command -v gcc >/dev/null || { echo "REFUSED: gcc is not on this runner" >&2; exit 2; }
+          CLANG=$(command -v clang || ls /usr/bin/clang-[0-9]* 2>/dev/null | sort -V | tail -n 1 || true)
+          [ -n "$CLANG" ] || { echo "REFUSED: no clang on this runner" >&2; exit 2; }
+          echo "compilers: $(command -v gcc) and $CLANG"
+          python3 -B kernel/runtime/check_fpenv.py --cc gcc --cc "$CLANG"
 
   image:
-    name: Build the Coq/Flocq image once
+    name: Build the Coq/Flocq image (once per Dockerfile and cache scope)
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -85,19 +67,21 @@ jobs:
         with:
           path: /tmp/mk-image
           key: mk-image-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
-      - name: Build and save the image (only when the cache has none for this Dockerfile)
+      - name: Build and save the image (only when the cache has none for this Dockerfile in this scope)
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
           docker build --pull -f ci/mathkernel/Dockerfile -t "$IMAGE" ci/mathkernel
+          echo "base image: $(docker image inspect ubuntu:24.04 --format '{{index .RepoDigests 0}}')"
           mkdir -p /tmp/mk-image
           docker save -o /tmp/mk-image/image.tar "$IMAGE"
       - name: Say what the image holds
         run: |
           set -euo pipefail
           docker load -i /tmp/mk-image/image.tar
+          echo "image id: $(docker image inspect "$IMAGE" --format '{{.Id}}')"
           docker run --rm --network none "$IMAGE" sh -c \
-            'coqc --version; ocaml -version; opam list --installed --columns=name,version coq coq-core coq-stdlib coq-flocq 2>/dev/null; sha256sum "$(command -v coqc)" "$(command -v coqchk)" "$(command -v python3)"'
+            'coqc --version; ocaml -version; python3 --version; opam repo list --all; opam list --installed --columns=name,version; sha256sum /opt/mk-switch.export "$(command -v coqc)" "$(command -v coqchk)" "$(command -v python3)"'
 
   gate:
     name: Gate ${{ matrix.folder }}
@@ -129,27 +113,34 @@ jobs:
       - name: The anchor is the owner's, set outside this checkout (fail closed)
         run: |
           set -euo pipefail
-          if ! printf '%s' "$ANCHOR" | grep -Eq '^[0-9a-f]{64}$'; then
-            echo "REFUSED: the repository Actions variable $ANCHOR_NAME is missing or is not 64 lower-case hex digits." >&2
+          if ! LC_ALL=C bash -c '[[ $ANCHOR =~ ^[0-9a-f]{64}$ ]]'; then
+            echo "REFUSED: the repository Actions variable $ANCHOR_NAME is missing or is not exactly 64 lower-case hex digits." >&2
             echo "It must hold the owner's own sha256 of kernel/coq/$FOLDER/FROZEN4.txt (docs/engineering/MATHKERNEL-LINUX-CI.md)." >&2
             exit 2
           fi
           echo "anchor $ANCHOR_NAME = ${ANCHOR:0:16}..."
       - uses: actions/checkout@v4
-      - name: Load the image built once for this run
+      - name: Load the image built for this run
         uses: actions/cache/restore@v4
         with:
           path: /tmp/mk-image
           key: mk-image-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
           fail-on-cache-miss: true
-      - run: docker load -i /tmp/mk-image/image.tar
-      - name: Feature row on the folder's freeze list
+      - name: Load it and say which it is
+        run: |
+          set -euo pipefail
+          docker load -i /tmp/mk-image/image.tar
+          echo "image id: $(docker image inspect "$IMAGE" --format '{{.Id}}')"
+      - name: Feature row on the folder's freeze list (the tree read-only)
         run: |
           docker run --rm --network none -e FOLDER -e PYTHONHASHSEED -e PYTHONUTF8 -e PYTHONDONTWRITEBYTECODE \
-            -v "$GITHUB_WORKSPACE:/work" -w /work "$IMAGE" \
+            -v "$GITHUB_WORKSPACE:/work:ro" -w /work "$IMAGE" \
             python3 -B kernel/hardening/features/feature_row3.py kernel/coq --list "kernel/coq/$FOLDER/FROZEN4.txt"
       - name: The folder's gate, with its anchor, every library rechecked
         run: |
+          set -euo pipefail
           docker run --rm --network none -e ANCHOR -e PYTHONHASHSEED -e PYTHONUTF8 -e PYTHONDONTWRITEBYTECODE \
             -v "$GITHUB_WORKSPACE/kernel/coq:/work" -w /work "$IMAGE" \
-            python3 -B gate/gate4.py "$FOLDER" --recheck
+            python3 -B gate/gate4.py "$FOLDER" --recheck | tee "$RUNNER_TEMP/gate.log"
+          grep -Eq "^  freeze list is the anchored one +ok  ANCHOR ${ANCHOR:0:16}\$" "$RUNNER_TEMP/gate.log" \
+            || { echo "REFUSED: the gate's output does not show the anchored row passing" >&2; exit 2; }

@@ -269,3 +269,13 @@ Revised after a review of the six commits above by agents of the authors' family
 | `kernel/runtime/mk_fpenv.c` | f3abea02ccf388b85ddb5116b07774a629d28beab693daf83a7f2101c4e74555 | 2f746a49c6b98edb62b7933ff7f6d736f49f2f98979d7d1c88d66ea23b0a135e |
 | `kernel/runtime/mk_fpenv.h` | 1f82a206b0c2043248cd4ad8b9ac2707e2f814a8fe4deb063478e79c4715bbd6 | d1a760305dcc620488ee8d9a0f03700a04053afaa510160c542531cf57054981 |
 | `kernel/runtime/test_fpenv.c` | 15c521b0fd7f9030654a87b63483fe7a9740af3571387a90dcc32ee403d1b814 | f3c9e4720823070d7d9be89b305fd335b0464ab1bc2343cf14ecc7fceaf6615d |
+
+## The linux-ci change, revised: the workflows and the image (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `.github/workflows/integrity.yml` | (new) | b1161b44a27d7805e73b8bbb1d1c245610b7022f2da49ccfac18d0ed972154ae |
+| `.github/workflows/mathkernel-linux.yml` | ccdb18335443011ebc9f183ecfd3cd8c9e1732d44ec535bb8d7ea2a06fab1082 | 0ee2cd2373b009c8193e882effed27396898d44f2c9be473a3a3b57dfa9b087e |
+| `ci/mathkernel/Dockerfile` | 0dc712cbafab7dbba07684a229cf35b73241106ef6db437eb1a1e7783fbcf593 | fef148b6668e8d732f0231539c68983541a012aaa54cf7230cd7aee6c91e69b5 |

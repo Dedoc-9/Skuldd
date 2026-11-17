@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Integrity, on every push and pull request whatever it touches: the import's manifests reconciled with the tree and
+# CHANGES-AFTER-IMPORT.md (tools/check_manifests.py judges every file, so no paths filter here), then the feature row
+# on each of the thirteen freeze lists. No Coq, no container; seconds. See docs/engineering/MATHKERNEL-LINUX-CI.md.
+name: Integrity
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONUTF8: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  integrity:
+    name: Manifests and feature rows (no Coq)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: The import's manifests reconciled with CHANGES-AFTER-IMPORT.md
+        run: python3 -B tools/check_manifests.py .
+      - name: The feature row on each of the thirteen freeze lists
+        run: |
+          set -euo pipefail
+          for f in f32 p32 p32r exp32 exp32r ieee64 sin32 cos32 sincos32 log32 sincos32i sincos32z compose; do
+            echo "== $f"
+            python3 -B kernel/hardening/features/feature_row3.py kernel/coq --list "kernel/coq/$f/FROZEN4.txt"
+          done
