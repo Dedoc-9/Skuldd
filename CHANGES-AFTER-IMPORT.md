@@ -96,3 +96,16 @@ In seven lines the engine's name is replaced by future-engine-integration wordin
 | `verdandi/AGENTS.md` | 45 | `the importer for a future engine integration (an optional path)` |
 
 sha256 before and after: `verdandi/AGENTS.md` 823e7962c7ddebfde830d64c4230b30ad145e4af3bf82ca806cb11a24e1eae47, 63ad624f8496d7414b4ddae562ca7491a7d00311842982a6a25e6165671bcfce; `verdandi/README.md` 3a10c7f033d22367739b808650ab8ee5aae0cf5bd0903802cc5cd784e1dd0015, a1e6ccecbf5301d22ea15f574f3d0c6a718eda30f591183c165b3d1ac9721449.
+
+## Ruling S6 (a) (1): commands written for a repository of their own
+
+`AGENTS.md` gains the section "Inside Skuldd: commands written for a repository of their own": what each
+command found on the import does here, and where or in which form to run it instead. Skuldd's copy of
+`verdandi/tools/rung.py` gains a guard, the function `skuldd_guard`, called in `main` before any command:
+it refuses in one line unless the folder it is given is Verdandi's root and git's top level, so inside
+Skuldd it never passes over no rows. Verdandi's own repository has no such guard.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `AGENTS.md` | ca9311b9ccc780725ffb91ed6f84bb00a5e053d5391ed3c8d8a5fe2f53690f93 | 4841da869d8a6e2c1f34804f1411cb5ae3995bbfe9afac282830535979d960f5 |
+| `verdandi/tools/rung.py` | ef1a05823ff3a10c4c619cf015b0acde2450219f8543f336063a8c6a2a99fe47 | de429a26f76514109ab6640ab261131297f53e37a96a4140c94d7426087e908e |

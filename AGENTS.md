@@ -53,6 +53,59 @@ All run in the pinned Coq image (Coq 8.20.1, Flocq 4.2.1), with `kernel/coq` mou
 The owner computes every statement's and every freeze list's sha256 himself; a check is given his value, never one
 read from the tree.
 
+## Inside Skuldd: commands written for a repository of their own
+
+Git's top level here is this folder, one above `orlog/` and `verdandi/`, and this history starts at the import: the
+histories of Ørlǫg and Verðandi stay in their own repositories (`PROVENANCE.md` names them and the commits
+imported). Three rules of git decide what a command sees here:
+- `REV:path` is read from the root of the revision's tree. From this folder write `HEAD:orlog/src/...`; from
+  `orlog/` or `verdandi/`, `HEAD:./src/...` reads the folder you stand in.
+- `HEAD^{tree}` is the whole tree. One part's tree is `git rev-parse HEAD:orlog`, `HEAD:verdandi` or `HEAD:kernel`.
+- `status`, `ls-tree` and `archive` take their paths from the working folder, and `git worktree add` checks out the
+  whole tree.
+
+Every mode that reads Ørlǫg's or Verðandi's history runs in that repository's own checkout: `tests/corpus_seals.py`
+with a revision, `tests/compat.py history` and `freeze`, the reproducers pinned to a commit, `tools/rung.py`, and
+looking up a commit that a record names. The tables below say what each command found on the import does here and
+what to do instead. Each was run on the import (2026-11-17) unless its line says read; "stops" means a traceback or
+exit 128.
+
+In `orlog/`:
+
+| Command | Here | Instead |
+|---|---|---|
+| `tests/corpus_seals.py REV` | stops: with an Ørlǫg revision at once, since this history does not hold it; with a Skuldd revision after printing "13 of 13", at its `git show HEAD:src/orlog/canon.py` | Ørlǫg's own checkout |
+| `tests/compat.py history` | stops before computing anything | Ørlǫg's own checkout |
+| `tests/compat.py freeze` (the owner's act) | read, not run: it would stop at its first corpus file, and could see only the imported versions | Ørlǫg's own checkout |
+| the reproducers pinned to commit 2e9805a: `research/law-sufficiency/run_all.py`, `run_all_1.py` and six generators in `research/rust-core/` | refuse unless HEAD is that commit, which this history does not hold (one run, seven read) | Ørlǫg's own checkout at 2e9805a |
+| `research/reporting-pass/reproducers/run_all.py` | names a Skuldd commit as Ørlǫg's tree, and its dirty flag reads the whole tree | Ørlǫg's own checkout |
+| `research/stepwalk/compare.py` | prints Skuldd's commit as both the Ørlǫg and the Verðandi HEAD | the commits imported are in `PROVENANCE.md` |
+| `research/run-1/twin-r7/ar_compute.py` and the other commands written relative to the working folder | run only from `orlog/` | change to `orlog/` first |
+| the commits that evidence headers, `AGENTS.md` and `README.md` name, and the gate record in commit 9de2792's message | not in this history | Ørlǫg's own repository |
+| `docs/engineering/release/PR-VERIFICATION-DISCIPLINE.md`'s `HEAD^{tree}` (its item 1) and `git rev-parse <commit>:<path>` (its item 5) | the first is the whole tree; the second fails for a path given from Ørlǫg's root | `git rev-parse HEAD:orlog`; for a file, `<commit>:orlog/<path>` |
+
+In `verdandi/`:
+
+| Command | Here | Instead |
+|---|---|---|
+| `tools/rung.py classify`, `plants` and `selftest` | Skuldd's copy refuses with one line unless the folder it is given is Verðandi's root at git's top level (`CHANGES-AFTER-IMPORT.md`). Without that guard, `plants` printed PLANTS HELD over no rows, `classify` from this folder graded against a one-file trusted base and from `verdandi/` stopped, and `selftest` read 20 of 21 | Verðandi's own checkout, as `verdandi/AGENTS.md` says |
+| the brief's `git show origin/main:tools/rung.py` (in `AGENTS.md`, `docs/ROADMAP.md` and `art/director/inverse/0254-spec.md`) | stops, from either folder | Verðandi's own checkout: the classifier is the copy Verðandi's pushed tree holds |
+| the landing check in `AGENTS.md` (the commit's Gated-Tree against `HEAD^{tree}`) | compares with the whole tree | the tree Verðandi's gate reads is `git rev-parse HEAD:verdandi`. Never run the check's recovery step, `git reset --hard origin/main`, here: it would move all three parts (read, not run) |
+| `mathkernel/F32/RUN.md`'s `git status --porcelain mathkernel/F32` | from this folder it names no file, so it cannot fail (run on a model of this layout) | run it from `verdandi/` |
+| `mathkernel/F32/RUN.md`'s `git archive` and `p1-oracle/evidence/README.md`'s `git show HEAD:...` | stop from this folder; the second also from `verdandi/` | from `verdandi/`; there, write `HEAD:./PATH` |
+| the commits that records name, among them 29352e51, 7dee210, e759213 and 868b644 | not in this history | Verðandi's own repository |
+| the record paths of `shell/win32.rs` and the defaults of `verify/seal_walk.py` and `verify/seal_sessionwalk.py` | relative to the working folder (read) | run from `verdandi/` |
+
+In `kernel/` and this folder:
+
+| Command | Here | Instead |
+|---|---|---|
+| `kernel/hardening/features/run_row2.sh` and `run_row3.sh` | written for the workspace in which their records, `runs2/row2-console.txt` and `runs3/row3-console.txt`, were made; here every input is missing and they do not refuse (`run_row2.sh` prints "same verdict: 0; different: 0") | do not run them here; the feature row is run as "The kernel's checks" says |
+| `kernel/hardening/plants/gen_refute.py` and `gen_refute2.py` | stop: they read the workspace's `mkf-ext/` | none in this tree |
+| `kernel/hardening/examples/build_examples.sh` | read, not run: it copies `Examples2.v`, which the import names `Examples.v` | none in this tree |
+| `kernel/hardening/plants/build_refute.sh` | read, not run: it needs a prebuilt closure (`/pre`) that nothing in the tree builds | none in this tree |
+| `tools/assemble.py` | read, not run: it built the import from the workspace and the two repositories, and needs them to run again | to check the import, the manifests and `PROVENANCE.md` are enough |
+
 ## Working here
 
 - Changes reach the main branch through a pull request the owner merges. No outside contribution is accepted until

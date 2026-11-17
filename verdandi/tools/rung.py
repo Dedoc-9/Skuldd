@@ -643,6 +643,25 @@ def cmd_selftest():
     return 0 if k == n else 1
 
 
+def skuldd_guard(repo):
+    # Skuldd's guard (listed in CHANGES-AFTER-IMPORT.md; Verdandi's own repository has no such guard). This copy reads
+    # Verdandi's history through git, and Skuldd's history does not hold it: inside Skuldd its plants passed over no
+    # rows. It refuses, in one line, unless the folder it is given is Verdandi's root and git's top level.
+    top = ""
+    try:
+        r = subprocess.run(["git", "-C", repo, "rev-parse", "--show-toplevel"], capture_output=True,
+                           encoding="utf-8", errors="replace")
+        top = r.stdout.strip() if r.returncode == 0 else ""
+    except OSError:
+        pass
+    same = lambda a, b: os.path.normcase(os.path.realpath(a)) == os.path.normcase(os.path.realpath(b))
+    root = all(os.path.isfile(os.path.join(repo, *f.split("/"))) for f in ("tools/rung.py", "verify/verify.py"))
+    if root and top and same(top, repo):
+        return None
+    return ("RUNG REFUSED: %s is not Verdandi's root at git's top level; inside Skuldd, run rung.py in Verdandi's own "
+            "checkout (Skuldd's AGENTS.md)" % repo)
+
+
 def main(argv):
     if not argv:
         print(open(__file__, encoding="utf-8").read().split("\n\n")[0])
@@ -652,6 +671,10 @@ def main(argv):
         i = argv.index("--repo")
         repo = os.path.abspath(argv[i + 1])
         argv = argv[:i] + argv[i + 2:]
+    refusal = skuldd_guard(repo)
+    if refusal:
+        print(refusal)
+        return 2
     cmd = argv[0]
     if cmd == "selftest":
         return cmd_selftest()
