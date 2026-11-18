@@ -315,5 +315,4 @@ of section 3. The benefits of section 6 are not measured.
 The repository's present guarantee is small and exact: thirteen proved statement files that a reader can check, one exhaustively
 measured function pair, and a record of every file's origin. Its design shows how the same proved source can reach
 four languages and a studio without any claim outrunning its evidence. The next steps are the ones that change a
-grade: the law's proof, the printers, the exhaustive measurements on a second host, a second Coq release, and human
-readers outside the authors' family.
+grade: the law's proof, the printers, the exhaustive measurements on a second host, and a second Coq release.
