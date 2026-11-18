@@ -6,7 +6,8 @@ grade was NOT MEASURED (`docs/GUARANTEES-LEDGER.md` §4). A run is cited by its 
 
 ## What runs
 
-`.github/workflows/integrity.yml`, on every push and pull request, whatever it touches, and by hand:
+`.github/workflows/integrity.yml`, on every push and pull request, whatever it touches, and by hand (a manual run is
+offered only once a workflow is on the default branch):
 
 1. **integrity** (no Coq, no container): `tools/check_manifests.py` reconciles the import's four manifests with the
    tree and with `CHANGES-AFTER-IMPORT.md`, plants included (it judges every file, so it has no paths filter); then
@@ -71,6 +72,11 @@ A green `gate` job shows that its folder's gate held on a GitHub-hosted Ubuntu 2
 from opam, against the owner's anchor, provided the workflow file and `gate/gate4.py` at that commit are the reviewed
 ones: a second machine, a second operating system on that machine, and a second build of the tools, beside the first
 host's records. It is MEASURED evidence of that run.
+
+A green run is read by a person. As they stand, these jobs are not fit to be required status checks: a pull request
+that touches none of `mathkernel-linux.yml`'s paths never starts it, so its checks would stay pending; and when the
+image job fails, the gate jobs are skipped, which GitHub reports as success. Requiring them needs an always-running
+summary job first.
 
 It does not show: a proof of anything beyond what the statements already prove; that the runner, GitHub Actions,
 opam, OCaml, Coq, Flocq or the processor are correct; that any compiled program executes the modelled operations;

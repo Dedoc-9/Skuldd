@@ -296,3 +296,13 @@ Revised after a review of the six commits above by agents of the authors' family
 |---|---|---|
 | `docs/GUARANTEES-LEDGER.md` | a16ad9cafde68092b6d82ab9edd2a709ad546e747afb984dd5b17b3f1aab5f31 | 3fd71c8d54108d6a42616c5bfe4b9a790d162d4efd141e381dd4e40d9399ff7e |
 | `docs/engineering/MATHKERNEL-LINUX-CI.md` | 737bb1a98093f6de7cf5bf3ccb00a166a954df4568488aac2f7da5ea2ba26252 | 3bfb369d499f23129dc6d6b80bcbba2ed572de2dc198461ffbedae7865c460c0 |
+
+## The linux-ci change, revised: the agent brief, third parties, required checks (2026-11-17)
+
+Revised after a completeness review of the commits above by an agent of the authors' family; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `AGENTS.md` | e965393a41aa54e11245372ec6babcfea4c29ddccdf755ab746c08336278c285 | c878d7b265a76544a6223a405c075b0a322a62f670c6c965007056f786761d19 |
+| `THIRD-PARTY.md` | d97c68d41e79695de1b9e8522481212a507ac399e92b6a4e41f695194b3e731f | 055f0f8d5af9590a1f77bc536a9036d8edd6037075b4e676e6d538d160face33 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | 3bfb369d499f23129dc6d6b80bcbba2ed572de2dc198461ffbedae7865c460c0 | a493580ad00a7d3a1628e6a5b738b3427419cb096bcca6147629ddf5706f88ad |
