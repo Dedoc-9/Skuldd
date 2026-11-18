@@ -2,7 +2,8 @@
 # MathKernel on Linux: what the workflows run, how they are anchored, and what a green run shows
 
 Status when this file was written (2026-11-17): the workflows were in the tree and **had not run on GitHub**; their
-grade was NOT MEASURED (`docs/GUARANTEES-LEDGER.md` §4). A run is cited by its id and commit, not by this file.
+grade was NOT MEASURED (`docs/GUARANTEES-LEDGER.md` §4). A run is cited by its id and commit, not by this file; the
+first runs are below, under "The first runs".
 
 ## What runs
 
@@ -107,6 +108,35 @@ when an anchor is given); `sincos32z` ran with the owner's anchor.
 On the same host, on the tree as proposed: `tools/check_manifests.py`, MANIFESTS RECONCILED 8 of 8 rows;
 `kernel/runtime/check_fpenv.py` with clang 22.1.8, FPENV CHECK HELD 13 of 13 rows. A rehearsal on one host is not a
 run on GitHub: another image, another build of Coq and Flocq, another machine.
+
+## The first runs (2026-11-18 UTC)
+
+On commit 01c174bda7ff2a2771ea3a412f8eda1806870dbe, the head of pull request #1 (the pull request's runs checked out
+GitHub's merge commit 6c362ac6, whose tree c69f62bd is the same; read through GitHub's API). MEASURED, read from the
+jobs' logs:
+
+- Integrity, runs 44211905905 (pull request) and 44211854876 (push): MANIFESTS RECONCILED 8 of 8 rows; the feature
+  row held on all 13 freeze lists.
+- MathKernel on Linux, runs 44211905832 (pull request) and 44211854754 (push). First attempt of each: both `fpenv`
+  jobs and the image green; all 13 gate jobs refused at their first step with the missing-anchor line (exit 2).
+  The anchor variables were set 13 to 48 seconds after these runs were created, and the gate jobs, starting 7 to 9
+  minutes later, still saw none, so an attempt appears to read the variables when it is created (ARGUED; GitHub
+  does not document it). Second attempt of each (a re-run of the failed jobs, which saw the variables): all 13 gates
+  held, each printing its anchor and passing the anchored row, with `THEOREMS.md`'s counts: f32 20, p32 35, p32r 41,
+  exp32 47, exp32r 54, ieee64 148, sin32 75, cos32 103, sincos32 134, log32 73, sincos32i 290, sincos32z 288,
+  compose 145.
+- `fpenv`: x86-64 with GCC 13.3.0 and clang 18.1.3, 26 of 26 rows; arm64, 21 of 21. GCC refused the ISO C99
+  contraction build at compile time; clang's was reported by the run-time canary.
+- The image was built twice, once per cache scope (ids 6c7f6ead... and 383301de...), from the same base
+  (`ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8`, read from the build
+  output; the job's own `base image:` line printed nothing, the inspected image not being in Docker's local store).
+  Nothing else the two builds printed differs: the switch export (9016502d...), `coqc`, `coqchk` and `python3`
+  (966d4693..., 72a15917..., e50d468e...), and the opam and apt package lists. Their ids differ, so some bytes of the
+  two images do. Coq 8.20.1, Flocq 4.2.1, OCaml 4.14.2; the Flocq smoke test passed.
+
+The jobs ran on GitHub-hosted runners, one per job, with GitHub's runner images (x86-64 20261111.370.1 and
+20261111.127.1, arm64 20261111.182.1). What a green run shows and does not show is the section "What a green run
+shows, and what it does not".
 
 ## What to keep from each run
 

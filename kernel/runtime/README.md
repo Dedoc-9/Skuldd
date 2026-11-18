@@ -31,8 +31,11 @@ so either could make the canary's unit differ from the library's.
 ## What it shows, and what it does not
 
 Measured on 2026-11-17, when this file was written: on one x86-64 Windows host, clang 22.1.8,
-`FPENV CHECK HELD: 13 of 13 rows` (two equivalent mutants skipped and named). GCC, Linux and AArch64 are for the
-workflow's `fpenv` jobs, which had not run then.
+`FPENV CHECK HELD: 13 of 13 rows` (two equivalent mutants skipped and named). Measured on 2026-11-18 UTC by the
+workflow's `fpenv` jobs on GitHub-hosted Ubuntu 24.04 (run 44211905832), with GCC 13.3.0 and clang 18.1.3: x86-64,
+26 of 26 rows (four equivalent mutants skipped and named); arm64, 21 of 21 (nine skipped and named: GCC cannot
+target x87 there; AArch64 has no MXCSR and no denormals-are-zero-only plant; the core did not keep FPCR's
+trap-enable bit, ARGUED from the self-test's count; the MXCSR rounding-read mutant is equivalent everywhere).
 
 It does not show that the kernel's operations are deterministic, or anything on a compiler, flag set or processor it
 did not run on. It cannot see a part of fast-math the compiler does not announce by a macro, contraction or any

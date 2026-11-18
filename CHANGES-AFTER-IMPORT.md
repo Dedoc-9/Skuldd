@@ -323,3 +323,16 @@ Found in the first CI runs; part of this tree only if the owner applies it.
 |---|---|---|
 | `.github/workflows/mathkernel-linux.yml` | 0ee2cd2373b009c8193e882effed27396898d44f2c9be473a3a3b57dfa9b087e | 5bb305936a06b9b316f311e6d9f567c59bccc89b8c0ce8e506d1357a5d34a1c7 |
 | `docs/engineering/MATHKERNEL-LINUX-CI.md` | a493580ad00a7d3a1628e6a5b738b3427419cb096bcca6147629ddf5706f88ad | d99d28e62efc09f2331b9e0513d9a08c4cca48f20cc41576bbfa1d896f585d6e |
+
+## D10: regraded from the first CI runs (2026-11-18)
+
+Present in this tree only by the owner's ruling on D10's texts.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `README.md` | 5b94957a82aabdd20de22c651fcd0dd9440a01be63fd89d47d2b475ce256c1cd | e825218a045ce9ad517b82809a2c26da75ad31e298c6b4c4389adb3eb31e206d |
+| `docs/GUARANTEES-LEDGER.md` | 3fd71c8d54108d6a42616c5bfe4b9a790d162d4efd141e381dd4e40d9399ff7e | 718ab8e09b8f782933812fa06c96d7a6af8835a664106ef95f0319d4ea4bc327 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | d99d28e62efc09f2331b9e0513d9a08c4cca48f20cc41576bbfa1d896f585d6e | 3e5411b8db017d82cc301c19ca1514373cbf2aa2ab7737157916e75488dc5df3 |
+| `docs/paper/SYSTEM-GUARANTEES.md` | 2c0096fb556e168cd8a662a30912cd63378ce0eeed684ef4bcbd25fc754fa76c | 265327ed44718cf01837bd11aedd611e729edd00d7bb326dd1e533e9087e8003 |
+| `kernel/notes/LIMITATIONS.md` | 19e898ad17f9f026c5a542384b43285c64be20270677d30fd8fc6cbf02bd48c9 | 5d75e982597d617b346e0f0cc9260848c5ef80f39dd188531d3b523fe4f190fb |
+| `kernel/runtime/README.md` | ac840d342c71e7c38fc0ef581c65c2794e09bbd6e007403671adc14606f52912 | 00d36516d6595cb94625b41f16715ef3761e491e9ae4326ffa7ced1599699397 |

@@ -7,7 +7,8 @@ line has its grade and where it stands. The grades: PROVEN (a theorem, checked),
 READ (read in a file), REPORTED (said by someone and not rechecked here), ARGUED (an inference), DESIGNED (a design,
 nothing built), NOT MEASURED (not run), NOT stated (no statement says it), NONE (nothing exists). Where a row is one of
 the paper's guarantees (`docs/paper/SYSTEM-GUARANTEES.md` §3), its number is given; the paper's own wording governs.
-Grades that depend on time are dated; this ledger was written on 2026-11-17.
+Grades that depend on time are dated; this ledger was written on 2026-11-17 and regraded from the first runs of the
+Linux CI, of 2026-11-18 UTC.
 
 ## 1. Mathematical guarantees: theorems about models
 
@@ -38,7 +39,7 @@ Grades that depend on time are dated; this ledger was written on 2026-11-17.
 |---|---|---|
 | G4, in the paper's words: the admitted floating-point state is checked at entry; conversions on integer bits make the turns kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; the immunity ARGUED (the paper's grade); not enforced: no library exists to call a check | the paper §3 G4 |
 | What the build must ensure, since no run-time check can: no contraction into fused multiply-adds, no fast-math or any of its parts, no excess precision (x87) | the strict flags of the library's own build; refused at compile time only where the compiler announces them (below) | `kernel/runtime/README.md` |
-| A prototype check, `kernel/runtime/mk_fpenv.{h,c}`: compile-time refusal of what the compiler announces (fast-math and its parts, finite-math, `__GCC_IEC_559 == 0`, excess precision); run-time probes and canaries (rounding, ties to even, flush-to-zero, denormals-are-zero, contraction in its own unit); register reads: x86-64 MXCSR (rounding, FZ, DAZ, exception masks), AArch64 FPCR (rounding, FZ, FIZ, trap enables) | MEASURED on 2026-11-17 on one x86-64 Windows host with clang 22.1.8 only: `check_fpenv.py` 13 of 13 rows, with plants and mutants; GCC, Linux and AArch64 NOT MEASURED then | `kernel/runtime/README.md` |
+| A prototype check, `kernel/runtime/mk_fpenv.{h,c}`: compile-time refusal of what the compiler announces (fast-math and its parts, finite-math, `__GCC_IEC_559 == 0`, excess precision); run-time probes and canaries (rounding, ties to even, flush-to-zero, denormals-are-zero, contraction in its own unit); register reads: x86-64 MXCSR (rounding, FZ, DAZ, exception masks), AArch64 FPCR (rounding, FZ, FIZ, trap enables) | MEASURED with plants and mutants: on 2026-11-17 on one x86-64 Windows host with clang 22.1.8, 13 of 13 rows; on 2026-11-18 UTC on GitHub-hosted Ubuntu 24.04 with GCC 13.3.0 and clang 18.1.3, x86-64 26 of 26 rows and arm64 21 of 21 (run 44211905832) | `kernel/runtime/README.md` |
 | What the prototype cannot see | a part of fast-math the compiler does not announce: clang announces `-freciprocal-math`, `-fno-signed-zeros` and contraction only on MSVC-environment targets, `-fassociative-math` alone nowhere, and on Linux targets none of them (MEASURED, clang 22.1.8, by preprocessing for each target); contraction or any optimisation in another translation unit; a state changed after the check; AArch64's FPCR.AH and FPCR.DN; any processor other than x86-64 and AArch64 beyond what the probes show | `kernel/runtime/mk_fpenv.h` |
 | A runtime check can undo a compiler's fast-math optimisation already compiled into a program | false in general: a check reads the processor's state, not the code; the library must be built as its own artifact with strict flags | — |
 
@@ -47,10 +48,10 @@ Grades that depend on time are dated; this ledger was written on 2026-11-17.
 | Evidence | Grade | Where |
 |---|---|---|
 | The 13 gates held; the minimal harness on `sincos32i` and `sincos32z`, its second version on `sincos32z` | MEASURED on one x86-64 Windows host, inside Linux containers (Debian, Coq 8.20.1 and Flocq 4.2.1 from Debian packages) | `THEOREMS.md`; the gate consoles |
-| The same gates on GitHub-hosted Ubuntu 24.04 with Coq 8.20.1 and Flocq 4.2.1 built from opam | NOT MEASURED as of 2026-11-17: the workflow had not run on GitHub | `.github/workflows/mathkernel-linux.yml`, `docs/engineering/MATHKERNEL-LINUX-CI.md` |
-| The floating-point state guard's gate on GitHub-hosted Ubuntu 24.04, x86-64 and arm64, with GCC and clang | NOT MEASURED as of 2026-11-17: the workflow's `fpenv` jobs had not run | `.github/workflows/mathkernel-linux.yml` |
+| The same gates on GitHub-hosted Ubuntu 24.04 with Coq 8.20.1 and Flocq 4.2.1 built from opam | MEASURED on 2026-11-18 UTC: all 13 gates held against the owner's anchors, each with its anchored row and `THEOREMS.md`'s count (runs 44211905832 and 44211854754, commit 01c174bd); the first attempt of each, made before the anchors were set, refused in all 13 gates. The manifest check and the 13 feature rows held (runs 44211905905 and 44211854876) | `.github/workflows/mathkernel-linux.yml`, `docs/engineering/MATHKERNEL-LINUX-CI.md` |
+| The floating-point state guard's gate on GitHub-hosted Ubuntu 24.04, x86-64 and arm64, with GCC and clang | MEASURED on 2026-11-18 UTC: x86-64 26 of 26 rows, arm64 21 of 21 (GCC 13.3.0, clang 18.1.3; run 44211905832) | `.github/workflows/mathkernel-linux.yml` |
 | The turns kernel's exhaustive measurement and the F32 sweeps | MEASURED on the same one host (GCC 14.2.0, clang 22.1.8, rustc 1.96.1) | the paper §5.3; Verðandi's `CLAIMS.md` |
-| Any second machine, operating system on hardware, ARM processor, or MSVC | NONE as of 2026-11-17 | — |
+| Any machine other than the one host and GitHub-hosted runners, an operating system on bare hardware, an ARM processor for anything but the guard, or MSVC | NONE as of 2026-11-18 UTC | — |
 
 ## 5. Product readiness
 

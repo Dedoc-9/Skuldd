@@ -52,7 +52,8 @@ behaviour by specification, and prove what each function computes.
 
 **What this paper does not claim.** No human outside the authors has read a statement here, and no reader has
 confirmed that one says what its owner meant; one model outside the authors' family has read them (G6). None is
-adopted by its owner as final. Nothing has run on a second host.
+adopted by its owner as final. Only the gates, the feature rows, the manifest check and the floating-point guard
+have run beyond one host, on GitHub-hosted runners (§9).
 No C99, Rust, Python or Ørlǫg library of the kernel's binary32 functions exists yet; the C sweep programs and Ørlǫg corpus laws of the five older ones (`narrow`, `sqrt32`, `rsqrt32`, `hypot32`, `exp32`) under `verdandi/mathkernel/F32/orl` are unadmitted test renderings. No speed-up for any person's work is measured.
 
 ## 2 The three subsystems
@@ -79,7 +80,7 @@ a design tool, and rendered deterministically (READ, its own brief).
 | G1 | Each of the 13 statement files is implied by its proof, with exactly four standard axioms | PROVEN | each folder's gate; for two folders the stricter harness | that the statements are the right ones; anything about compiled code |
 | G2 | The turns kernel on 32-bit patterns: every finite input gives a faithful rounding; zero signs as specified; every infinite or NaN input gives 0x7FC00000; every intermediate finite and moderate | stated, MEASURED on all 2^32 inputs | the T2 sweep (section 5.3), whose transcription and consoles are withheld from this tree with the law | a proof; that the transcription equals the law outside 2,096 sampled patterns; other hosts, compilers or MPFR builds; MPFR's correctness, which is trusted |
 | G3 | Every backend (C99, Rust, Python; one for Ørlǫg planned, not yet designed) gives the same bytes as the proved program on every input | DESIGNED | none yet | — |
-| G4 | The admitted floating-point state is checked at entry; conversions on integer bits make the turns kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; immunity ARGUED from G2's measured ranges | T2's measured intermediate ranges | a check called at entry: a prototype (`kernel/runtime`, MEASURED on one host with clang only, 2026-11-17) exists, and no library calls it |
+| G4 | The admitted floating-point state is checked at entry; conversions on integer bits make the turns kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; immunity ARGUED from G2's measured ranges | T2's measured intermediate ranges | a check called at entry: a prototype (`kernel/runtime`; MEASURED on one Windows host with clang 22.1.8, 2026-11-17, and on GitHub-hosted Ubuntu 24.04, x86-64 and arm64, with GCC 13.3.0 and clang 18.1.3, run 44211905832, 2026-11-18 UTC) exists, and no library calls it |
 | G5 | Every file of the tree is accounted for: two parts were blob-exact copies of pinned commits at the import, with every later change listed in `CHANGES-AFTER-IMPORT.md`, and the kernel's freeze lists match | MEASURED | the assembler's manifests; 665 of 665 freeze entries | who wrote each file's content |
 | G6 | A statement is read by someone outside the authors' model family before its owner adopts it | MET at statement level for the 13 statement files: one model outside the authors' family (ChatGPT, OpenAI), administered by the owner, 2026-11-17 | the review's findings, verified against the files (docs/GUARANTEES-LEDGER.md §1) | that a human outside the authors has read them; that the statements say what their owner meant; the law (G2), which was not in the review |
 
@@ -122,8 +123,8 @@ functions' narrowing are the same term up to their records, accepted by Coq's ke
 theorem's type against the frozen statement, reads Print Assumptions and coqchk, and refuses every plant. A minimal
 harness runs nothing from the judged tree but coqc and coqchk and reads one recursive coqchk summary strictly. A source
 row refuses recursive definitions, checking-flag changes and the Coq features named by the upstream critical-bugs list
-that the tier does not use. Under his custody ruling the owner computes the sha256 of each statement and freeze list himself; so far he has done so for the two newest folders, and the eleven older folders' anchors were computed by the authors. For those two folders the harness is
-given his values, never values read from the tree. Planned: one tree verdict, one append-only anchors file whose head
+that the tier does not use. Under the owner's custody ruling the owner computes the sha256 of each statement and freeze list; the recorded verdicts of the eleven older folders were given freeze-list hashes the authors computed, and only the two newest folders have the owner's own statement hashes and harness anchors. Since 2026-11-18 the owner has also set a freeze-list anchor for each of the 13 folders, which the Linux CI's gates are given (run 44211905832). For the two newest folders the harness is
+given the owner's values, never values read from the tree. Planned: one tree verdict, one append-only anchors file whose head
 the owner computes (DESIGNED).
 
 **Language surfaces** (DESIGNED). The same proved program, printed in three programming languages: a C99 header and source taking and
@@ -133,7 +134,7 @@ floating-point state.
 
 ## 5 Evaluation
 
-All runs are on one Windows host, in a pinned container image (Coq 8.20.1, Flocq 4.2.1) with no network; the containers of the hardening runs and of the sweep had the judged files mounted read-only, while the folder gates mount the tree writable and fail their last row if anything in it changed outside their own output folders. Each claim below is MEASURED unless marked; each says what it does not show.
+All runs in this section are on one Windows host, in a pinned container image (Coq 8.20.1, Flocq 4.2.1) with no network; the containers of the hardening runs and of the sweep had the judged files mounted read-only, while the folder gates mount the tree writable and fail their last row if anything in it changed outside their own output folders. Each claim below is MEASURED unless marked; each says what it does not show.
 
 ### 5.1 Proof checking
 
@@ -277,7 +278,8 @@ Pages below were opened by research agents for this work (REPORTED); none is cop
   (docs.python.org). These facts set the build flags and the integer-bit conversions of the design.
 
 What is different here: exact equality with an explicitly rounded graph rather than an error bound; a law on bit
-patterns that covers NaN bytes, zero signs and discarded branches (stated and measured; withheld from this tree and not proved in it); and a custody discipline in which the owner, not the author, holds the hashes (so far those of the two newest folders and of the law).
+patterns that covers NaN bytes, zero signs and discarded branches (stated and measured; withheld from this tree and not proved in it); and a custody discipline in which the owner, not the author, holds the hashes (so far the statement and harness hashes of the two newest folders and of the law, and since
+2026-11-18 the freeze-list anchors of all 13 folders that the Linux CI is given).
 
 ## 8 Intellectual property
 
@@ -299,7 +301,11 @@ patterns that covers NaN bytes, zero signs and discarded branches (stated and me
 
 ## 9 Limitations and threats to validity
 
-One host ran everything. One model family wrote and checked the statements, the proofs and the checks, and agreement
+One host ran everything this paper measures. Later, GitHub-hosted runners, one per job, reran the 13 gates against
+the owner's anchors and the floating-point guard on x86-64 and arm64 with GCC and clang (run 44211905832), and the
+manifest check and the feature rows (run 44211905905), on 2026-11-18 UTC, with Coq 8.20.1 and Flocq 4.2.1 built
+from opam (MEASURED): machines other than the one host and a second build of the same releases, not a second Coq
+release. One model family wrote and checked the statements, the proofs and the checks, and agreement
 within one family is corroboration, not proof. Coq's kernel and checker share one code base. MPFR, the compilers and
 the printers to come are trusted. The thirteen statements are candidates, not adopted. This tree holds no proof of the law
 of section 3. The benefits of section 6 are not measured.
@@ -309,4 +315,5 @@ of section 3. The benefits of section 6 are not measured.
 The repository's present guarantee is small and exact: thirteen proved statement files that a reader can check, one exhaustively
 measured function pair, and a record of every file's origin. Its design shows how the same proved source can reach
 four languages and a studio without any claim outrunning its evidence. The next steps are the ones that change a
-grade: the law's proof, the printers, a second host, a second Coq release, and human readers outside the authors' family.
+grade: the law's proof, the printers, the exhaustive measurements on a second host, a second Coq release, and human
+readers outside the authors' family.
