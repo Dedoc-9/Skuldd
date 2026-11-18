@@ -23,7 +23,8 @@ workflow itself, and by hand:
    MEASURED.
 3. **image**: builds `ci/mathkernel/Dockerfile` (Ubuntu 24.04; OCaml 4.14.2 and Coq 8.20.1 from opam's default
    repository, Flocq 4.2.1 from the Rocq/Coq released repository, which is where `coq-flocq` is published) and keeps
-   it in GitHub's Actions cache, keyed by the Dockerfile's hash. A cache entry is scoped to its branch or pull request
+   it in GitHub's Actions cache, keyed by a version (`v2`) and the Dockerfile's hash, with the base image's digest read
+   from the build's output beside it, so that every run prints it. A cache entry is scoped to its branch or pull request
    (a run can also read the default branch's) and is evicted after 7 days without use, so the image is built once per
    Dockerfile and cache scope, and again after an eviction. The base image's tag and both opam repositories are read
    as they stand at each build, so two builds can differ; each build records its own: the base image's digest, the

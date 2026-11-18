@@ -314,3 +314,12 @@ Present in this tree only by the owner's ruling D8 (a). The texts, old and new, 
 sha256 before and after: `docs/paper/SYSTEM-GUARANTEES.md` 2cfadd0d4bd544aab5f73158b2db508821f6e8d21f360fdb22c87d785df85047, 2c0096fb556e168cd8a662a30912cd63378ce0eeed684ef4bcbd25fc754fa76c
 sha256 before and after: `README.md` 200987c9cbc99e405fdac52310d770801fb2950bbe610d8f84c7313274a47e20, 5b94957a82aabdd20de22c651fcd0dd9440a01be63fd89d47d2b475ce256c1cd
 sha256 before and after: `kernel/notes/LIMITATIONS.md` b97da394d1287ff1a53f642bca9033730c803bdfad8d5465b88e346c5d13acd4, 19e898ad17f9f026c5a542384b43285c64be20270677d30fd8fc6cbf02bd48c9
+
+## The base image's digest read from the build output (2026-11-18)
+
+Found in the first CI runs; part of this tree only if the owner applies it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `.github/workflows/mathkernel-linux.yml` | 0ee2cd2373b009c8193e882effed27396898d44f2c9be473a3a3b57dfa9b087e | 5bb305936a06b9b316f311e6d9f567c59bccc89b8c0ce8e506d1357a5d34a1c7 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | a493580ad00a7d3a1628e6a5b738b3427419cb096bcca6147629ddf5706f88ad | d99d28e62efc09f2331b9e0513d9a08c4cca48f20cc41576bbfa1d896f585d6e |

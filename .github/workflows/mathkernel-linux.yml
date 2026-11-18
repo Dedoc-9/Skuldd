@@ -66,18 +66,22 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/mk-image
-          key: mk-image-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
+          key: mk-image-v2-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
       - name: Build and save the image (only when the cache has none for this Dockerfile in this scope)
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
-          docker build --pull -f ci/mathkernel/Dockerfile -t "$IMAGE" ci/mathkernel
-          echo "base image: $(docker image inspect ubuntu:24.04 --format '{{index .RepoDigests 0}}')"
+          docker build --pull --progress=plain -f ci/mathkernel/Dockerfile -t "$IMAGE" ci/mathkernel 2>&1 | tee "$RUNNER_TEMP/build.log"
+          base=$(grep -oE '^#[0-9]+ \[1/[0-9]+\] FROM [^ ]+@sha256:[0-9a-f]{64}' "$RUNNER_TEMP/build.log" | head -n 1 | sed 's/.* FROM //' || true)
+          [ -n "$base" ] || { echo "REFUSED: the build's output names no base image digest" >&2; exit 2; }
           mkdir -p /tmp/mk-image
+          printf '%s\n' "$base" > /tmp/mk-image/base-image.txt
           docker save -o /tmp/mk-image/image.tar "$IMAGE"
       - name: Say what the image holds
         run: |
           set -euo pipefail
+          [ -s /tmp/mk-image/base-image.txt ] || { echo "REFUSED: the cached image has no recorded base digest" >&2; exit 2; }
+          echo "base image: $(cat /tmp/mk-image/base-image.txt)"
           docker load -i /tmp/mk-image/image.tar
           echo "image id: $(docker image inspect "$IMAGE" --format '{{.Id}}')"
           docker run --rm --network none "$IMAGE" sh -c \
@@ -124,7 +128,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: /tmp/mk-image
-          key: mk-image-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
+          key: mk-image-v2-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
           fail-on-cache-miss: true
       - name: Load it and say which it is
         run: |
