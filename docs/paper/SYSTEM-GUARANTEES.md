@@ -50,8 +50,9 @@ behaviour by specification, and prove what each function computes.
 6. The design of the merged repository: a shared operations record, one generic correspondence theorem, printers
    to four languages, one tree verdict and one anchors file (DESIGNED).
 
-**What this paper does not claim.** No statement here has been read by anyone outside the model family of the AI
-assistants that wrote and proved it, and none is adopted by its owner as final. Nothing has run on a second host.
+**What this paper does not claim.** No human outside the authors has read a statement here, and no reader has
+confirmed that one says what its owner meant; one model outside the authors' family has read them (G6). None is
+adopted by its owner as final. Nothing has run on a second host.
 No C99, Rust, Python or Ørlǫg library of the kernel's binary32 functions exists yet; the C sweep programs and Ørlǫg corpus laws of the five older ones (`narrow`, `sqrt32`, `rsqrt32`, `hypot32`, `exp32`) under `verdandi/mathkernel/F32/orl` are unadmitted test renderings. No speed-up for any person's work is measured.
 
 ## 2 The three subsystems
@@ -78,7 +79,7 @@ a design tool, and rendered deterministically (READ, its own brief).
 | G1 | Each of the 13 statement files is implied by its proof, with exactly four standard axioms | PROVEN | each folder's gate; for two folders the stricter harness | that the statements are the right ones; anything about compiled code |
 | G2 | The turns kernel on 32-bit patterns: every finite input gives a faithful rounding; zero signs as specified; every infinite or NaN input gives 0x7FC00000; every intermediate finite and moderate | stated, MEASURED on all 2^32 inputs | the T2 sweep (section 5.3), whose transcription and consoles are withheld from this tree with the law | a proof; that the transcription equals the law outside 2,096 sampled patterns; other hosts, compilers or MPFR builds; MPFR's correctness, which is trusted |
 | G3 | Every backend (C99, Rust, Python; one for Ørlǫg planned, not yet designed) gives the same bytes as the proved program on every input | DESIGNED | none yet | — |
-| G4 | The admitted floating-point state is checked at entry; conversions on integer bits make the turns kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; immunity ARGUED from G2's measured ranges | T2's measured intermediate ranges | the check itself, which is not built |
+| G4 | The admitted floating-point state is checked at entry; conversions on integer bits make the turns kernel immune to flush-to-zero and denormals-are-zero | DESIGNED; immunity ARGUED from G2's measured ranges | T2's measured intermediate ranges | a check called at entry: a prototype (`kernel/runtime`, MEASURED on one host with clang only, 2026-11-17) exists, and no library calls it |
 | G5 | Every file of the tree is accounted for: two parts were blob-exact copies of pinned commits at the import, with every later change listed in `CHANGES-AFTER-IMPORT.md`, and the kernel's freeze lists match | MEASURED | the assembler's manifests; 665 of 665 freeze entries | who wrote each file's content |
 | G6 | A statement is read by someone outside the authors' model family before its owner adopts it | MET at statement level for the 13 statement files: one model outside the authors' family (ChatGPT, OpenAI), administered by the owner, 2026-11-17 | the review's findings, verified against the files (docs/GUARANTEES-LEDGER.md §1) | that a human outside the authors has read them; that the statements say what their owner meant; the law (G2), which was not in the review |
 
@@ -308,4 +309,4 @@ of section 3. The benefits of section 6 are not measured.
 The repository's present guarantee is small and exact: thirteen proved statement files that a reader can check, one exhaustively
 measured function pair, and a record of every file's origin. Its design shows how the same proved source can reach
 four languages and a studio without any claim outrunning its evidence. The next steps are the ones that change a
-grade: the law's proof, the printers, a second host, a second Coq release, and readers outside the authors' family.
+grade: the law's proof, the printers, a second host, a second Coq release, and human readers outside the authors' family.

@@ -44,8 +44,9 @@ Some comments inside frozen files are wrong or stale; frozen bytes never change,
 note beside the tier: [kernel/notes/CORRECTIONS-2026-11-16.md](kernel/notes/CORRECTIONS-2026-11-16.md).
 
 "Candidate" means proved and not adopted: the statements were written and the proofs checked by AI assistants
-working for the owner, and no reader outside that model family has yet confirmed that a statement says what it
-should. A proof shows that the statement follows; it does not show that the statement is the right one.
+working for the owner. One model outside that family has read them (G6); no human outside the authors has, and no
+reader has confirmed that a statement says what its owner meant. A proof shows that the statement follows; it does
+not show that the statement is the right one.
 
 <details>
 <summary>Evidence that the proofs are accepted (MEASURED on one host; what it does not show)</summary>
