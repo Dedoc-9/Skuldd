@@ -336,3 +336,11 @@ Present in this tree only by the owner's ruling on D10's texts.
 | `docs/paper/SYSTEM-GUARANTEES.md` | 2c0096fb556e168cd8a662a30912cd63378ce0eeed684ef4bcbd25fc754fa76c | 265327ed44718cf01837bd11aedd611e729edd00d7bb326dd1e533e9087e8003 |
 | `kernel/notes/LIMITATIONS.md` | 19e898ad17f9f026c5a542384b43285c64be20270677d30fd8fc6cbf02bd48c9 | 5d75e982597d617b346e0f0cc9260848c5ef80f39dd188531d3b523fe4f190fb |
 | `kernel/runtime/README.md` | ac840d342c71e7c38fc0ef581c65c2794e09bbd6e007403671adc14606f52912 | 00d36516d6595cb94625b41f16715ef3761e491e9ae4326ffa7ced1599699397 |
+
+## E5: human readers dropped from the paper's next steps (2026-11-18)
+
+Present in this tree only by the owner's ruling E5 (a); the facts that no human outside the authors has read the statements stay.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `docs/paper/SYSTEM-GUARANTEES.md` | 265327ed44718cf01837bd11aedd611e729edd00d7bb326dd1e533e9087e8003 | 971c7d41b13adafde353e7052de64318a68fbbde5b1199446e3d726bfd4e4780 |
