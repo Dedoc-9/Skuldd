@@ -44,8 +44,9 @@ Some comments inside frozen files are wrong or stale; frozen bytes never change,
 note beside the tier: [kernel/notes/CORRECTIONS-2026-11-16.md](kernel/notes/CORRECTIONS-2026-11-16.md).
 
 "Candidate" means proved and not adopted: the statements were written and the proofs checked by AI assistants
-working for the owner, and no reader outside that model family has yet confirmed that a statement says what it
-should. A proof shows that the statement follows; it does not show that the statement is the right one.
+working for the owner. One model outside that family has read them (G6); no human outside the authors has, and no
+reader has confirmed that a statement says what its owner meant. A proof shows that the statement follows; it does
+not show that the statement is the right one.
 
 <details>
 <summary>Evidence that the proofs are accepted (MEASURED on one host; what it does not show)</summary>
@@ -67,7 +68,8 @@ should. A proof shows that the statement follows; it does not show that the stat
   (2026-11-17); its four canaries (a wrong anchor, a changed byte, an admitted top theorem, an unlisted import) each
   failed at rows their change should reach (ARGUED: the expected rows were not written down before the runs).
 - Does not show: anything on another host, compiler or Coq release; the gates of the eleven older folders do not yet
-  read coqchk's axiom list (only the harness does, on two folders), and their anchors are freeze-list hashes the authors computed, not the owner; Coq's own kernel is trusted (its published list of
+  read coqchk's axiom list (only the harness does, on two folders), and their recorded verdicts' anchors are freeze-list hashes the authors computed, not the owner (since 2026-11-18
+  the Linux CI gives every gate an anchor the owner set); Coq's own kernel is trusted (its published list of
   critical bugs is being worked through: see the paper's section on trust).
 
 </details>
@@ -96,7 +98,10 @@ Does not show: a proof; that the transcription equals the law at patterns other 
   the reviewer's blind formalisation exists.
 - No C, Rust or Python library of the kernel exists yet: the printers that would generate them from the proved
   shapes are designed, not built.
-- One host only; no second machine and no second Coq release has run the checks.
+- The exhaustive measurements ran on one host only. The 13 gates, the feature rows, the manifest check and the
+  floating-point guard have also run on GitHub-hosted runners (the Linux CI:
+  [docs/engineering/MATHKERNEL-LINUX-CI.md](docs/engineering/MATHKERNEL-LINUX-CI.md)); no second Coq release has
+  run them.
 - What the kernel's older functions do not state, and other limits: [kernel/notes/LIMITATIONS.md](kernel/notes/LIMITATIONS.md).
 
 ## Checking it yourself

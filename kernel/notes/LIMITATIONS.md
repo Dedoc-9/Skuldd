@@ -37,11 +37,13 @@ What the kernel's statements, proofs and measurements do not give. A reader shou
 ## Everything
 
 - **Candidates, not adopted.** Every statement was written, and every proof made and checked, by AI assistants
-  working for the owner; no reader outside that model family has confirmed that a statement says what it should.
-- **One host, one compiler per program, one Coq release** (clang for the older functions' C programs and rustc for the Rust backend of their corpus step, GCC 14.2.0 for the turns kernel's exhaustive measurement; Coq 8.20.1 with Flocq 4.2.1). Coq's own list of critical bugs has 45
+  working for the owner. One model outside that family has read the statements (G6); no human outside the authors
+  has, and no reader has confirmed that a statement says what its owner meant.
+- **One host for the measurements, one compiler per program, one Coq release** (clang for the older functions' C programs and rustc for the Rust backend of their corpus step, GCC 14.2.0 for the turns kernel's exhaustive measurement; Coq 8.20.1 with Flocq 4.2.1; the 13 gates have also run on GitHub-hosted runners, with the
+  same releases built from opam). Coq's own list of critical bugs has 45
   entries that affect that release and one unclear (REPORTED: read by agents of the authors' model family; an adversarial check upheld 45 of 46 labels). The tier does use Coq's virtual machine: its entries, and #16891, which the tier's `field` calls reach, are covered only by coqchk's re-check without the virtual machine. The constructs behind most of the other entries
   are refused by a source row on every run, and the 15 reachable only through library code wait for a second release.
-- **The eleven older folders have no anchor of the owner's**: the gate runs behind their verdicts were given freeze-list hashes the authors computed. Only `sincos32i` and `sincos32z` have the owner's own, and only those two folders have also
+- **The eleven older folders' recorded verdicts have no anchor of the owner's**: the gate runs behind them were given freeze-list hashes the authors computed. Since 2026-11-18 the Linux CI runs every folder's gate against an anchor the owner set from the owner's own copy, and all 13 held (run 44211905832). Only `sincos32i` and `sincos32z` had the owner's own anchors before the import, and only those two folders have also
   passed the stricter harness that reads coqchk's whole summary.
 - **No library of the kernel exists yet in C, Rust, Python or Ørlǫg**; the printers that would make them are
   designed, not built.

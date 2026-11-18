@@ -41,6 +41,11 @@ nothing in `kernel/` or `verdandi/` needs it.
 
 ## The kernel's checks
 
+The Linux CI (`.github/workflows/`, described in `docs/engineering/MATHKERNEL-LINUX-CI.md`) runs the feature rows and
+the folder gates in a second image, built from `ci/mathkernel/Dockerfile`. It is not pinned: its base tag and opam
+repositories are read at each build, and each build records what it got. Its runs are graded apart from the records
+below, which were all made in the first image.
+
 All run in a container image with Coq 8.20.1 and Flocq 4.2.1 (its recipe is not in this tree and no file under `kernel/` names it; the harness consoles print the sha256 of the coqc and coqchk they ran), with `kernel/coq` mounted read-only, except for the folder gate, which writes `<folder>/out4/` and `libcache/` inside the tree it judges and so needs it mounted writable:
 - the feature row: `python3 -B kernel/hardening/features/feature_row3.py <coq-root> --list <coq-root>/<folder>/FROZEN4.txt`
   (refuses recursive definitions, checking-flag changes and the Coq features behind the upstream critical-bugs list

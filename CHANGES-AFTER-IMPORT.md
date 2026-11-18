@@ -229,3 +229,110 @@ inside a text are shown here as spaces):
 </details>
 
 sha256 before and after: `AGENTS.md` 4841da869d8a6e2c1f34804f1411cb5ae3995bbfe9afac282830535979d960f5, e965393a41aa54e11245372ec6babcfea4c29ddccdf755ab746c08336278c285; `LICENSING.txt` de1d9e8a47cc3fca1735a8707d4909c4a04dd22997c16aa809393b28e9780105, 4abc58d6db5c687e09971a09ba102a50afb86134402cb5bd44214967c69b7928; `PROVENANCE.md` 5826f61ec34d536371794f7fb176d3499a5df582c5894237aed90a789322837e, 237cf33ec55b7a4a0346aa64fd3c5d22344bdbec014a34d279bb47c58652fafa; `README.md` f3bad9d5a2f5f2f7fd7cd49fcb116eece8caa3cc7e1d1f76cbe53404b65ce5bd, 200987c9cbc99e405fdac52310d770801fb2950bbe610d8f84c7313274a47e20; `THEOREMS.md` 27f6c7234907817d43455fed54d56eb4cfca21b48e7a68762dd49dc8481734ed, e15b0ca9934d8053a56776233b465dcc527a54b7d4cdc9252061bfb8bc26b27c; `THIRD-PARTY.md` cda96fe9f23186d1c0f1b5ba37bd6f9baea4a940125bab9e0eca0e737c2cb746, d97c68d41e79695de1b9e8522481212a507ac399e92b6a4e41f695194b3e731f; `docs/paper/SYSTEM-GUARANTEES.md` 673db8c5fde881d0c4f731c1595be8e2a8eed3237e2b8d1c7c57f95b96eb99ae, cd1b3466adace9a078e9b1ff73e7eceda884d489cdf4c2b628487096ddb1b003; `kernel/hardening/big106/BIG106-NOTE-2026-11-17.md` a0602341d5d4f6ffe97e9ed928fb1dfa73d717d67a7b5efd1cd0bfe7c0c22c27, ffc917b666342f54e806fa9a45c49b19a1c2d5554daa1195edd412e737522dc1; `kernel/hardening/plants/PLANT-LABELS.md` 9976cefa12fb9e481a20120ec490e5c0ba9cf75e6f3093ed50f453f3cc5b0b53, 7389613de51a1c08fd382013e60585272820487c1626d9429a0e3b9d6563c09f; `kernel/notes/CORRECTIONS-2026-11-16.md` 8ed9773c3fd173e361728573827e63bfd0044ca26c8dcbd296c1fe988e4b7b48, 73a0e236eec7a8ea1910c546aac3ea8b7669d6dd834bbbf1603d9f443ea6c5ba; `kernel/notes/LIMITATIONS.md` 460cab4a0bf52230d538387a59b8ee96d90c9e32634638684952dbb29efa107a, b97da394d1287ff1a53f642bca9033730c803bdfad8d5465b88e346c5d13acd4.
+
+## The Linux CI, the floating-point state guard and the guarantees ledger (2026-11-17)
+
+Added by the pull request `linux-ci`, prepared by the assistant at the owner's request of 2026-11-17; it is
+part of this tree only if the owner merges it. No file of the import is changed by it, and no proof source,
+statement, freeze list or gate: a Linux workflow and its image, a guarantees ledger, the manifest check, and
+a prototype floating-point state guard with its gate.
+
+| File | sha256 |
+|---|---|
+| `.github/workflows/mathkernel-linux.yml` | ccdb18335443011ebc9f183ecfd3cd8c9e1732d44ec535bb8d7ea2a06fab1082 |
+| `ci/mathkernel/Dockerfile` | 0dc712cbafab7dbba07684a229cf35b73241106ef6db437eb1a1e7783fbcf593 |
+| `docs/GUARANTEES-LEDGER.md` | a16ad9cafde68092b6d82ab9edd2a709ad546e747afb984dd5b17b3f1aab5f31 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | 737bb1a98093f6de7cf5bf3ccb00a166a954df4568488aac2f7da5ea2ba26252 |
+| `kernel/runtime/README.md` | b1000e7ca5822cf7e06092e6a31511ecdbd6b5ce3cd1d523b703a470137bccfe |
+| `kernel/runtime/check_fpenv.py` | e3b0959ce742fd9e37ea056143ac7ec0138ba3c4527a1b5ab8020798aee2ead5 |
+| `kernel/runtime/mk_fpenv.c` | f3abea02ccf388b85ddb5116b07774a629d28beab693daf83a7f2101c4e74555 |
+| `kernel/runtime/mk_fpenv.h` | 1f82a206b0c2043248cd4ad8b9ac2707e2f814a8fe4deb063478e79c4715bbd6 |
+| `kernel/runtime/test_fpenv.c` | 15c521b0fd7f9030654a87b63483fe7a9740af3571387a90dcc32ee403d1b814 |
+| `tools/check_manifests.py` | 6fa83222e8104b3e59a73e2d94c7435da6605f5929efd63e2bdf32b54770de01 |
+
+## Ruling D1 (a): G6's row
+
+Carries out the owner's ruling D1 (a) of 2026-11-17.
+
+- `docs/paper/SYSTEM-GUARANTEES.md`, line 83: was "| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | process, NOT MET yet | — | — |"; now "| G6 | A statement is read by someone outside the authors' model family before its owner adopts it | MET at statement level for the 13 statement files: one model outside the authors' family (ChatGPT, OpenAI), administered by the owner, 2026-11-17 | the review's findings, verified against the files (docs/GUARANTEES-LEDGER.md §1) | that a human outside the authors has read them; that the statements say what their owner meant; the law (G2), which was not in the review |"
+
+sha256 before and after: `docs/paper/SYSTEM-GUARANTEES.md` cd1b3466adace9a078e9b1ff73e7eceda884d489cdf4c2b628487096ddb1b003, 2cfadd0d4bd544aab5f73158b2db508821f6e8d21f360fdb22c87d785df85047
+
+## The linux-ci change, revised: the guard (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `kernel/runtime/README.md` | b1000e7ca5822cf7e06092e6a31511ecdbd6b5ce3cd1d523b703a470137bccfe | ac840d342c71e7c38fc0ef581c65c2794e09bbd6e007403671adc14606f52912 |
+| `kernel/runtime/check_fpenv.py` | e3b0959ce742fd9e37ea056143ac7ec0138ba3c4527a1b5ab8020798aee2ead5 | f6f6f47995c85f7d835d7891206a504a5a76eea1e318f65eb398c3e972eb1df0 |
+| `kernel/runtime/mk_fpenv.c` | f3abea02ccf388b85ddb5116b07774a629d28beab693daf83a7f2101c4e74555 | 2f746a49c6b98edb62b7933ff7f6d736f49f2f98979d7d1c88d66ea23b0a135e |
+| `kernel/runtime/mk_fpenv.h` | 1f82a206b0c2043248cd4ad8b9ac2707e2f814a8fe4deb063478e79c4715bbd6 | d1a760305dcc620488ee8d9a0f03700a04053afaa510160c542531cf57054981 |
+| `kernel/runtime/test_fpenv.c` | 15c521b0fd7f9030654a87b63483fe7a9740af3571387a90dcc32ee403d1b814 | f3c9e4720823070d7d9be89b305fd335b0464ab1bc2343cf14ecc7fceaf6615d |
+
+## The linux-ci change, revised: the workflows and the image (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `.github/workflows/integrity.yml` | (new) | b1161b44a27d7805e73b8bbb1d1c245610b7022f2da49ccfac18d0ed972154ae |
+| `.github/workflows/mathkernel-linux.yml` | ccdb18335443011ebc9f183ecfd3cd8c9e1732d44ec535bb8d7ea2a06fab1082 | 0ee2cd2373b009c8193e882effed27396898d44f2c9be473a3a3b57dfa9b087e |
+| `ci/mathkernel/Dockerfile` | 0dc712cbafab7dbba07684a229cf35b73241106ef6db437eb1a1e7783fbcf593 | fef148b6668e8d732f0231539c68983541a012aaa54cf7230cd7aee6c91e69b5 |
+
+## The linux-ci change, revised: the manifest check (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `tools/check_manifests.py` | 6fa83222e8104b3e59a73e2d94c7435da6605f5929efd63e2bdf32b54770de01 | 355e5ff4e88015007c70aa38064f18e9f86034994575479668dd970491fefd83 |
+
+## The linux-ci change, revised: the ledger and the CI document (2026-11-17)
+
+Revised after a review of the six commits above by agents of the authors' family, each finding confirmed by a second agent; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `docs/GUARANTEES-LEDGER.md` | a16ad9cafde68092b6d82ab9edd2a709ad546e747afb984dd5b17b3f1aab5f31 | 3fd71c8d54108d6a42616c5bfe4b9a790d162d4efd141e381dd4e40d9399ff7e |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | 737bb1a98093f6de7cf5bf3ccb00a166a954df4568488aac2f7da5ea2ba26252 | 3bfb369d499f23129dc6d6b80bcbba2ed572de2dc198461ffbedae7865c460c0 |
+
+## The linux-ci change, revised: the agent brief, third parties, required checks (2026-11-17)
+
+Revised after a completeness review of the commits above by an agent of the authors' family; part of this tree only if the owner merges it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `AGENTS.md` | e965393a41aa54e11245372ec6babcfea4c29ddccdf755ab746c08336278c285 | c878d7b265a76544a6223a405c075b0a322a62f670c6c965007056f786761d19 |
+| `THIRD-PARTY.md` | d97c68d41e79695de1b9e8522481212a507ac399e92b6a4e41f695194b3e731f | 055f0f8d5af9590a1f77bc536a9036d8edd6037075b4e676e6d538d160face33 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | 3bfb369d499f23129dc6d6b80bcbba2ed572de2dc198461ffbedae7865c460c0 | a493580ad00a7d3a1628e6a5b738b3427419cb096bcca6147629ddf5706f88ad |
+
+## D8: the lines that disagreed with G6 and G4 (2026-11-17)
+
+Present in this tree only by the owner's ruling D8 (a). The texts, old and new, are in the commit that carries this section.
+
+sha256 before and after: `docs/paper/SYSTEM-GUARANTEES.md` 2cfadd0d4bd544aab5f73158b2db508821f6e8d21f360fdb22c87d785df85047, 2c0096fb556e168cd8a662a30912cd63378ce0eeed684ef4bcbd25fc754fa76c
+sha256 before and after: `README.md` 200987c9cbc99e405fdac52310d770801fb2950bbe610d8f84c7313274a47e20, 5b94957a82aabdd20de22c651fcd0dd9440a01be63fd89d47d2b475ce256c1cd
+sha256 before and after: `kernel/notes/LIMITATIONS.md` b97da394d1287ff1a53f642bca9033730c803bdfad8d5465b88e346c5d13acd4, 19e898ad17f9f026c5a542384b43285c64be20270677d30fd8fc6cbf02bd48c9
+
+## The base image's digest read from the build output (2026-11-18)
+
+Found in the first CI runs; part of this tree only if the owner applies it.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `.github/workflows/mathkernel-linux.yml` | 0ee2cd2373b009c8193e882effed27396898d44f2c9be473a3a3b57dfa9b087e | 5bb305936a06b9b316f311e6d9f567c59bccc89b8c0ce8e506d1357a5d34a1c7 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | a493580ad00a7d3a1628e6a5b738b3427419cb096bcca6147629ddf5706f88ad | d99d28e62efc09f2331b9e0513d9a08c4cca48f20cc41576bbfa1d896f585d6e |
+
+## D10: regraded from the first CI runs (2026-11-18)
+
+Present in this tree only by the owner's ruling on D10's texts.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `README.md` | 5b94957a82aabdd20de22c651fcd0dd9440a01be63fd89d47d2b475ce256c1cd | e825218a045ce9ad517b82809a2c26da75ad31e298c6b4c4389adb3eb31e206d |
+| `docs/GUARANTEES-LEDGER.md` | 3fd71c8d54108d6a42616c5bfe4b9a790d162d4efd141e381dd4e40d9399ff7e | 718ab8e09b8f782933812fa06c96d7a6af8835a664106ef95f0319d4ea4bc327 |
+| `docs/engineering/MATHKERNEL-LINUX-CI.md` | d99d28e62efc09f2331b9e0513d9a08c4cca48f20cc41576bbfa1d896f585d6e | 3e5411b8db017d82cc301c19ca1514373cbf2aa2ab7737157916e75488dc5df3 |
+| `docs/paper/SYSTEM-GUARANTEES.md` | 2c0096fb556e168cd8a662a30912cd63378ce0eeed684ef4bcbd25fc754fa76c | 265327ed44718cf01837bd11aedd611e729edd00d7bb326dd1e533e9087e8003 |
+| `kernel/notes/LIMITATIONS.md` | 19e898ad17f9f026c5a542384b43285c64be20270677d30fd8fc6cbf02bd48c9 | 5d75e982597d617b346e0f0cc9260848c5ef80f39dd188531d3b523fe4f190fb |
+| `kernel/runtime/README.md` | ac840d342c71e7c38fc0ef581c65c2794e09bbd6e007403671adc14606f52912 | 00d36516d6595cb94625b41f16715ef3761e491e9ae4326ffa7ced1599699397 |
