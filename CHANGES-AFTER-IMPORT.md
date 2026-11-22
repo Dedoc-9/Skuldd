@@ -344,3 +344,17 @@ Present in this tree only by the owner's ruling E5 (a); the facts that no human 
 | File | sha256 before | sha256 after |
 |---|---|---|
 | `docs/paper/SYSTEM-GUARANTEES.md` | 265327ed44718cf01837bd11aedd611e729edd00d7bb326dd1e533e9087e8003 | 971c7d41b13adafde353e7052de64318a68fbbde5b1199446e3d726bfd4e4780 |
+
+## The GPU note: bit-exact results on Direct3D (2026-11-18)
+
+Added by patch 0016, prepared by the assistant at the owner's request of 2026-11-18; it is part of this tree only if
+the owner applies it. An engineering note, graded claim by claim, and one sentence of the paper pointing to it; no
+proof source, statement, freeze list or gate is changed.
+
+| File | sha256 before | sha256 after |
+|---|---|---|
+| `docs/paper/SYSTEM-GUARANTEES.md` | 971c7d41b13adafde353e7052de64318a68fbbde5b1199446e3d726bfd4e4780 | 36fd4f6bed04be3c69899b081895ed778a976ccd0c51b5f3855068834e86ab6d |
+
+| File | sha256 |
+|---|---|
+| `docs/engineering/GPU-BIT-EXACTNESS.md` | 0a75782fa5e845f495ad54b6dadc70d1b597f54da302316be646d68e59ca9245 |

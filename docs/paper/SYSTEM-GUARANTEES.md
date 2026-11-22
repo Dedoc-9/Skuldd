@@ -308,7 +308,9 @@ from opam (MEASURED): machines other than the one host and a second build of the
 release. One model family wrote and checked the statements, the proofs and the checks, and agreement
 within one family is corroboration, not proof. Coq's kernel and checker share one code base. MPFR, the compilers and
 the printers to come are trusted. The thirteen statements are candidates, not adopted. This tree holds no proof of the law
-of section 3. The benefits of section 6 are not measured.
+of section 3. The benefits of section 6 are not measured. No GPU result is part of this guarantee;
+`docs/engineering/GPU-BIT-EXACTNESS.md` says how a GPU kernel can stay outside Direct3D's 32-bit floating-point
+latitude, and what one device measured.
 
 ## 10 Conclusion
 
