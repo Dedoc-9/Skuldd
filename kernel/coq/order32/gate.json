@@ -1,0 +1,226 @@
+{
+ "name": "ORDER32",
+ "tier": "flocq4",
+ "deps": [
+  "f32",
+  "p32",
+  "p32r",
+  "exp32",
+  "exp32r",
+  "ieee64",
+  "sin32",
+  "cos32",
+  "sincos32",
+  "sincos32i",
+  "floor32",
+  "ceil32"
+ ],
+ "files": [
+  "ORDER32_Statement.v",
+  "Order32.v",
+  "Closed.v",
+  "Identity.v"
+ ],
+ "identity": "Identity",
+ "statement": {
+  "file": "ORDER32_Statement.v",
+  "sha256": "aa229794a1b476c3da3488aa9db96ad150761dff6da22f0c9937d069bd17cbab"
+ },
+ "plants": {
+  "ord-r-swapped": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_ord_r_swapped.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 129, characters",
+   "class": "b claim",
+   "what": "FC_ORD_R with T_floor32 and T_ceil32 exchanged in the conclusion. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 1/2, CL b = 1 is above b (plant 1). Refused in the proof of FC_ORD_R, where Zfloor_lb meets the ceiling"
+  },
+  "ord-leb-nan-premise": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_ord_leb_nan_premise.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 137, characters",
+   "class": "c premise",
+   "what": "FC_ORD_LEB without the premise is_nan b = false. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at the NaN, Bleb NaN NaN is false (plant 2). Refused where the proof of FC_ORD_LEB takes the premise"
+  },
+  "ord-leb-strict": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_ord_leb_strict.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 140, characters",
+   "class": "b claim",
+   "what": "FC_ORD_LEB with Bltb in place of Bleb in its first conjunct (FL b < b). KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 1, +infinity and -0 FL b is b (plant 3). Refused in the proof of FC_ORD_LEB at the infinities, where FL b = b"
+  },
+  "ord-nan-nonfinite-premise": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_ord_nan_nonfinite_premise.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 154, characters",
+   "class": "c premise",
+   "what": "FC_ORD_NAN for every input that is not finite in place of the NaN. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = c = +infinity, FL b = +infinity and Bcompare gives Some Eq (plant 4). Refused where the proof of FC_ORD_NAN takes the premise that b is the NaN"
+  },
+  "total-nn-flipped": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_total_nn_flipped.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 192, characters",
+   "class": "b claim",
+   "what": "FC_TOTAL_NN with its first pair flipped (b before FL b). KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 1/2 (plant 5). Refused in the proof of FC_TOTAL_NN for a binary32 input, where the pair must be ordered"
+  },
+  "diff-one-only": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_diff_one_only.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 207, characters",
+   "class": "b claim",
+   "what": "FC_DIFF claims the difference is always 1. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 1, 0 and -3 it is 0 (plant 6). Refused in the proof of FC_DIFF, at the whole inputs"
+  },
+  "fix-no-format32": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_fix_no_format32.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 213, characters",
+   "class": "c premise",
+   "what": "FC_FIX for every finite binary64 input in place of the binary32 inputs. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 2^23 + 1/2 (binary64, not binary32) FL b = b and b is not whole (plant 7). Refused where the proof of FC_FIX takes the premise format32"
+  },
+  "eq-int-no-format32": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_eq_int_no_format32.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 225, characters",
+   "class": "c premise",
+   "what": "FC_EQ_INT for every finite binary64 input in place of the binary32 inputs. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 2^23 + 1/2, FL b = CL b = b and b is not whole (plant 8). Refused where the proof of FC_EQ_INT takes the premise format32"
+  },
+  "eq-int-opp": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_eq_int_opp.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 238, characters",
+   "class": "b claim",
+   "what": "FC_EQ_INT says that equal results are Bopp b in place of b. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = +0 (FL b is +0, Bopp b is -0) and b = 1 (plant 9). Refused in the proof of FC_EQ_INT, where FC_FIX gives FL b = b"
+  },
+  "neg-no-outer-opp": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_neg_no_outer_opp.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 246, characters",
+   "class": "b claim",
+   "what": "FC_NEG without the outer Bopp (CL b = FL (Bopp b)). KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 1/2 and at +0 (plant 10); also at the infinities (CL (+inf) = +inf, FL (-inf) = -inf: ARGUED from FL_NONFINITE and CL_NONFINITE). Refused in the proof of FC_NEG for an input that is not finite, where Bopp (Bopp b) = b is used"
+  },
+  "idem-is-identity": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_idem_is_identity.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 270, characters",
+   "class": "b claim",
+   "what": "FC_IDEM says FL (FL b) = b. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = 1/2 (plant 11). Refused in the proof of FC_IDEM for a binary32 input"
+  },
+  "mono-strict": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_mono_strict.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 300, characters",
+   "class": "b claim",
+   "what": "FC_MONO with Bltb in place of Bleb in the premise and both conclusions. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at (b1, b2) = (1/4, 1/2) both floors are +0 (plant 12). Refused in the proof of FC_MONO at its first step that reads the premise"
+  },
+  "ord-nan-eq": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_ord_nan_eq.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 157, characters",
+   "class": "b claim",
+   "what": "FC_ORD_NAN says Bcompare (FL b) c = Some Eq at the NaN. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at the NaN Bcompare is None for every c (plant 13). Refused in the proof of FC_ORD_NAN, where the comparison is computed"
+  },
+  "fix-opp": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_fix_opp.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 217, characters",
+   "class": "b claim",
+   "what": "FC_FIX says a whole b has FL b = Bopp b. KNOWN FALSE, MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand): at b = +0, 1 and -0 (plant 14). Refused in the proof of FC_FIX, where FL b and the claimed value must agree in value and sign"
+  },
+  "total-zero-reversed": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_total_zero_reversed.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 166, characters",
+   "class": "a definition",
+   "what": "fc_total_nn with its zero clause reversed (implb (Bsign x) (Bsign y)): -0 no longer below +0. KNOWN FALSE (FC_TOTAL_ZERO, both conjuncts), MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand) (plant 15; FC_TOTAL_NN stays true on that sample, which is why FC_TOTAL_ZERO exists). Refused in the proof of FC_TOTAL_ZERO, its first conjunct"
+  },
+  "total-eq-true": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_total_eq_true.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 167, characters",
+   "class": "a definition",
+   "what": "fc_total_nn true on every pair of equal values: +0 below -0. KNOWN FALSE (FC_TOTAL_ZERO, second conjunct), MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand) (plant 16; FC_TOTAL_NN stays true on that sample). Refused in the proof of FC_TOTAL_ZERO, its second conjunct"
+  },
+  "total-eq-false": {
+   "replace": {
+    "ORDER32_Statement.v": "plants/ORDER32_Statement_total_eq_false.v"
+   },
+   "fails": "Order32",
+   "text": "order32/Order32.v\", line 166, characters",
+   "class": "a definition",
+   "what": "fc_total_nn false on every pair of equal values: -0 not below +0. KNOWN FALSE (FC_TOTAL_ZERO, first conjunct; FC_TOTAL_NN at b = 1), MEASURED: ext-work/p2/a/order32/facts-run3-console.txt rows P, Python binary64 (the shapes transcribed by hand) (plant 17). Refused in the proof of FC_TOTAL_ZERO, its first conjunct, which comes before FC_TOTAL_NN"
+  },
+  "admitted": {
+   "replace": {
+    "Order32.v": "plants/Order32_admitted.v"
+   },
+   "reader": "Order32.FC_MONO_proof :",
+   "words": [
+    "Admitted"
+   ],
+   "class": "e proof",
+   "what": "FC_MONO_proof, the proof of FC_MONO, ends with Admitted in place of Qed (its script unchanged)"
+  },
+  "bleb-inf-axiom": {
+   "replace": {
+    "Order32.v": "plants/Order32_bleb_inf_axiom.v"
+   },
+   "reader": "Order32.fc_bleb_inf_fin :",
+   "words": [
+    "Axiom"
+   ],
+   "class": "f axiom",
+   "what": "fc_bleb_inf_fin (Bleb of an infinity against a finite value is its sign bit, computed on constructors) is an Axiom of the same statement, its proof removed; used by the top theorem through FC_MONO"
+  },
+  "ten-of-eleven": {
+   "replace": {
+    "Closed.v": "plants/Closed_ten_of_eleven.v"
+   },
+   "fails": "Identity",
+   "text": "order32/Identity.v\", line 4, characters",
+   "class": "g identity",
+   "what": "Closed.v states, under the name ORDER32, ten of the eleven parts (FC_TOTAL_ZERO left out: the one part whose loss no other part would show, since plants total-zero-reversed and total-eq-true are refused by it alone) and proves that"
+  },
+  "guard": {
+   "replace": {
+    "Closed.v": "plants/Closed_guard.v"
+   },
+   "reader": "is assumed to be guarded",
+   "words": [
+    "bypass_check"
+   ],
+   "class": "h guard",
+   "what": "order32_holds from False, by a recursion whose termination check is switched off"
+  }
+ }
+}

@@ -27,3 +27,16 @@ How each part was taken:
 
 To check a part: recompute the sha256 of each file and compare with its manifest line, then the manifest's own
 sha256 with the table above.
+
+## Re-pins after the import
+
+A re-pin of `orlog/` or `verdandi/` is one dated note below, added by hand (not by `tools/assemble.py`) and never
+rewritten. Its first line names the new pinned commit and its tree; the last note for a part names that part's pin.
+The import table above and the four manifests stay as they are: they describe the import.
+
+Re-pin 2026-11-22: `verdandi/` pinned at commit 94d7c28a446cb3df7f0b01d59687f716c9ecb8f8, tree 79de963f1e7c2f93ed8616eb2396a83d4bbfc879.
+Carries out the owner's ruling SY-1 of 2026-11-21. Verðandi's commit 94d7c28 comes directly after the import pin
+a01b3a1 in Verðandi's history and changes two files, both under `verdandi/mathkernel/F32/`: `README.md` (two lines
+added) and `LIMITATIONS.md` (added). Each is now its blob at 94d7c28, byte for byte, listed with its sha256 before
+and after in `CHANGES-AFTER-IMPORT.md`. No other file of `verdandi/` changes with this re-pin: every change listed
+there before it stays as listed.

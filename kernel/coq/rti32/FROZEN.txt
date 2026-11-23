@@ -1,0 +1,2 @@
+# FROZEN of rti32: the statement file, frozen before its proof (2026-11-22). The sha256 below is the owner's, computed with Get-FileHash under R1 of Turn 228 and equal to the assistant's (ext-work/harden/STATE.md, "RULINGS S280 AND ADDENDUM 1"); its form and content follow ruling A5 (c).
+c880889571705e6760d35e8fe9badab376b2d5e64e339bc45a658e5d58c119b7  rti32/RTI32_Statement.v

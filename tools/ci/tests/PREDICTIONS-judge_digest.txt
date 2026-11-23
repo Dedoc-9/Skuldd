@@ -1,0 +1,68 @@
+# Predictions for tools/ci/tests/test_judge_digest.py (the CI judge digest, tools/ci/judge_digest.py).
+# Written before the test's first run, 2026-11-18; its sha256 was recorded then, and no prediction changes after it.
+# One line per case: ID | predicted outcome | what the case does. The test reads this file and holds each case to it.
+# Outcomes: HELD (exit 0, every row ok); FAILED <row> (exit 1, that row FAIL; other rows may fail too); USAGE (exit 2,
+# no verdict line); SAME (every value compared is equal); AGREES (run mode agrees with inventory.py's own outcome).
+# Unless a line says otherwise, the judge runs on a fresh honest copy with --inventory-json of a self-consistent
+# inventory and --expect the honest digest D (the digest C01 printed).
+# C01: without --expect, 12 rows; the digest equals the test's own computation of the spec's formula.
+# C02: with --expect D, run twice: 13 rows, the digest D and the same output both times.
+# C03: the judge's digest function, given the files in sorted, reversed and three shuffled orders, gives D each time,
+#      and refuses a path listed twice.
+# C05: the JSON holds the schema, D, the verdict and the inventory digest; files sorted by path bytes and equal to the
+#      test's own listing; two runs write the same bytes.
+# P01-P14, P25: the expected-digest row must name a new digest. P15: the row's text is exactly "the CI judge changed:
+# after review the owner sets MK_ANCHOR_CI to D". P16, P17: the digest stays D and the row names D as the value to set.
+# P31-P33 run in run mode: no --inventory-json and no --expect.
+# M01: on a copy that also holds kernel/coq, verdandi/mathkernel/F32 and THEOREMS.md, the inventory row is ok exactly
+#      when inventory.py exits 0, and the digest equals the one given its own JSON. With no inventory.py in the tree,
+#      the row FAILs naming it.
+C01 | HELD | the honest twin, no --expect
+C02 | HELD | the honest twin with --expect D, run twice
+C03 | SAME | the digest function, given the files in five orders
+C04 | HELD | a second honest copy, its files written in reverse order
+C05 | HELD | --json OUT outside the tree, two runs
+P01 | FAILED expected digest | one byte of the first workflow file (by path) changed
+P02 | FAILED expected digest | a workflow added as .github/workflows/extra.yaml
+P03 | FAILED expected digest | a file added under tools/ci/ (tools/ci/extra.py)
+P04 | FAILED expected digest | a file added in a new subfolder of tools/ci/ (tools/ci/sub/extra.txt)
+P05 | FAILED expected digest | tools/ci/tests/test_judge_digest.py renamed, same bytes
+P06 | FAILED expected digest | one byte of kernel/coq/gate/gate4.py changed
+P07 | FAILED expected digest | a module added to kernel/coq/gate/ (json.py, a would-be shadow)
+P08 | FAILED expected digest | one byte of kernel/coq/EXPECTED-CI-LIBRARIES.txt changed
+P09 | FAILED expected digest | one byte of kernel/hardening/features/feature_row4.py changed
+P10 | FAILED expected digest | one byte of kernel/hardening/features/feature_row3.py changed
+P11 | FAILED expected digest | one byte of tools/check_manifests.py changed
+P12 | FAILED expected digest | one byte of ci/mathkernel/Dockerfile changed
+P13 | FAILED expected digest | a file added under ci/mathkernel/
+P14 | FAILED expected digest | one byte of .github/CODEOWNERS changed
+P15 | FAILED expected digest | --expect a wrong value (D with its last digit changed)
+P16 | FAILED expected digest | --expect D in upper case
+P17 | FAILED expected digest | --expect empty (the variable unset)
+P18 | FAILED group codeowners | .github/CODEOWNERS removed
+P19 | FAILED group expected-libraries | kernel/coq/EXPECTED-CI-LIBRARIES.txt removed
+P20 | FAILED group feature-row4 | kernel/hardening/features/feature_row4.py removed
+P21 | FAILED group workflows | every *.yml and *.yaml under .github/workflows/ removed (the folder kept)
+P22 | FAILED group gate | every file of kernel/coq/gate/ removed (the folder kept)
+P23 | FAILED group codeowners | .github/CODEOWNERS renamed to .github/codeowners (case only)
+P24 | FAILED this judge is the judged one | the copy's tools/ci/judge_digest.py has an appended line
+P25 | FAILED expected digest | --inventory-json of another self-consistent inventory (a FROZEN4 sha256 differs)
+P26 | FAILED inventory digest | --inventory-json whose digest is not the sha256 of its own content
+P27 | FAILED inventory digest | --inventory-json naming a file that does not exist
+P28 | FAILED inventory digest | --inventory-json with the schema skuldd-inventory/2
+P29 | FAILED inventory digest | --inventory-json that is not JSON
+P30 | FAILED judge files are plain files | a link under tools/ci/ to a folder outside the tree (junction on Windows)
+P31 | FAILED inventory digest | inventory.py replaced: exits 0, prints a digest other than its JSON's
+P32 | FAILED inventory digest | inventory.py replaced: prints its digest and INVENTORY FAILED, exits 1
+P33 | FAILED inventory digest | tools/ci/inventory.py removed
+P34 | FAILED inventory digest | --inventory-json self-consistent, but its verdict is INVENTORY FAILED
+P35 | FAILED inventory digest | --inventory-json with the key digest twice
+D01 | HELD | a file added under tools/ci/__pycache__/ (the spec skips that folder)
+D02 | HELD | one byte of README.md (outside the judge) changed
+D03 | HELD | every copied file's modification time changed
+D04 | HELD | a file that is not a workflow (.github/workflows/notes.txt) added
+U01 | USAGE | --json OUT inside tools/ci/ of the root; OUT is not written
+U02 | USAGE | --json OUT at .github/workflows/judge.yml of the root; OUT is not written
+U03 | USAGE | --root names a file, not a folder
+U04 | USAGE | no --root
+M01 | AGREES | run mode on a copy that also holds what the inventory reads

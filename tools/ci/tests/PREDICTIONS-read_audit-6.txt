@@ -1,0 +1,14 @@
+# Predictions for tools/ci/tests/test_read_audit.py, sixth file (after review round 8), written by the assistant on
+# 2026-11-20 before any of these cases first ran; no line changes after that run. A line: "case | exit <n> | rows that
+# FAIL (hook, reads, runs) or - | what the case does". A case that exits 2 prints no row and no verdict, and here also
+# writes nothing at the path inside the tree that its --json names by another spelling (the test checks that).
+#
+# What the round changes. Review 8 found that read_audit.py's own refusal of a --json path inside ROOT compared the path
+# as written only (made absolute, a long-path prefix taken off), so a path naming a file inside ROOT by another
+# spelling was accepted and the audit's JSON written inside the tree: on Windows the 8.3 short form of ROOT's folder
+# (this host's temporary folder is itself written in that form, so the case gives the other form) and a junction outside
+# ROOT to it; on POSIX a symbolic link (its R8S-2). The refusal now compares the path as written and as resolved
+# (realpath, then the prefix taken off) with ROOT as written and as resolved, as judge_digest.py, verify_records.py and
+# inventory.py do since round 7. The workflows give the audit no --json (integrity.yml), so nothing they run changes.
+a58 | exit 2 | - | --json audit.json in the tree's folder spelled otherwise: on Windows its 8.3 short form, or its long form where the tree is given short; on POSIX through a symbolic link beside the tree to it (review 8's A01)
+a59 | exit 2 | - | --json audit.json in a linked folder beside the tree: on Windows a junction to the tree, on POSIX a symbolic link to the tree's kernel folder (review 8's A02)

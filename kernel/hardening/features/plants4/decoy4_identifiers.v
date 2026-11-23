@@ -1,0 +1,10 @@
+Definition Conjectures_n : nat := 0.
+Definition ContextFree : nat := 1.
+Definition my_Context : nat := 2.
+Definition the_Context_size : nat := 3.
+Definition DeclareInstance : nat := 4.
+Definition Admittance : nat := 5.
+Definition Obligational : nat := 6.
+Definition Obligations2 : nat := 7.
+Definition programs : nat := 8.
+#[local] Definition programmed : nat := 9.

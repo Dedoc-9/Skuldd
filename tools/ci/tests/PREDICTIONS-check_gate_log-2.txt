@@ -1,0 +1,28 @@
+# Addendum to tools/ci/tests/PREDICTIONS-check_gate_log.txt: the honest cases of the saved-log mode (--ci-logs) for
+# the eight folders gated after that file was frozen (sincos32n, exp32a, floor32, ceil32, rti32, order32, bits32 and
+# fclink). test_check_gate_log.py reads it in that mode only (PRED_SAVED_ADDENDA), after that file and addendum 1,
+# whose rows it uses; it names no case those files name. Written by the assistant on 2026-11-23 (UTC), before any run
+# of these cases; its sha256 was recorded then, and no line changes after it. A case whose result differs from its
+# line stays red and is explained.
+# Why: the saved-log mode builds h-ci-<folder> and h-raw-<folder> for every kernel/coq/<folder>/gate.json, and its
+# row "predictions name every case, once" needs a line for each. Each line predicts what the honest twin of a held CI
+# gate job of the folder gives, as for the thirteen: "none". CI run 44223174587 (the default --ci-run) gated only the
+# thirteen first folders, so the saved logs hold no job log of these eight; until the logs of a run that gated them
+# are saved and named with --ci-run, each of these cases is not built ("the case could not be built: 0 saved logs for
+# <folder> in run <ID>") and fails whatever its line says.
+h-ci-bits32 | none | honest twin: bits32
+h-ci-ceil32 | none | honest twin: ceil32
+h-ci-exp32a | none | honest twin: exp32a
+h-ci-fclink | none | honest twin: fclink
+h-ci-floor32 | none | honest twin: floor32
+h-ci-order32 | none | honest twin: order32
+h-ci-rti32 | none | honest twin: rti32
+h-ci-sincos32n | none | honest twin: sincos32n
+h-raw-bits32 | none | honest twin, the saved job log as downloaded: bits32
+h-raw-ceil32 | none | honest twin, the saved job log as downloaded: ceil32
+h-raw-exp32a | none | honest twin, the saved job log as downloaded: exp32a
+h-raw-fclink | none | honest twin, the saved job log as downloaded: fclink
+h-raw-floor32 | none | honest twin, the saved job log as downloaded: floor32
+h-raw-order32 | none | honest twin, the saved job log as downloaded: order32
+h-raw-rti32 | none | honest twin, the saved job log as downloaded: rti32
+h-raw-sincos32n | none | honest twin, the saved job log as downloaded: sincos32n

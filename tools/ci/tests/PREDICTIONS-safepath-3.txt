@@ -1,0 +1,8 @@
+# Predictions for tools/ci/tests/test_safepath.py, third file: the third workflow, .github/workflows/drift.yml
+# (rulings SY-1 and SY-2), whose header says that Python runs there with PYTHONSAFEPATH=1 and which no case read
+# before this file. Written by the assistant on 2026-11-22, before any run of these cases; its sha256 was recorded
+# then, and no line changes after it. The format is that of PREDICTIONS-safepath.txt. W3 reads drift.yml with the
+# check W0 applies to the other two workflows (its top-level env, and each docker run that starts Python: drift.yml
+# has none); W4 is that check seen to fail on a copy of drift.yml.
+W3-drift | ok | - | drift.yml sets PYTHONSAFEPATH "1" at the top, and no docker run of it starts Python without it
+W4-plant-drift | FAIL | no top-level PYTHONSAFEPATH | drift.yml without its top-level PYTHONSAFEPATH line

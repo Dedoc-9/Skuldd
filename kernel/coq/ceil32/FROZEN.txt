@@ -1,0 +1,2 @@
+# FROZEN of ceil32: the statement file, frozen before its proof (2026-11-18, Turn 250). The sha256 below is the owner's, minted with Get-FileHash under R1 of Turn 228 and equal to the assistant's (sheet-checks/OWNER-HASHES-TURN-250-FLOOR32-CEIL32.md); each line is sha256, two spaces, path from the tree's root. A correction is a new file or a dated note beside this one.
+2a2f21678a040cc49896146001e26f42e1258118b9496271afdde6aab0dd37a3  ceil32/CEIL32_Statement.v

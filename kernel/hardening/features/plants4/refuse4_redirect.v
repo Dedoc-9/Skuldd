@@ -1,0 +1,1 @@
+Redirect "out" Print nat.

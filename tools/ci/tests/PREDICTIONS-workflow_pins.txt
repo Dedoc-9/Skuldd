@@ -1,0 +1,18 @@
+# Predictions for tools/ci/tests/test_workflow_pins.py. Written by the assistant on 2026-11-22, before this test's
+# first run in this tree; its sha256 is recorded outside this file then, and no line changes after it (a correction is
+# a new file). One line per case: id | HELD or FAILED | the rows that fail (or -) | what. The honest tree is the
+# repository's own workflows; each plant changes one workflow text in memory. The row "predictions" is the test's own.
+W00 | HELD | - | the honest workflows (drift.yml, integrity.yml, mathkernel-linux.yml)
+W01 | FAILED | pins | a checkout given by its tag (actions/checkout@v4)
+W02 | FAILED | pins | an action pinned by a full sha that is not one SK-1's batch pinned
+W03 | FAILED | pins | an allowed action's sha with no release tag beside it
+W04 | FAILED | permissions | a job given "permissions: write-all"
+W05 | FAILED | permissions | the top-level "contents: read" made "contents: write"
+W06 | FAILED | triggers | a workflow started by pull_request_target
+W07 | FAILED | credentials | drift.yml's own checkout without persist-credentials: false
+W08 | FAILED | env-only | an expression ${{ ... }} written inside a run: block
+W09 | FAILED | drift-matrix | drift.yml's verdandi job fetching another repository than PROVENANCE.md names
+W10 | FAILED | drift-matrix | drift.yml's matrix without its orlog job
+W11 | HELD | - | a decoy: an expression ${{ github.sha }} added to a step's env: block, where values belong
+W12 | FAILED | credentials | the fpenv job's checkout without persist-credentials: false, as it was before this push
+W13 | FAILED | drift-actions | drift.yml gains an upload-artifact step (a pair SK-1 allows, so pins holds)

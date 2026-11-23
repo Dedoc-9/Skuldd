@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Second predictions for tools/ci/tests/test_inventory.py (2026-11-18), written after the first file's 43 cases ran
+# and held, before any of these ran, and not changed after their first run. They reach checks inside rows that the
+# first plants did not reach. Form and meaning as in PREDICTIONS-inventory.txt: a plant (Q) must fail exactly the rows
+# under it; a decoy (E) must hold.
+# E01 is the limit the inventory's header states: a folder, its freeze list and its ANCHORS.md row changed together
+# hold here. Only the Actions variable the gate is given catches that change; the decoy shows the inventory does not.
+
+Q01 tier-unknown: kernel/coq/sincos32z/gate.json names the tier flocq5
+  FAIL sincos32z: gate.json parses
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+Q02 identity-key: kernel/coq/sincos32z/gate.json names Closed as its identity module
+  FAIL sincos32z: gate.json parses
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+Q03 frozen4-path-twice: kernel/coq/sincos32z/FROZEN4.txt repeats its first entry at its end
+  FAIL sincos32z: FROZEN4.txt present and readable
+  FAIL sincos32z: ANCHORS.md value is sha256 of FROZEN4.txt
+Q04 identity-require-extra: kernel/coq/sincos32z/Identity.v also requires Zero
+  FAIL sincos32z: Identity.v is the plain conjunction of that row
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+Q05 anchor-record-empty: kernel/coq/ANCHORS.md, p32's record cell empty
+  FAIL ANCHORS.md: one row per gated folder with its variable
+Q06 successor-self: THEOREMS.md gains a Successors row naming f32.F32_Statement.F32_REL as its own successor
+  FAIL THEOREMS.md: every successor row names known statements
+Q07 identity-string: kernel/coq/sincos32z/Identity.v gains Local Notation "A /\ B" := (A \/ B) : type_scope.
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v is the plain conjunction of that row
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+Q08 theorems-bare-first: THEOREMS.md's f32 row names its statement as the bare F32_REL
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL f32: Identity.v names are its THEOREMS.md row
+Q09 folder-not-plain: copy kernel/coq/f32 to kernel/coq/F99
+  FAIL discovery: every gate.json is in a gated folder or a mirror
+  FAIL discovery: no .v file under kernel/coq outside a gated folder
+Q10 mirror-frozen4-unreadable: append the line "garbage" to verdandi/mathkernel/F32/p32r/FROZEN4.txt
+  FAIL mirror p32r: FROZEN4.txt equals its kernel twin's
+  FAIL mirror p32r: every listed file holds its sha256
+Q11 gate-json-not-utf8: kernel/coq/sincos32z/gate.json holds a byte 0xff in its name
+  FAIL sincos32z: gate.json parses
+  FAIL sincos32z: gate.json files are its top-level .v files
+  FAIL sincos32z: plants/*.v are the plant files it names
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+Q12 identity-comment-open: kernel/coq/sincos32z/Identity.v ends in a comment that is not closed
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v is the plain conjunction of that row
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+Q13 theorems-cells: THEOREMS.md's cos32 row without its Gate cell
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+Q14 gate-dir-file-absent: remove kernel/coq/gate/freeze4.py
+  FAIL gate dir: kernel/coq/gate holds exactly its own files
+E01 consistent-rewrite: change kernel/coq/sincos32z/Zero.v, its FROZEN4.txt line and its ANCHORS.md value together
+  HELD
+E02 identity-comment: kernel/coq/sincos32z/Identity.v gains a comment; its FROZEN4.txt line and ANCHORS.md value follow
+  HELD
+E03 crlf-theorems: THEOREMS.md with CR LF line ends
+  HELD

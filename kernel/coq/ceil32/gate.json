@@ -1,0 +1,117 @@
+{
+ "name": "CEIL32",
+ "tier": "flocq4",
+ "deps": [
+  "f32",
+  "p32",
+  "p32r",
+  "exp32",
+  "exp32r",
+  "ieee64",
+  "sin32",
+  "cos32",
+  "sincos32",
+  "sincos32i"
+ ],
+ "files": [
+  "CEIL32_Statement.v",
+  "Ceil32.v",
+  "CeilIEEE.v",
+  "Closed.v",
+  "Identity.v"
+ ],
+ "identity": "Identity",
+ "statement": {
+  "file": "CEIL32_Statement.v",
+  "sha256": "2a2f21678a040cc49896146001e26f42e1258118b9496271afdde6aab0dd37a3"
+ },
+ "plants": {
+  "format64-exact": {
+   "replace": {
+    "CEIL32_Statement.v": "plants/CEIL32_Statement_format64_exact.v"
+   },
+   "fails": "Ceil32",
+   "text": "ceil32/Ceil32.v\", line 91, characters",
+   "class": "c premise",
+   "what": "CL_EXACT for every binary64 x in place of every binary32 x: attacks the reasoning (only binary32 numbers of magnitude 2^23 or more are whole). KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: x = 2^23 + 1/2 is binary64, the graph returns it, and ceil x is a whole number. Refused in the 2^23 branch, where the proof needs the input it returns to be a binary32 number (measured, rehearsal r1)"
+  },
+  "no-step": {
+   "replace": {
+    "CEIL32_Statement.v": "plants/CEIL32_Statement_no_step.v"
+   },
+   "fails": "Ceil32",
+   "text": "ceil32/Ceil32.v\", line 85, characters",
+   "class": "a step",
+   "what": "the zero step removed from the graph and the shape alike (the kernel still accepts CL_model). Attacks the reasoning about the sign of a zero. KNOWN FALSE (CL_SIGN): at x = -0 the unstepped shape gives +0, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64; and ext-work/p1/probe/probe-plant-run1.txt (C, all 2^32 inputs). Refused where the proof needs the step (the model lemma that the step changes no value)"
+  },
+  "sign-always-plus": {
+   "replace": {
+    "CEIL32_Statement.v": "plants/CEIL32_Statement_sign_always_plus.v"
+   },
+   "fails": "Ceil32",
+   "text": "ceil32/Ceil32.v\", line 194, characters",
+   "class": "b claim",
+   "what": "CL_SIGN claims every result has sign bit 0. KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: at x = -1 the result is -1. Refused in the proof of CL_SIGN"
+  },
+  "ieee-other-mode": {
+   "replace": {
+    "CEIL32_Statement.v": "plants/CEIL32_Statement_ieee_other_mode.v"
+   },
+   "fails": "CeilIEEE",
+   "text": "ceil32/CeilIEEE.v\", line 54, characters",
+   "class": "b claim",
+   "what": "CL_IEEE with Bnearbyint at mode_DN for mode_UP. KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: at x = 1/2 the two differ. THE TRUST BOUNDARY: Ceil32.v (the four other parts) compiles with this statement; the refusal is in CeilIEEE.v alone"
+  },
+  "value-no-finite": {
+   "replace": {
+    "CEIL32_Statement.v": "plants/CEIL32_Statement_value_no_finite.v"
+   },
+   "fails": "Ceil32",
+   "text": "ceil32/Ceil32.v\", line 180, characters",
+   "class": "c premise",
+   "what": "CL_VALUE without the premise that the input is finite. KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: at +infinity (B2R is 0, a binary32 number) the result is +infinity, not finite. Refused where the proof takes the premise"
+  },
+  "admitted": {
+   "replace": {
+    "Ceil32.v": "plants/Ceil32_admitted.v"
+   },
+   "reader": "Ceil32.cl_ceil_near :",
+   "words": [
+    "Admitted"
+   ],
+   "class": "e proof",
+   "what": "cl_ceil_near (ceil from the nearest whole number) ends with Admitted"
+  },
+  "mul0-axiom": {
+   "replace": {
+    "Ceil32.v": "plants/Ceil32_mul0_axiom.v"
+   },
+   "reader": "Ceil32.cl_mul0 :",
+   "words": [
+    "Axiom"
+   ],
+   "class": "f axiom",
+   "what": "cl_mul0 (b * +0 for a finite b is the zero with the sign of b) is an Axiom of the same statement, its proof removed; used by the top theorem through the step lemmas"
+  },
+  "four-of-five": {
+   "replace": {
+    "Closed.v": "plants/Closed_four_of_five.v"
+   },
+   "fails": "Identity",
+   "text": "ceil32/Identity.v\", line 4, characters",
+   "class": "g identity",
+   "what": "Closed.v states, under the name CEIL32, four of the five parts (CL_IEEE left out) and proves that"
+  },
+  "guard": {
+   "replace": {
+    "Closed.v": "plants/Closed_guard.v"
+   },
+   "reader": "is assumed to be guarded",
+   "words": [
+    "bypass_check"
+   ],
+   "class": "h guard",
+   "what": "ceil32_holds from False, by a recursion whose termination check is switched off"
+  }
+ }
+}

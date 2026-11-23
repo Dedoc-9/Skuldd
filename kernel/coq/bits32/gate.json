@@ -1,0 +1,175 @@
+{
+ "name": "BITS32",
+ "tier": "flocq4",
+ "deps": [
+  "f32",
+  "p32",
+  "p32r",
+  "exp32",
+  "exp32r",
+  "ieee64",
+  "sin32",
+  "cos32",
+  "sincos32",
+  "sincos32i",
+  "floor32",
+  "ceil32"
+ ],
+ "files": [
+  "BITS32_Statement.v",
+  "Bits32Dec.v",
+  "Bits32Spec.v",
+  "Bits32Widen.v",
+  "Bits32Link.v",
+  "Closed.v",
+  "Identity.v"
+ ],
+ "identity": "Identity",
+ "statement": {
+  "file": "BITS32_Statement.v",
+  "sha256": "c3e65cb7285ddf438145e6fc7284e7749013472b3d4b06f8fc211d345b043e53"
+ },
+ "plants": {
+  "g1-no-quiet": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g1_no_quiet.v"
+   },
+   "fails": "Bits32Spec",
+   "text": "bits32/Bits32Spec.v\", line 30, characters",
+   "class": "d definition",
+   "what": "SPEC32's NaN branch returns u: the quiet bit is not set. KNOWN FALSE (G1 of ext-work/p2/a/bits32/draft4/PLANTS.md): at u = 0x7F800001 the mutant gives 0x7F800001 where SPEC32_NAN says 0x7FC00001 (MEASURED, reported: ext-work/p2/a/bits32/review1/probe-r1-run1-console.txt, rows R1). Refused in the proof of SPEC32_NAN, the first part Bits32Spec.v proves, at its last step (u = u lor 2^22 fails). SPEC32_PROGRAM and SPEC32_STORE exclude NaN patterns and do not read this branch (an equivalent mutant for them, PLANTS.md)"
+  },
+  "g2-direction-swapped": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g2_direction_swapped.v"
+   },
+   "fails": "Bits32Spec",
+   "text": "bits32/Bits32Spec.v\", line 115, characters",
+   "class": "d definition",
+   "what": "floor and ceiling exchanged in SPEC32's rounding bit (away). KNOWN FALSE (G2): at u = 0x3F000000 (0.5) the floor is +0, the mutant gives 0x3F800000 (MEASURED, reported: review1 probe, rows R1). Refused in SPEC32_VALUE, where the integer lemma b32_mg_int (sign applied to q + bit is the floor or the ceiling of +-m / 2^k) is applied to the rounding bit; SPEC32_RANGE, proved for any rounding bit, compiles before it"
+  },
+  "g3-zero-plus": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g3_zero_plus.v"
+   },
+   "fails": "Bits32Spec",
+   "text": "bits32/Bits32Spec.v\", line 110, characters",
+   "class": "d definition",
+   "what": "a zero result is always +0 (join32 false 0 0). KNOWN FALSE (G3): at u = 0xBE800000 (-0.25) the ceiling is -0 (0x80000000), the mutant gives +0 (MEASURED, reported: review1 probe, rows R1). Refused in SPEC32_VALUE, where the last branch is decoded with the input's sign on its zero (b32_last_fin); SPEC32_RANGE, proved for a zero of either sign, compiles before it"
+  },
+  "g4-k-off-by-one": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g4_k_off_by_one.v"
+   },
+   "fails": "Bits32Spec",
+   "text": "bits32/Bits32Spec.v\", line 115, characters",
+   "class": "d definition",
+   "what": "k := 151 - max ef 1 in SPEC32. KNOWN FALSE (G4): at u = 0x3F800000 (1.0) the floor is 0x3F800000, the mutant gives +0 (MEASURED, reported: review1 probe, rows R1). Refused in SPEC32_VALUE at its last equation: the result is the floor at the scale 2^-151+max, the value's scale is 2^-150+max; SPEC32_RANGE (any k >= 1) compiles before it"
+  },
+  "g5-widen-zero-unsigned": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g5_widen_zero_unsigned.v"
+   },
+   "fails": "Bits32Widen",
+   "text": "bits32/Bits32Widen.v\", line 42, characters",
+   "class": "d definition",
+   "what": "widen32 sends every zero to B754_zero false. KNOWN FALSE (G5): B32_WIDEN at the binary32 -0, whose widening has sign bit 0 (ARGUED from the definition, PLANTS.md). Refused in B32_WIDEN's zero case (the sign)"
+  },
+  "g6-store-nan-included": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g6_store_nan_included.v"
+   },
+   "fails": "Bits32Link",
+   "text": "bits32/Bits32Link.v\", line 116, characters",
+   "class": "c premise",
+   "what": "SPEC32_STORE without its premise that u is not a NaN. KNOWN FALSE (G6): u = 0x7F800001, v = dec32 0x7FC00000; v widens to b64's one NaN, the program's result (FL_NONFINITE), but bits_of_b32 v = 0x7FC00000 and SPEC32 u = 0x7FC00001 (MEASURED, reported: review1 probe, rows R1). Refused in the proof of SPEC32_STORE, which takes the premise"
+  },
+  "g7-widen-nan-to-inf": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g7_widen_nan_to_inf.v"
+   },
+   "fails": "Bits32Link",
+   "text": "bits32/Bits32Link.v\", line 84, characters",
+   "class": "d definition",
+   "what": "widen32 sends every NaN to B754_infinity false. KNOWN FALSE (G7, SPEC32_STORE): u = 0x7F800000, v = dec32 0x7FC00000; the program returns +infinity, the mutant widening of v is +infinity, but bits_of_b32 v = 0x7FC00000 and SPEC32 u = 0x7F800000 (integer part MEASURED, reported: ext-work/p2/a/bits32/answer1-check-run1-console.txt, rows W). Refused in b32_widen_inj (a NaN never widens to a value that is not a NaN), the lemma SPEC32_STORE rests on; B32_WIDEN and SPEC32_PROGRAM compile with the mutant"
+  },
+  "g8-range-wrap": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g8_range_wrap.v"
+   },
+   "fails": "Bits32Spec",
+   "text": "bits32/Bits32Spec.v\", line 67, characters",
+   "class": "d definition",
+   "what": "SPEC32 adds 2^32 to every output of its last branch at or above 2^31. KNOWN FALSE (G8): at u = 0xBF800000 (-1.0) the floor is 0xBF800000, the mutant gives 0x1BF800000, not a pattern (integer part MEASURED, reported: answer1 check, rows W). Refused in SPEC32_RANGE; SPEC32_NAN, SPEC32_NAN31 and SPEC32_INF, which do not reach the last branch, compile before it"
+  },
+  "g9-nan-sign-flipped": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g9_nan_sign_flipped.v"
+   },
+   "fails": "Bits32Spec",
+   "text": "bits32/Bits32Spec.v\", line 30, characters",
+   "class": "d definition",
+   "what": "SPEC32's NaN branch returns (u lor 2^22) xor 2^31. KNOWN FALSE (G9): at u = 0x7F800001 the mutant gives 0xFFC00001 where SPEC32_NAN says 0x7FC00001 (integer part MEASURED, reported: answer1 check, rows W). Refused in the proof of SPEC32_NAN at its last step; for SPEC32_NAN31 and every other part it is an equivalent mutant (PLANTS.md). The Coq counterpart of the sweep's PL3"
+  },
+  "g10-widen-inf-sign-flipped": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g10_widen_inf_sign_flipped.v"
+   },
+   "fails": "Bits32Widen",
+   "text": "bits32/Bits32Widen.v\", line 43, characters",
+   "class": "d definition",
+   "what": "widen32's infinity branch returns B754_infinity (negb s). KNOWN FALSE (G10): B32_WIDEN at the binary32 +infinity, whose widening has sign bit 1 (ARGUED from the definition, PLANTS.md). Refused in B32_WIDEN's infinity case (the sign); B32_WIDEN alone refuses it (PLANTS.md, REVIEW-3 m7)"
+  },
+  "g11-finite-on-snan": {
+   "replace": {
+    "BITS32_Statement.v": "plants/BITS32_Statement_g11_finite_on_snan.v"
+   },
+   "fails": "Bits32Spec",
+   "text": "bits32/Bits32Spec.v\", line 74, characters",
+   "class": "d definition",
+   "what": "is_finite32 also true on every binary32 NaN whose payload is below 2^22 (a signalling NaN). KNOWN FALSE (G11, SPEC32_VALUE): at u = 0x7F800001 the mutant calls dec32 u finite, and SPEC32 u = 0x7FC00001 decodes to a NaN of payload 0x400001, which it does not (ARGUED, PLANTS.md). Refused in SPEC32_VALUE at its first step (a pattern is_finite32 calls finite is not a NaN); Bits32Dec.v reads is_finite32 on patterns that are not NaNs only, and SPEC32_INF compiles with the mutant"
+  },
+  "admitted": {
+   "replace": {
+    "Bits32Dec.v": "plants/Bits32Dec_admitted.v"
+   },
+   "reader": "Bits32Dec.b32_mg_int :",
+   "words": [
+    "Admitted"
+   ],
+   "class": "e proof",
+   "what": "b32_mg_int (the magnitude with its sign is the floor or the ceiling of +-m / 2^k) ends with Admitted; used by the top theorem through SPEC32_VALUE"
+  },
+  "axiom": {
+   "replace": {
+    "Bits32Widen.v": "plants/Bits32Widen_axiom.v"
+   },
+   "reader": "Bits32Widen.b32_fin_not_nan :",
+   "words": [
+    "Axiom"
+   ],
+   "class": "f axiom",
+   "what": "b32_fin_not_nan (a finite b64 value is not a NaN) is an Axiom of the same statement, its proof removed; used by the top theorem through B32_WIDEN"
+  },
+  "guard": {
+   "replace": {
+    "Closed.v": "plants/Closed_guard.v"
+   },
+   "reader": "is assumed to be guarded",
+   "words": [
+    "bypass_check"
+   ],
+   "class": "h guard",
+   "what": "bits32_holds from False, by a recursion whose termination check is switched off"
+  },
+  "seven-of-eight": {
+   "replace": {
+    "Closed.v": "plants/Closed_seven_of_eight.v"
+   },
+   "fails": "Identity",
+   "text": "bits32/Identity.v\", line 4, characters",
+   "class": "g identity",
+   "what": "Closed.v states, under the name BITS32, seven of the eight parts (SPEC32_STORE left out) and proves that"
+  }
+ }
+}

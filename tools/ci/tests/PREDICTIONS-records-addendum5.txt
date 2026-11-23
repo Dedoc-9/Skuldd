@@ -1,0 +1,12 @@
+# Addendum 5 to PREDICTIONS-records.txt, written on 2026-11-20 after review round 3 and before this addendum's first
+# run; no earlier file is changed. verify_records.py now requires each record's log check verdict to be "GATE LOG HELD:
+# n of n rows" with n exactly the number of rows tools/ci/check_gate_log.py prints (its GATE_LOG_ROWS, 15), and the
+# test's own log checks now say "GATE LOG HELD: 15 of 15 rows" (before: 14 of 14, which verify_records.py accepted
+# then); every earlier case keeps its predicted outcome. The case "gate log rows" (the three counts are one number) is
+# not a run of either script and has no line here.
+#
+# V42: F's record's log check verdict "GATE LOG HELD: 14 of 14 rows" (one row fewer than check_gate_log.py prints).
+# Before, it held.
+case V42 verify_records exit 1 fails VR10
+# V43: F's record's log check verdict "GATE LOG HELD: 16 of 16 rows" (one row more). Before, it held.
+case V43 verify_records exit 1 fails VR10

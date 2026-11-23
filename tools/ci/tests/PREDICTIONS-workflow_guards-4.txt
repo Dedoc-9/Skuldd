@@ -1,0 +1,21 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py, fourth file. Written by the assistant on 2026-11-20, after
+# review round 6 and before the first run of these cases; its sha256 was recorded then, and no line changes after
+# that run. The format and the checks are the first file's. A case is named in one file only.
+# The step: the image job's "Say what the image holds; its base is the digest the Dockerfile pins". Review 6 found that
+# its FROM count read only "^FROM ", while Docker reads an instruction in any case of letters and after any indent, so
+# that a second stage written "from", indented, or with a tab after FROM was not counted, and the build step's grep,
+# which since review 5 reads a stage-named step label, then recorded the pinned stage's base (its RA6-1). The step now
+# counts FROM as Docker reads it (grep -ciE '^[[:space:]]*from[[:space:]]'), and refuses the two forms that count
+# cannot read: a parser directive on the first line ("# <word>=<value>", which can change the escape character), and a
+# line after a line continuation that does not start with a blank (a keyword split by a continuation; a comment or an
+# empty line inside an instruction is refused too, a stricter rule than a letter in the first column). b06 to b08 stay
+# as frozen. Each case runs the step on the Dockerfile of the tree with the lines named here appended (d07: one line
+# put before it), base-image.txt holding the pinned base and the stand-in image id.
+d02 | exit 2 | out:0,msg:exactly one FROM | a second stage "from docker.io/library/debian:12" (lower case) and "COPY --from=0 /opt /opt"
+d03 | exit 2 | out:0,msg:exactly one FROM | a second stage "  FROM debian:12" (indented)
+d04 | exit 2 | out:0,msg:exactly one FROM | a second stage "FROM<TAB>debian:12" (a tab after FROM)
+d05 | exit 2 | out:0,msg:exactly one FROM | a second stage "FROM debian:12" in the first column (refused before this round too)
+d06 | exit 2 | out:0,msg:exactly one FROM | a final stage "from scratch" and "COPY --from=0 / /"
+d07 | exit 2 | out:0,msg:parser directive | the line "# escape=`" put before the Dockerfile's first line
+d08 | exit 2 | out:0,msg:continues a line | "FR\" and on the next line "OM debian:12" (a keyword split by a line continuation)
+d09 | exit 2 | out:0,msg:continues a line | "RUN true \", then "# a comment inside the instruction", then " && true"

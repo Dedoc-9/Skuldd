@@ -1,0 +1,14 @@
+# Predictions for tools/ci/tests/test_check_boundaries.py, second file: the cases added when the row input was made
+# to refuse a map that GitHub shows otherwise than this check reads it (a code fence, an HTML comment over several
+# lines; review loop of Push A, round 1). Written by the assistant on 2026-11-22, before the first run of these
+# cases; its sha256 is recorded outside this file then, and no line changes after it (a correction is a new file).
+# The test reads it after PREDICTIONS-check_boundaries.txt, whose lines stand as they are; the format is that file's.
+# HIDDEN below is a row B099 whose Claim names `bb.BB_Statement.B2`, with its seven fields; P49 and P50 start from
+# P01's map (B002 names B1 only, so no row a reader sees names B2) and add HIDDEN between two level-2 headings.
+P49 | FAILED | input | P01's map with "## Fenced", a line "```", HIDDEN, "## end" and a line "```" before section 2
+P50 | FAILED | input | P01's map with "## Hidden", a line "<!--", HIDDEN, "## end" and a line "-->" before section 2
+H07 | HELD | - | decoy: a whole-line HTML comment "<!-- a note -->" under the heading of section 2
+#
+# Mutants, each a copy of tools/ci with one change, the test run on the copy (not read by the test):
+mutant | M10 | P49, P50 | read_input() without its fence and comment refusals (both maps then hold: B2 has a row)
+mutant | M0b | none | the control: the copy unchanged, every case of both files holds

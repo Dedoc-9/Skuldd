@@ -1,0 +1,17 @@
+# Predictions for tools/ci/tests/test_check_boundaries.py, third file: the cases added when the row input was made
+# to refuse a map line that starts an HTML block (a line of up to three blanks and then "<" that is not one whole
+# HTML comment), which GitHub shows as raw or preformatted text, not as rows (review loop of Push A, round 2).
+# Written by the assistant on 2026-11-22, before the first run of these cases; its sha256 is recorded outside this
+# file then, and no line changes after it (a correction is a new file). The test reads it after
+# PREDICTIONS-check_boundaries.txt and PREDICTIONS-check_boundaries-2.txt, whose lines stand as they are; the format
+# is theirs. HIDDEN is the row B099 of the second file (its Claim names `bb.BB_Statement.B2`); P51 to P53 start from
+# P01's map (B002 names B1 only, so no row a reader sees names B2) and add HIDDEN inside an HTML block.
+P51 | FAILED | input | P01's map with "## Raw", a line "<div>", HIDDEN, "## end" and a line "</div>" before section 2
+P52 | FAILED | input | P01's map with "## Pre", a line "<pre>", HIDDEN, a blank line, "## end", a line "</pre>"
+P53 | FAILED | input | P51's map with three blanks before "<div>" and before "</div>"
+H08 | HELD | - | decoy: the first Stop of the map (row B001's) begins "<b>x</b> ", a tag inside a line
+#
+# Mutants, each a copy of tools/ci with one change, the test run on the copy (not read by the test):
+mutant | M11 | P51, P52, P53 | read_input() without its HTML block refusal (the three maps then hold: B2 has a row)
+mutant | M12 | P53 | the refusal's pattern without its leading blanks (a line that starts with "<" only)
+mutant | M0c | none | the control: the copy unchanged, every case of the three files holds

@@ -1,0 +1,110 @@
+# Predictions for tools/ci/tests/test_check_gate_log.py --repo-data: which rows of tools/ci/check_gate_log.py each case
+# fails when every input is built from this repository's own files. Written by the assistant on 2026-11-18, before the
+# first run of that mode, and frozen there (its sha256 is recorded with the batch's records). A line is never changed
+# after that run: a case whose result differs from its line stays red and is explained.
+#
+# Form and meaning as in PREDICTIONS-check_gate_log.txt: "row <k> | <name>" names the checker's rows in their order;
+# "<case> | <rows> | <what the case is>" gives the rows predicted to fail ("none": GATE LOG HELD, exit 0; "usage": exit
+# 2, no verdict line; a list: GATE LOG FAILED with exactly those rows failing, exit 1).
+#
+# Honest inputs of this mode, all from the tree: for each gated folder (each kernel/coq/<folder>/gate.json) a console
+# in gate4.py's exact form, written by the test from that folder's gate.json (and its deps'), its FROZEN4.txt (the
+# anchor is its sha256), the sha256 of kernel/coq/gate/gate4.py, the axiom count of the tier's expected-pa file, and
+# every library of kernel/coq/EXPECTED-CI-LIBRARIES.txt with its sha256 as "checked in this run ... exit 0 clean";
+# --expected-libs is that file; --root a temporary tree holding copies of the folder's gate.json and FROZEN4.txt,
+# gate/gate4.py, the tier's expected-pa file and an out4/Closure.out the test builds (those libraries, then
+# MKF.<dep>.<stem> and MKF.<folder>.<stem> for every file of the deps' and the folder's gate.json "files").
+# "h-repo-<folder>" gives the checker that console as tee writes it; "h-repo-job-<folder>" the same lines as a
+# downloaded job log: a byte-order mark, a GitHub timestamp on every line, and runner lines before and after.
+# The plants p01-p30 and q01-q10 are the plants of the saved-log mode with the same ids, made the same way on the f32
+# console of this mode (p27 on p32's); s01-s04 are plants of this mode only.
+row 1 | log: read as UTF-8 text
+row 2 | log: one gate4 run, its header before its verdict
+row 3 | header: this folder and sources, --recheck, the tree's gate4
+row 4 | anchor line: the given anchor, all 64 digits
+row 5 | freeze list is the anchored one: ok, ANCHOR <16>
+row 6 | verdict: <NAME> GATE4 HELD: n of n [anchor <16>]
+row 7 | every gate row ok, as many as the verdict, no other line
+row 8 | closure row: N libraries, 0 from the log, N checked
+row 9 | library lines: N, each exit 0 clean, none twice
+row 10 | expected-libraries file: read, one hash per library
+row 11 | every library logged is expected, with the expected hash
+row 12 | identity row: as many axioms as expected-pa-<tier> lists
+row 13 | tree: FROZEN4 is the anchor's; gate.json, gate4, PA as listed
+row 14 | out4/Closure.out: every own module of the folder
+row 15 | out4/Closure.out: its outside libraries are those logged
+h-repo-compose | none | honest console built from the tree: compose
+h-repo-cos32 | none | honest console built from the tree: cos32
+h-repo-exp32 | none | honest console built from the tree: exp32
+h-repo-exp32r | none | honest console built from the tree: exp32r
+h-repo-f32 | none | honest console built from the tree: f32
+h-repo-ieee64 | none | honest console built from the tree: ieee64
+h-repo-log32 | none | honest console built from the tree: log32
+h-repo-p32 | none | honest console built from the tree: p32
+h-repo-p32r | none | honest console built from the tree: p32r
+h-repo-sin32 | none | honest console built from the tree: sin32
+h-repo-sincos32 | none | honest console built from the tree: sincos32
+h-repo-sincos32i | none | honest console built from the tree: sincos32i
+h-repo-sincos32z | none | honest console built from the tree: sincos32z
+h-repo-job-compose | none | the honest console as a job log (BOM, timestamps, runner lines): compose
+h-repo-job-cos32 | none | the honest console as a job log: cos32
+h-repo-job-exp32 | none | the honest console as a job log: exp32
+h-repo-job-exp32r | none | the honest console as a job log: exp32r
+h-repo-job-f32 | none | the honest console as a job log: f32
+h-repo-job-ieee64 | none | the honest console as a job log: ieee64
+h-repo-job-log32 | none | the honest console as a job log: log32
+h-repo-job-p32 | none | the honest console as a job log: p32
+h-repo-job-p32r | none | the honest console as a job log: p32r
+h-repo-job-sin32 | none | the honest console as a job log: sin32
+h-repo-job-sincos32 | none | the honest console as a job log: sincos32
+h-repo-job-sincos32i | none | the honest console as a job log: sincos32i
+h-repo-job-sincos32z | none | the honest console as a job log: sincos32z
+h-crlf-f32 | none | the honest f32 console with CR LF line ends
+h-json-f32 | none | the honest f32 console with --json; the record's verdict, digest, folder, anchor, log sha256 checked
+p01-one-from-log | 8 | the closure row says "1 from the log" (counts unchanged)
+p02-counts-differ | 8,9 | the closure row says N libraries but N-1 checked in this run (N library lines remain)
+p03-library-hash-changed | 11 | the last hex digit of one library's sha256 changed
+p04-extra-library | 11 | Coq.Planted.Extra added: a library line, the closure row's counts +1, a Closure.out line
+p05-anchored-row-missing | 5,7 | the anchored row deleted (one row fewer than the verdict counts)
+p06-fail-row | 7 | the row "plant shadow refused" says FAIL; the verdict line unchanged
+p07-verdict-unequal | 6 | the verdict line says HELD: n-1 of n
+p08-verdict-other-anchor | 6 | the verdict line names anchor 0000000000000000
+p09-axioms-plus-one | 12 | the identity row reports one axiom more
+p10-own-module-missing | 14 | MKF.f32.F32 removed from Closure.out
+p11-no-recheck | 3 | the header without --recheck
+p12-header-other-folder | 3 | the header says it judges p32
+p13-anchor-line-other | 4 | the last digit of the gate's full anchor line changed (its first 16 digits unchanged)
+p14-second-verdict | 2 | a second copy of the verdict line appended after the first
+p15-unknown-line | 7 | the line "Traceback (most recent call last):" inserted after the anchor line
+p16-library-not-clean | 9 | one library line says "exit 1 notclean"
+p17-library-twice | 9 | one library line repeated and the closure row's counts raised by one
+p18-expected-missing | 10,11 | --expected-libs names a file that does not exist
+p19-expected-malformed | 10 | a line "garbage" appended to a copy of the expected file
+p20-real-tree-no-out4 | 14,15 | --root is the repository itself, which holds no out4 (as outside the gate's job)
+p21-closure-extra-outside | 15 | Coq.Planted.Extra added to Closure.out only
+p22-gatejson-name-changed | 6,13 | the tree's gate.json says "name": "F33"
+p23-frozen4-not-anchor | 13 | a comment line appended to the tree's FROZEN4.txt
+p24-gate4-changed | 3,13 | a comment line appended to the tree's gate/gate4.py
+p25-expected-pa-plus-one | 12,13 | a fifth axiom line appended to the tree's expected-pa file
+p26-log-missing | 1,2,3,4,5,6,7,8,9,11,12,15 | --log names a file that does not exist
+p27-header-source-dropped | 3 | p32 case: the header says "sources of p32" (f32 dropped)
+p28-verdict-failed | 6,7 | the row "plant shadow refused" says FAIL and the verdict line says FAILED: n-1 of n
+p29-library-after-verdict | 9 | a copy of one library line appended after the verdict line
+p30-identity-other-tier | 12 | the identity row names the flocq3 list
+q01-identity-module-missing | 14 | MKF.f32.Identity removed from Closure.out
+q02-logged-not-in-closure | 15 | the first library the log lists removed from Closure.out only
+q03-header-other-identity | 3 | the header says "identity f32.Other"
+q04-two-anchor-lines | 4 | a second copy of the anchor line inserted after it
+q05-log-not-utf8 | 1,2,3,4,5,6,7,8,9,11,12,15 | a byte 0xff inserted in the log (it no longer reads as UTF-8)
+q06-library-line-unreadable | 9,15 | one library line's sha256 cut to 63 digits (that line no longer reads)
+q07-expected-library-twice | 10 | a copy of the expected file with its last library line repeated
+q08-frozen4-lists-gate4-twice | 13 | FROZEN4.txt lists gate/gate4.py twice; log and --anchor name the new list
+q09-zero-libraries | 8,11,15 | every library line removed and the closure row says 0 libraries, 0 checked
+q10-two-headers | 2,7 | a second copy of the header line inserted after it
+s01-failed-console | 3,6,7 | a run without --recheck whose rows "plant guard refused" and "plant shadow refused" FAIL, its verdict FAILED: n-2 of n
+s02-other-image | 11 | every library line's sha256 has its last digit changed (another image's libraries, the same names)
+s03-tier-not-a-name | 3,6,12,13,14 | the tree's gate.json "tier" is "flocq4" followed by a NUL character (JSON escape \u0000)
+s04-gatejson-too-deep | 3,6,12,13,14 | the tree's gate.json is 100000 "[" then 100000 "]" (too deep for the JSON reader)
+u01-anchor-not-hex | usage | --anchor XYZ
+u02-no-expected-libs | usage | --expected-libs left out
+u03-folder-dotdot | usage | --folder ../f32

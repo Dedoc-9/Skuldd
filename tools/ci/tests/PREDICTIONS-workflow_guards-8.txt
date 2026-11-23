@@ -1,0 +1,12 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py, eighth file: the verdict job's list of the jobs it needs.
+# Written by the assistant on 2026-11-22, before any run of these cases; its sha256 was recorded then, and no line
+# changes after it. The format and the checks are those of PREDICTIONS-workflow_guards.txt.
+#
+# The verdict job of mathkernel-linux.yml names the jobs it needs twice: in its "needs:" list, which GitHub reads,
+# and in the list "want" of its first step ("Every other job of this run succeeded"), which refuses unless the jobs
+# GitHub hands it, sorted, are that list. A difference fails closed on GitHub (the step refuses), but no case caught
+# it before a run. needs-list compares the two as the step does (the needs: list sorted, the want list as written);
+# each plant changes one side, on a copy of the workflow's text.
+needs-list | ok | - | the verdict job's needs: list, sorted, is the want list of its first step
+needs-list-plant | FAIL | - | the same check on a copy whose verdict job also needs a job named extra
+needs-list-plant2 | FAIL | - | the same check on a copy whose verdict step's want list lacks sweep

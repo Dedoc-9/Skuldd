@@ -1,0 +1,9 @@
+# Addendum 3 to PREDICTIONS-records.txt, written after addendum 2's first run (80 of 80 cases as predicted) and before
+# this addendum's first run; no earlier file is changed. verify_records.py's judge row gained one check after that run:
+# the sha256 the CI judge lists for .github/workflows/mathkernel-linux.yml is every record's workflow_sha256 (the
+# workflow the records ran is the one the judge hashed and MK_ANCHOR_CI binds). No earlier plant changes either value,
+# so no earlier prediction moves.
+#
+# V40: every record names the digest of a judge JSON that lists another sha256 for the workflow (its digest recomputed,
+# expect equal to it).
+case V40 verify_records exit 1 fails VR05

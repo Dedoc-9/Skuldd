@@ -1,0 +1,290 @@
+# Predictions for tools/ci/tests/test_inventory.py, fourteenth round: no new case. Written by the assistant on
+# 2026-11-22 (UTC), before any run of test_inventory.py with this file; its sha256 was recorded then, and no line
+# changes after it. Format as in PREDICTIONS-inventory.txt. test_inventory.py lists this file in SUPERSEDING: each
+# case below is one an earlier file predicts, with the same id and name, and its lines here replace the earlier ones;
+# the earlier files keep their bytes.
+# Why: the tree now gates 21 folders (the thirteen, then sincos32n, exp32a, floor32 and ceil32, then rti32, order32,
+# bits32 and fclink, each with its proved row after ceil32's and its ANCHORS.md row), and its Successors table has 8
+# rows, naming FLOOR32, CEIL32, RTI32, ORDER32, BITS32 and FCLINK. A plant that leaves the proved table unread now
+# fails the Identity row of each of the 21 folders, and the successor row too, whose names are then statements of no
+# proved row read; one that leaves the ANCHORS.md table unread fails the value row of each of the 21. P52's plant puts
+# its line under the sincos32z row, which is no longer the table's last: the eight rows under it are not read. Every
+# other case is unchanged on this tree (argued case by case before this file was frozen).
+# Not named: E07, a decoy, which must predict HELD. Its plant puts a blank line and P52's line as prose under the
+# sincos32z row, which on this tree ends the proved table above the eight rows under it; E07 then fails the proved
+# row, the successor row and the Identity rows of those eight folders, and stays red until its plant or the table's
+# order changes.
+P52 proved-row-without-pipes: as in -5.txt; the sincos32z row is 13th of 21 now: the 8 rows under the line are not read
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+P56 anchors-table-indented-four: as in -5.txt; the ANCHORS.md table unread, now of 21 rows
+  FAIL ANCHORS.md: one row per gated folder with its variable
+  FAIL bits32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL ceil32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL compose: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL cos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32a: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL f32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL fclink: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL floor32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL ieee64: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL log32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL order32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL rti32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sin32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32i: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32n: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32z: ANCHORS.md value is sha256 of FROZEN4.txt
+Q20 proved-table-without-pipes: as in -6.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q21 proved-table-leading-pipes: as in -6.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q22 proved-table-indented-four: as in -6.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q35 proved-header-underscores: as in -7.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q41 lf-proved-table: as in -8.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q45 proved-table-first: as in -8.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q52 lf-anchor-table: as in -8.txt; the ANCHORS.md table unread, now of 21 rows
+  FAIL ANCHORS.md: one row per gated folder with its variable
+  FAIL bits32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL ceil32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL compose: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL cos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32a: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL f32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL fclink: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL floor32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL ieee64: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL log32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL order32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL rti32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sin32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32i: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32n: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32z: ANCHORS.md value is sha256 of FROZEN4.txt
+Q68 second-plain-proved-table: as in -8.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q82 lookalike-proved-header: as in -9.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q83 lookalike-proved-header-digit: as in -9.txt; the proved table unread: 21 Identity rows and the 8 successor rows
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL bits32: Identity.v names are its THEOREMS.md row
+  FAIL ceil32: Identity.v names are its THEOREMS.md row
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32a: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL fclink: Identity.v names are its THEOREMS.md row
+  FAIL floor32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL order32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL rti32: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32n: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row

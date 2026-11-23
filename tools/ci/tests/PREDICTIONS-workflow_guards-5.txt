@@ -1,0 +1,28 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py, fifth file. Written by the assistant on 2026-11-20, after
+# review round 7 and before the first run of these cases; its sha256 was recorded then, and no line changes after
+# that run. The format and the checks are the first file's. A case is named in one file only.
+# The step: the image job's "Say what the image holds; its base is the digest the Dockerfile pins". Review 7 found
+# forms of the Dockerfile that its FROM count and its two refusals read otherwise than Docker: a byte-order mark before
+# line 1, which hid a FROM or a parser directive there; a no-break space before a FROM, which glibc's grep does not
+# read as a space; a syntax directive after a "#!" line or in "//" form; and a keyword split around an indented
+# comment or a blank-only line inside a continued instruction, which Docker skips. The step now also refuses, after
+# the count: a byte outside printable ASCII, a blank and a tab (read in the C locale); a first line that starts with
+# "#!" or "//"; a line shaped as a parser directive ("# <word>=<value>" or "// <word>=<value>") anywhere; and a line
+# after a continuation that is a comment or blank only at any indent (as well as one that does not start with a
+# blank). Each was counted on the Dockerfile of the tree before it ran: 0 such bytes, a first line "# SPDX-...", 0
+# directive-shaped lines, 18 continued lines, each starting with a blank, none a comment or blank only. Each case runs
+# the step on the Dockerfile of the tree with the lines named here added (x06: one line put after its first line),
+# base-image.txt holding the pinned base and the stand-in image id. x02 runs with LC_ALL=C, where grep does not read a
+# no-break space as a space, as glibc's grep does not in any locale (Git Bash's does in a UTF-8 locale, which the FROM
+# count then refuses first). The frozen d07 ("# escape=`" on line 1) keeps its message: the new refusal of a
+# directive's form says "parser directive" too.
+x01 | exit 2 | out:0,msg:outside printable ASCII | a byte-order mark and "FROM docker.io/library/debian:12 AS x" put before the Dockerfile, "COPY --from=x /opt /opt" after it (review 7's e02)
+x02 | exit 2 | out:0,msg:outside printable ASCII | "<U+00A0>FROM docker.io/library/debian:12" after the Dockerfile, in the C locale (e03)
+x03 | exit 2 | out:0,msg:first line starts with | "#!/bin/sh" and "# syntax=docker/dockerfile:1" put before the Dockerfile (e04, p2)
+x04 | exit 2 | out:0,msg:first line starts with | "// syntax=docker/dockerfile:1" put before the Dockerfile (e05, p3)
+x05 | exit 2 | out:0,msg:outside printable ASCII | a byte-order mark and "# syntax=docker/dockerfile:1" put before the Dockerfile (e06, p1)
+x06 | exit 2 | out:0,msg:parser directive | "# syntax=docker/dockerfile:1" put after the Dockerfile's first line
+x07 | exit 2 | out:0,msg:parser directive | "// syntax=docker/dockerfile:1" after the Dockerfile
+x08 | exit 2 | out:0,msg:continues a line | "F\", "  # inside the instruction" and "ROM ubuntu:24.04" after the Dockerfile (p4)
+x09 | exit 2 | out:0,msg:continues a line | "F\", a line of three blanks and "ROM ubuntu:24.04" after the Dockerfile (p5)
+x10 | exit 0 | out:2,outeq:image_id,outeq:base_image | a decoy: "RUN true \", "<TAB>&& true" and "# a comment after the instruction" after the Dockerfile (a tab, and a comment outside a continuation, are allowed)

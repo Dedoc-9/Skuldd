@@ -1,0 +1,12 @@
+# Predictions for tools/ci/tests/test_safepath.py, second file: the verdict job's first step with its fifth job,
+# sweep (ruling S280-13 (a)). Written by the assistant on 2026-11-22, before any run of these cases; its sha256 was
+# recorded then, and no line changes after it. The format is that of PREDICTIONS-safepath.txt, with one more
+# outcome: "retired" takes out a case the first file predicts. V0, V1 and V2 are retired, not edited: their lines
+# hold for the four-job step they were written for, and V1's text names the four jobs. V3, V4 and V5 run the same
+# three runs, with NEEDS naming fpenv as failed and inventory, sweep, image and gate as succeeded.
+V0-honest | retired | - | the step now needs five jobs; replaced by V3-honest
+V1-control | retired | - | the step now needs five jobs and its success line names them; replaced by V4-control
+V2-guarded | retired | - | the step now needs five jobs; replaced by V5-guarded
+V3-honest | 1 | REFUSED: not every job of this run succeeded: fpenv: failure | no json.py, unset
+V4-control | 0 | every job of this run succeeded: fpenv, gate, image, inventory, sweep | json.py, unset: it passes
+V5-guarded | 1 | REFUSED: not every job of this run succeeded: fpenv: failure | json.py there, set: the honest result

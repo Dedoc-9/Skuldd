@@ -1,0 +1,102 @@
+# Predictions for tools/ci/tests/test_inventory.py, ninth file (after review round 7), written by the assistant on
+# 2026-11-20 before any of these cases first ran; no line changes after that run. The earlier files stay as they were.
+#
+# Why. Review 7 found Markdown in THEOREMS.md and kernel/coq/ANCHORS.md that GitHub shows one way and the inventory
+# read another way, inside the subset of the eighth file: a table header or a heading that imitates the proved table's,
+# a successor table's or the Successors heading with ASCII look-alikes ("FoIder" with a capital I, "OId statement",
+# "Success0rs") was read as a plain table or heading; "<" behind a backslash-escaped backtick, behind a backtick that a
+# later line closes, or inside a code span that a table row's pipes cut, passed the HTML rule; a code fence was not
+# refused, so a proved table GitHub shows as code was read; and a character outside printable ASCII that is neither a
+# control nor of category Cf (U+3164, U+2800, U+034F, U+FE0F) passed. tools/ci/inventory.py now:
+# (1) compares a header cell or a heading's text with the proved table's, a successor table's and the Successors
+#     heading after folding ASCII look-alikes (a capital I and a 1 read as l, a 0 as o, then rn as m and vv as w), so
+#     such a table or heading counts as what it imitates and fails as a second one;
+# (2) refuses, on every line but a THEOREMS.md heading's (whose own rule refuses a backslash and every character
+#     outside printable ASCII and U+2026), a backslash, a backtick run that no run of its length closes on its line,
+#     and a code span holding "|";
+# (3) refuses a line that opens or closes a code fence (``` or ~~~ after any indent);
+# (4) refuses a character outside printable ASCII that the file may not hold: THEOREMS.md may hold U+00B1, U+00F0,
+#     U+03C0 and U+2026 (the four it holds), ANCHORS.md none;
+# (5) compares its two output paths after resolving them and then taking a long-path prefix off (a volume GUID path
+#     resolves to its drive's form; taking the prefix off first left it relative).
+# Rules 2 to 4 fail the row "THEOREMS.md: written in the Markdown subset this reader reads" in THEOREMS.md and the
+# ANCHORS.md row in ANCHORS.md; rule 1 fails the row that reads the table or heading. Each was counted on the honest
+# files before it ran: 0 backslashes, 0 unclosed backtick runs, 0 code spans holding "|", 0 fence lines, and outside
+# printable ASCII only U+00B1, U+00F0, U+03C0 (once each) and U+2026 (twice) in THEOREMS.md, none in ANCHORS.md.
+#
+# Plants Q82 to Q99, decoys E30 to E33, the usage case U04. PROVED_HEAD8, DELIM5 and SUCC_HEAD8 are the eighth file's.
+# "The 13 identity rows" are the rows "<f>: Identity.v names are its THEOREMS.md row" of the 13 gated folders, written
+# out in full below.
+
+Q82 lookalike-proved-header: after the proved table, "Also proved:" and a table whose first header cell is "FoIder" (a capital I), its one row f32's naming F32_CR (review 7's n1)
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q83 lookalike-proved-header-digit: the same with the first two header cells "F0lder" (a zero) and "Staternent" (rn for m)
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q84 lookalike-successor-header: before the "## Successors" heading, "Earlier successors:" and a table whose first header cell is "OId statement" (a capital I), one row naming f32.F32_Statement.F32_REL and f32.NOPE.NOT_A_STATEMENT (review 7's n2)
+  FAIL THEOREMS.md: every successor row names known statements
+Q85 lookalike-successors-heading: at the end of THEOREMS.md, the heading "## Success0rs" (a zero)
+  FAIL THEOREMS.md: every successor row names known statements
+Q86 escaped-backticks-html: at the end of THEOREMS.md, "Note: \`<b>bold on GitHub</b>\` here." (review 7's n3, M01)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q87 code-span-across-lines: at the end of THEOREMS.md, "Prose `x" and on the next line "y` <table>...</table> `z`" (an HTML successor-shaped table; review 7's M02)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q88 code-span-across-pipes: at the end of THEOREMS.md, a table "| Name | Value |", "|---|---|", "| a `b | <b>c</b> d` |" (review 7's n4, M03)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q89 escaped-backticks-declaration: at the end of THEOREMS.md, "Hidden on GitHub: \`<!X this text is hidden>\` end." (review 7's n5)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q90 fenced-proved-table: a line "```" before the proved table and one after it (review 7's n6 and f2)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q91 unclosed-fence-before-proved-table: a line "```" before the proved table only (review 7's f1)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q92 tilde-fence: at the end of THEOREMS.md, "~~~", "x", "~~~"
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q93 fence-in-anchors: at the end of ANCHORS.md, "```", "x", "```"
+  FAIL ANCHORS.md: one row per gated folder with its variable
+Q94 escaped-backtick-anchors: at the end of ANCHORS.md, "\`<table><tr><td>zz32</td><td>MK_ANCHOR_ZZ32</td></tr></table>`" (review 7's M04)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+Q95 hangul-filler: at the end of THEOREMS.md, "A filler <U+3164> here." (review 7's v1)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q96 braille-blank: at the end of THEOREMS.md, "A blank <U+2800> here." (v2)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q97 grapheme-joiner: at the end of THEOREMS.md, "A joiner a<U+034F>b here." (v3)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q98 variation-selector: at the end of THEOREMS.md, "A selector a<U+FE0F> here." (v4)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q99 eth-in-anchors: at the end of ANCHORS.md, "Ver<U+00F0>andi." (a letter THEOREMS.md may hold and ANCHORS.md may not)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+E30 lookalike-free-header: at the end of THEOREMS.md, a table "| Item | Count 10 |", "|---|---|", "| I | 1 |" (a capital I and digits in a header that imitates nothing)
+  HELD
+E31 angle-in-cell-code-span: at the end of THEOREMS.md, a table "| Name | Value |", "|---|---|", "| a | `<b>` |" (a code span holding no "|", inside one cell)
+  HELD
+E32 allowed-characters: at the end of THEOREMS.md, "Ver<U+00F0>andi: <U+00B1> <U+03C0> <U+2026>"
+  HELD
+E33 double-backtick-span: at the end of THEOREMS.md, "Use ``a ` b`` here." (a run of two closed by a run of two, a single backtick inside)
+  HELD
+U04 outputs-one-file-volume-path: the honest copy run with --json <work>/u04.json and --matrix-out the same path written as Windows' volume GUID path (\\?\Volume{GUID}\...; on POSIX a leading "//", there being no such form: the test runs that form; not run on POSIX here) (review 7's O2)
+  USAGE

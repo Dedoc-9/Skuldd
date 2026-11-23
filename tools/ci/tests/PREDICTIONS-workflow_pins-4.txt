@@ -1,0 +1,19 @@
+# Predictions for tools/ci/tests/test_workflow_pins.py, fourth file: the cases added when the rows permissions and
+# triggers were made to read whole every line that holds a quote mark (" or '), since a quoted scalar may hold " #"
+# (review loop of Push A, round 3). Written by the assistant on 2026-11-22, before the first run of these cases; its
+# sha256 is recorded outside this file then, and no line changes after it (a correction is a new file). The test reads
+# it after the first three files, whose lines stand as they are; the format is theirs. W24 and W25 append a job to
+# drift.yml, W26 replaces drift.yml's "on:" block, and W27 adds one line after its job-level "    timeout-minutes: 15".
+# W27 is the rule's cost, a decoy that fails: a comment that holds a quote mark is read whole (W23's holds none).
+W24 | FAILED | permissions | a job whose double-quoted name "a #" stands before its key permissions on one line
+W25 | FAILED | permissions | the same job, its double-quoted name over two lines, the second starting "#b"
+W26 | FAILED | triggers | drift.yml's on: as {push: {branches: ["main #"]}, pull_request_target: {}}
+W27 | FAILED | permissions | the comment line "    # the job's permissions" (it holds a quote mark: read whole)
+#
+# Mutants, each a copy of the test with one change, run on the same workflows (not read by the test):
+# mutant M0c: none, the control: every case of the four files holds.
+# mutant M4: the line that takes the comment off a line back to its form before this file (a line whose text starts
+#   with "#" not read, any other cut at its first " #", whether or not it holds a quote mark): exactly W24, W25, W26
+#   and W27 fail.
+# mutant M3 (the third file's): the row permissions' line check back to its form before that file (a line whose text
+#   starts "permissions:" below the top): with this file's cases, exactly W21, W22, W24, W25 and W27 fail.

@@ -1,0 +1,10 @@
+# Predictions for tools/ci/tests/test_judge_digest.py, sixth round: case T03.
+# Written by the assistant on 2026-11-20, after review round 7, before any run of this case; its sha256 was recorded
+# then, and no prediction changes after it. The format and the outcomes are those of PREDICTIONS-judge_digest.txt.
+# Why a sixth round: review 7 found that judge_digest.py, which since round 6 took a long-path prefix off before it
+# resolved a --json path, left Windows' volume GUID path (\\?\Volume{GUID}\...) relative once the prefix was off, so
+# that it resolved under the current folder and a path among the judge files was written (its J5). judge_digest.py now
+# resolves first (a volume GUID path becomes its drive's form, a long-path prefix given is kept) and then takes the
+# prefix off. On POSIX, which has no such form, T03 gives the path with a leading "//", as T01 does there (the case
+# runs that form there; it is not run on POSIX here, and the scheme of this test has no skipped case).
+T03 | USAGE | --json OUT at tools/ci/out.json of the root, written as Windows' volume GUID path (on POSIX a leading "//"); OUT is not written (review 7's J5)

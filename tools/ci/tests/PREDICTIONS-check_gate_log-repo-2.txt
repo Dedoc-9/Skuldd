@@ -1,0 +1,26 @@
+# Addendum to tools/ci/tests/PREDICTIONS-check_gate_log-repo.txt: the honest cases of the --repo-data mode for the
+# eight folders gated after that file was frozen (sincos32n, exp32a, floor32, ceil32, rti32, order32, bits32 and
+# fclink). test_check_gate_log.py reads it in that mode only (PRED_REPO_ADDENDA), after that file and addendum 1,
+# whose rows it uses; it names no case those files name. Written by the assistant on 2026-11-22 (UTC), before any run
+# of these cases; its sha256 was recorded then, and no line changes after it. A case whose result differs from its
+# line stays red and is explained.
+# Why: the test builds h-repo-<folder> and h-repo-job-<folder> for every kernel/coq/<folder>/gate.json, and its row
+# "predictions name every case, once" needs a line for each. Each console is written from the folder's gate.json, its
+# deps' and its FROZEN4.txt, as for the thirteen; each FROZEN4.txt lists the folder's gate.json, gate/gate4.py and
+# gate/expected-pa-flocq4.txt once with their sha256 now, and no plant's text holds a line end, so every row holds.
+h-repo-bits32 | none | honest console built from the tree: bits32
+h-repo-ceil32 | none | honest console built from the tree: ceil32
+h-repo-exp32a | none | honest console built from the tree: exp32a
+h-repo-fclink | none | honest console built from the tree: fclink
+h-repo-floor32 | none | honest console built from the tree: floor32
+h-repo-order32 | none | honest console built from the tree: order32
+h-repo-rti32 | none | honest console built from the tree: rti32
+h-repo-sincos32n | none | honest console built from the tree: sincos32n
+h-repo-job-bits32 | none | the honest console as a job log: bits32
+h-repo-job-ceil32 | none | the honest console as a job log: ceil32
+h-repo-job-exp32a | none | the honest console as a job log: exp32a
+h-repo-job-fclink | none | the honest console as a job log: fclink
+h-repo-job-floor32 | none | the honest console as a job log: floor32
+h-repo-job-order32 | none | the honest console as a job log: order32
+h-repo-job-rti32 | none | the honest console as a job log: rti32
+h-repo-job-sincos32n | none | the honest console as a job log: sincos32n

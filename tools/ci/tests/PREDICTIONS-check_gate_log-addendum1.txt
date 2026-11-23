@@ -1,0 +1,8 @@
+# Addendum 1 to the predictions of tools/ci/tests/test_check_gate_log.py: cases of both modes (--repo-data and the
+# saved-log mode), read after the mode's own file, whose rows they use. Written by the assistant on 2026-11-19, after
+# review, before any run of these cases; its sha256 was recorded then, and no line changes after it.
+# Why: a folder name is the inventory's form ([a-z][a-z0-9_]*) in every reader of a gate log, for --folder and for
+# gate.json's "deps".
+p31-deps-not-a-folder-name | 3,6,12,13,14 | p32's console; the tree's p32/gate.json names its dependency "F32" in capitals, so gate.json is not read (and no longer has its listed sha256)
+u04-folder-upper | usage | --folder F32 (the folder's name in capitals)
+u05-folder-digit | usage | --folder 9f32 (a name that starts with a digit)

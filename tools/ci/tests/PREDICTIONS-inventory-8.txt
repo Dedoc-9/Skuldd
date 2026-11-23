@@ -1,0 +1,196 @@
+# Predictions for tools/ci/tests/test_inventory.py, eighth file (after review round 6), written by the assistant on
+# 2026-11-20 before any of these cases first ran; no line changes after that run. The earlier files stay as they were.
+#
+# Why. Rounds 4, 5 and 6 each found Markdown that GitHub shows one way and the inventory read another way, and a reader
+# that lists spellings is closed by the next spelling it does not list. So THEOREMS.md and kernel/coq/ANCHORS.md are
+# now read in a named subset of Markdown (tools/ci/inventory.py, the function markdown), and anything outside it fails:
+# (1) a carriage return not before a line feed (a CR LF line end is read as one, so the frozen decoy E03, THEOREMS.md
+# in CR LF, holds still), U+FEFF, a control character (tab included), a character of Unicode category Cf, an
+# ampersand, anywhere; (2) a heading's line (an ATX heading at any indent, every line of a setext heading's paragraph)
+# and a table's header line hold only printable ASCII and U+2026, and none of "[", "<" and backslash; (3) the cells
+# the inventory reads names from (the proved table's Statement, Statement file and Closing theorem cells, the
+# Successors table's Old statement and Successor cells) hold nothing but commas and blanks outside backtick spans;
+# (4) in THEOREMS.md every delimiter row lies under the header of the proved table, of a successor table, or of a
+# table whose header holds only letters, digits, blanks, commas, U+2026 and the marks *, _ and ` (so the proved and
+# successor rows read every other table's header as GitHub shows it; the frozen decoys E18 and E24, a plain table,
+# hold still), and ANCHORS.md holds exactly one delimiter row; (5) "<!--" only on line 1, closed there, and "<"
+# outside a code span only on line 1 and, in THEOREMS.md, on the lines "<details>", "</details>" and
+# "<summary>...</summary>", each followed by a blank line (or "<details>" by its summary line); (6) a list item whose
+# text starts with "#", and a line of "=" or "-" only under a list item's line. A heading at any indent counts as one
+# (one inside a list item is indented).
+#
+# Where a refusal is printed. THEOREMS.md: the new row "THEOREMS.md: written in the Markdown subset this reader reads"
+# (printed only when the file is read, as the row of block quotes), except that the heading rules (2 for a heading's
+# line, and 6) fail the row "THEOREMS.md: every successor row names known statements", which reads every heading (so
+# the frozen plant Q36, "## <em>Successors</em>", fails that row only, as predicted), and that rule (3) fails the row
+# that reads the cell (the proved row, which then has no usable row for that folder, or the successor row).
+# ANCHORS.md: every rule fails "ANCHORS.md: one row per gated folder with its variable" (the gate job's ANCHORS.md step
+# calls the same reader).
+#
+# Plants: review 6's I01 to I08 with their controls (Q40 to Q52), m1, m2b, m2c, m3, m4, m5, m6 and a2b (Q53 to Q60),
+# p1 to p6 with c1, c5 and c6 (Q61 to Q69); two decoys reviewers proposed that the subset refuses, frozen as refused (an
+# ampersand in prose, Q70; a second one-line comment, Q71); and one plant for each further rule (Q72 to Q81). Decoys:
+# E25 to E29. U02 and U03: the output paths (review 6's O1 and O1c). ZZ_ROW8 below is "| `zz32` | `zz32.ZZ_Statement.ZZ`
+# | `zz32/ZZ_Statement.v` | `zz32.Zz.zz` | 1 of 1 |"; the proved header is "| Folder | Statement | Statement file |
+# Closing theorem | Gate |"; the successor table is "| Old statement | Successor | Relation | What the successor still
+# does not say | Date |", "|---|---|---|---|---|" and a row naming f32.F32_Statement.NOPE and NOPE2.
+#
+# The 13 rows "<f>: Identity.v names are its THEOREMS.md row" and "<f>: ANCHORS.md value is sha256 of FROZEN4.txt" are
+# written out in full where predicted.
+
+Q40 lone-cr-proved-table: at the end of THEOREMS.md, a line feed, then one line in which lone carriage returns hold a blank line, the proved header, its delimiter row and ZZ_ROW8, then a line feed (review 6's I01)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q41 lf-proved-table: at the end of THEOREMS.md, after a blank line, the proved header, its delimiter row and ZZ_ROW8 on lines of their own (I01's control)
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q42 lone-cr-successors: at the end of THEOREMS.md, one line in which lone carriage returns hold "## Successors", a blank line and the successor table (review 6's I02)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q43 lf-successors: the same lines with line feeds (I02's control)
+  FAIL THEOREMS.md: every successor row names known statements
+Q44 bom-proved-table-first: before THEOREMS.md's first byte, a byte-order mark, then the proved header without its leading pipe, its delimiter row, ZZ_ROW8 and a blank line (review 6's I03)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q45 proved-table-first: the same without the byte-order mark (I03's control; the comment of line 1 is no longer on line 1)
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q46 entity-successors: at the end of THEOREMS.md, "## Succ&#101;ssors" and a successor table whose header cell reads "Succ&#101;ssor" (review 6's I04)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q47 plain-successors: the same written plainly (I04's control)
+  FAIL THEOREMS.md: every successor row names known statements
+Q48 zero-width-successors: I04 with U+200B inside "Successors" and "Successor" in place of the references (review 6's I05)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL THEOREMS.md: every successor row names known statements
+Q49 link-successors: "## [Successors](#successors)" and a header cell "[Successor](#successor)" (review 6's I06)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL THEOREMS.md: every successor row names known statements
+Q50 entity-folder-header: at the end of THEOREMS.md, a second proved table whose first header cell is "F&#111;lder", one row ZZ_ROW8 (review 6's I07)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q51 lone-cr-anchor-table: at the end of ANCHORS.md, one line in which lone carriage returns hold a blank line and a second anchor table with a row for zz32 (review 6's I08)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+Q52 lf-anchor-table: the same lines with line feeds (I08's control)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+  FAIL compose: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL cos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL f32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL ieee64: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL log32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sin32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32i: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32z: ANCHORS.md value is sha256 of FROZEN4.txt
+Q53 also-proved-entity: after the proved table, "Also proved:" and a table whose first header cell is "F&#111;lder", its one row f32's naming F32_CR (review 6's m1)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q54 hidden-proved-shown-copy: the proved table between a line "<!--" and, after a blank line, "-->"; then a copy whose header reads "F&#111;lder" and whose f32 row names F32_CR (review 6's m2b)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q55 hidden-proved: the same without the copy (review 6's m2c)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q56 also-proved-zero-width: m1 with "Fol<U+200B>der" (review 6's m3)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q57 second-successors-entity: after the Successors table, "## &#83;uccessors" and a table whose header reads "&#79;ld statement", naming f32.NOPE.NOT_A_STATEMENT (review 6's m4)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q58 name-in-comment: f32's Statement cell "F32_CR <!-- `f32.F32_Statement.F32_REL` -->" (review 6's m5)
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL f32: Identity.v names are its THEOREMS.md row
+Q59 also-proved-cyrillic: m1 with a Cyrillic capital O (U+041E) in "Folder" (review 6's m6)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q60 hidden-anchor-table: ANCHORS.md's table between a line "<!--" and, after a blank line, "-->" (review 6's a2b)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+Q61 heading-entity: at the end of THEOREMS.md, "## &#83;uccessors" (review 6's p1)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q62 heading-link: "## [Successors](#successors)" (review 6's p2)
+  FAIL THEOREMS.md: every successor row names known statements
+Q63 heading-in-list-item: "- ## Successors" (review 6's p3)
+  FAIL THEOREMS.md: every successor row names known statements
+Q64 setext-in-list-item: "- Successors" over "  ----------" (review 6's p4)
+  FAIL THEOREMS.md: every successor row names known statements
+Q65 proved-header-link: under "## Other", a second proved table whose first header cell is "[Folder](#x)" (review 6's p5)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q66 successor-header-entity: under "## Other", a successor-shaped table whose first header cell is "Old&#32;statement" (review 6's p6)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q67 second-plain-successors-heading: "## Successors" (review 6's c1)
+  FAIL THEOREMS.md: every successor row names known statements
+Q68 second-plain-proved-table: p5 with a plain "Folder" cell (review 6's c5)
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q69 second-plain-successor-table: p6 with a plain "Old statement" cell (review 6's c6)
+  FAIL THEOREMS.md: every successor row names known statements
+Q70 ampersand-in-prose: at the end of THEOREMS.md, "The kernel & its gates." (a decoy reviewers proposed; refused by rule 1)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q71 second-one-line-comment: "<!-- a second comment -->" (a decoy a reviewer proposed; refused by rule 5)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q72 inline-html-table: "Also: <table><tr><th>Folder</th><th>Statement</th></tr></table>" (HTML inside a paragraph, which GitHub shows)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q73 details-close-without-blank: "</details>" followed by the line "A line right under it." (no blank line)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q74 heading-indented-in-list-item: "- a note", a blank line, "    ## Successors" (a heading inside the list item, indented four spaces)
+  FAIL THEOREMS.md: every successor row names known statements
+Q75 setext-indented-in-list-item: "- a note", a blank line, "    Successors" over "    ----------"
+  FAIL THEOREMS.md: every successor row names known statements
+Q76 also-proved-strikethrough: m1 with "~~Folder~~" (GitHub shows "Folder" struck through)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q77 also-proved-math: m1 with "$Folder$" (GitHub shows it as math)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q78 file-cell-beside: f32's Statement file cell "`f32/F32_Statement.v` (see notes)"
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL f32: Identity.v names are its THEOREMS.md row
+Q79 successor-cell-beside: a Successors row "| `p32.P32_Statement.T32` (old) | `p32r.P32R_Statement.P32R` | x | x | x |"
+  FAIL THEOREMS.md: every successor row names known statements
+Q80 successor-header-bracket: the Successors table's header cell "Date" written "Date [1]"
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+Q81 tab-in-prose: at the end of THEOREMS.md, "A tab<TAB>here."
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+E25 second-details-block: at the end of THEOREMS.md, "<details>", "<summary>More notes</summary>", a blank line, "Nothing more.", a blank line, "</details>"
+  HELD
+E26 ellipsis-in-header: at the end of THEOREMS.md, a table "| Name <U+2026> | Value |", "|---|---|", "| a | b |"
+  HELD
+E27 pi-in-body-cell: at the end of THEOREMS.md, a table "| Name | Value |", "|---|---|", "| pi | <U+03C0> |"
+  HELD
+E28 list-items-without-heading: at the end of THEOREMS.md, "1. an item", "2. another item", "- a third, with no heading"
+  HELD
+E29 angle-in-code-span: at the end of THEOREMS.md, "Run `coqc <folder>/Identity.v` from the root."
+  HELD
+U02 outputs-one-file-long-path: the honest copy run with --json <work>/u02.json and --matrix-out the same path with a long-path prefix (\\?\ on Windows; on POSIX a leading "//", there being no such prefix: the test runs that form; not run on POSIX here)
+  USAGE
+U03 outputs-one-file-plain: the same with the second path written as the first (review 6's O1c)
+  USAGE

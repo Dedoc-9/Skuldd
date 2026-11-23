@@ -1,0 +1,46 @@
+# Predictions for tools/ci/tests/test_drift.py. Written by the assistant on 2026-11-22, before this test's first run
+# in this tree; its sha256 is recorded outside this file then, and no line changes after it (a correction is a new
+# file). It carries the cases of the drift candidate's predictions (frozen 2026-11-21 before that candidate's first
+# run) and adds C05 and O02. One line per case: id | exit | rows that FAIL (or -) | verdict | text the output must
+# hold (or -) | text it must not hold (or -) | what. The verdict is HELD, ORIGIN AHEAD, FAILED or USAGE (exit 2, no
+# verdict line at all). The fixture: an origin repository whose main is c0 (a.txt, c.txt, dir/b.txt,
+# kernel/attest/rec-HOSTX.json), with branches side (a.txt changed), ahead-changed (dir/b.txt changed), ahead-added
+# (new.txt added) and repin (c.txt changed, d.txt added), each one commit past c0, and a tag v1 at c0. Each case
+# builds its own Skuldd tree (the copy under verdandi/ unless it says orlog/, its manifest, PROVENANCE.md and
+# CHANGES-AFTER-IMPORT.md). The rows "predictions" and "grammar" are the test's own and are not listed here.
+H01 | 0 | - | HELD | DRIFT LINE verdandi | - | the honest twin: the copy is the pin c0, against main (c0)
+H02 | 3 | - | ORIGIN AHEAD | verdandi/dir/b.txt  needs a re-pin or a reason | - | PLANT a changed origin file
+H03 | 3 | - | ORIGIN AHEAD | origin-added | new.txt | PLANT an added origin file: shown as a hash, not its path
+H04 | 3 | - | ORIGIN AHEAD | verdandi/new.txt | - | H03 with --show-paths: the path is printed
+P01 | 1 | D5 | FAILED | UNEXPLAINED | - | PLANT a changed Skuldd file: a.txt edited, no row
+P02 | 1 | D5 | FAILED | verdandi/new-here.txt  UNEXPLAINED | - | PLANT an added Skuldd file, no row
+P03 | 1 | D5 | FAILED | skuldd-removed | HOSTX | PLANT a removed Skuldd file, no row; the host's name not printed
+C01 | 0 | - | HELD | SKULDD-ONLY BY RULING C2 (b) | - | P01 with a SKULDD-ONLY row naming its exact bytes
+C02 | 0 | - | HELD | SKULDD-ONLY BY RULING C2 (b) | HOSTX | P03 with a row whose path writes <host>
+C03 | 0 | - | HELD | SENT BACK Verdandi patch 0001-new-here.patch | - | P02 with a SENT BACK row (before: absent)
+C05 | 0 | - | HELD | patch 0001-new-here.patch | UNEXPLAINED | C03 with the name written with its diacritic
+P04 | 1 | D5 | FAILED | names other bytes | - | P01 with a row whose after is other bytes
+P05 | 1 | D5 | FAILED | names other bytes | - | C01 with a later row for a.txt naming other bytes: the last counts
+P06 | 1 | D6 | FAILED | is no class | - | the copy unchanged; a row whose class reads "SKULDD ONLY C2"
+P07 | 1 | D6 | FAILED | the other repository's route | - | the copy unchanged; a verdandi/ row sent back by an Orlog PR
+P08 | 1 | D2,D3 | FAILED | differ between the manifest and the import pin | - | one manifest line's sha256 altered
+P09 | 1 | D1 | FAILED | is no commit of the origin | - | PROVENANCE.md names a commit the origin does not hold
+P10 | 1 | D1 | FAILED | not the recorded | - | PROVENANCE.md names c0 with another tree id
+P11 | 1 | D4 | FAILED | 1 commit(s) the branch lacks | - | PLANT a pin on a side branch, against main
+P12 | 1 | D3 | FAILED | do not give the current pin | - | PLANT a re-pin note and the copy re-pinned, no RE-PIN rows
+C04 | 0 | - | HELD | 2 RE-PIN row(s) | - | P12 with its two RE-PIN rows (c.txt changed, d.txt absent before)
+P13 | 1 | D3 | FAILED | a commit PROVENANCE.md names as no pin | - | C04 with the RE-PIN rows naming another commit
+P14 | 1 | D5 | FAILED | verdandi/c.txt  UNEXPLAINED | - | C04 but the copy's c.txt kept its old bytes
+B01 | 3 | - | ORIGIN AHEAD | the original changed it too | - | C01 against side, which changed a.txt too
+O01 | 0 | - | HELD | SENT BACK Orlog pull request #12 | - | an orlog/ copy, a.txt edited, sent back by a pull request
+O02 | 0 | - | HELD | pull request #12 | UNEXPLAINED | O01 with the name written with its diacritics
+U01 | 2 | - | USAGE | - | - | --help
+U02 | 2 | - | USAGE | - | - | --roo for --root, the other options given in full
+U03 | 2 | - | USAGE | - | - | --later HEAD
+U04 | 2 | - | USAGE | - | - | --later v1, a tag
+U05 | 2 | - | USAGE | - | - | --later c0's commit id
+U06 | 2 | - | USAGE | - | - | an unknown option, --pinned
+U07 | 2 | - | USAGE | - | - | --root an empty folder
+U08 | 2 | - | USAGE | - | - | --origin a folder that is no git repository
+U09 | 2 | - | USAGE | - | - | --part kernel
+U10 | 2 | - | USAGE | - | - | --origin a folder inside a git repository, not its top folder

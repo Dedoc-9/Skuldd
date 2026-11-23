@@ -1,0 +1,82 @@
+# Predictions for tools/ci/tests/test_inventory.py, sixth round: plants Q15-Q24, decoys E15-E18. Written by the
+# assistant on 2026-11-20, after review round 4, before any run of these cases; its sha256 was recorded then, and no
+# prediction changes after it. Format as in PREDICTIONS-inventory.txt. Each plant is made on a copy of the tree and
+# must fail exactly the rows named, every other row ok; each decoy must hold.
+# Why: "|" and ";" are words of their own wherever they stand, so a constructor's bar or a field's semicolon glued to
+# a symbol or to a letter outside ASCII still splits there; a statement file holding a character other than printable
+# ASCII (and tab, line feed, carriage return, form feed) outside its comments and strings fails the row; a second
+# proved table GitHub would show, with its outer pipes left out (one or both) or indented, fails the proved-table row;
+# a second heading whose text starts with "Successor", of another level or underlined, fails the successor row.
+# Unless a line says otherwise, a names plant appends its text, on a line of its own, to
+# kernel/coq/log32/LOG32_Statement.v, with its line in log32's FROZEN4.txt and log32's ANCHORS.md value rewritten to
+# follow (SQRT32 is defined in p32/P32_Statement.v). "alpha" and "beta" are the Greek letters, in UTF-8. ZZ_ROW is
+# "`zz32` | `zz32.Z_Statement.Z` | `zz32/Z_Statement.v` | `zz32.Z.z` | 1 of 1"; the NOPE row names
+# f32.F32_Statement.NOPE and f32.F32_Statement.NOPE2. "At the end of THEOREMS.md" is after its last section
+# (Checking a row yourself), after a blank line.
+Q15 constructor-bar-after-alpha: "Inductive sq_n1 (alpha : Type) : Type := sq_n2 : alpha -> sq_n1 alpha|SQRT32 : sq_n1 alpha." (the bar glued to alpha)
+  FAIL statement files: each name defined in one of them
+Q16 field-semicolon-after-alpha: "Record sq_n3 (alpha : Type) := { sq_n4 : alpha; SQRT32 : nat }." (the semicolon glued to alpha)
+  FAIL statement files: each name defined in one of them
+Q17 constructor-bar-after-symbol: "Notation "x !" := (S x) (at level 2, left associativity)." then "Inductive sq_n5 : nat -> Type := sq_n6 : sq_n5 3 !|SQRT32 : sq_n5 0." (ASCII only; the bar glued to "!")
+  FAIL statement files: each name defined in one of them
+Q18 field-semicolon-after-symbol: the same Notation, then "Record sq_n7 : Type := { sq_n8 : 3 = 2!; SQRT32 : nat }." (ASCII only; the semicolon glued to "!")
+  FAIL statement files: each name defined in one of them
+Q19 alpha-in-a-definition: "Definition sq_n9 : nat := let alpha := 0 in alpha." (no name defined twice; a character outside ASCII)
+  FAIL statement files: each name defined in one of them
+Q20 proved-table-without-pipes: at the end of THEOREMS.md, "Folder | Statement | Statement file | Closing theorem | Gate", "--- | --- | --- | --- | ---" and ZZ_ROW, without outer pipes
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q21 proved-table-leading-pipes: at the end of THEOREMS.md, the same three lines each with a leading pipe and no trailing pipe
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q22 proved-table-indented-four: at the end of THEOREMS.md, the same table with outer pipes, each line indented by four spaces (GitHub shows code there unless it is inside a list item; refused either way)
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q23 successors-setext-heading: at the end of THEOREMS.md, "Successors" underlined with "----------", a blank line and a successor table with outer pipes whose one row is the NOPE row
+  FAIL THEOREMS.md: every successor row names known statements
+Q24 successors-level-three-heading: at the end of THEOREMS.md, "### Successors", a blank line and the same successor table
+  FAIL THEOREMS.md: every successor row names known statements
+E15 alpha-in-comment-and-string: "(* alpha|SQRT32 *) Notation sq_e1 := "alpha|SQRT32; beta"." (the letters outside ASCII only in a comment and a string)
+  HELD
+E16 double-bar-in-brackets: "Inductive sq_e2 : Prop := sq_e3 : (true || false) = true -> sq_e2 | sq_e4 : sq_e2." (the bars of "||" inside brackets split nothing)
+  HELD
+E17 successor-word-in-prose: at the end of THEOREMS.md, the line "Successors are named in the table above." (not a heading)
+  HELD
+E18 other-table-without-pipes: at the end of THEOREMS.md, "Name | Value", "--- | ---" and "a | b" (another table, not a proved one)
+  HELD

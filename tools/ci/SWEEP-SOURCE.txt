@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# tools/ci/SWEEP-SOURCE.txt: the declared input of the sweep job of .github/workflows/mathkernel-linux.yml (ruling
+# S280-13 (a)), read by tools/ci/check_sweep.py, whose header gives the grammar. It names the two candidate
+# floor32/ceil32 sweeps and chooses one with its "use" line: sweep_fc2.c from fclink's frozen folder when fclink is
+# in the push, otherwise sweep_fc.c, the first exhaustive sweep. Changing a line here is a change to the CI judge.
+#
+# fclink: kernel/coq/fclink/sweep_fc2.c, frozen with FCLINK_Statement.v before its proof; its sha256 is the owner's,
+# as kernel/coq/fclink/FROZEN.txt records it. Its expected counts are given at build time (-DWANT_F, -DWANT_C,
+# -DNEGZ_F, -DNEGZ_C); it reports four comparisons per function (the C library's floorf/ceilf, the integer
+# reference, the binary64 result against the integer reference, the hand transcription). The plant never-step makes
+# the zero step's test "fabs(Y) <= 0.0" read "fabs(Y) < 0.0", which no value meets, so the zero step never applies,
+# as in the reviewed plant sweep_fc2_nostep.c, which writes Y in place of the step (argued, not compared). Its
+# predicted counts are those reported for that plant, 1 floor32 and 1,065,353,216 ceil32 differences (every pattern
+# of (-1, -0] for ceil32, -0 for floor32: the step is what makes those results -0), and no -0 result.
+# p1: sweep_fc.c (2026-11-18), at the path where ruling S280-12 ships it with its consoles (kernel/records/floor32/).
+# Its freeze list kernel/records/floor32/SWEEP-FROZEN.txt, against which both of its runs checked it first (their
+# "sweep_fc.c: OK" lines), records its sha256 on a line whose path, sweep_fc.c, ends the source's path: the
+# freeze-list line below, which check_sweep reads when the use line is "use p1". PLANT=1 removes its zero step; its
+# counts are built into the program and were measured in both of its runs (clang, one Windows host): 1 and
+# 1,065,353,216, no -0.
+use fclink
+
+fclink path kernel/coq/fclink/sweep_fc2.c
+fclink sha256 924bd031c84172fd98203f1b755f1f63b8cc62aecd76bd6358273f00fc2a7005
+fclink freeze-list kernel/coq/fclink/FROZEN.txt
+fclink fields 4
+fclink run frozen
+fclink frozen source frozen
+fclink frozen sha256 924bd031c84172fd98203f1b755f1f63b8cc62aecd76bd6358273f00fc2a7005
+fclink frozen define WANT_F=0
+fclink frozen define WANT_C=0
+fclink frozen define NEGZ_F=1
+fclink frozen define NEGZ_C=1065353216
+fclink frozen expect floor32 0 1
+fclink frozen expect ceil32 0 1065353216
+fclink frozen verdict SWEEP2 HELD
+fclink run never-step
+fclink never-step source replace 2
+fclink never-step from <= 0.0 ? (x * 0.0)
+fclink never-step to < 0.0 ? (x * 0.0)
+fclink never-step sha256 212cfd4a138336a06015f3479893a456993093e5a586e319624f1cc3e12c6f55
+fclink never-step define WANT_F=1
+fclink never-step define WANT_C=1065353216
+fclink never-step define NEGZ_F=0
+fclink never-step define NEGZ_C=0
+fclink never-step expect floor32 1 0
+fclink never-step expect ceil32 1065353216 0
+fclink never-step verdict SWEEP2 HELD
+
+p1 path kernel/records/floor32/sweep_fc.c
+p1 sha256 c0b4b71092f841621eefd9ae65677afb5ec198785772bce2a22de67efaafdc92
+p1 freeze-list kernel/records/floor32/SWEEP-FROZEN.txt
+p1 fields 2
+p1 run frozen
+p1 frozen source frozen
+p1 frozen sha256 c0b4b71092f841621eefd9ae65677afb5ec198785772bce2a22de67efaafdc92
+p1 frozen expect floor32 0 1
+p1 frozen expect ceil32 0 1065353216
+p1 frozen verdict SWEEP HELD (plant=0)
+p1 run plant1
+p1 plant1 source frozen
+p1 plant1 sha256 c0b4b71092f841621eefd9ae65677afb5ec198785772bce2a22de67efaafdc92
+p1 plant1 define PLANT=1
+p1 plant1 expect floor32 1 0
+p1 plant1 expect ceil32 1065353216 0
+p1 plant1 verdict SWEEP HELD (plant=1)

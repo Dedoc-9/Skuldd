@@ -1,0 +1,117 @@
+{
+ "name": "FLOOR32",
+ "tier": "flocq4",
+ "deps": [
+  "f32",
+  "p32",
+  "p32r",
+  "exp32",
+  "exp32r",
+  "ieee64",
+  "sin32",
+  "cos32",
+  "sincos32",
+  "sincos32i"
+ ],
+ "files": [
+  "FLOOR32_Statement.v",
+  "Floor32.v",
+  "FloorIEEE.v",
+  "Closed.v",
+  "Identity.v"
+ ],
+ "identity": "Identity",
+ "statement": {
+  "file": "FLOOR32_Statement.v",
+  "sha256": "32109ba742e330fc72e41014efabe2f42403c1331425b03c91aba155e0a16c7c"
+ },
+ "plants": {
+  "format64-exact": {
+   "replace": {
+    "FLOOR32_Statement.v": "plants/FLOOR32_Statement_format64_exact.v"
+   },
+   "fails": "Floor32",
+   "text": "floor32/Floor32.v\", line 91, characters",
+   "class": "c premise",
+   "what": "FL_EXACT for every binary64 x in place of every binary32 x: attacks the reasoning (only binary32 numbers of magnitude 2^23 or more are whole). KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: x = 2^23 + 1/2 is binary64, the graph returns it, and floor x is a whole number. Refused in the 2^23 branch, where the proof needs the input it returns to be a binary32 number (measured, rehearsal r1)"
+  },
+  "no-step": {
+   "replace": {
+    "FLOOR32_Statement.v": "plants/FLOOR32_Statement_no_step.v"
+   },
+   "fails": "Floor32",
+   "text": "floor32/Floor32.v\", line 85, characters",
+   "class": "a step",
+   "what": "the zero step removed from the graph and the shape alike (the kernel still accepts FL_model). Attacks the reasoning about the sign of a zero. KNOWN FALSE (FL_SIGN): at x = -0 the unstepped shape gives +0, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64; and ext-work/p1/probe/probe-plant-run1.txt (C, all 2^32 inputs). Refused where the proof needs the step (the model lemma that the step changes no value)"
+  },
+  "sign-always-plus": {
+   "replace": {
+    "FLOOR32_Statement.v": "plants/FLOOR32_Statement_sign_always_plus.v"
+   },
+   "fails": "Floor32",
+   "text": "floor32/Floor32.v\", line 194, characters",
+   "class": "b claim",
+   "what": "FL_SIGN claims every result has sign bit 0. KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: at x = -1 the result is -1. Refused in the proof of FL_SIGN"
+  },
+  "ieee-other-mode": {
+   "replace": {
+    "FLOOR32_Statement.v": "plants/FLOOR32_Statement_ieee_other_mode.v"
+   },
+   "fails": "FloorIEEE",
+   "text": "floor32/FloorIEEE.v\", line 54, characters",
+   "class": "b claim",
+   "what": "FL_IEEE with Bnearbyint at mode_UP for mode_DN. KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: at x = 1/2 the two differ. THE TRUST BOUNDARY: Floor32.v (the four other parts) compiles with this statement; the refusal is in FloorIEEE.v alone"
+  },
+  "value-no-finite": {
+   "replace": {
+    "FLOOR32_Statement.v": "plants/FLOOR32_Statement_value_no_finite.v"
+   },
+   "fails": "Floor32",
+   "text": "floor32/Floor32.v\", line 180, characters",
+   "class": "c premise",
+   "what": "FL_VALUE without the premise that the input is finite. KNOWN FALSE, MEASURED: ext-work/p1/plant-facts-run1.txt, Python binary64: at +infinity (B2R is 0, a binary32 number) the result is +infinity, not finite. Refused where the proof takes the premise"
+  },
+  "admitted": {
+   "replace": {
+    "Floor32.v": "plants/Floor32_admitted.v"
+   },
+   "reader": "Floor32.fl_floor_near :",
+   "words": [
+    "Admitted"
+   ],
+   "class": "e proof",
+   "what": "fl_floor_near (floor from the nearest whole number) ends with Admitted"
+  },
+  "mul0-axiom": {
+   "replace": {
+    "Floor32.v": "plants/Floor32_mul0_axiom.v"
+   },
+   "reader": "Floor32.fl_mul0 :",
+   "words": [
+    "Axiom"
+   ],
+   "class": "f axiom",
+   "what": "fl_mul0 (b * +0 for a finite b is the zero with the sign of b) is an Axiom of the same statement, its proof removed; used by the top theorem through the step lemmas"
+  },
+  "four-of-five": {
+   "replace": {
+    "Closed.v": "plants/Closed_four_of_five.v"
+   },
+   "fails": "Identity",
+   "text": "floor32/Identity.v\", line 4, characters",
+   "class": "g identity",
+   "what": "Closed.v states, under the name FLOOR32, four of the five parts (FL_IEEE left out) and proves that"
+  },
+  "guard": {
+   "replace": {
+    "Closed.v": "plants/Closed_guard.v"
+   },
+   "reader": "is assumed to be guarded",
+   "words": [
+    "bypass_check"
+   ],
+   "class": "h guard",
+   "what": "floor32_holds from False, by a recursion whose termination check is switched off"
+  }
+ }
+}

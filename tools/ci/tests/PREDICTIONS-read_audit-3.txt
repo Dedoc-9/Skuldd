@@ -1,0 +1,21 @@
+# Predictions for tools/ci/tests/test_read_audit.py after review round 5 (cases a22 to a35). Written by the assistant
+# on 2026-11-20, before any run of these cases; its sha256 was recorded then, and no line changes after it.
+# One line per case: case | exit <n> | the rows that FAIL ("runs", "hook", "reads", comma-separated, or "-") | what.
+# Every case's tree is the test header's; "the bound files" as in PREDICTIONS-read_audit.txt; the inventory JSON is a
+# held one naming the gated folder zz and no mirror. In each case the process that reads writes a marker file outside
+# the tree (what it read, or its mode), so the case shows the read happened; "marker written" or "marker absent" below
+# is checked too. A1 to A6 are review 5's ways round the hook (r-scripts-v5).
+a22 | exit 1 | hook | A1: the bound files; os.unsetenv("PYTHONPATH"), then a child Python with env None reads README-unbound.md unseen (an environment change the hook cannot judge); marker written
+a23 | exit 1 | hook | A1 by putenv: os.putenv("PYTHONPATH", ""), then the same child; marker written
+a24 | exit 1 | hook | A2: shell=True runs a child Python with -I that reads README-unbound.md unseen (a shell given a command, judged as os.system); marker written
+a25 | exit 1 | hook,reads | A2's control: the same shell command without -I: the shell is refused, and the child keeps the hook, which sees its read; marker written
+a26 | exit 1 | hook | A3: a temporary folder holding an empty sitecustomize.py put before the hook's folder on PYTHONPATH; the child reads README-unbound.md unseen (the hook's folder is not first); marker written
+a27 | exit 1 | reads | A3's control: the same folder put after the hook's folder: the child keeps the hook, which sees the read; marker written
+a28 | exit 1 | hook,reads | A4: sys.audit("tempfile.mkdtemp", <the tree>), then the stand-in reads README-unbound.md itself: a temporary folder that existed and is the root fails the hook row and exempts nothing; marker written
+a29 | exit 1 | reads | A5: the stand-in reads README-unbound.md through \\?\ and its absolute path (on POSIX, a leading "//"): the prefix is taken off; marker written
+a30 | exit 1 | hook | A6: a child Python started with -X 'a"b c' then -I reads README-unbound.md unseen (the Windows command line is split with the backslash rule); marker written
+a31 | exit 1 | hook | PYTHONHOME set to an empty temporary folder for a child Python: refused (the child cannot start, so it reads nothing); marker absent
+a32 | exit 1 | reads | the stand-in reads README-unbound.md through a link (a junction on Windows, a symbolic link on POSIX) in a temporary folder of its own to the tree: judged by the path the link resolves to; marker written
+a33 | exit 0 | - | a decoy: the folder with an empty sitecustomize.py put after the hook's folder; the child reads docs/m.md; marker written
+a34 | exit 0 | - | a decoy: os.environ["PLANT_OTHER"] set (a variable the hook does not guard), then a child Python with env None reads docs/m.md; marker written
+a35 | exit 0 | - | a decoy: a child Python started with -X 'a"b c' and no -I reads docs/m.md; marker written

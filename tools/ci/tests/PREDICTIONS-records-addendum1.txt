@@ -1,0 +1,61 @@
+# Addendum 1 to PREDICTIONS-records.txt, written after that file's first run (54 of 54 cases as predicted) and before
+# this addendum's first run; neither file is changed after its first run. A mutation pass over the two scripts found
+# checks that no listed plant reaches alone: verify_records.py's "anchor is its frozen4_sha256" (V06 is also caught
+# by the inventory's sha256) and run_record.py's "the header judges this folder" (R09 is also caught by the anchor
+# line). The cases below reach those and other checks one at a time. The rows' labels are those of
+# PREDICTIONS-records.txt; F and G as there. "two verdict lines" is caught through "the verdict line is the last" as
+# well: the check "exactly one" cannot fail alone, so it is an equivalent mutant (named, no plant).
+#
+# Honest twin.
+# H06: GITHUB_REPOSITORY in upper case, the workflow ref in lower case: GitHub's names are not case-sensitive.
+case H06 run_record exit 0 fails -
+#
+# Plants on run_record.py.
+# R23: F's gate log whose header names G, everything else F's.
+case R23 run_record exit 1 fails RR11,RR14
+# R24: a gate log without its verdict line (a gate that stopped first).
+case R24 run_record exit 1 fails RR10,RR14
+# R25: F's gate log twice over (two runs in one log).
+case R25 run_record exit 1 fails RR10,RR11,RR14
+# R26: a log check JSON of F naming another log's sha256.
+case R26 run_record exit 1 fails RR12,RR14
+# R27: a log check JSON of F that read another verdict line.
+case R27 run_record exit 1 fails RR12,RR14
+# R28: an inventory JSON whose sha256 for F's FROZEN4.txt is another, its digest recomputed, the judge's made over it.
+case R28 run_record exit 1 fails RR07,RR14
+# R29: a judge JSON made over another inventory digest.
+case R29 run_record exit 1 fails RR08,RR14
+# R30: --anchor in upper-case hex (the log check's JSON names the same string).
+case R30 run_record exit 1 fails RR06,RR14
+# R31: --folder ../f32 (a path, not a folder name).
+case R31 run_record exit 1 fails RR06,RR07,RR11,RR12,RR14
+# R32: a commit without .github/workflows/mathkernel-linux.yml (GITHUB_SHA that commit).
+case R32 run_record exit 1 fails RR04,RR14
+# R33: GITHUB_SHA is the word HEAD.
+case R33 run_record exit 1 fails RR01,RR03,RR14
+# R34: --out in a folder that does not exist.
+case R34 run_record exit 1 fails RR14
+#
+# Plants on verify_records.py.
+# V28: F's record's frozen4_sha256 is G's, its anchor kept.
+case V28 verify_records exit 1 fails VR08,VR09
+# V29: F's record without its gate_log_sha256.
+case V29 verify_records exit 1 fails VR01,VR07
+# V30: F's record's commit is not an object id.
+case V30 verify_records exit 1 fails VR01,VR07
+# V31: every record names another inventory digest than the inventory JSON's.
+case V31 verify_records exit 1 fails VR04
+# V32: a judge JSON made over another inventory digest.
+case V32 verify_records exit 1 fails VR05
+# V33: a judge JSON whose file list was changed, its digest kept.
+case V33 verify_records exit 1 fails VR05
+# V34: every record names another toolchain digest than the toolchain JSON's.
+case V34 verify_records exit 1 fails VR06
+# V35: F's gate verdict line says HELD: 19 of 20.
+case V35 verify_records exit 1 fails VR09
+# V36: F's log check verdict says HELD: 13 of 14 rows.
+case V36 verify_records exit 1 fails VR10
+# V37: an inventory JSON naming F twice, its digest recomputed (the judge's JSON left as it was).
+case V37 verify_records exit 1 fails VR04,VR05
+# V38: the verdict job's GITHUB_WORKFLOW_REF names .github/workflows/integrity.yml.
+case V38 verify_records exit 1 fails VR03
