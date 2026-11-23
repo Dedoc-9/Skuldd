@@ -1,0 +1,47 @@
+# Predictions for tools/ci/tests/test_inventory.py, eleventh file (after review round 9), written by the assistant on
+# 2026-11-21 before any of these cases first ran; changed after the first (mutant) run only as the dated notes below
+# say. The earlier files stay as they were.
+#
+# Why. Review 9 found setext headings that GitHub shows and the inventory's reader does not count as a heading starting
+# "Successor": a paragraph read back past its start, because two lines that end a paragraph in CommonMark are not among
+# the block starts the reader stops at (an earlier "=" underline, or "--"; a block start indented four spaces inside a
+# list item whose content starts at column 4 or later), and a paragraph that starts on a list item's line and runs on
+# to a second line before its underline. tools/ci/inventory.py now refuses, as a heading problem, a line of "=" only or
+# "-" only (at any indent) directly under a line that is not blank: a setext heading's underline, in any container
+# (its rule 11). In THEOREMS.md it fails the successor row, in ANCHORS.md the ANCHORS.md row. Counted before it ran (by
+# review 9's scripts and ghosts lenses, on this tree): 0 lines of "=" or "-" only in THEOREMS.md and ANCHORS.md.
+#
+# Plants R18 to R26, the controls R21 and R22 (they failed before the rule too), and the decoy E34 (a line of "=" only
+# after a blank line, which no rule refuses). With the rule taken out (a mutant), the test is predicted to fail
+# exactly R18, R19, R20, R23, R24, R25 and R26, which then hold, and no other case.
+#
+# Corrected on 2026-11-21 after the mutant run (h2/out/mut-test_inventory-run1.txt), before any run on the honest
+# tree: the decoy was first written R27, under a plant's prefix, which this test refuses ("a plant must predict
+# failing rows"); it is now E34, a decoy's prefix. No case's plant or predicted outcome changed: the decoy's id did
+# (on its own line and in the header's list), and this note was added. The file as first run is kept privately.
+#
+# Corrected again on 2026-11-21 at the owner's ruling RK-1, after review 10: line 2 said that no line changes after
+# the first run, and the note above that no case's lines changed; both were false after the change it records.
+#
+# Corrected a third time on 2026-11-21 at the owner's ruling RK-2, after review 11: line 2 said the file changed
+# once after the first run; it changed twice, the second time at RK-1.
+R18 setext-after-intro: at the end of THEOREMS.md, "Intro", "=====", "Successors", "----------", a blank line, "| Old | New |", "|---|---|", "| `f32.F32_Statement.F32_REL` | `f32.F32_Statement.NOPE` |" (review 9's M01)
+  FAIL THEOREMS.md: every successor row names known statements
+R19 setext-after-double-dash: R18 with "--" as Intro's underline (M02)
+  FAIL THEOREMS.md: every successor row names known statements
+R20 setext-after-indented-break: at the end of THEOREMS.md, "1.  a", "    ***", "    Successors", "    ---", a blank line and R18's table indented four spaces (M03)
+  FAIL THEOREMS.md: every successor row names known statements
+R21 setext-successors-control: R18 without "Intro" and "=====" (M01c, a control)
+  FAIL THEOREMS.md: every successor row names known statements
+R22 setext-in-list-item-control: R20 with "- a" and two spaces of indent (M03c, a control)
+  FAIL THEOREMS.md: every successor row names known statements
+R23 list-item-two-line-setext: at the end of THEOREMS.md, "- Successors", "  of 2026-11-21", "  -------------", a blank line and R18's table indented two spaces (review 9's G9-1, s1)
+  FAIL THEOREMS.md: every successor row names known statements
+R24 ordered-item-two-line-setext: at the end of THEOREMS.md, "1. Successors", "   of 2026-11-21", "   -------------" (s4)
+  FAIL THEOREMS.md: every successor row names known statements
+R25 nested-item-two-line-setext: at the end of THEOREMS.md, "- a", "  - Successors", "    of 2026-11-21", "    -------------"
+  FAIL THEOREMS.md: every successor row names known statements
+R26 setext-in-anchors: at the end of ANCHORS.md, "Notes", "====="
+  FAIL ANCHORS.md: one row per gated folder with its variable
+E34 equals-line-after-blank: at the end of THEOREMS.md, "x", a blank line, "=====" (a decoy)
+  HELD

@@ -1,0 +1,26 @@
+# Predictions for tools/ci/tests/test_safepath.py: what each case of the PYTHONSAFEPATH guard must give. Written by the
+# assistant on 2026-11-18, before the test's first run; its sha256 was recorded then, and no line changes after it. A
+# case whose result differs from its line stays red and is explained.
+#
+# A line is "<case> | <outcome> | <text> | <what the case is>". For a run, <outcome> is its exit code and <text> a line
+# its output must hold (for the feature row, its last line). For a check of the workflow files, <outcome> is ok or
+# FAIL, and for FAIL <text> is a phrase every problem it reports must hold.
+#
+# F cases run a copy of kernel/hardening/features/feature_row4.py, alone in a temporary folder, on copies of the plants
+# refuse4_conjectures.v and refuse4_admit_obligations.v (from kernel/hardening/features/plants4/), from another
+# folder. The planted re.py beside the copy loads the standard re and makes re.finditer find nothing. V cases run the
+# script of the step "Every other job of this run succeeded" of .github/workflows/mathkernel-linux.yml, read from that
+# file, from stdin as the step runs it, with NEEDS naming fpenv as failed and the three other jobs as succeeded, in a
+# temporary folder; the planted json.py there loads the standard json and makes every "result" "success". "unset"
+# means PYTHONSAFEPATH is removed from the environment; "set" means PYTHONSAFEPATH=1. A control shows the plant takes
+# effect without the guard, so the guarded case's honest result is not the plant failing to load.
+premise | 0 | preloaded before a script: none | this interpreter has loaded neither re nor json before a script runs
+F0-honest | 1 | FEATURE ROW 4 FAILED: 2 of 3 rows failed | the copy, no re.py beside it, unset
+F1-control | 0 | FEATURE ROW 4 HELD: 3 of 3 rows | re.py beside the copy, unset: the shadow changes the verdict
+F2-guarded | 1 | FEATURE ROW 4 FAILED: 2 of 3 rows failed | re.py beside the copy, set: the honest verdict
+V0-honest | 1 | REFUSED: not every job of this run succeeded: fpenv: failure | no json.py, unset
+V1-control | 0 | every job of this run succeeded: fpenv, gate, image, inventory | json.py there, unset: the shadow passes it
+V2-guarded | 1 | REFUSED: not every job of this run succeeded: fpenv: failure | json.py there, set: the honest result
+W0-workflows | ok | - | both workflows set PYTHONSAFEPATH "1" at the top, and every docker run that starts Python passes it
+W1-plant-docker | FAIL | without -e PYTHONSAFEPATH | mathkernel-linux.yml with "-e PYTHONSAFEPATH " taken from the gate's docker run
+W2-plant-env | FAIL | no top-level PYTHONSAFEPATH | integrity.yml without its top-level PYTHONSAFEPATH line

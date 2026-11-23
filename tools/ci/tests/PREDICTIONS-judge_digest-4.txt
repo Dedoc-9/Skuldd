@@ -1,0 +1,19 @@
+# Predictions for tools/ci/tests/test_judge_digest.py, fourth round: cases S01-S09.
+# Written by the assistant on 2026-11-19, after review, before any run of these cases; its sha256 was recorded then,
+# and no prediction changes after it. The format and the outcomes are those of PREDICTIONS-judge_digest.txt.
+# Why a fourth round: every file that a CI test or feature-row run reads as its cases or expected outcomes is now a
+# judge file. The judge gained three required groups: theorems (THEOREMS.md), row4-predictions
+# (kernel/hardening/features/PREDICTIONS-row4-2026-11-18.md) and row4-plants (every file under
+# kernel/hardening/features/plants4/). Before, removing one row of the row-4 predictions left the digest unmoved.
+# C01 and C02: with seventeen groups the judge prints 20 rows without --expect and 21 with it; the test counts them
+# from its own table of the groups.
+# S01-S03, S06, S08: the expected-digest row must name a new digest.
+S01 | FAILED expected digest | PREDICTIONS-row4-2026-11-18.md without its P1 row refuse4_context (one line removed)
+S02 | FAILED expected digest | one byte of kernel/hardening/features/plants4/refuse4_context.v changed
+S03 | FAILED expected digest | kernel/hardening/features/plants4/decoy4_comment.v removed (the folder keeps its other files)
+S04 | FAILED group row4-predictions | kernel/hardening/features/PREDICTIONS-row4-2026-11-18.md removed
+S05 | FAILED group row4-plants | every file under kernel/hardening/features/plants4/ removed (the folder left empty)
+S06 | FAILED expected digest | one byte of THEOREMS.md changed
+S07 | FAILED group theorems | THEOREMS.md removed
+S08 | FAILED expected digest | a file added under kernel/hardening/features/plants4/ (refuse4_extra.v)
+S09 | HELD | a file added beside plants4, kernel/hardening/features/notes.txt (outside the judge)

@@ -1,0 +1,12 @@
+# Addendum 2 to PREDICTIONS-records.txt, written after addendum 1's first run (78 of 78 cases as predicted) and before
+# this addendum's first run; no earlier file is changed. The second mutation pass found one check that no plant
+# reaches alone: verify_records.py's "the inventory names no folder twice" (V37 is also caught by the records' digest).
+# It also named two equivalent mutants, which get no plant: run_record.py's "exactly one verdict line" (two verdict
+# lines also fail "the verdict line is the last") and its "--anchor is 64 lower-case hex digits" (a string of another
+# form can never equal a sha256 hexdigest, so the row fails all the same; only its detail differs).
+#
+# R35: an inventory JSON naming F twice, its digest recomputed, the judge's JSON made over it.
+case R35 run_record exit 1 fails RR07,RR14
+# V39: an inventory JSON naming F twice, its digest recomputed, the judge's JSON made over it, and every record naming
+# those two digests.
+case V39 verify_records exit 1 fails VR04

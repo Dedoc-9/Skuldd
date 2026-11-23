@@ -1,0 +1,127 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Predictions for tools/ci/tests/test_inventory.py, written on 2026-11-18 before the test's first run and not changed
+# after it. Each case is a copy of the tree's kernel/coq, verdandi/mathkernel/F32 and THEOREMS.md with one change.
+# A plant (P) must make tools/ci/inventory.py exit 1 with exactly the rows under it failing and every other row ok.
+# A decoy (D) changes something the inventory must accept: exit 0, every row ok.
+# Form: "<id> <name>: <the change>", then one indented line per row predicted to fail ("  FAIL <row>"), or "  HELD".
+
+P01 unlisted-v: add kernel/coq/f32/Extra.v
+  FAIL f32: gate.json files are its top-level .v files
+P02 listed-absent: remove kernel/coq/sincos32z/Zero.v
+  FAIL sincos32z: gate.json files are its top-level .v files
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P03 name-twice: kernel/coq/sincos32z/gate.json lists "Zero.v" twice in "files"
+  FAIL sincos32z: gate.json files are its top-level .v files
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P04 unknown-gate-json: add kernel/coq/f32/plants/gate.json (a copy of f32's)
+  FAIL discovery: every gate.json is in a gated folder or a mirror
+P05 gate-dir-extra-file: add kernel/coq/gate/json.py
+  FAIL gate dir: kernel/coq/gate holds exactly its own files
+P06 mirror-file-changed: append a comment to verdandi/mathkernel/F32/ieee64/Ops.v
+  FAIL mirror ieee64: every listed file holds its sha256
+P07 mirror-frozen4-changed: append a comment line to verdandi/mathkernel/F32/f32/FROZEN4.txt
+  FAIL mirror f32: FROZEN4.txt equals its kernel twin's
+P08 mirror-file-and-list-changed: change verdandi/mathkernel/F32/ieee64/Ops.v and its line in that FROZEN4.txt
+  FAIL mirror ieee64: FROZEN4.txt equals its kernel twin's
+P09 identity-names-differ: kernel/coq/sincos32z/Identity.v names another theorem of Closed
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P10 theorems-row-differs: THEOREMS.md names cos32.Cos32.cos32_any as cos32's closing theorem
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+P11 anchor-value-changed: kernel/coq/ANCHORS.md, the last digit of compose's value changed
+  FAIL compose: ANCHORS.md value is sha256 of FROZEN4.txt
+P12 anchor-row-missing: kernel/coq/ANCHORS.md without its log32 row
+  FAIL ANCHORS.md: one row per gated folder with its variable
+  FAIL log32: ANCHORS.md value is sha256 of FROZEN4.txt
+P13 v-in-subfolder: add kernel/coq/exp32/extra/Hidden.v
+  FAIL exp32: no .v file in another subfolder
+P14 plant-unnamed: add kernel/coq/p32/plants/unnamed.v
+  FAIL p32: plants/*.v are the plant files it names
+P15 plant-absent: remove kernel/coq/compose/plants/Compose_axiom_landing.v
+  FAIL compose: plants/*.v are the plant files it names
+  FAIL compose: FROZEN4.txt entries hold in the tree
+P16 v-outside-gated: add kernel/coq/orl/Stray.v
+  FAIL discovery: no .v file under kernel/coq outside a gated folder
+P17 gate-dir-package: add kernel/coq/gate/json/__init__.py
+  FAIL gate dir: kernel/coq/gate holds exactly its own files
+P18 gate-json-key-twice: kernel/coq/sincos32z/gate.json has "name" twice
+  FAIL sincos32z: gate.json parses
+  FAIL sincos32z: gate.json files are its top-level .v files
+  FAIL sincos32z: plants/*.v are the plant files it names
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P19 identity-form-disjunct: kernel/coq/sincos32z/Identity.v, type "statement \/ False", term "or_introl theorem"
+  FAIL sincos32z: Identity.v is the plain conjunction of that row
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P20 identity-form-extra-sentence: kernel/coq/sincos32z/Identity.v gains "Local Notation conjx := conj."
+  FAIL sincos32z: Identity.v is the plain conjunction of that row
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P21 theorems-unknown-folder: THEOREMS.md gains a proved row for ghost32
+  FAIL THEOREMS.md: one proved row per gated folder
+P22 theorems-row-missing: THEOREMS.md without its cos32 row
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+P23 successor-unknown: THEOREMS.md gains a Successors table whose successor is f32.F32_Statement.F32_NEW
+  FAIL THEOREMS.md: every successor row names known statements
+P24 anchor-variable-wrong: kernel/coq/ANCHORS.md names MK_ANCHOR_F23 for f32
+  FAIL ANCHORS.md: one row per gated folder with its variable
+P25 kernel-frozen4-changed: append a comment line to kernel/coq/sincos32i/FROZEN4.txt
+  FAIL sincos32i: ANCHORS.md value is sha256 of FROZEN4.txt
+P26 mirror-without-twin: copy verdandi/mathkernel/F32/f32 to verdandi/mathkernel/F32/f99
+  FAIL mirror f99: FROZEN4.txt equals its kernel twin's
+  FAIL mirror f99: every .v file is listed
+P27 empty-root: an empty folder as the root
+  FAIL discovery: at least one gated folder
+  FAIL gate dir: kernel/coq/gate holds exactly its own files
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL ANCHORS.md: one row per gated folder with its variable
+P28 frozen4-unreadable-line: append the line "garbage" to kernel/coq/sincos32z/FROZEN4.txt
+  FAIL sincos32z: FROZEN4.txt present and readable
+  FAIL sincos32z: ANCHORS.md value is sha256 of FROZEN4.txt
+P29 mirror-unlisted-v: add verdandi/mathkernel/F32/p32r/Extra.v
+  FAIL mirror p32r: every .v file is listed
+P30 mirror-gate-changed: append a comment to verdandi/mathkernel/F32/gate/strict_read.py
+  FAIL mirrors: gate4.py and strict_read.py equal the kernel's
+  FAIL mirror exp32: every listed file holds its sha256
+  FAIL mirror exp32r: every listed file holds its sha256
+  FAIL mirror f32: every listed file holds its sha256
+  FAIL mirror ieee64: every listed file holds its sha256
+  FAIL mirror p32: every listed file holds its sha256
+  FAIL mirror p32r: every listed file holds its sha256
+P31 identity-absent: remove kernel/coq/sincos32z/Identity.v
+  FAIL sincos32z: gate.json files are its top-level .v files
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v is the plain conjunction of that row
+P32 gate-json-removed: remove kernel/coq/sincos32z/gate.json
+  FAIL discovery: no .v file under kernel/coq outside a gated folder
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL ANCHORS.md: one row per gated folder with its variable
+P33 v-outside-mirror: add verdandi/mathkernel/F32/orl/Stray.v
+  FAIL discovery: no .v file under verdandi/mathkernel/F32 outside a mirror
+P34 deps-unknown: kernel/coq/sincos32z/gate.json names orl among its deps
+  FAIL sincos32z: gate.json parses
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P35 files-not-plain: kernel/coq/sincos32z/gate.json lists "../Zero.v"
+  FAIL sincos32z: gate.json parses
+  FAIL sincos32z: gate.json files are its top-level .v files
+  FAIL sincos32z: plants/*.v are the plant files it names
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P36 plant-outside-plants: kernel/coq/compose/gate.json puts in Compose_axiom_landing.v, not under plants/
+  FAIL compose: plants/*.v are the plant files it names
+  FAIL compose: FROZEN4.txt entries hold in the tree
+P37 plant-replaces-unlisted: kernel/coq/compose/gate.json's axiom-landing replaces Other.v, not a listed file
+  FAIL compose: plants/*.v are the plant files it names
+  FAIL compose: FROZEN4.txt entries hold in the tree
+P38 theorems-order-swapped: THEOREMS.md lists exp32r's two statements in the other order
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+P39 statement-file-wrong: THEOREMS.md names f32/F32.v as f32's statement file
+  FAIL f32: Identity.v names are its THEOREMS.md row
+D01 successor-known: THEOREMS.md gains a Successors table whose two columns name proved statements
+  HELD
+D02 successor-empty: THEOREMS.md gains a Successors table with no row
+  HELD
+D03 gate-json-lookalike: add kernel/coq/f32/plants/gate.json.bak
+  HELD
+D04 subfolder-non-v: add kernel/coq/exp32/extra/notes.txt
+  HELD

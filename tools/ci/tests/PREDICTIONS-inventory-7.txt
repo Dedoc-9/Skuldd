@@ -1,0 +1,71 @@
+# Predictions for tools/ci/tests/test_inventory.py, seventh round: plants Q25-Q39, decoys E19-E24. Written by the
+# assistant on 2026-11-20, after review round 5, before any run of these cases; its sha256 was recorded then, and no
+# prediction changes after it. Format as in PREDICTIONS-inventory.txt. Each plant is made on a copy of the tree and
+# must fail exactly the rows named, every other row ok; each decoy must hold.
+# Why: GitHub shows a table or a heading inside a block quote or a list item, and the inventory's reader does not open
+# those containers, so in THEOREMS.md and ANCHORS.md a block quote's line, and a list item's line holding a "|", fail
+# (a new row for THEOREMS.md; the ANCHORS.md row for that file); a delimiter row at any indent outside ANCHORS.md's
+# table, or in the Successors section outside its table, fails (a table inside a list item); a heading's text is
+# read as GitHub shows it (HTML tags and "*", "_", "`" taken out; a setext heading's text from the first line of its
+# paragraph), and so is a header cell; a table with "Old statement" and "Successor" columns anywhere but under the
+# Successors heading fails; a gated folder whose anchor variable would be MK_ANCHOR_CI (named ci) is refused.
+# "At the end of THEOREMS.md" (or of ANCHORS.md) is after its last line, after a blank line. ZZ_ROW and the NOPE row
+# are as in PREDICTIONS-inventory-6.txt; "the successor table" is the one of Q23 there (outer pipes, one row: the NOPE
+# row); "the proved header" is "Folder | Statement | Statement file | Closing theorem | Gate"; "a second anchor table"
+# is "| Folder | Variable | sha256 of FROZEN4.txt | Record |", "|---|---|---|---|" and a row naming f32 and
+# MK_ANCHOR_F32 with 64 zeros. A block-quoted line is the line with "> " before it.
+Q25 proved-table-in-block-quote: at the end of THEOREMS.md, the proved header with outer pipes, "|---|---|---|---|---|" and ZZ_ROW with outer pipes, each line block-quoted (review 5's T1)
+  FAIL THEOREMS.md: no block quote, no list item holding a bar
+Q26 proved-table-on-a-list-item: at the end of THEOREMS.md, "- | <the proved header> |", then "  |---|---|---|---|---|" and "  | <ZZ_ROW> |" (review 5's T1b)
+  FAIL THEOREMS.md: no block quote, no list item holding a bar
+Q27 successor-table-in-block-quote: inside the Successors section, after its table and a blank line, the successor table, each line block-quoted (review 5's T2)
+  FAIL THEOREMS.md: no block quote, no list item holding a bar
+Q28 successors-heading-in-block-quote: at the end of THEOREMS.md, the line "> ## Successors" (review 5's block-quoted heading)
+  FAIL THEOREMS.md: no block quote, no list item holding a bar
+Q29 anchor-table-in-block-quote: at the end of ANCHORS.md, a second anchor table, each line block-quoted (review 5's b1)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+Q30 anchor-table-in-list-item: at the end of ANCHORS.md, "- a list item", a blank line, and a second anchor table with each line indented by four spaces (inside the list item; review 5's b5)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+Q31 successors-heading-with-emphasis: at the end of THEOREMS.md, "## Notes", a blank line, "### **Successors**", a blank line and the successor table (review 5's T3)
+  FAIL THEOREMS.md: every successor row names known statements
+Q32 successors-setext-paragraph: at the end of THEOREMS.md, "Successors", "of retired statements", "---", a blank line and the successor table (review 5's T4: a setext heading whose paragraph has two lines)
+  FAIL THEOREMS.md: every successor row names known statements
+Q33 successor-table-elsewhere: at the end of THEOREMS.md, "## Retired statements", a blank line and the successor table (review 5's T5: a successor-shaped table outside the Successors section)
+  FAIL THEOREMS.md: every successor row names known statements
+Q34 gated-folder-named-ci: kernel/coq/ci/gate.json, a copy of f32's gate.json (its anchor variable would be MK_ANCHOR_CI)
+  FAIL discovery: no gated folder takes the variable MK_ANCHOR_CI
+Q35 proved-header-underscores: at the end of THEOREMS.md, "| _Folder_ | Statement | Statement file | Closing theorem | Gate |", "|---|---|---|---|---|" and ZZ_ROW with outer pipes (GitHub shows "Folder")
+  FAIL THEOREMS.md: one proved row per gated folder
+  FAIL compose: Identity.v names are its THEOREMS.md row
+  FAIL cos32: Identity.v names are its THEOREMS.md row
+  FAIL exp32: Identity.v names are its THEOREMS.md row
+  FAIL exp32r: Identity.v names are its THEOREMS.md row
+  FAIL f32: Identity.v names are its THEOREMS.md row
+  FAIL ieee64: Identity.v names are its THEOREMS.md row
+  FAIL log32: Identity.v names are its THEOREMS.md row
+  FAIL p32: Identity.v names are its THEOREMS.md row
+  FAIL p32r: Identity.v names are its THEOREMS.md row
+  FAIL sin32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32: Identity.v names are its THEOREMS.md row
+  FAIL sincos32i: Identity.v names are its THEOREMS.md row
+  FAIL sincos32z: Identity.v names are its THEOREMS.md row
+Q36 successors-heading-html: at the end of THEOREMS.md, "## <em>Successors</em>", a blank line and the line "No statement has a successor here." (a second heading, no table)
+  FAIL THEOREMS.md: every successor row names known statements
+Q37 indented-table-in-successors: inside the Successors section, after its table and a blank line, "- a list item", a blank line, and "| a | b |", "|---|---|", "| c | d |", each indented by four spaces (a second table inside a list item)
+  FAIL THEOREMS.md: every successor row names known statements
+Q38 successors-heading-emphasis-alone: at the end of THEOREMS.md, "## Notes", a blank line, "### **Successors**", a blank line and the line "No statement has a successor here." (a second heading, no table)
+  FAIL THEOREMS.md: every successor row names known statements
+Q39 successors-setext-alone: at the end of THEOREMS.md, "Successors", "of retired statements", "---", a blank line and the line "No statement has a successor here." (a second heading, no table)
+  FAIL THEOREMS.md: every successor row names known statements
+E19 folder-ci-without-gate: kernel/coq/ci/README.txt, one line; no gate.json (not a gated folder)
+  HELD
+E20 list-item-without-bar: at the end of THEOREMS.md, "- a note on the successors, without a bar"
+  HELD
+E21 heading-not-successor: at the end of THEOREMS.md, "### *Notes* on successors" (its text starts with "Notes")
+  HELD
+E22 bar-and-sign-in-prose: at the end of THEOREMS.md, "Values > 0 are kept; a | b is prose here." (">" not first, no delimiter row)
+  HELD
+E23 anchors-list-item-without-bar: at the end of ANCHORS.md, "- a note without a bar"
+  HELD
+E24 table-without-old-statement: at the end of THEOREMS.md, "| Statement | Successor count |", "|---|---|", "| x | 0 |" (no "Old statement" column)
+  HELD

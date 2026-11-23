@@ -1,0 +1,3 @@
+# A list in the form of FROZEN4.txt for the input row, written by make_feature_plants4.py.
+0000000000000000000000000000000000000000000000000000000000000000  absent4.v
+9711e841306a820eecd0302d002fd7b8d1d8b5f3891a6cffabac46c43cc817b6  decoy4_identifiers.v

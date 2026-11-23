@@ -1,0 +1,2 @@
+# FROZEN of sincos32n: the statement file, frozen before its proof (2026-11-18, Turn 246). The sha256 below is the owner's, minted with Get-FileHash under R1 of Turn 228 and equal to the assistant's (sheet-checks/OWNER-HASHES-TURN-246-F01-F02.md); each line is sha256, two spaces, path from the tree's root. A correction is a new file or a dated note beside this one.
+b3ea4523f9a0f752a0c203046cc84e9115f6ed4d902014aeffae7ede59fe71ee  sincos32n/SINCOS32_NONZERO_Statement.v

@@ -1,0 +1,14 @@
+# Predictions for tools/ci/tests/test_workflow_pins.py, third file: the cases added when the row permissions was made
+# to refuse every line but the top-level one that names permissions outside a comment, a quoted key among them
+# (review loop of Push A, round 2). Written by the assistant on 2026-11-22, before the first run of these cases; its
+# sha256 is recorded outside this file then, and no line changes after it (a correction is a new file). The test reads
+# it after PREDICTIONS-workflow_pins.txt and PREDICTIONS-workflow_pins-2.txt, whose lines stand as they are; the
+# format is theirs. Each case adds one line after drift.yml's job-level "    timeout-minutes: 15".
+W21 | FAILED | permissions | the job-level line "    "permissions": write-all" (a double-quoted key)
+W22 | FAILED | permissions | the job-level line "    'permissions': write-all" (a single-quoted key)
+W23 | HELD | - | a decoy: the comment line "    # no permissions here"
+#
+# Mutants, each a copy of the test with one change, run on the same workflows (not read by the test):
+# mutant M0c: none, the control: every case of the three files holds.
+# mutant M3: the row permissions' line check back to its form before this file (a line whose text starts
+#   "permissions:" below the top): exactly W21 and W22 fail.

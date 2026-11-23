@@ -1,0 +1,19 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py, sixth file. Written by the assistant on 2026-11-20, after
+# review round 8 and before the first run of these cases; its sha256 was recorded then, and no line changes after
+# that run. The format and the checks are the first file's. A case is named in one file only.
+# The step: the image job's "Say what the image holds; its base is the digest the Dockerfile pins". Review 8 found
+# that its FROM count needed a blank or a tab after FROM, so "FROM\" (the keyword, then a line continuation) with the
+# image on the next line, which starts with a blank, was not counted, while Docker joins the two lines into one FROM
+# instruction (ARGUED from BuildKit's parser as read in review; no Docker runs here); and that its byte rule did not
+# see a NUL byte, since grep reads such a file as binary and takes the NUL for a line's end. The step now counts FROM
+# before a blank, a tab, a line continuation or the line's end (grep -ciE '^[[:space:]]*from([[:space:]]|\\|$)'), and
+# reads the file as text in the byte rule (grep -a). Each was counted on the Dockerfile of the tree before it ran: the
+# new count 1, the bytes outside printable ASCII, a blank and a tab read with -a 0, the NUL bytes 0. Each case runs the
+# step on the Dockerfile of the tree with the lines named here added after it, base-image.txt holding the pinned base
+# and the stand-in image id. h05 and h06 are controls refused before this round too (h06 is the frozen d08's form).
+h02 | exit 2 | out:0,msg:exactly one FROM | "FROM\", " docker.io/library/debian:12" and "COPY --from=0 /opt /opt" after the Dockerfile (review 8's h02)
+h03 | exit 2 | out:0,msg:exactly one FROM | "FROM\" and two blanks, then "<TAB>docker.io/library/debian:12 AS x" after the Dockerfile (h03)
+h04 | exit 2 | out:0,msg:exactly one FROM | "from\" and " debian:12" after the Dockerfile (h04)
+h05 | exit 2 | out:0,msg:exactly one FROM | a control: "FROM \" and " debian:12" after the Dockerfile (h05)
+h06 | exit 2 | out:0,msg:continues a line | a control: "FR\" and "OM debian:12" after the Dockerfile (h06)
+h07 | exit 2 | out:0,msg:outside printable ASCII | "# a comment holding a NUL byte <NUL> here" after the Dockerfile (h07)

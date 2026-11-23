@@ -1,0 +1,169 @@
+{
+ "name": "FCLINK",
+ "tier": "flocq4",
+ "deps": [
+  "f32",
+  "p32",
+  "p32r",
+  "exp32",
+  "exp32r",
+  "ieee64",
+  "sin32",
+  "cos32",
+  "sincos32",
+  "sincos32i",
+  "floor32",
+  "ceil32"
+ ],
+ "files": [
+  "CPrint.v",
+  "KernelText.v",
+  "FCLINK_Statement.v",
+  "Link.v",
+  "Closed.v",
+  "Identity.v"
+ ],
+ "identity": "Identity",
+ "statement": {
+  "file": "FCLINK_Statement.v",
+  "sha256": "b974b59c98d88ee935a003a51e9895f01c6d316a48ec7d5332617c1f9396ea4e"
+ },
+ "generated": {
+  "fclink/KernelText.v": [
+   "fclink/gen_kernel_text.py"
+  ]
+ },
+ "plants": {
+  "op-lt-le": {
+   "replace": {
+    "KernelText.v": "plants/KernelText_op_lt_le.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 25, characters",
+   "class": "t text row",
+   "what": "PLANTS.md P1: x < n changed to x <= n in the floor line (2 places), the ceil line unchanged; KernelText.v as gen_kernel_text.py quotes the planted sweep (ext-work/p2/proofs/fclink/plant-sweeps/sweep_fc2_op_lt_le.c), equal byte for byte to draft 3's plants-a3 file (MEASURED, make_plants.py). FC_TEXT KNOWN FALSE: the printed text of the frozen shape is the frozen line (FC_FLOOR_TEXT holds with the frozen KernelText.v, MEASURED) and the planted line differs from it. The sweep tells it apart too: 16,777,216 floor differences (reported, PLANTS.md). Refused at FC_FLOOR_TEXT"
+  },
+  "op-lt-le-ceil": {
+   "replace": {
+    "KernelText.v": "plants/KernelText_op_lt_le_ceil.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 30, characters",
+   "class": "t text row",
+   "what": "PLANTS.md P1c: n < x changed to n <= x in the ceil line (2 places), the floor line unchanged, so that FC_CEIL_TEXT is seen to refuse on its own while FC_FLOOR_TEXT holds; quoted from the planted sweep sweep_fc2_op_lt_le_ceil.c, equal to draft 3's file. FC_TEXT KNOWN FALSE as for op-lt-le. Sweep: 16,777,216 ceil differences (MEASURED in draft 3's run a3, reported). Refused at FC_CEIL_TEXT"
+  },
+  "cst-cn-odd": {
+   "replace": {
+    "KernelText.v": "plants/KernelText_cst_cn_odd.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 25, characters",
+   "class": "t text row",
+   "what": "PLANTS.md P2: the constant CN 0x18000000000000p0 written 0x18000000000001p0 (12 places in each line); quoted from sweep_fc2_cst_cn_odd.c, equal to draft 3's file. AN EQUIVALENT MUTANT FOR THE SWEEP: 0 differences in either function (reported, PLANTS.md), so only this text row tells it from the proved program. FC_TEXT KNOWN FALSE as for op-lt-le. Refused at FC_FLOOR_TEXT"
+  },
+  "cst-big-2p22": {
+   "replace": {
+    "KernelText.v": "plants/KernelText_cst_big_2p22.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 25, characters",
+   "class": "t text row",
+   "what": "PLANTS.md P2b: the constant BIG 0x10000000000000p-29 (2^23) written 0x10000000000000p-30 (2^22), once in each line; quoted from sweep_fc2_cst_big_2p22.c, equal to draft 3's file. Sweep: 8,388,608 differences in each function (reported, PLANTS.md). FC_TEXT KNOWN FALSE as for op-lt-le. Refused at FC_FLOOR_TEXT"
+  },
+  "nostep": {
+   "replace": {
+    "KernelText.v": "plants/KernelText_nostep.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 25, characters",
+   "class": "t text row",
+   "what": "PLANTS.md P3: the zero step (fabs(Y) <= 0.0 ? (x * 0.0) : Y) replaced by Y in each line; quoted from sweep_fc2_nostep.c, equal to draft 3's file. Sweep: 1 floor and 1,065,353,216 ceil differences (reported, and the canary of draft 3's run a3). FC_TEXT KNOWN FALSE as for op-lt-le. Refused at FC_FLOOR_TEXT"
+  },
+  "equiv-big-lt": {
+   "replace": {
+    "KernelText.v": "plants/KernelText_equiv_big_lt.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 25, characters",
+   "class": "t text row",
+   "what": "PLANTS.md P4: the 2^23 test BIG <= fabs(x) written BIG < fabs(x), once in each line; quoted from sweep_fc2_equiv_big_lt.c, equal to draft 3's file. AN EQUIVALENT MUTANT FOR THE SWEEP: 0 differences (reported, PLANTS.md; at |x| = 2^23 the other branch also returns x, ARGUED), so only this text row tells it from the proved program. FC_TEXT KNOWN FALSE as for op-lt-le. Refused at FC_FLOOR_TEXT"
+  },
+  "hand-edited-text": {
+   "replace": {
+    "KernelText.v": "plants/KernelText_hand_edited.v"
+   },
+   "generated": "fclink/KernelText.v",
+   "class": "b generated",
+   "what": "KernelText.v with one blank added at the end of its first line (a comment line): the same strings for Coq, and not what gen_kernel_text.py prints from the frozen sweep_fc2.c"
+  },
+  "printer-sub-plus": {
+   "replace": {
+    "CPrint.v": "plants/CPrint_sub_plus.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 25, characters",
+   "class": "p printer",
+   "what": "CPrint.v's tprint writes subtraction with a plus sign, (a + b) for t_sub (PLANTS.md section 6): attacks the printer, not the swept text. The two lines use t_sub (every n is (x + CN) - CN), so the printed text of each frozen shape changes and FC_TEXT with the frozen KernelText.v is KNOWN FALSE (ARGUED: the frozen lines hold a minus sign where t_sub prints; PLANTS.md, the Python text differs, reported). Refused at FC_FLOOR_TEXT"
+  },
+  "fields-no-mul": {
+   "replace": {
+    "FCLINK_Statement.v": "plants/FCLINK_Statement_fields_no_mul.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 79, characters",
+   "class": "c premise",
+   "what": "FC_FIELDS without its t_mul conjunct (nine of ten): FC_PARAM then asks the relation to be kept by fewer fields than the shapes use (the zero step x * 0.0). UNPROVABLE, ARGUED (PLANTS.md section 6: the least relation that holds at the text x and v and is closed under the other nine does not relate the whole texts). Refused in FC_PARAM_proof's floor branch, where no premise closes the t_mul node"
+  },
+  "param-floor-ceil": {
+   "replace": {
+    "FCLINK_Statement.v": "plants/FCLINK_Statement_param_floor_ceil.v"
+   },
+   "fails": "Link",
+   "text": "fclink/Link.v\", line 79, characters",
+   "class": "b claim",
+   "what": "FC_PARAM relates the floor shape at tprint to the ceil shape at tieee_ops. KNOWN FALSE, ARGUED: at the relation 'w is the binary64 value of the text s with x read as v', which keeps the ten fields, the floor text at v = 1/2 has value 0 and the ceil computation 1 (FLOOR32 and CEIL32 give floor and ceil). Refused in FC_PARAM_proof's floor branch, where the input node of one side meets a subtraction node of the other"
+  },
+  "admitted": {
+   "replace": {
+    "Link.v": "plants/Link_admitted.v"
+   },
+   "reader": "Link.FC_FLOOR_TEXT :",
+   "words": [
+    "Admitted"
+   ],
+   "class": "e proof",
+   "what": "FC_FLOOR_TEXT (the floor line is the printed text of the frozen shape) ends with Admitted"
+  },
+  "param-axiom": {
+   "replace": {
+    "Link.v": "plants/Link_param_axiom.v"
+   },
+   "reader": "Link.FC_PARAM_proof :",
+   "words": [
+    "Axiom"
+   ],
+   "class": "f axiom",
+   "what": "FC_PARAM_proof is an Axiom of the same statement, its proof removed; used by the top theorem"
+  },
+  "three-of-four": {
+   "replace": {
+    "Closed.v": "plants/Closed_three_of_four.v"
+   },
+   "fails": "Identity",
+   "text": "fclink/Identity.v\", line 4, characters",
+   "class": "g identity",
+   "what": "Closed.v states, under the name FCLINK, three of the four parts (CEIL32 left out) and proves that"
+  },
+  "guard": {
+   "replace": {
+    "Closed.v": "plants/Closed_guard.v"
+   },
+   "reader": "is assumed to be guarded",
+   "words": [
+    "bypass_check"
+   ],
+   "class": "h guard",
+   "what": "fclink_holds from False, by a recursion whose termination check is switched off"
+  }
+ }
+}

@@ -1,0 +1,56 @@
+2026-11-22T12:13:21Z
+clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+build exit 0
+da85329504790b9faca8764360d0afeb801cb94a1d9e5f9795760e0fd64016fc *spec32_list.exe
+list run exit 0
+7d077c8252ce9915105ecbdad8bdb8f71f1eab7d7a211777139afe81f252ac42 *k2-run1-list.txt
+8194
+checksum up=0 20675489687969882
+checksum up=1 20666838147440858
+== transcription_check.py LIST 
+rows 8192 (want 8192); in the list order: yes
+mode: plant none
+spec32 vs coq: floor 0, ceiling 0 disagreements
+spec   vs coq: floor 0, ceiling 0 disagreements
+iref   vs coq: floor 0, ceiling 0 disagreements
+checksums: C up=0 20675489687969882 up=1 20666838147440858; coq up=0 20675489687969882 up=1 20666838147440858; equal
+K2 TRANSCRIPTION CORROBORATION HELD
+exit 0
+== transcription_check.py LIST --plant q21
+rows 8192 (want 8192); in the list order: yes
+mode: plant q21
+spec32 vs coq: floor 10, ceiling 10 disagreements
+spec   vs coq: floor 10, ceiling 10 disagreements
+iref   vs coq: floor 0, ceiling 0 disagreements
+first spec32 disagreement: u 0x7f800001 up 0, C 0x7fc00001, coq 0x7fa00001
+checksums: C up=0 20675489687969882 up=1 20666838147440858; coq up=0 20675438236442714 up=1 20666786695913690; DIFFER
+K2 PLANT q21 CAUGHT (20 spec32 disagreements)
+exit 0
+== transcription_check.py LIST --plant zero
+rows 8192 (want 8192); in the list order: yes
+mode: plant zero
+spec32 vs coq: floor 0, ceiling 1015 disagreements
+spec   vs coq: floor 0, ceiling 1015 disagreements
+iref   vs coq: floor 0, ceiling 1015 disagreements
+first spec32 disagreement: u 0x80000001 up 1, C 0x80000000, coq 0x00000000
+checksums: C up=0 20675489687969882 up=1 20666838147440858; coq up=0 20675489687969882 up=1 18440286299005146; DIFFER
+K2 PLANT zero CAUGHT (1015 spec32 disagreements)
+exit 0
+== transcription_check.py LIST --plant q21 --nocheck
+rows 8192 (want 8192); in the list order: yes
+mode: plant q21, comparisons removed
+spec32 vs coq: floor 0, ceiling 0 disagreements
+spec   vs coq: floor 0, ceiling 0 disagreements
+iref   vs coq: floor 0, ceiling 0 disagreements
+checksums: C up=0 20675489687969882 up=1 20666838147440858; coq up=0 20675438236442714 up=1 20666786695913690; not compared
+K2 PLANT q21 NOT CAUGHT (0 spec32 disagreements)
+exit 0
+== transcription_check.py LIST --nocheck
+rows 8192 (want 8192); in the list order: yes
+mode: plant none, comparisons removed
+spec32 vs coq: floor 0, ceiling 0 disagreements
+spec   vs coq: floor 0, ceiling 0 disagreements
+iref   vs coq: floor 0, ceiling 0 disagreements
+checksums: C up=0 20675489687969882 up=1 20666838147440858; coq up=0 20675489687969882 up=1 20666838147440858; not compared
+K2 TRANSCRIPTION CORROBORATION HELD
+exit 0

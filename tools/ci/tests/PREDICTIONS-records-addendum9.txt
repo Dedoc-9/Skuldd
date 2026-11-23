@@ -1,0 +1,15 @@
+# Addendum 9 to PREDICTIONS-records.txt, written on 2026-11-21 after review round 9 and before this addendum's first
+# run; no earlier file is changed. Review 9 found that verify_records.py's walk of --dir used os.walk with no onerror,
+# which skips a folder it cannot list, so the files in it were never judged and the records row held (its R9S-3, V01:
+# on Windows a folder "x." made through a \\?\ path, which Windows then opens as "x"). verify_records.py now collects
+# every error of the walk, and the records row fails naming each folder that cannot be listed. On POSIX the case plants
+# a folder with mode 000 (where the test runs as root, the folder is built and listed, and V49 fails as a file
+# that is no record, not by the walk's error). Counted before it ran: the verdict job's --dir is the folder
+# download-artifact writes, which this run fills.
+# With the check taken out (a mutant), the test is predicted to fail exactly V49 and no other case.
+#
+# V49: --dir holds the 13 honest records and a folder that cannot be listed, holding note.txt.
+case V49 verify_records exit 1 fails VR01
+#
+# Corrected on 2026-11-21 at the owner's ruling RK-1, after review 10: the sentence on root said that the folder
+# cannot be built there; as root it is built and listed. No case or prediction changed.

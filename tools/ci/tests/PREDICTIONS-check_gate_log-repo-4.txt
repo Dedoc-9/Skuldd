@@ -1,0 +1,8 @@
+# Addendum to tools/ci/tests/PREDICTIONS-check_gate_log-repo.txt: two more cases of ruling RD-2 (a) of 2026-11-23,
+# pinning two limits of row 14 that repo-3's cases did not (a compile row counts only inside this gate run, between
+# its header and its verdict, and only under its own folder). test_check_gate_log.py reads it in the --repo-data mode
+# only (PRED_REPO_ADDENDA). Not blind: an outside review ran both cases on the checker before this file was written
+# (ext-work review, 2026-11-23: each failed row 14 only); written by the assistant from that review's proposal, its
+# sha256 recorded before this tree's first run of the cases; no line changes after it.
+r04-compile-row-after-verdict | 14 | ieee64: P32_IEEE_Check out of Closure.out, its compile row renamed, an exact one after the verdict
+r05-compile-row-other-folder | 14 | ieee64: P32_IEEE_Check out of Closure.out, its compile row named f32/P32_IEEE_Check

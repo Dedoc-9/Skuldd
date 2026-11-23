@@ -13,15 +13,23 @@ not account for it. Rows, each PASS or FAIL:
       (each hash anywhere in the file: a removed record's path is written with `<host>` there)
   M3  every file present but in no manifest (beside the manifests, PROVENANCE.md and CHANGES-AFTER-IMPORT.md) has its
       present sha256 on a line of CHANGES-AFTER-IMPORT.md that also names its path in backticks
-  P1-P5  plants on the same reading, in memory: a changed file left unlisted, a manifest line altered, an added file
-      left unlisted, a manifest's own sha256 missing from PROVENANCE.md, a listed file copied to an unlisted path;
-      each must turn its row red
+  M4  (ruling SY-2) every file of orlog/ and verdandi/ that differs from its pin has a reason: the pin is the
+      manifest with the RE-PIN rows of CHANGES-AFTER-IMPORT.md's "## Drift classification" sections laid over it in
+      order, and the last row naming the file is "SKULDD-ONLY BY RULING <id>" or "SENT BACK <route>" with the pin's
+      sha256 (or "absent") before and the file's (or "removed") after; every table line in those sections parses
+      (the grammar of tools/ci/drift.py, which also holds the RE-PIN rows to the original's commits)
+  P1-P8  plants on the same reading, in memory: a changed file left unlisted, a manifest line altered, an added file
+      left unlisted, a manifest's own sha256 missing from PROVENANCE.md, a listed file copied to an unlisted path, a
+      copy's file changed and listed by its hashes but with no classification row, a copy's file changed with a
+      classification row naming other bytes, a classification line that does not parse; each must turn its row red
 
     python -B tools/check_manifests.py [ROOT]          (ROOT: the tree's top folder; default: this file's parent's)
 
 Last line: "MANIFESTS RECONCILED: n of n rows" or "MANIFESTS NOT RECONCILED: k of n rows failed".
 What it does not show: that a listed change was ruled or is right (CHANGES-AFTER-IMPORT.md is read, not judged); git
-history; anything about the import's sources beyond the manifests' own hashes.
+history; anything about the import's sources beyond the manifests' own hashes; that a RE-PIN row's bytes are the
+original's at that commit, or that the original has not moved (tools/ci/drift.py, with a clone of the original).
+A message names a copy's file only when the file is in the tree: a removed file is named by its pinned sha256.
 """
 import hashlib
 import os
@@ -32,6 +40,21 @@ sys.dont_write_bytecode = True
 PARTS = ("orlog", "verdandi", "kernel", "root")
 SELF = {"PROVENANCE.md", "CHANGES-AFTER-IMPORT.md"} | {"MANIFEST.%s.txt" % p for p in PARTS}
 HEX = re.compile(r"^[0-9a-f]{64}$")
+COPIES = ("orlog", "verdandi")
+# the classification grammar, the same as tools/ci/drift.py's (a change to one is a change to both)
+SECTION = re.compile(r"^## Drift classification\b")
+HEADING = re.compile(r"^#{1,6} ")
+ROW = re.compile(r"^\| `((?:orlog|verdandi)/[^`|]+)` \| (absent|[0-9a-f]{64}) \| (removed|[0-9a-f]{64}) \| "
+                 r"([^|]*[^| ]) \|$")
+HEADER = re.compile(r"^\| File \| sha256 before \| sha256 after \| Class \|$")
+SEPARATOR = re.compile(r"^\|(?: ?:?-{3,}:? ?\|){4}$")
+RULING_ID = r"[A-Z][A-Z0-9]*(?:-[0-9]+)?(?: \([a-z0-9]+\))*"
+CLASSES = (
+    ("RE-PIN", re.compile(r"RE-PIN ([0-9a-f]{40})")),
+    ("SKULDD-ONLY", re.compile(r"SKULDD-ONLY BY RULING (%s)" % RULING_ID)),
+    ("SENT BACK", re.compile(r"SENT BACK (?:(?:Orlog|\u00d8rl\u01ebg) pull request #[1-9][0-9]*|"
+                             r"(?:Verdandi|Ver\u00f0andi) patch [A-Za-z0-9][A-Za-z0-9._-]*\.patch)")),
+)
 
 
 def sha(b):
@@ -76,8 +99,73 @@ def read_manifests(root):
     return lines, problems, own
 
 
+def pattern(path):
+    """A row's path as a pattern: <host> stands for one path segment's part."""
+    return re.compile("[^/]+".join(re.escape(x) for x in path.split("<host>")))
+
+
+def classification(changes):
+    """(rows, problems): the rows [(line, path, before, after, kind)] of the "## Drift classification" sections."""
+    rows, problems, inside = [], [], False
+    for n, line in enumerate(changes.split("\n"), 1):
+        line = line.rstrip("\r")
+        if HEADING.match(line):
+            inside = bool(SECTION.match(line))
+            continue
+        if not inside or not line.startswith("|") or HEADER.match(line) or SEPARATOR.match(line):
+            continue
+        m = ROW.match(line)
+        kind = next((k for k, rx in CLASSES if m and rx.fullmatch(m.group(4))), None)
+        if not m or kind is None:
+            problems.append("CHANGES-AFTER-IMPORT.md line %d is not a classification row" % n)
+            continue
+        path, before, after, cls = m.groups()
+        if kind == "SENT BACK" and (("patch" in cls) != path.startswith("verdandi/")):
+            problems.append("CHANGES-AFTER-IMPORT.md line %d sends a file back by the other repository's route" % n)
+            continue
+        if "<host>" in path and after != "removed":
+            problems.append("CHANGES-AFTER-IMPORT.md line %d writes <host> in a file that is still here" % n)
+            continue
+        rows.append((n, path, before, after, kind))
+    return rows, problems
+
+
+def m4(lines, changes, present):
+    """Row M4: every file of the copies that differs from its pin has, as the last row naming it, its reason."""
+    rows, p4 = classification(changes)
+    differ = 0
+    for part in COPIES:
+        pin = {path: h for h, path in lines.get(part, [])}
+        for n, path, before, after, kind in rows:
+            if kind != "RE-PIN" or not path.startswith(part + "/"):
+                continue
+            for p in ([q for q in set(pin) | set(present) if pattern(path).fullmatch(q)] if "<host>" in path
+                      else [path]):
+                if after == "removed":
+                    pin.pop(p, None)
+                else:
+                    pin[p] = after
+        here = {p: h for p, h in present.items() if p.startswith(part + "/")}
+        for p in sorted(set(pin) | set(here)):
+            before, after = pin.get(p, "absent"), here.get(p, "removed")
+            if before == after:
+                continue
+            differ += 1
+            last = None
+            for r in rows:
+                if r[4] != "RE-PIN" and pattern(r[1]).fullmatch(p):
+                    last = r
+            if not (last and last[2] == before and last[3] == after):
+                p4.append("%s differs from its pin and %s" % (
+                    p if p in here else "a removed file (pinned sha256 %s)" % before[:16],
+                    "its last classification row (line %d) names other bytes" % last[0] if last else
+                    "no classification row gives its reason"))
+    return ("M4", not p4, p4 or ["%d file(s) of orlog/ and verdandi/ differ from their pin, each with its reason"
+                                 % differ])
+
+
 def judge(lines, own, provenance, changes, present):
-    """The three rows on given inputs (the honest run and the plants use the same function)."""
+    """The four rows on given inputs (the honest run and the plants use the same function)."""
     rows = []
     p1 = [("PROVENANCE.md does not give %s's sha256 %s" % ("MANIFEST.%s.txt" % part, h[:16]))
           for part, h in own.items() if h not in provenance]
@@ -109,6 +197,7 @@ def judge(lines, own, provenance, changes, present):
           p, present[p][:16]) for p in extra
           if not any(present[p] in line and ("`%s`" % p) in line for line in change_lines)]
     rows.append(("M3", not p3, p3 or ["%d added file(s), each listed with its path and sha256" % len(extra)]))
+    rows.append(m4(lines, changes, present))
     return rows
 
 
@@ -134,11 +223,27 @@ def main(argv):
     listed_paths = {q for part in lines.values() for _, q in part}
     extra_now = sorted(p for p in present if p not in listed_paths and p not in SELF)
     p_copied = dict(present, **{"planted/copy-of-a-listed-file": present[extra_now[0] if extra_now else changed]})
+    # P6-P8 (M4): a copy's file that equals its manifest line, changed in memory and listed by both hashes
+    copy_file = next(p for part in COPIES for h, p in lines[part] if present.get(p) == h)
+    old_h, new_h = present[copy_file], sha(b"planted copy change")
+    p_copy = dict(present, **{copy_file: new_h})
+    c_listed = changes + "\n%s %s\n" % (old_h, new_h)
+    c_other = c_listed + ("\n## Drift classification (plant)\n\n| File | sha256 before | sha256 after | Class |\n"
+                          "|---|---|---|---|\n| `%s` | %s | %s | SKULDD-ONLY BY RULING C2 (b) |\n"
+                          % (copy_file, old_h, sha(b"other bytes")))
+    c_bad = changes + ("\n## Drift classification (plant)\n\n| File | sha256 before | sha256 after | Class |\n"
+                       "|---|---|---|---|\n| `%s` | %s | %s | SKULDD ONLY C2 |\n" % (copy_file, old_h, old_h))
     plants = [("P1 a changed file left unlisted", "M2", judge(lines, own, provenance, changes, p_changed)),
               ("P2 a manifest line altered", "M2", judge(altered, own, provenance, changes, present)),
               ("P3 an added file left unlisted", "M3", judge(lines, own, provenance, changes, p_added)),
               ("P4 a manifest PROVENANCE.md does not name", "M1", judge(lines, own_gone, provenance, changes, present)),
-              ("P5 a listed file copied to an unlisted path", "M3", judge(lines, own, provenance, changes, p_copied))]
+              ("P5 a listed file copied to an unlisted path", "M3", judge(lines, own, provenance, changes, p_copied)),
+              ("P6 a copy's file changed, listed, with no reason", "M4", judge(lines, own, provenance, c_listed,
+                                                                                p_copy)),
+              ("P7 a copy's file changed, its row naming other bytes", "M4", judge(lines, own, provenance, c_other,
+                                                                                    p_copy)),
+              ("P8 a classification line that does not parse", "M4", judge(lines, own, provenance, c_bad,
+                                                                            present))]
     for name, key, got in plants:
         red = not dict((r[0], r[1]) for r in got)[key]
         rows.append((name, red, ["row %s %s" % (key, "turned red: CAUGHT" if red else "stayed green: NOT CAUGHT")]))

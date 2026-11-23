@@ -4,13 +4,21 @@
 # whose recipe is not in this tree. Coq is in opam's default repository; coq-flocq is not (opam.ocaml.org has no
 # coq-flocq page: HTTP 404, read 2026-11-17). It is in the Rocq/Coq "released" repository, added below as that
 # repository's README says. Its release build needs a C++ compiler (build-essential); autoconf is installed as a
-# precaution, needed only for development builds. The top-level versions are pinned; the base image is the
-# ubuntu:24.04 tag, and both opam repositories and every dependency below the pinned packages are as they stand at
-# build time. So the build records what it got: the whole opam switch is exported to /opt/mk-switch.export, and the
-# image job prints it, the repositories, the base image's digest, the image's id and the sha256 of coqc, coqchk and
-# python3. Before the image is kept, it must load Flocq and Coq's reals. No kernel source enters the image: the gate's
-# tree is mounted at run time. The container runs as root, so a gate can write its out4 folders into the mounted tree.
-FROM ubuntu:24.04
+# precaution, needed only for development builds. The base image is pinned by its digest: the one the ubuntu:24.04
+# tag resolved to in the four CI image builds that ci/mathkernel/EXPECTED-TOOLCHAIN.txt names. The install line pins
+# the two packages it names, coq and coq-flocq, by version. The apt packages, both opam repositories and every
+# dependency below those two are as they stand at build time. No dependency is named on the install line: opam would
+# make it a root of the switch, and the switch export the record holds would change. Instead
+# ci/mathkernel/EXPECTED-TOOLCHAIN.txt records the version of every opam package the four builds installed, apart from
+# the compiler's three base-* packages, which the check allows by name at version "base", so a dependency that drifts
+# fails the toolchain check (a review event). So the build records what it got: the whole opam
+# switch is exported to /opt/mk-switch.export, and the image job prints it, the repositories, the base image's digest,
+# the image's id and the sha256 of coqc, coqchk and python3; tools/ci/check_toolchain.py compares what
+# tools/ci/toolchain_probe.sh prints inside the image with
+# ci/mathkernel/EXPECTED-TOOLCHAIN.txt. Before the image is kept, it must load Flocq and Coq's reals. No kernel source
+# enters the image: the gate's tree is mounted at run time. The container runs as root, so a gate can write its out4
+# folders into the mounted tree.
+FROM ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8
 
 ENV DEBIAN_FRONTEND=noninteractive \
     OPAMROOT=/opt/opam \

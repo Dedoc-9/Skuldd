@@ -1,0 +1,19 @@
+# Predictions for tools/ci/tests/test_read_audit.py, fifth file (after review round 7), written by the assistant on
+# 2026-11-20 before any of these cases first ran; no line changes after that run. A line: "case | exit <n> | rows that
+# FAIL (hook, reads, runs) or - | what the case does". Every case here writes its marker file outside the tree (the
+# test checks that it exists).
+#
+# What the round changes. (1) Review 7 found that on POSIX os.spawnv forks (Lib/os.py's spawnv calls fork, then exec
+# in the child) and the hook refuses "os.fork", so the stand-in's "spawn" and "spawn-isolated" children, which the
+# fourth file's a14, a15 and a17 run, would fail the hook row on Linux where a15 and a17 predict otherwise. The
+# stand-in now starts those children with os.spawnv on Windows and with os.posix_spawn on POSIX (judged by the event
+# "os.posix_spawn"), so the frozen outcomes of a14, a15 and a17 hold on both; a55 runs os.spawnv itself and is refused
+# on both (on Windows, where os.spawnv does not fork, the stand-in raises the event "os.fork" by hand before it).
+# (2) A program that is not Python raises no event of the processes the hook watches, so what it reads is not seen; the
+# hook now logs whether each process it judges as given its environment is a Python run (by its program's or its first
+# argument's name), and the hook row fails on a program that is not Python started outside a run's new temporary
+# folder (a56); started inside one, it is not judged (a57, a decoy). The repository's own tests start git and sh only
+# in their temporary folders (test_records.py, test_check_toolchain.py).
+a55 | exit 1 | hook | spawnv: os.spawnv of a child that keeps the hook and reads docs/m.md; on POSIX os.spawnv forks, which the hook refuses; on Windows the event "os.fork" raised by hand before it
+a56 | exit 1 | hook | foreign: git --version, a program that is not Python, started with the hook's environment from the tree's root
+a57 | exit 0 | - | foreign-temporary: the same git started in the new temporary folder the stand-in made in the tree (a decoy)

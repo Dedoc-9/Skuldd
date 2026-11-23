@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# PREDICTIONS-check_toolchain-4.txt: a fourth round of plants for tools/ci/tests/test_check_toolchain.py. Written by
+# the assistant on 2026-11-20, after review 8 found that tools/ci/toolchain_probe.sh printed a record-only value (env
+# COQPATH, COQLIB, OCAMLPATH, OCAMLRUNPARAM) raw, so a value holding a line feed printed a line of its own that
+# tools/ci/check_toolchain.py read as a key ("opam zarith 1.14" made a missing package look installed); written before
+# any run of this plant; not changed after its first run. The probe now prints such a value as "failed". The rows R1 to
+# R9 are the ones PREDICTIONS-check_toolchain.txt names, and the form of a plant line is that file's. The test reads
+# the four files; a plant is named in one of them only. The plant is the probe's own output under the test's sh (Git
+# Bash's here), with the stub tools of "probe-stub-judged" but an opam stub that lists no zarith, and OCAMLRUNPARAM =
+# "b", a line feed, "opam zarith 1.14": the stubs' paths and hashes fail R3 and R8 as in "probe-stub-judged", and
+# zarith, absent, fails R6 (review 8's H01, which failed R3 and R8 only before this round, and H01c).
+plant probe-env-line-feed | observed | the probe's output with OCAMLRUNPARAM holding a line feed and "opam zarith 1.14", opam listing no zarith | R3; R6; R8

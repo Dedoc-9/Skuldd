@@ -1,0 +1,1 @@
+NonCumulative Inductive N := n.

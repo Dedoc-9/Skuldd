@@ -1,0 +1,15 @@
+# Predictions for tools/ci/tests/test_inventory.py, fifteenth round: no case. Written by the assistant on 2026-11-22
+# (UTC), before any run of test_inventory.py with this file; its sha256 was recorded then, and no line changes after
+# it. Format as in PREDICTIONS-inventory.txt. test_inventory.py reads it after PREDICTIONS-inventory-14.txt and does
+# not list it in SUPERSEDING, so it cannot predict an earlier case again; it names none.
+# Why: THEOREMS.md's Successors table gains three rows, 11 in all: SINCOS32_NONZERO under SINCOS32_ALL, and
+# EXP32_ADJ under EXP32 and under EXP32_RANGE, relation "adds"; the sentence above the table names them. Every name
+# the three rows add is a statement of the proved table, whose rows do not change. A case could move only if its
+# plant left the proved rows of sincos32, exp32, exp32r, sincos32n or exp32a unread, or changed their Statement
+# cells, while the rows of floor32 to fclink, below all five, were still read; or if a plant that finds its place by
+# a line's start or by a text's bytes found another place in the new text. No plant does either: P52 leaves every
+# row from sincos32n on unread, floor32 to fclink among them, so the successor row fails as
+# PREDICTIONS-inventory-14.txt says; P38 lists exp32r's two statements in the other order, the same names; the other
+# plants that touch THEOREMS.md edit other rows, the whole table, the Successors table's frame or the file's end,
+# and fail or hold as with 8 rows. So every case is predicted as the earlier files predict it (argued case by case
+# before this file was frozen).

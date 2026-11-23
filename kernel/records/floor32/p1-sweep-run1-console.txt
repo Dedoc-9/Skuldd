@@ -1,0 +1,17 @@
+p1 sweep run1, 2026-11-18T14:32:55Z
+sweep_fc.c: OK
+run_sweep.sh: OK
+clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+62e3fc3c9bbed69f2a26ad8a4c8516109726a4d095a129ca020f30080fbe99ab *sweep_fc.exe
+e02cc46995562081b26f417bed25f0472ca7615ae6e698c05bcfc4e9684e9d90 *sweep_fc_plant.exe
+floor32 plant=0 inputs 4294967296 | differs from host floorf: 0 | differs from integer reference: 0 | NaN-ness disagrees: 0 | -0 results: 1 | as expected
+ceil32  plant=0 inputs 4294967296 | differs from host ceilf : 0 | differs from integer reference: 0 | NaN-ness disagrees: 0 | -0 results: 1065353216 | as expected
+SWEEP HELD (plant=0)
+program exit 0 (26 s)
+floor32 plant=1 inputs 4294967296 | differs from host floorf: 1 | differs from integer reference: 1 | NaN-ness disagrees: 0 | -0 results: 0 | as expected
+  first difference from the host at 0x80000000
+ceil32  plant=1 inputs 4294967296 | differs from host ceilf : 1065353216 | differs from integer reference: 1065353216 | NaN-ness disagrees: 0 | -0 results: 0 | as expected
+  first difference from the host at 0x80000000
+SWEEP HELD (plant=1)
+plant exit 0 (25 s)
+SWEEPS HELD (program c0b4b71092f84162)

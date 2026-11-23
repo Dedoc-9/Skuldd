@@ -1,0 +1,92 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py: what each inline guard of the two workflows does on each case.
+# Written by the assistant on 2026-11-19, before the test's first run; its sha256 was recorded then, and no line
+# changes after that run: a case whose result differs from its line stays red and is explained.
+# One line per case: case | outcome | checks | what the case is. Outcome: "exit <n>" (the step's exit code) or, for the
+# two steps cases, "ok" or "FAIL". Checks, comma-separated, or "-": msg:<text> (the step's error output holds it),
+# say:<text> (its output holds it), out:<n> (it wrote n lines to GITHUB_OUTPUT), outeq:<key> (its GITHUB_OUTPUT line
+# for key is the value the test computed: the honest matrix, the stand-in image id, the pinned base, the toolchain
+# digest check_toolchain.py printed), base:recorded (base-image.txt holds the reference the case's first FROM line
+# names), cr (the case plants a value ending in CR LF: bash on Linux keeps that CR, so the guard refuses; Git Bash
+# drops it), missing:<step name> (the steps check names that step). The workspace, the stand-ins and the honest
+# inputs are as the test's header says; f32 is the folder of the single-folder cases, p32 the "other" folder.
+steps | ok | - | every step the cases below run is in the two workflows' text once, with a run: block
+steps-plant | FAIL | missing:Every other job of this run succeeded | the same check on a copy of mathkernel-linux.yml whose verdict step is renamed "Every job succeeded"
+k01 | exit 0 | say:among 3 tracked files | mathkernel-linux.yml's "No compiled Python is tracked", three tracked files, none compiled
+k02 | exit 2 | msg:REFUSED | the same with tools/ci/__pycache__/inventory.cpython-312.pyc tracked
+k03 | exit 2 | msg:REFUSED | the same with kernel/coq/gate/strict_read.pyo tracked
+k11 | exit 0 | say:among 3 tracked files | integrity.yml's "No compiled Python is tracked", three tracked files, none compiled
+k12 | exit 2 | msg:REFUSED | the same with json.pyc tracked at the top
+m01 | exit 0 | out:1,outeq:matrix | the inventory step given the matrix tools/ci/inventory.py wrote for this tree
+m02 | exit 2 | out:0,msg:not one line | that matrix followed by a second line "matrix={...}"
+m03 | exit 2 | out:0,msg:not one line,cr | that matrix ending in CR LF
+m04 | exit 2 | out:0,msg:anchor variables | {"include":[]}
+m05 | exit 2 | out:0,msg:anchor variables | one entry, its folder F32 in capitals
+m06 | exit 2 | out:0,msg:anchor variables | one entry with a third key "x"
+m07 | exit 2 | out:0,msg:anchor variables | the honest matrix with a space after "include":
+m08 | exit 2 | out:0,msg:anchor variables | one entry whose anchor is GITHUB_TOKEN
+m09 | exit 2 | out:0,msg:anchor variables | the honest matrix with a second top-level key "exclude"
+m10 | exit 1 | out:0 | the inventory exits 0 and writes no matrix file
+m11 | exit 1 | out:0 | the inventory exits 1 (after writing the honest matrix)
+m12 | exit 0 | out:1,outeq:matrix | a decoy: the honest matrix followed by two newlines (command substitution drops them)
+m13 | exit 2 | out:0,msg:anchor variables | a malformed matrix line: one f32 entry, its closing "]}" missing
+m14 | exit 2 | out:0,msg:not one line | the honest matrix with a CR after its first character
+b01 | exit 0 | base:recorded | the image build step given build output whose "[1/4] FROM" line names the pinned base
+b02 | exit 0 | base:recorded | that FROM line's reference followed by a second "@sha256:<digest>": the first reference is recorded
+b03 | exit 2 | msg:digest | a FROM line with no digest
+b04 | exit 1 | - | the build exits 1 (pipefail through tee)
+b05 | exit 0 | base:recorded | two "[1/4] FROM" lines, another digest first: the first is recorded (the next step refuses it)
+i01 | exit 0 | out:2,outeq:image_id,outeq:base_image | the image step, base-image.txt holding the pinned base, the stand-in image id
+i02 | exit 2 | out:0,msg:pins | base-image.txt naming another digest
+i03 | exit 2 | out:0,msg:no recorded base | no base-image.txt
+i04 | exit 2 | out:0,msg:exactly one FROM | the Dockerfile's FROM line without its digest
+i05 | exit 2 | out:0,msg:exactly one FROM | the Dockerfile with two pinned FROM lines
+i06 | exit 2 | out:0,msg:not one line | base-image.txt with a line "junk" before the base
+i07 | exit 2 | out:0,msg:not in the form | the image id "abc"
+i08 | exit 2 | out:0,msg:not one line | the image id twice, on two lines
+i09 | exit 2 | out:0,msg:exactly one FROM | the Dockerfile's FROM line followed by " AS base"
+i10 | exit 2 | out:0,msg:pins,cr | base-image.txt ending in CR LF
+t01 | exit 0 | out:1,outeq:digest | the image job's toolchain step, the probe's output built from the record
+t02 | exit 1 | out:0,msg:REFUSED | the probe exits 3
+t03 | exit 1 | out:0,msg:REFUSED | the probe prints another sha256 for coqc
+t04 | exit 1 | out:0,msg:REFUSED | the probe prints nothing
+a01 | exit 0 | - | the gate's first step, f32 with MK_ANCHOR_F32 holding the sha256 of f32's FROZEN4.txt
+a02 | exit 2 | msg:missing | the anchor empty (the variable unset)
+a03 | exit 2 | msg:missing | the anchor in capitals
+a04 | exit 2 | msg:missing | the anchor's first 63 digits
+a05 | exit 2 | msg:matrix entry | f32 with the variable name MK_ANCHOR_P32
+a06 | exit 2 | msg:missing | the anchor followed by a newline and "junk"
+a07 | exit 2 | msg:matrix entry | the folder F32 in capitals
+a08 | exit 2 | msg:missing | the anchor followed by a space
+r01 | exit 0 | - | the ANCHORS.md step for every folder of the honest matrix, each given the sha256 of its FROZEN4.txt (one run each)
+r02 | exit 2 | msg:REFUSED | f32 given p32's anchor
+r03 | exit 2 | msg:REFUSED | f32 named with the variable MK_ANCHOR_P32
+r04 | exit 2 | msg:REFUSED | a folder newf that ANCHORS.md does not hold
+r05 | exit 2 | msg:REFUSED | f32 given an empty anchor
+r06 | exit 2 | msg:REFUSED | ANCHORS.md with a stray f32 row (64 zeros) after its table and a blank line
+l01 | exit 0 | - | the gate's load step, the image job's id and base
+l02 | exit 2 | msg:the image job checked | the loaded image's id differs in its last digit
+l03 | exit 2 | msg:the image job checked | the image job's id empty
+l04 | exit 2 | msg:the image job's is | the cached base-image.txt naming another digest
+g01 | exit 0 | - | the gate's toolchain step, the image job's toolchain digest
+g02 | exit 1 | msg:REFUSED | the image job's toolchain digest empty
+g03 | exit 1 | msg:REFUSED | the probe prints another sha256 for coqc
+f01 | exit 0 | say:FEATURE ROW (stand-in) HELD | the gate's feature-row step, both rows holding
+f02 | exit 1 | - | feature row 4 exits 1
+e01 | exit 0 | - | the gate step, a console whose anchored row is ok with f32's anchor
+e02 | exit 2 | msg:anchored row | the anchored row names p32's anchor
+e03 | exit 2 | msg:anchored row | the anchored row FAIL
+e04 | exit 1 | - | the gate exits 1 (pipefail through tee)
+v01 | exit 0 | say:every job of this run succeeded | the verdict's first step, the four jobs success
+v02 | exit 1 | msg:inventory: failure | inventory failure, gate skipped
+v03 | exit 1 | msg:gate: failure | gate failure
+v04 | exit 1 | msg:image: failure | image failure, gate skipped
+v05 | exit 1 | msg:gate: cancelled | gate cancelled
+v06 | exit 1 | msg:the jobs needed are | fpenv missing from needs
+v07 | exit 1 | msg:REFUSED | needs {}
+v08 | exit 1 | msg:gate: None | gate's value a string, not an object
+v09 | exit 1 | msg:skipped | every job skipped
+v10 | exit 1 | - | needs not JSON (a traceback)
+n01 | exit 0 | say: 0 failed | integrity's feature-row step on this tree's inventory JSON, every row (a stand-in) holding
+n02 | exit 1 | say:1 failed,msg:REFUSED | feature row 4 failing on kernel/coq/f32/FROZEN4.txt only
+n03 | exit 1 | say:of 0 gated folders,msg:REFUSED | an inventory JSON with no gated folder and one copy
+n04 | exit 1 | - | an inventory JSON that is not JSON (the list writer stops)

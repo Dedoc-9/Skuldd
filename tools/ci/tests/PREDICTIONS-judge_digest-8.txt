@@ -1,0 +1,27 @@
+# Predictions for tools/ci/tests/test_judge_digest.py, eighth round: cases V01-V13.
+# Written by the assistant on 2026-11-22, before any run of these cases; its sha256 was recorded then, and no
+# prediction changes after it. The format and the outcomes are those of PREDICTIONS-judge_digest.txt.
+# Why an eighth round: under ruling S282-3 (b) of 2026-11-22 the judge gained the required group boundaries-frozen:
+# BOUNDARIES.md (the boundary map) and the FROZEN.txt directly inside each folder under kernel/coq (a folder's record
+# of its statement files' sha256). Before, a change to either left the digest unmoved. The group's row fails when
+# BOUNDARIES.md is missing or no such FROZEN.txt is found; a link directly under kernel/coq, where a FROZEN.txt is
+# looked for, fails the row "judge files are plain files". kernel/records is not in the group (the same ruling).
+# C01 and C02: with eighteen groups the judge prints 21 rows without --expect and 22 with it; the test counts them
+# from its own table of the groups. Its own listing of the judge files (C01, C03, C05) takes the group's files too.
+# "The first FROZEN.txt" is the first kernel/coq/<folder>/FROZEN.txt of the copy by path (bits32's in this tree).
+# V01-V03: the expected-digest row must name a new digest.
+# A mutant, the judge without the group's one line in GROUPS, is predicted to fail C01, C02, C03, C05, V01-V07 and
+# V11-V13 and no other case (a comment: the test does not read it).
+V01 | FAILED expected digest | one byte of BOUNDARIES.md changed
+V02 | FAILED expected digest | one byte of the first FROZEN.txt changed
+V03 | FAILED expected digest | a new folder kernel/coq/zz32 holding a FROZEN.txt added
+V04 | FAILED group boundaries-frozen | BOUNDARIES.md removed (every FROZEN.txt kept)
+V05 | FAILED group boundaries-frozen | every kernel/coq/<folder>/FROZEN.txt removed (BOUNDARIES.md kept)
+V06 | FAILED judge files are plain files | the first FROZEN.txt's folder moved out and a link to it put in its place
+V07 | FAILED judge files are plain files | the first FROZEN.txt replaced by a folder of that name
+V08 | HELD | a file added under kernel/records (kernel/records/floor32/extra.txt): outside the group, by the ruling
+V09 | HELD | a file NOTES.md added beside the first FROZEN.txt, in its folder (outside the judge)
+V10 | HELD | a FROZEN.txt two levels down (sub/FROZEN.txt in the first FROZEN.txt's folder): the group takes one level
+V11 | USAGE | --json BOUNDARIES.md of a fresh copy: exit 2, no verdict line, its bytes as they were
+V12 | USAGE | --json the first FROZEN.txt of a fresh copy: exit 2, no verdict line, its bytes as they were
+V13 | USAGE | --json boundaries.md (lower case) of a fresh copy: exit 2, no verdict line, the path as it was

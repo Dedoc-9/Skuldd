@@ -1,0 +1,20 @@
+# Predictions for tools/ci/tests/test_workflow_pins.py, second file: the cases added when the rows triggers and
+# permissions were made to read every YAML form a reviewer found passing them (review loop of Push A, round 1). Written
+# by the assistant on 2026-11-22, before the first run of these cases; its sha256 is recorded outside this file then,
+# and no line changes after it (a correction is a new file). The test reads it after PREDICTIONS-workflow_pins.txt,
+# whose lines stand as they are. One line per case: id | HELD or FAILED | the rows that fail (or -) | what. Each case
+# changes one workflow text in memory; ON is drift.yml's whole "on:" block (push, pull_request, schedule,
+# workflow_dispatch).
+W14 | FAILED | triggers | drift.yml's ON made the flow sequence "on: [push, pull_request_target]"
+W15 | FAILED | triggers | drift.yml's ON made the scalar "on: workflow_run"
+W16 | FAILED | triggers | drift.yml's ON made a block sequence: "on:", "  - push", "  - pull_request_target"
+W17 | FAILED | permissions | "  id-token: write" after a blank line under drift.yml's top-level "  contents: read"
+W18 | HELD | - | a decoy: drift.yml's "  push:" given the comment "# never pull_request_target" on its line
+W19 | HELD | - | a decoy: a blank line and the comment line "  # read only" under drift.yml's "  contents: read"
+W20 | HELD | - | a decoy: a whole comment line "# not on workflow_run" put at the top of drift.yml
+#
+# Mutants, each a copy of the test with one change, run on the same workflows (not read by the test):
+# mutant M0: none, the control: every case of both files holds.
+# mutant M1: the row triggers back to its first form (a line that starts "pull_request_target:" or "workflow_run:"):
+#   exactly W14, W15 and W16 fail.
+# mutant M2: the row permissions back to its first form (the two lines under "permissions:" only): exactly W17 fails.

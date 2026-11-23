@@ -1,0 +1,3 @@
+# A list in the form of FROZEN4.txt for the input row, written by make_feature_plants4.py.
+1e2c10c6bc31cfc047f0f8fa8af1f7eaf19b2cae5aa2fd4c938dd9d14da0738c  /decoy4_comment.v
+9711e841306a820eecd0302d002fd7b8d1d8b5f3891a6cffabac46c43cc817b6  decoy4_identifiers.v

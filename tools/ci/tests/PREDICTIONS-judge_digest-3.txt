@@ -1,0 +1,21 @@
+# Predictions for tools/ci/tests/test_judge_digest.py, third round: cases R01-R09 and U05.
+# Written by the assistant on 2026-11-18, after review, before any run of these cases; its sha256 was recorded then,
+# and no prediction changes after it. The format and the outcomes are those of PREDICTIONS-judge_digest.txt.
+# Why a third round: the judge gained five groups. anchors-ledger (kernel/coq/ANCHORS.md), fpenv-check
+# (kernel/runtime/check_fpenv.py) and fpenv-test (kernel/runtime/test_fpenv.c) must each hold a file; top-py (*.py at
+# the repository's top) and local-actions (.github/actions/**) may hold none. And the inventory JSON must say "held":
+# true as well as a HELD verdict.
+# C01 and C02: with fourteen groups the judge prints 17 rows without --expect and 18 with it. The first file's
+# comment says 12 and 13, which was true of the nine-group judge; the outcomes it predicts (HELD) stand, and the test
+# now counts the rows from its own table of the groups.
+# R01-R03, R05: the expected-digest row must name a new digest.
+R01 | FAILED expected digest | a file json.py added at the top of the copy (group top-py)
+R02 | FAILED expected digest | a local action added as .github/actions/local/action.yml (group local-actions)
+R03 | FAILED expected digest | one byte of kernel/runtime/check_fpenv.py changed
+R04 | FAILED group fpenv-test | kernel/runtime/test_fpenv.c removed
+R05 | FAILED expected digest | one byte of kernel/coq/ANCHORS.md changed
+R06 | FAILED group anchors-ledger | kernel/coq/ANCHORS.md removed
+R07 | FAILED inventory digest | --inventory-json self-consistent, its verdict INVENTORY HELD, but "held" false
+R08 | HELD | a file docs/extra.py added (not at the top: outside the judge)
+R09 | HELD | a file README.PY added at the top (not "*.py": Python imports no module from it on Linux)
+U05 | USAGE | --json OUT at the top of the root as judge.py (where it would be a judge file); OUT is not written

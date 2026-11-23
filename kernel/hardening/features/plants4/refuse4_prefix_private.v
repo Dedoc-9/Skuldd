@@ -1,0 +1,1 @@
+Private Inductive P := p.

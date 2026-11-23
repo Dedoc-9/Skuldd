@@ -1,0 +1,8 @@
+# Addendum to tools/ci/tests/PREDICTIONS-check_gate_log-repo.txt: the cases of ruling RD-2 (a) of 2026-11-23 (row 14
+# exempts from the identity's Closure.out only the modules a list in check_gate_log.py names per folder, now ieee64's
+# P32_IEEE_Check and EXP32_IEEE_Check, each only when the gate's log shows it compiled). test_check_gate_log.py reads
+# it in the --repo-data mode only (PRED_REPO_ADDENDA); it names no case the other files name. Written by the assistant
+# on 2026-11-23 (UTC), before any run of these cases; its sha256 was recorded then, and no line changes after it.
+r01-check-modules-outside | none | ieee64: P32_IEEE_Check and EXP32_IEEE_Check out of Closure.out, both compiled
+r02-unlisted-module-outside | 14 | ieee64: Ops out of Closure.out, compiled, but not on the list
+r03-listed-module-not-compiled | 14 | ieee64: P32_IEEE_Check out of Closure.out, its compile row renamed

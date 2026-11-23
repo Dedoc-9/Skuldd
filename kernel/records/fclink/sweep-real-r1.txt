@@ -1,0 +1,30 @@
+  input                          ok  use fclink: 2 runs (frozen, never-step)
+  source                         ok  kernel/coq/fclink/sweep_fc2.c sha256 924bd031c84172fd98203f1b755f1f63b8cc62aecd76bd6358273f00fc2a7005
+  freeze list                    ok  kernel/coq/fclink/FROZEN.txt records 924bd031c84172fd for kernel/coq/fclink/sweep_fc2.c
+  run sources                    ok  frozen 924bd031c84172fd, never-step 212cfd4a138336a0
+  compiler cc1                   ok  clang: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3 (clang; x86_64-pc-windows-msvc; machine x86-64)
+  canary fma cc1                 ok  the scan finds vfmadd213sd in cc1-canary-fma.o
+  canary x87 cc1                 ok  the scan finds fninit in cc1-canary-x87.o
+  build cc1 -O0 frozen           ok  clang -std=c99 -ffp-contract=off -O0 -DWANT_F=0 -DWANT_C=0 -DNEGZ_F=1 -DNEGZ_C=1065353216 -c, linked
+  scan cc1 -O0 frozen            ok  947 instructions, no x87 or FMA
+  build cc1 -O0 never-step       ok  clang -std=c99 -ffp-contract=off -O0 -DWANT_F=1 -DWANT_C=1065353216 -DNEGZ_F=0 -DNEGZ_C=0 -c, linked
+  scan cc1 -O0 never-step        ok  947 instructions, no x87 or FMA
+  build cc1 -O2 frozen           ok  clang -std=c99 -ffp-contract=off -O2 -DWANT_F=0 -DWANT_C=0 -DNEGZ_F=1 -DNEGZ_C=1065353216 -c, linked
+  scan cc1 -O2 frozen            ok  377 instructions, no x87 or FMA
+  build cc1 -O2 never-step       ok  clang -std=c99 -ffp-contract=off -O2 -DWANT_F=1 -DWANT_C=1065353216 -DNEGZ_F=0 -DNEGZ_C=0 -c, linked
+  scan cc1 -O2 never-step        ok  347 instructions, no x87 or FMA
+  started cc1-O0-frozen
+  started cc1-O0-never-step
+  started cc1-O2-frozen
+  started cc1-O2-never-step
+  ended   cc1-O2-never-step: exit 0 after 49 s
+  ended   cc1-O2-frozen: exit 0 after 53 s
+  ended   cc1-O0-frozen: exit 0 after 286 s
+  ended   cc1-O0-never-step: exit 0 after 286 s
+  sweep cc1 -O0 frozen           ok  SWEEP2 HELD: floor32 0/1, ceil32 0/1065353216 (d/z) as predicted (286 s)
+  sweep cc1 -O0 never-step       ok  SWEEP2 HELD: floor32 1/0, ceil32 1065353216/0 (d/z) as predicted (286 s)
+  sweep cc1 -O2 frozen           ok  SWEEP2 HELD: floor32 0/1, ceil32 0/1065353216 (d/z) as predicted (53 s)
+  sweep cc1 -O2 never-step       ok  SWEEP2 HELD: floor32 1/0, ceil32 1065353216/0 (d/z) as predicted (49 s)
+SWEEP CHECK HELD: 19 of 19 rows (fclink; x86-64; clang)
+
+exit 0 (2026-11-22T12:21:03Z to 2026-11-22T12:25:52Z, clock of this host, UTC)

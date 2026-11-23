@@ -1,0 +1,25 @@
+# Predictions for tools/ci/tests/test_read_audit.py, eighth file (ruling S283-1 (a) of 2026-11-22), written by the
+# assistant on 2026-11-22 before any of these cases first ran; no line changes after that run. A line: "case | exit
+# <n> | rows that FAIL (hook, reads, runs) or - | what the case does".
+#
+# What the change is. On Push A's tree the read audit failed with "not bound: verdandi/mathkernel/F32/LIMITATIONS.md",
+# a file added after the import by a re-pin and recorded in CHANGES-AFTER-IMPORT.md only: tools/check_manifests.py's
+# row M3 accepts it (a line holding its present sha256 and its path in backticks), and the audit did not read that
+# file. read_audit.py now also binds a file that CHANGES-AFTER-IMPORT.md names with its present sha256, read as row M3
+# reads it: the file as UTF-8 text split into lines; the files M3 judges, found by check_manifests.py's own walk, its
+# list of the import's own records left out; each path with its exact case. These cases add CHANGES-AFTER-IMPORT.md
+# (its text as the case says), docs/c.md, docs/d.md and docs/build/c.md (the three with the same bytes) and
+# PROVENANCE.md to the tree; the stand-in test reads the files bound in every case and the one file the case names.
+# a61 is the honest case; the others are plants, each predicted to leave the file it reads unbound.
+# Mutants, each run on a copy of tools/ci and tools/check_manifests.py: with the new binding taken out, the test is
+# predicted to fail exactly a61; with the binding kept but its sha256 test taken out (the path in backticks enough),
+# exactly a62 and a64.
+a61 | exit 0 | - | docs/c.md named on one line with its present sha256 and its path in backticks: bound
+a62 | exit 1 | reads | docs/c.md named with its path in backticks and a wrong sha256 (of other bytes): not bound
+a63 | exit 1 | reads | docs/d.md read (docs/c.md's bytes), only docs/c.md named, as in a61: not bound
+a64 | exit 1 | reads | docs/c.md's path in backticks on one line, its present sha256 on the next: not bound
+a65 | exit 1 | reads | docs/c.md's present sha256 and its path, not in backticks, on one line: not bound
+a66 | exit 1 | reads | PROVENANCE.md named with its present sha256 (an import record M3 leaves out): not bound
+a67 | exit 1 | reads | docs/c.md read, `docs/C.md` (another case) named with docs/c.md's sha256: not bound
+a68 | exit 1 | reads | docs/build/c.md named with its present sha256 (a folder named build, which M3 skips): not bound
+a69 | exit 1 | reads | docs/c.md named as in a61, then a byte that is not UTF-8 in the file: nothing bound

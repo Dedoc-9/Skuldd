@@ -1,0 +1,6 @@
+# FROZEN of fclink: the statement files, frozen before their proof (2026-11-22). The sha256 below are the owner's, computed with Get-FileHash under R1 of Turn 228 and equal to the assistant's (ext-work/harden/STATE.md, "RULINGS S280 AND ADDENDUM 1"); its form and content follow ruling A1 (a).
+1a2be9a46d46ab8956765cc21a38be79e8f71600fbe9ea37c579ab7739859ed5  fclink/CPrint.v
+b974b59c98d88ee935a003a51e9895f01c6d316a48ec7d5332617c1f9396ea4e  fclink/FCLINK_Statement.v
+aa89a5557f5b8cf10709206fe267ffdba68b93e2322f61b3e7384cf8323456e7  fclink/KernelText.v
+924bd031c84172fd98203f1b755f1f63b8cc62aecd76bd6358273f00fc2a7005  fclink/sweep_fc2.c
+79dca82136338b94a6ac13c54b6dc26ac4cbcb5a47b2b911b19a214ace90b7dc  fclink/gen_kernel_text.py

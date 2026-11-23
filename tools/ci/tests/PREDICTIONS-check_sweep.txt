@@ -1,0 +1,89 @@
+# Predictions for tools/ci/tests/test_check_sweep.py: what each case of tools/ci/check_sweep.py must give. Written by
+# the assistant on 2026-11-22, before the test's first run; its sha256 was recorded then, and no line changes after
+# it. A case whose result differs from its line stays red and is explained; a new round is a new dated file.
+#
+# A line is "<case> | <outcome> | <detail> | <what the case is>". HELD: exit 0, a HELD verdict ending with the
+# detail; FAILED: exit 1, a FAILED verdict, and the rows that fail are exactly the detail's (comma-separated); USAGE:
+# exit 2 and no verdict line; ok: the tree's declared input reads with no problem. Unless a line says otherwise, a
+# check case runs candidate alpha (sweep_fc2.c's form, with a freeze list) with the compilers gcc and clang (cc1 and
+# cc2) on x86-64 through GNU objdump's form, --jobs 4. The runs of a candidate are "frozen" (the sweep) and its plant
+# ("never-step" for alpha, "plant1" for beta). Rows that are not reached are not printed, so they are not failed.
+H01 | HELD | (alpha; x86-64; gcc, clang) | honest: every row of alpha on x86-64
+H02 | HELD | (alpha; aarch64; gcc, clang) | honest on aarch64: no x87 canary; fadd, fmul, fmaxnm and fminnm are no FMA
+H03 | HELD | (beta; x86-64; gcc, clang) | honest: candidate beta (sweep_fc.c's form, no freeze list, PLANT=1)
+P01 | FAILED | input | two blanks between two words of a line
+P02 | FAILED | input | a tab between two words
+P03 | FAILED | input | a byte outside ASCII in a comment
+P04 | FAILED | input | no line end after the last line
+P05 | FAILED | input | two use lines
+P06 | FAILED | input | "use gamma", a candidate not declared
+P07 | FAILED | input | a run key no run has ("colour")
+P08 | FAILED | input | never-step's keys before its "run" line
+P09 | FAILED | input | a define with a name in lower case
+P10 | FAILED | input | the frozen run expects no ceil32 line
+P11 | FAILED | input | alpha without its plant run: no run predicts a difference
+P12 | FAILED | input | the frozen run predicts a floor32 difference: no run is the sweep
+P13 | FAILED | input | a path holding ".."
+P14 | FAILED | input | a sha256 in upper case
+P15 | FAILED | input | a "from" line in a run that builds the source as it is
+P16 | FAILED | input | a blank at the end of the use line
+P17 | FAILED | input | an empty input
+P20 | FAILED | source | the source with one more line: its sha256 is not the declared one
+P21 | FAILED | source | a folder where the source should be
+P22 | FAILED | source | no source
+P24 | FAILED | freeze list | the freeze list records another sha256 for the source
+P25 | FAILED | freeze list | the freeze list has no line for the source
+P26 | FAILED | freeze list | the freeze list has two lines for the source (a second, shorter path)
+P27 | FAILED | freeze list | no freeze list
+P28 | FAILED | run sources | the plant's replacement declared 3 times; the text occurs twice
+P29 | FAILED | run sources | the plant's declared sha256 is not that of the source it makes
+P30 | FAILED | input | the frozen run's sha256 is not the source's
+P31 | FAILED | compiler cc2 | clang cannot be started
+P32 | FAILED | compiler cc1 | gcc's machine is riscv64, neither x86-64 nor aarch64
+P33 | FAILED | compiler cc2 | clang's machine is aarch64 where gcc's is x86-64
+P34 | FAILED | compiler cc1 | gcc's --version names no known family
+P35 | FAILED | compiler cc1 | gcc's --version exits 1
+P36 | FAILED | canary fma cc1 | cc1's FMA canary lists no FMA instruction
+P37 | FAILED | canary x87 cc2 | cc2's x87 canary lists no x87 instruction
+P38 | FAILED | canary fma cc1 | objdump reads cc1's FMA canary as elf32-i386
+P40 | FAILED | build cc1 -O2 never-step, sweep cc1 -O2 never-step | that compile exits 1: no scan, no run
+P41 | FAILED | build cc2 -O0 frozen, sweep cc2 -O0 frozen | that link exits 1: no scan, no run
+P42 | FAILED | scan cc1 -O2 frozen, sweep cc1 -O2 frozen | vfmadd231sd in that object: it is not run
+P43 | FAILED | scan cc2 -O0 never-step, sweep cc2 -O0 never-step | fldt (x87) in that object
+P45 | FAILED | scan cc2 -O2 frozen, sweep cc2 -O2 frozen | on aarch64, fmla in that object
+P46 | FAILED | scan cc1 -O0 frozen, sweep cc1 -O0 frozen | objdump lists no instruction of that object
+P47 | FAILED | scan cc2 -O2 never-step, sweep cc2 -O2 never-step | objdump reads that object as elf64-littleaarch64
+P50 | FAILED | sweep cc1 -O0 frozen | floor32's difference from floorf printed as 1, the rest as predicted
+P51 | FAILED | sweep cc2 -O2 frozen | floor32's NaN-ness disagreeing on 1
+P52 | FAILED | sweep cc1 -O2 never-step | floor32's -0 results printed as 2
+P53 | FAILED | sweep cc2 -O0 never-step | the program exits 1
+P54 | FAILED | sweep cc1 -O0 never-step | the program still running at its time limit
+P55 | FAILED | sweep cc2 -O2 never-step | a line "done" after the verdict line
+P56 | FAILED | sweep cc1 -O2 never-step | floor32's "first difference" line missing in a plant
+P57 | FAILED | sweep cc2 -O0 frozen | the last line "SWEEP2 FAILED", every count as predicted
+P58 | FAILED | sweep cc1 -O2 frozen | floor32's line reports 4294967295 inputs
+P59 | FAILED | sweep cc2 -O2 frozen | floor32's line ends "NOT AS EXPECTED"
+P60 | FAILED | sweep cc1 -O0 frozen | floor32's line without its hand-transcription comparison (3 of 4)
+P62 | FAILED | sweep cc1 -O0 never-step, sweep cc1 -O2 never-step | gcc alone; the plant takes no effect: its counts
+D01 | HELD | (alpha; x86-64; gcc, clang) | decoy: comments and blank lines added, beta's lines above alpha's
+D02 | HELD | (alpha; x86-64; gcc, clang) | decoy: beta's source absent (only the chosen candidate's is read)
+D03 | HELD | (alpha; x86-64; gcc, clang) | decoy: every listing in llvm-objdump's form (coff-x86-64, comments)
+D04 | HELD | (alpha; x86-64; gcc, clang) | decoy: a call to a function named fmadd, nopw and lea in one object
+D05 | HELD | (alpha; x86-64; gcc) | decoy: one compiler only (the workflow, not this check, asks for both)
+D06 | HELD | (alpha; x86-64; gcc, clang) | decoy: --jobs 1
+U01 | USAGE | - | --help
+U02 | USAGE | - | --inp, an abbreviation of --input
+U03 | USAGE | - | --work inside --root
+U04 | USAGE | - | --work a folder that holds a file
+U05 | USAGE | - | --jobs 0
+U06 | USAGE | - | --input ../input.txt
+U07 | USAGE | - | no --cc
+C01 | FAILED | source | the command line, the source changed, --cc a program that does not exist: it stops at source
+C02 | FAILED | compiler cc1 | the command line, honest root, --cc a program that does not exist
+R01 | ok | - | the tree's tools/ci/SWEEP-SOURCE.txt reads with no problem, its use line naming a candidate
+mutant | M1 | P42, P43, P45 | scan() refuses no x87 or FMA it lists (the canaries, through finds(), still run)
+mutant | M2 | P50, P60 | judge_output() without its test of the comparisons' number and counts
+mutant | M3 | P20, C01 | check() without the source's sha256 test (run sources fails in place of source)
+mutant | M4 | P24, P25, P26, P27 | check() without its freeze list row
+mutant | M5 | P57 | judge_output() without its test of the verdict line
+mutant | M6 | H02, P45 | BASE_FLAGS without -ffp-contract=off (on aarch64 the stand-in then fuses)

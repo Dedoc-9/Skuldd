@@ -1,0 +1,75 @@
+# Predictions for tools/ci/tests/test_inventory.py, tenth file (after review round 8), written by the assistant on
+# 2026-11-20 before any of these cases first ran; no line changes after that run. The earlier files stay as they were.
+#
+# Why. Review 8 found Markdown in THEOREMS.md and kernel/coq/ANCHORS.md that GitHub shows one way and the inventory
+# read another way: a heading after container markers the reader does not open ("- - ## Successors", "- > ## ...",
+# a footnote's "[^n]: ## ..."), which the successor row did not count; a link reference definition (GitHub shows
+# nothing), an image (GitHub shows a picture), a footnote and a task-list box, since "[" was refused only on a heading's
+# line and a table's header; and a tilde fence opened inside a list item ("- ~~~"). It also found that the walk entered
+# a junction (os.path.islink does not call one a link), and that two output paths that are two names of one file (a
+# hard link), or an output that has another name, were written. tools/ci/inventory.py now:
+# (1) refuses a "#" followed by a blank or the line's end on every line but a top-level ATX heading's (at most three
+#     spaces, one to six "#", then a space or the line's end); a block quote's line and a list item's line holding a
+#     "|" are left to the containers' rule, which refuses them already. In THEOREMS.md this fails the successor row
+#     (it judges every heading), in ANCHORS.md the ANCHORS.md row;
+# (2) refuses "[" on every line but a THEOREMS.md heading's (where rule 2 refuses it on the successor row): the subset
+#     row in THEOREMS.md, the ANCHORS.md row in ANCHORS.md;
+# (3) reads a fence after list markers as a fence (the subset row; the ANCHORS.md row);
+# (4) treats a junction as a linked folder, as a symbolic link: not entered; and a linked folder met by a walk is an
+#     error of the row that walked it (discovery, the two .v rows, gate dir), so what lies behind a link is not read;
+# (5) refuses, as a usage error, --json and --matrix-out that are two names of one file (os.path.samefile, after the
+#     resolved-path comparison: "--json and --matrix-out name the same file") and an existing output file that has
+#     another name (st_nlink above 1: "has another name (a hard link)").
+# Each was counted on the real tree before it ran (wf9/fix2-8/measure-before-run1.txt): "#" on 5 lines of THEOREMS.md
+# and 1 of ANCHORS.md, each a top-level heading; "[" on 0 lines; 0 fence lines after list markers; 0 symbolic links
+# and 0 junctions among the 311 folders the walk meets. A "#" before a letter or a digit opens no heading and is not
+# refused, so the frozen decoy E06 ("#tag") and the frozen plants that hold "&#" or "(#" keep their outcomes.
+#
+# Plants R01 to R17 (review 8's names in each line), the usage cases U05 and U06 and the decoy U07. On POSIX, which has
+# no junction, R16 and R17 plant a symbolic link (the cases run that form there; not run on POSIX here).
+R01 nested-list-heading: at the end of THEOREMS.md, "- - ## Successors" (review 8's N01)
+  FAIL THEOREMS.md: every successor row names known statements
+R02 quote-in-list-heading: at the end of THEOREMS.md, "- > ## Successors" (N02)
+  FAIL THEOREMS.md: every successor row names known statements
+R03 nested-list-heading-over-table: R01's line, a blank line, then "    | Old | New |", "    |---|---|" and "    | `f32.F32_Statement.F32_REL` | `f32.F32_Statement.NOPE` |" (N03)
+  FAIL THEOREMS.md: every successor row names known statements
+R04 footnote-heading: at the end of THEOREMS.md, "See x[^n].", a blank line, "[^n]: ## Successors" (FN1)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL THEOREMS.md: every successor row names known statements
+R05 link-reference-definition: at the end of THEOREMS.md, "[//]: # (hidden: the f32 row names F32_CR)" (review 8's k1)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL THEOREMS.md: every successor row names known statements
+R06 image: at the end of THEOREMS.md, "![Proved theorems](https://example.invalid/proved-table.png)" (k2)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+R07 link-reference-definition-anchors: at the end of ANCHORS.md, "[//]: # (hidden)" (k3)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+R08 footnote: at the end of THEOREMS.md, "x[^1]", a blank line, "[^1]: y"
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+R09 task-list-box: at the end of THEOREMS.md, "- [ ] x"
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+R10 tilde-fence-in-list-item: at the end of THEOREMS.md, "- ~~~", "  x" (E01)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+R11 tilde-fence-in-list-item-anchors: at the end of ANCHORS.md, "- ~~~", "  x" (E02)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+R12 second-successors-heading: at the end of THEOREMS.md, "## Successors again" (N01c, a control)
+  FAIL THEOREMS.md: every successor row names known statements
+R13 list-item-heading: at the end of THEOREMS.md, "- ## Successors" (N02c, a control; the frozen Q63's lines)
+  FAIL THEOREMS.md: every successor row names known statements
+R14 footnote-then-indented-heading: at the end of THEOREMS.md, "See x[^n].", a blank line, "[^n]: x", a blank line, "    ## Successors" (FN2, a control; its "[" now fails the subset row too)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+  FAIL THEOREMS.md: every successor row names known statements
+R15 indented-tilde-fence: at the end of THEOREMS.md, "  ~~~", "  x" (E01c, a control)
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+R16 linked-folder-to-gated: kernel/coq/zz, a junction (POSIX: a symbolic link) to the copy's kernel/coq/f32
+  FAIL discovery: every gate.json is in a gated folder or a mirror
+  FAIL discovery: no .v file under kernel/coq outside a gated folder
+R17 linked-folder-in-gate-dir: kernel/coq/gate/j, a junction (POSIX: a symbolic link) to a new empty folder beside the copy
+  FAIL discovery: every gate.json is in a gated folder or a mirror
+  FAIL discovery: no .v file under kernel/coq outside a gated folder
+  FAIL gate dir: kernel/coq/gate holds exactly its own files
+U05 outputs-two-names-of-one-file: the honest copy run with --json <work>/u05.json and --matrix-out <work>/u05-other.json, a hard link to it (review 8's D01); u05.json's bytes unchanged
+  USAGE SAYING name the same file
+U06 output-with-another-name: the honest copy run with --json <work>/u06.json, a hard link to <work>/u06-other.json (review 8's C01, for the inventory); u06-other.json's bytes unchanged
+  USAGE SAYING has another name
+U07 existing-output-one-name: a decoy: the honest copy run with --json <work>/u07.json, an existing file with one name; HELD, and the file now holds the JSON
+  HELD
