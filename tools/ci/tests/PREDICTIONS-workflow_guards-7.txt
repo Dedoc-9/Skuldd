@@ -1,0 +1,42 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py, seventh file: the sweep job of ruling S280-13 (a). Written
+# by the assistant on 2026-11-22, before any run of these cases; its sha256 was recorded then, and no line changes
+# after it. The format and the checks are those of PREDICTIONS-workflow_guards.txt; "sevid" is "evid" read from the
+# sweep step's evidence file ($RUNNER_TEMP/sweep/evidence.txt).
+#
+# What changed in the workflow: a job "sweep" on the fpenv job's two runners runs tools/ci/check_sweep.py and keeps
+# its evidence ("sweep <runner> attempt <N>" and the HELD line) only when the check's last line is its HELD verdict
+# with gcc and clang; the verdict job needs it (its first step's list of jobs gains "sweep"), downloads each leg's
+# evidence and reads it in the step "Each sweep leg held, by its own evidence", which also holds each leg to its
+# machine (ubuntu-24.04 x86-64, ubuntu-24.04-arm aarch64) and both legs to one source. The v cases of the first file
+# now run with a needs object that holds sweep as well (succeeded unless the case says otherwise); their predicted
+# outcomes and checks are unchanged (v01's "the four jobs" now means the five). The s cases run the sweep step with a
+# PATH of one folder (FP_TOOLS' wrappers, a stand-in python3 that prints its arguments and the planted check output,
+# and the compilers and objdump each case puts there), LEG ubuntu-24.04 unless said, attempt 1.
+sweep-legs | ok | - | the sweep matrix is the fpenv matrix and the legs (and machines) the verdict's step reads
+sweep-legs-plant | FAIL | - | the same check on a copy whose sweep matrix alone gains a third runner, macos-14
+s01 | exit 0 | say:compilers: ,sevid:ok | gcc, clang and objdump, the check holding
+s13 | exit 0 | say:--input tools/ci/SWEEP-SOURCE.txt --cc gcc --cc ,sevid:ok | as s01: the input, both compilers
+s14 | exit 0 | say:--objdump objdump --work ,say:--timeout 2400,sevid:ok | as s01: objdump, the time limit
+s02 | exit 2 | msg:gcc is not on this runner,sevid:none | no gcc on the PATH
+s03 | exit 2 | msg:no clang on this runner,sevid:none | gcc and objdump, and neither clang nor clang-<version>
+s04 | exit 0 | say:clang-18,sevid:ok | gcc, clang-17, clang-18 and objdump and no clang: the newest version is chosen
+s05 | exit 2 | msg:objdump is not on this runner,sevid:none | gcc and clang, no objdump
+s06 | exit 1 | sevid:none | the check exits 1, its last line a FAILED verdict
+s07 | exit 1 | msg:REFUSED,sevid:none | the check exits 0, its last line a FAILED verdict
+s08 | exit 1 | msg:REFUSED,sevid:none | the check exits 0, its HELD line followed by a line "done"
+s09 | exit 1 | msg:REFUSED,sevid:none | the check exits 0, its HELD line naming gcc alone
+s10 | exit 1 | sevid:none,cr | the check exits 0, its HELD line ended by CR LF
+s11 | exit 1 | msg:REFUSED,sevid:none | the check exits 0 and prints nothing
+s12 | exit 0 | sevid:ok | LEG ubuntu-24.04-arm, an aarch64 HELD line: the evidence names the arm leg
+y01 | exit 0 | say:every sweep leg held | the verdict's sweep step, each leg's honest evidence (fclink)
+y02 | exit 1 | msg:REFUSED | the arm64 leg's evidence missing
+y03 | exit 1 | msg:REFUSED | the arm64 leg's evidence holding a FAILED line
+y04 | exit 1 | msg:REFUSED | the x86-64 leg's evidence of attempt 2
+y05 | exit 1 | msg:REFUSED | the x86-64 leg's evidence holding "33 of 34 rows"
+y06 | exit 1 | msg:REFUSED | a second file beside the x86-64 leg's evidence
+y07 | exit 1 | msg:REFUSED | the x86-64 leg's evidence with CR LF line ends
+y08 | exit 1 | msg:REFUSED | a third folder, ubuntu-22.04, with its own evidence
+y09 | exit 1 | msg:on x86-64 | the x86-64 leg's evidence holding the aarch64 HELD line
+y10 | exit 1 | msg:different sources | the arm64 leg swept p1, the x86-64 leg fclink
+y11 | exit 1 | msg:REFUSED | the x86-64 leg's HELD line naming gcc alone
+y12 | exit 0 | say:every sweep leg held | both legs held with p1

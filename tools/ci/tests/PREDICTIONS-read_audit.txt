@@ -1,0 +1,14 @@
+# Predictions for tools/ci/tests/test_read_audit.py (tools/ci/read_audit.py on small planted trees). Written by the
+# assistant on 2026-11-20, before the test's first run; its sha256 was recorded then, and no line changes after it.
+# One line per case: case | exit <n> | the rows that FAIL ("runs", "hook", "reads", comma-separated, or "-") | what.
+# Every case's tree is the test header's. "The bound files": tools/ci/tests/PREDICTIONS-x.txt (a judge file),
+# kernel/coq/zz/A.v (a file the freeze list names), docs/m.md (a file the manifest names) and absent.txt (no such
+# file); the stand-in tests also write and read a file in a temporary folder they make inside the tree.
+a01 | exit 0 | - | honest: the stand-in tests read the bound files; a child Python started with the environment it was given reads kernel/coq/zz/FROZEN4.txt
+a02 | exit 1 | reads | the stand-in tests read the bound files and README-unbound.md (bound by nothing)
+a03 | exit 1 | reads | the bound files; the child Python (the environment it was given) reads README-unbound.md
+a04 | exit 1 | hook | the bound files; the child Python is started without PYTHONPATH (no hook) and reads README-unbound.md unseen
+a05 | exit 1 | hook | the bound files; the child Python is started with -I (no hook) and reads README-unbound.md unseen
+a06 | exit 1 | reads | the bound files; a stand-in feature row reads README-unbound.md
+a07 | exit 0 | - | a decoy: the bound files, and written-unbound.txt opened for writing only (not a read)
+a08 | exit 0 | - | a decoy: the bound files; the child reads docs/m.md; the stand-in tests exit 1 (their verdict is not this check's)

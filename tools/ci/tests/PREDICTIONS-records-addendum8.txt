@@ -1,0 +1,13 @@
+# Addendum 8 to PREDICTIONS-records.txt, written on 2026-11-20 after review round 8 and before this addendum's first
+# run; no earlier file is changed. Review 8 found that verify_records.py's walk of --dir, which lists a linked folder
+# as a file (no record can be one), took a junction for a plain folder: os.path.islink does not call a junction a
+# link, and os.walk enters it, so a junction beside the records, or a --dir holding only a junction to the records,
+# held (its R8S-4). verify_records.py now treats a folder as linked when os.path.islink or os.path.isjunction says so
+# (os.path.isjunction exists from CPython 3.12). On POSIX the cases plant a symbolic link, which was refused before
+# too (they run that form there; not run on POSIX here). Counted before it ran: the verdict job's --dir is the folder
+# download-artifact writes, which holds one folder per artifact and no link.
+#
+# V47: --dir holds the 13 honest records and a junction jx to an empty folder: jx is not a record.
+case V47 verify_records exit 1 fails VR01
+# V48: --dir holds only a junction j to the folder of the 13 honest records: j is not a record, and no record is read.
+case V48 verify_records exit 1 fails VR01,VR02,VR03,VR04,VR05,VR06,VR07,VR08,VR09,VR10

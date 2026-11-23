@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Third predictions for tools/ci/tests/test_inventory.py (2026-11-18), written by the assistant after review, before
+# any of these cases ran, and not changed after their first run. Form and meaning as in PREDICTIONS-inventory.txt: a
+# plant must fail exactly the rows under it. They reach two checks review added to existing rows, so that no earlier
+# prediction changes: the row "<f>: FROZEN4.txt entries hold in the tree" now also requires every file the folder's
+# gate requires (gate4.py's rule) to be listed, and the row "THEOREMS.md: every successor row names known statements"
+# now requires the "## Successors" heading and its table. In P40 to P42 the folder's ANCHORS.md value is changed to
+# the sha256 of the changed list, so that only the row under test can fail.
+
+P40 frozen4-misses-file: kernel/coq/log32/FROZEN4.txt without its line for log32/Trunc.v; its ANCHORS.md value follows
+  FAIL log32: FROZEN4.txt entries hold in the tree
+P41 frozen4-misses-generator: kernel/coq/cos32/FROZEN4.txt without its line for cos32/emit_cos32.py; ANCHORS.md follows
+  FAIL cos32: FROZEN4.txt entries hold in the tree
+P42 frozen4-misses-dep-file: kernel/coq/sincos32z/FROZEN4.txt without its line for sincos32/Graph.v (a dependency's)
+  FAIL sincos32z: FROZEN4.txt entries hold in the tree
+P43 successors-heading-renamed: THEOREMS.md gains a Successors row naming f32.F32_Statement.F32_NEW, its heading renamed
+  FAIL THEOREMS.md: every successor row names known statements
+P44 successors-table-removed: THEOREMS.md keeps its "## Successors" heading; the table under it is removed
+  FAIL THEOREMS.md: every successor row names known statements

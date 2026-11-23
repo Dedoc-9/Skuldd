@@ -1,0 +1,670 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# MathKernel on Linux, on every push and pull request whatever it touches, and by hand. Its jobs:
+#   inventory  tools/ci/inventory.py finds the gated folders from the tree and gives the gate matrix; then
+#              tools/ci/judge_digest.py hashes the CI judge (the files that decide what CI says) with the inventory, and
+#              fails unless that digest equals the repository Actions variable MK_ANCHOR_CI, which the owner sets after
+#              review. Both JSON records are kept for the verdict.
+#   fpenv      the floating-point state guard's gate with GCC and clang, on x86-64 and arm64 (no Coq). Each leg
+#              whose check held keeps its evidence, fpenv-<runner>-attempt<N>: its leg, attempt and HELD line.
+#   sweep      the frozen floor32/ceil32 sweep (ruling S280-13 (a)), on the fpenv job's legs, by
+#              tools/ci/check_sweep.py: the source tools/ci/SWEEP-SOURCE.txt chooses, its sha256 checked, built with
+#              GCC and clang at -O0 and -O2, -std=c99 -ffp-contract=off, no x87 or FMA instruction in what objdump
+#              lists of each object, and every run of all 2^32 inputs per function held as predicted, the plants'
+#              counts among them. Each leg whose check held keeps its evidence, sweep-<runner>-attempt<N>, and every
+#              leg its console, sweep-console-<runner>-attempt<N>.
+#   image      builds ci/mathkernel/Dockerfile (its base image pinned by digest) once per Dockerfile and cache scope,
+#              then compares the toolchain inside it (tools/ci/toolchain_probe.sh) with
+#              ci/mathkernel/EXPECTED-TOOLCHAIN.txt (tools/ci/check_toolchain.py). An image whose toolchain differs
+#              fails the job and is not cached.
+#   gate       one job per gated folder of the inventory. Each takes its anchor from the Actions variable its matrix
+#              entry names (never a hash taken from this checkout) and finds it in kernel/coq/ANCHORS.md; reruns the
+#              inventory and the judge on its own checkout; loads the image the image job checked (the same id) and
+#              checks its toolchain again; runs feature rows 3 and 4 on the folder's freeze list; runs the folder's gate
+#              with --recheck; checks the gate's log (tools/ci/check_gate_log.py: the anchored row, HELD n of n, every
+#              outside library checked in this run and none taken from a log, each with the sha256 CI expects, the
+#              closure complete); and writes its run record (tools/ci/run_record.py).
+#   verdict    "MathKernel verdict" runs after every other job, also when one failed. It fails unless every one
+#              succeeded, each fpenv leg's evidence of this attempt holds its HELD line, each sweep leg's its HELD
+#              line for GCC and clang on that leg's machine (both legs one source), and
+#              tools/ci/verify_records.py holds over the run records: one per gated folder, all of one commit,
+#              workflow, run, image, toolchain and judge. So no matrix leg rests on how GitHub combines the legs of a
+#              job into one result alone. It is the check to require (docs/engineering/BRANCH-PROTECTION.md).
+# Every value reaches a script through env, never written into it. Every action is pinned by a full commit sha, its
+# release tag beside it. Python runs with PYTHONSAFEPATH=1, here and in each container that runs it: neither a
+# script's own folder nor the current folder is put on its import path, so a file named like a standard module
+# (json.py, re.py) beside a script, or at the top of the checkout for a script read from stdin, is never imported.
+# Re-run all jobs, never only the failed ones: the verdict reads the artifacts of its own attempt. What a green run
+# shows and does not show: docs/engineering/MATHKERNEL-LINUX-CI.md.
+name: MathKernel on Linux
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mathkernel-linux-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONUTF8: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONSAFEPATH: "1"
+  IMAGE: skuldd-mathkernel-ci:local
+
+jobs:
+  inventory:
+    name: Inventory and CI judge
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.inventory.outputs.matrix }}
+    env:
+      MK_ANCHOR_CI: ${{ vars.MK_ANCHOR_CI }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: No compiled Python is tracked
+        run: |
+          set -euo pipefail
+          git ls-files -z > "$RUNNER_TEMP/tracked.z"
+          found=$(tr '\0' '\n' < "$RUNNER_TEMP/tracked.z" | grep -E '(^|/)__pycache__/|\.py[co]$' || true)
+          if [ -n "$found" ]; then
+            echo "REFUSED: compiled Python is tracked; Python could run it in place of a reviewed source:" >&2
+            printf '%s\n' "$found" >&2
+            exit 2
+          fi
+          echo "no compiled Python among $(tr -cd '\0' < "$RUNNER_TEMP/tracked.z" | wc -c) tracked files"
+      - name: The inventory, found from the tree, and the gate matrix
+        id: inventory
+        run: |
+          set -euo pipefail
+          python3 -B tools/ci/inventory.py --root "$GITHUB_WORKSPACE" --json "$RUNNER_TEMP/inventory.json" \
+            --matrix-out "$RUNNER_TEMP/matrix.json"
+          matrix=$(cat "$RUNNER_TEMP/matrix.json")
+          case $matrix in *$'\n'*|*$'\r'*) echo "REFUSED: the gate matrix is not one line" >&2; exit 2 ;; esac
+          entry='[{]"folder":"[a-z][a-z0-9_]*","anchor":"MK_ANCHOR_[A-Z][A-Z0-9_]*"[}]'
+          if ! printf '%s\n' "$matrix" | LC_ALL=C grep -Eqx "[{]\"include\":[[]$entry(,$entry)*[]][}]"; then
+            echo "REFUSED: the gate matrix is not one line of folders and their anchor variables" >&2
+            exit 2
+          fi
+          echo "gate matrix: $matrix"
+          printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
+      - name: The CI judge against MK_ANCHOR_CI (fail closed when it is missing or differs)
+        run: |
+          python3 -B tools/ci/judge_digest.py --root "$GITHUB_WORKSPACE" \
+            --inventory-json "$RUNNER_TEMP/inventory.json" --json "$RUNNER_TEMP/judge.json" --expect "$MK_ANCHOR_CI"
+      - name: Keep the inventory and the judge
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: inventory-attempt${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/inventory.json
+            ${{ runner.temp }}/judge.json
+          if-no-files-found: warn
+
+  fpenv:
+    name: Floating-point state guard (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    env:
+      LEG: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: mk_fpenv's self-test, plants and mutants with GCC and clang
+        run: |
+          set -euo pipefail
+          command -v gcc >/dev/null || { echo "REFUSED: gcc is not on this runner" >&2; exit 2; }
+          # clang, or else the clang-<version> whose path sort -V puts last among the folders of the PATH (in one
+          # folder, the newest)
+          CLANG=$(command -v clang || (IFS=:; for d in $PATH; do ls -d "$d"/clang-[0-9]* 2>/dev/null; done) \
+            | sort -V | tail -n 1 || true)
+          [ -n "$CLANG" ] || { echo "REFUSED: no clang on this runner" >&2; exit 2; }
+          echo "compilers: $(command -v gcc) and $CLANG"
+          mkdir -p "$RUNNER_TEMP/fpenv"
+          python3 -B kernel/runtime/check_fpenv.py --cc gcc --cc "$CLANG" | tee "$RUNNER_TEMP/fpenv/check.txt"
+          verdict=$(tail -n 1 "$RUNNER_TEMP/fpenv/check.txt")
+          if ! printf '%s\n' "$verdict" | LC_ALL=C grep -Eqx 'FPENV CHECK HELD: [0-9]+ of [0-9]+ rows( \(.*\))?'; then
+            echo "REFUSED: the check's last line is not its HELD verdict: $verdict" >&2
+            exit 1
+          fi
+          printf 'fpenv %s attempt %s\n%s\n' "$LEG" "$GITHUB_RUN_ATTEMPT" "$verdict" > "$RUNNER_TEMP/fpenv/evidence.txt"
+      - name: Keep this leg's evidence (only when its check held)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fpenv-${{ matrix.runner }}-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/fpenv/evidence.txt
+          if-no-files-found: error
+
+  sweep:
+    name: floor32/ceil32 sweep (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    # eight runs of 2^33 evaluations per leg, up to the processor count at a time; on one Windows host with clang,
+    # 4 at a time, a run took 33 to 53 s at -O2 and 185 to 286 s at -O0 (MEASURED there, three of the four
+    # sweep-check records under kernel/records/; runner times NOT_MEASURED)
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    env:
+      LEG: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: The frozen floor32/ceil32 sweep with GCC and clang at -O0 and -O2 (its sha256, no x87 or FMA, plants)
+        run: |
+          set -euo pipefail
+          command -v gcc >/dev/null || { echo "REFUSED: gcc is not on this runner" >&2; exit 2; }
+          # clang, or else the clang-<version> whose path sort -V puts last among the folders of the PATH, as the
+          # fpenv job finds it
+          CLANG=$(command -v clang || (IFS=:; for d in $PATH; do ls -d "$d"/clang-[0-9]* 2>/dev/null; done) \
+            | sort -V | tail -n 1 || true)
+          [ -n "$CLANG" ] || { echo "REFUSED: no clang on this runner" >&2; exit 2; }
+          command -v objdump >/dev/null || { echo "REFUSED: objdump is not on this runner" >&2; exit 2; }
+          echo "compilers: $(command -v gcc) and $CLANG; objdump: $(command -v objdump)"
+          mkdir -p "$RUNNER_TEMP/sweep"
+          python3 -B tools/ci/check_sweep.py --root "$GITHUB_WORKSPACE" --input tools/ci/SWEEP-SOURCE.txt \
+            --cc gcc --cc "$CLANG" --objdump objdump --work "$RUNNER_TEMP/sweep/work" --timeout 2400 \
+            | tee "$RUNNER_TEMP/sweep/check.txt"
+          verdict=$(tail -n 1 "$RUNNER_TEMP/sweep/check.txt")
+          held='SWEEP CHECK HELD: [0-9]+ of [0-9]+ rows [(][a-z][a-z0-9_-]*; (x86-64|aarch64); gcc, clang[)]'
+          if ! printf '%s\n' "$verdict" | LC_ALL=C grep -Eqx "$held"; then
+            echo "REFUSED: the check's last line is not its HELD verdict with gcc and clang: $verdict" >&2
+            exit 1
+          fi
+          printf 'sweep %s attempt %s\n%s\n' "$LEG" "$GITHUB_RUN_ATTEMPT" "$verdict" > "$RUNNER_TEMP/sweep/evidence.txt"
+      - name: Keep this sweep leg's evidence (only when its check held)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sweep-${{ matrix.runner }}-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sweep/evidence.txt
+          if-no-files-found: error
+      - name: Keep this sweep leg's console (also when a step failed)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sweep-console-${{ matrix.runner }}-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sweep/check.txt
+          if-no-files-found: warn
+
+  image:
+    name: Build the Coq/Flocq image and check its toolchain
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    outputs:
+      image_id: ${{ steps.image.outputs.image_id }}
+      base_image: ${{ steps.image.outputs.base_image }}
+      toolchain_digest: ${{ steps.toolchain.outputs.digest }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Restore the image from GitHub's cache
+        id: cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: /tmp/mk-image
+          key: mk-image-v2-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
+      - name: Build and save the image (only when the cache has none for this Dockerfile in this scope)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          docker build --pull --progress=plain -f ci/mathkernel/Dockerfile -t "$IMAGE" ci/mathkernel 2>&1 | tee "$RUNNER_TEMP/build.log"
+          # BuildKit's step label: "[1/4]", padded to the width of the count ("[ 1/10]"), or after a stage's name
+          # ("[base 1/4]", which only a build of more than one stage prints, and the next step refuses such a
+          # Dockerfile: it counts FROM before a blank, a tab, a line continuation or the line's end); the line starts
+          # with "#<n> ", which a RUN step's output lines follow with their time
+          base=$(grep -oE '^#[0-9]+ \[([A-Za-z0-9_.-]+ +)? *1/[0-9]+\] FROM [^ @]+@sha256:[0-9a-f]{64}' "$RUNNER_TEMP/build.log" | head -n 1 | sed 's/.* FROM //' || true)
+          [ -n "$base" ] || { echo "REFUSED: the build's output names no base image digest" >&2; exit 2; }
+          mkdir -p /tmp/mk-image
+          printf '%s\n' "$base" > /tmp/mk-image/base-image.txt
+          docker save -o /tmp/mk-image/image.tar "$IMAGE"
+      - name: Say what the image holds; its base is the digest the Dockerfile pins
+        id: image
+        run: |
+          set -euo pipefail
+          [ -s /tmp/mk-image/base-image.txt ] || { echo "REFUSED: the cached image has no recorded base digest" >&2; exit 2; }
+          base=$(cat /tmp/mk-image/base-image.txt)
+          echo "base image: $base"
+          # FROM counted as Docker reads it: in any case of letters, after any indent, before a blank, a tab, a line
+          # continuation or the line's end (in a file of printable ASCII, a blank and a tab only, which the next
+          # check requires). That Docker and BuildKit read the rest as the count does: ARGUED from BuildKit's
+          # Dockerfile parser as a review remembered it, its source not read; no Docker was run to check it
+          froms=$(grep -ciE '^[[:space:]]*from([[:space:]]|\\|$)' ci/mathkernel/Dockerfile || true)
+          pinned=$(sed -n 's/^FROM [^ @]*@\(sha256:[0-9a-f]\{64\}\)$/\1/p' ci/mathkernel/Dockerfile)
+          if [ "$froms" != 1 ] || [ -z "$pinned" ]; then
+            echo "REFUSED: ci/mathkernel/Dockerfile must have exactly one FROM line, pinned by a sha256 digest" >&2
+            exit 2
+          fi
+          # The count reads the text as Docker does only where the text is plain, so the forms it cannot read are
+          # refused: a byte outside printable ASCII, a blank and a tab (a byte-order mark or a no-break space, which
+          # hide a FROM from the count, a carriage return and a NUL byte; the file read as text, -a, so a NUL is not
+          # taken for a binary file's line end, byte by byte, in the C locale); a first line that starts with "#!"
+          # or "//" (BuildKit skips the one and reads the other as a comment when it looks for a syntax directive,
+          # which names a frontend image that then reads this file); a line shaped as a parser directive
+          # ("# <word>=<value>" or "// <word>=<value>", which can change the escape character or the frontend)
+          # anywhere; and a line after a line continuation that does not start with a blank, or that is a comment or
+          # blank only (Docker skips those inside an instruction, so a keyword split around one is read). How
+          # BuildKit reads each form: ARGUED from its Dockerfile parser as a review remembered it, its source not
+          # read; no Docker was run to check it
+          if LC_ALL=C grep -aq '[^[:print:][:blank:]]' ci/mathkernel/Dockerfile; then
+            echo "REFUSED: ci/mathkernel/Dockerfile holds a byte outside printable ASCII, a blank and a tab" >&2
+            exit 2
+          fi
+          if head -n 1 ci/mathkernel/Dockerfile | grep -qE '^[[:space:]]*(#!|//)'; then
+            echo "REFUSED: ci/mathkernel/Dockerfile's first line starts with #! or //" >&2
+            exit 2
+          fi
+          directive='^[[:space:]]*(#|//)[[:space:]]*[a-z][a-z0-9_-]*[[:space:]]*='
+          if grep -qiE "$directive" ci/mathkernel/Dockerfile; then
+            echo "REFUSED: ci/mathkernel/Dockerfile holds a parser directive's form, which this step does not read" >&2
+            exit 2
+          fi
+          if ! awk 'c && ($0 !~ /^[ \t]/ || $0 ~ /^[ \t]*(#|$)/) { bad = 1 } { c = ($0 ~ /[\\`][ \t]*$/) }
+            END { exit bad }' ci/mathkernel/Dockerfile; then
+            echo "REFUSED: ci/mathkernel/Dockerfile continues a line onto one that does not start with a blank, or" \
+              "onto a comment or a blank line" >&2
+            exit 2
+          fi
+          case $base in
+            *"@$pinned") ;;
+            *) echo "REFUSED: the base image $base is not the one the Dockerfile pins ($pinned)" >&2; exit 2 ;;
+          esac
+          docker load -i /tmp/mk-image/image.tar
+          id=$(docker image inspect "$IMAGE" --format '{{.Id}}')
+          echo "image id: $id"
+          case $id$base in *$'\n'*|*$'\r'*) echo "REFUSED: the image id or base is not one line" >&2; exit 2 ;; esac
+          if ! printf '%s\n' "$id" | LC_ALL=C grep -Eqx 'sha256:[0-9a-f]{64}' \
+            || ! printf '%s\n' "$base" | LC_ALL=C grep -Eqx '[^[:space:]@]+@sha256:[0-9a-f]{64}'; then
+            echo "REFUSED: the image id or the base image is not in the form expected" >&2
+            exit 2
+          fi
+          docker run --rm --network none -e PYTHONSAFEPATH "$IMAGE" sh -c \
+            'coqc --version; ocaml -version; python3 --version; opam repo list --all; opam list --installed --columns=name,version; sha256sum /opt/mk-switch.export "$(command -v coqc)" "$(command -v coqchk)" "$(command -v python3)"'
+          printf 'image_id=%s\n' "$id" >> "$GITHUB_OUTPUT"
+          printf 'base_image=%s\n' "$base" >> "$GITHUB_OUTPUT"
+      - name: The toolchain in the image is the recorded one (a difference is a review event)
+        id: toolchain
+        run: |
+          set -euo pipefail
+          probe=0
+          docker run --rm --network none -e PYTHONSAFEPATH -v "$GITHUB_WORKSPACE:/work:ro" -w /work "$IMAGE" \
+            sh tools/ci/toolchain_probe.sh > "$RUNNER_TEMP/toolchain-observed.txt" || probe=$?
+          check=0
+          python3 -B tools/ci/check_toolchain.py --observed "$RUNNER_TEMP/toolchain-observed.txt" \
+            --expected ci/mathkernel/EXPECTED-TOOLCHAIN.txt --json "$RUNNER_TEMP/toolchain.json" \
+            > "$RUNNER_TEMP/toolchain-check.txt" || check=$?
+          cat "$RUNNER_TEMP/toolchain-observed.txt" "$RUNNER_TEMP/toolchain-check.txt"
+          digest=$(sed -n 's/^TOOLCHAIN DIGEST \([0-9a-f]\{64\}\)$/\1/p' "$RUNNER_TEMP/toolchain-check.txt")
+          case $digest in
+            *[!0-9a-f]*|'') ok=no ;;
+            *) ok=yes ;;
+          esac
+          if [ "$probe" -ne 0 ] || [ "$check" -ne 0 ] || [ "$ok" != yes ] || [ "${#digest}" -ne 64 ]; then
+            echo "REFUSED: the probe exited $probe and the toolchain check $check; the image is not the recorded one" \
+              >&2
+            exit 1
+          fi
+          printf 'digest=%s\n' "$digest" >> "$GITHUB_OUTPUT"
+      - name: Keep the toolchain record
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: toolchain-attempt${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/toolchain.json
+            ${{ runner.temp }}/toolchain-observed.txt
+          if-no-files-found: warn
+
+  gate:
+    name: Gate ${{ matrix.folder }}
+    needs: [inventory, image]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.inventory.outputs.matrix) }}
+    env:
+      FOLDER: ${{ matrix.folder }}
+      ANCHOR_NAME: ${{ matrix.anchor }}
+      ANCHOR: ${{ vars[matrix.anchor] }}
+      MK_ANCHOR_CI: ${{ vars.MK_ANCHOR_CI }}
+      BUILT_IMAGE_ID: ${{ needs.image.outputs.image_id }}
+      BUILT_BASE_IMAGE: ${{ needs.image.outputs.base_image }}
+      BUILT_TOOLCHAIN_DIGEST: ${{ needs.image.outputs.toolchain_digest }}
+    steps:
+      - name: The anchor is the owner's, set outside this checkout (fail closed)
+        run: |
+          set -euo pipefail
+          if ! LC_ALL=C bash -c '[[ $FOLDER =~ ^[a-z][a-z0-9_]*$ ]]' \
+            || [ "$ANCHOR_NAME" != "MK_ANCHOR_${FOLDER^^}" ]; then
+            echo "REFUSED: the matrix entry is not a folder name and its variable MK_ANCHOR_<FOLDER>" >&2
+            exit 2
+          fi
+          if ! LC_ALL=C bash -c '[[ $ANCHOR =~ ^[0-9a-f]{64}$ ]]'; then
+            echo "REFUSED: the repository Actions variable $ANCHOR_NAME is missing or is not exactly 64 lower-case hex digits." >&2
+            echo "It must hold the owner's own sha256 of kernel/coq/$FOLDER/FROZEN4.txt (docs/engineering/MATHKERNEL-LINUX-CI.md)." >&2
+            exit 2
+          fi
+          echo "anchor $ANCHOR_NAME = ${ANCHOR:0:16}..."
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: The anchor is the one kernel/coq/ANCHORS.md records for this folder
+        run: |
+          python3 -B - <<'EOF'
+          import importlib.util
+          import os
+          import sys
+          # The file is read by tools/ci/inventory.py's own readers (markdown, then anchors_table), so this step and
+          # the inventory read it alike and refuse the same files: anything outside the Markdown subset the inventory
+          # reads, a stray row, a line GitHub reads as one more row, a second table, a block quote or a list item
+          # holding a bar. inventory.py is a judge file; the next step holds it to MK_ANCHOR_CI.
+          spec = importlib.util.spec_from_file_location('mk_inventory', 'tools/ci/inventory.py')
+          inventory = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(inventory)
+          folder, name, anchor = os.environ['FOLDER'], os.environ['ANCHOR_NAME'], os.environ['ANCHOR']
+          with open('kernel/coq/ANCHORS.md', 'rb') as fh:
+              lines, problems, _ = inventory.markdown(fh.read(), 'ANCHORS.md')
+          rows = {}
+          if lines is not None:
+              rows, more = inventory.anchors_table(lines)
+              problems = problems + more
+          row = rows.get(folder)
+          if problems or row is None or row[0] != name or row[1] != anchor:
+              print('REFUSED: kernel/coq/ANCHORS.md does not hold exactly one row for %s naming %s with the anchor '
+                    'this job was given%s' % (folder, name, ''.join('; ' + p for p in problems[:3])), file=sys.stderr)
+              sys.exit(2)
+          print('kernel/coq/ANCHORS.md: %s %s %s...' % (folder, name, anchor[:16]))
+          EOF
+      - name: The inventory and the CI judge on this job's own checkout
+        run: |
+          set -euo pipefail
+          python3 -B tools/ci/inventory.py --root "$GITHUB_WORKSPACE" --json "$RUNNER_TEMP/inventory.json"
+          python3 -B tools/ci/judge_digest.py --root "$GITHUB_WORKSPACE" \
+            --inventory-json "$RUNNER_TEMP/inventory.json" --json "$RUNNER_TEMP/judge.json" --expect "$MK_ANCHOR_CI"
+      - name: Restore the image the image job built and checked
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: /tmp/mk-image
+          key: mk-image-v2-${{ runner.os }}-${{ hashFiles('ci/mathkernel/Dockerfile') }}
+          fail-on-cache-miss: true
+      - name: Load it; it is the image the image job checked (the same id and base)
+        run: |
+          set -euo pipefail
+          docker load -i /tmp/mk-image/image.tar
+          id=$(docker image inspect "$IMAGE" --format '{{.Id}}')
+          base=$(cat /tmp/mk-image/base-image.txt)
+          echo "image id: $id"
+          echo "base image: $base"
+          if [ "$id" != "$BUILT_IMAGE_ID" ]; then
+            echo "REFUSED: this image is $id; the image job checked $BUILT_IMAGE_ID" >&2
+            exit 2
+          fi
+          if [ "$base" != "$BUILT_BASE_IMAGE" ]; then
+            echo "REFUSED: this base is $base; the image job's is $BUILT_BASE_IMAGE" >&2
+            exit 2
+          fi
+      - name: The toolchain in this image is the recorded one
+        run: |
+          set -euo pipefail
+          probe=0
+          docker run --rm --network none -e PYTHONSAFEPATH -v "$GITHUB_WORKSPACE:/work:ro" -w /work "$IMAGE" \
+            sh tools/ci/toolchain_probe.sh > "$RUNNER_TEMP/toolchain-observed.txt" || probe=$?
+          check=0
+          python3 -B tools/ci/check_toolchain.py --observed "$RUNNER_TEMP/toolchain-observed.txt" \
+            --expected ci/mathkernel/EXPECTED-TOOLCHAIN.txt --json "$RUNNER_TEMP/toolchain.json" \
+            > "$RUNNER_TEMP/toolchain-check.txt" || check=$?
+          cat "$RUNNER_TEMP/toolchain-check.txt"
+          digest=$(sed -n 's/^TOOLCHAIN DIGEST \([0-9a-f]\{64\}\)$/\1/p' "$RUNNER_TEMP/toolchain-check.txt")
+          if [ "$probe" -ne 0 ] || [ "$check" -ne 0 ] || [ "$digest" != "$BUILT_TOOLCHAIN_DIGEST" ]; then
+            echo "REFUSED: the probe exited $probe and the toolchain check $check; digest $digest, the image job's" \
+              "$BUILT_TOOLCHAIN_DIGEST" >&2
+            exit 1
+          fi
+      - name: Feature rows 3 and 4 on the folder's freeze list (the tree read-only)
+        run: |
+          set -euo pipefail
+          for row in 3 4; do
+            docker run --rm --network none -e PYTHONHASHSEED -e PYTHONUTF8 -e PYTHONDONTWRITEBYTECODE \
+              -e PYTHONSAFEPATH -v "$GITHUB_WORKSPACE:/work:ro" -w /work "$IMAGE" \
+              python3 -B "kernel/hardening/features/feature_row$row.py" kernel/coq \
+              --list "kernel/coq/$FOLDER/FROZEN4.txt"
+          done
+      - name: The folder's gate, with its anchor, every library rechecked
+        run: |
+          set -euo pipefail
+          docker run --rm --network none -e ANCHOR -e PYTHONHASHSEED -e PYTHONUTF8 -e PYTHONDONTWRITEBYTECODE \
+            -e PYTHONSAFEPATH -v "$GITHUB_WORKSPACE/kernel/coq:/work" -w /work "$IMAGE" \
+            python3 -B gate/gate4.py "$FOLDER" --recheck | tee "$RUNNER_TEMP/gate.log"
+          grep -Eq "^  freeze list is the anchored one +ok  ANCHOR ${ANCHOR:0:16}\$" "$RUNNER_TEMP/gate.log" \
+            || { echo "REFUSED: the gate's output does not show the anchored row passing" >&2; exit 2; }
+      - name: The gate's log, held to the anchor, the tree, the expected libraries and the closure
+        run: |
+          python3 -B tools/ci/check_gate_log.py --log "$RUNNER_TEMP/gate.log" --folder "$FOLDER" --anchor "$ANCHOR" \
+            --root "$GITHUB_WORKSPACE" --expected-libs kernel/coq/EXPECTED-CI-LIBRARIES.txt \
+            --json "$RUNNER_TEMP/gate-check.json"
+      - name: The run record of this gate
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/record"
+          python3 -B tools/ci/run_record.py --folder "$FOLDER" --anchor "$ANCHOR" --root "$GITHUB_WORKSPACE" \
+            --gate-log "$RUNNER_TEMP/gate.log" --gate-check-json "$RUNNER_TEMP/gate-check.json" \
+            --toolchain-json "$RUNNER_TEMP/toolchain.json" --inventory-json "$RUNNER_TEMP/inventory.json" \
+            --judge-json "$RUNNER_TEMP/judge.json" --image-id "$BUILT_IMAGE_ID" --base-image "$BUILT_BASE_IMAGE" \
+            --out "$RUNNER_TEMP/record/run-record.json"
+      - name: Keep the run record
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: run-record-${{ matrix.folder }}-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/record/run-record.json
+          if-no-files-found: error
+      - name: Keep the gate's evidence (also when a step failed)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: gate-evidence-${{ matrix.folder }}-attempt${{ github.run_attempt }}
+          # The gate's own text outputs too: Closure.out, Locate.out (where each library was loaded from), and what
+          # coqc and coqchk printed for each module (for Identity, its printed assumptions). Subfolders are not kept.
+          path: |
+            ${{ runner.temp }}/gate.log
+            ${{ runner.temp }}/gate-check.json
+            ${{ runner.temp }}/toolchain-observed.txt
+            ${{ runner.temp }}/toolchain.json
+            ${{ runner.temp }}/inventory.json
+            ${{ runner.temp }}/judge.json
+            ${{ github.workspace }}/kernel/coq/${{ matrix.folder }}/out4/*.out
+          if-no-files-found: warn
+
+  verdict:
+    name: MathKernel verdict
+    needs: [inventory, fpenv, sweep, image, gate]
+    # always(), never !cancelled(): a skipped job reports Success to a required check (GitHub's docs), so a cancelled
+    # run could read as passing. With always() the verdict of a cancelled run runs, and fails at its first step
+    # (ARGUED; not run on GitHub).
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Every other job of this run succeeded
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          python3 -B - <<'EOF'
+          import json
+          import os
+          import sys
+          needs = json.loads(os.environ['NEEDS'])
+          want = ['fpenv', 'gate', 'image', 'inventory', 'sweep']
+          bad = []
+          if sorted(needs) != want:
+              bad.append('the jobs needed are %s, not %s' % (', '.join(sorted(needs)), ', '.join(want)))
+          for job in sorted(needs):
+              result = needs[job].get('result') if isinstance(needs[job], dict) else None
+              print('  %-10s %s' % (job, result))
+              if result != 'success':
+                  bad.append('%s: %s' % (job, result))
+          if bad:
+              print('REFUSED: not every job of this run succeeded: %s' % '; '.join(bad), file=sys.stderr)
+              sys.exit(1)
+          print('every job of this run succeeded: %s' % ', '.join(want))
+          EOF
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        if: ${{ !cancelled() }}
+        with:
+          persist-credentials: false
+      - name: Download the inventory and the CI judge of this attempt
+        if: ${{ !cancelled() }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: inventory-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/inputs/inventory
+      - name: Download the toolchain record of this attempt
+        if: ${{ !cancelled() }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: toolchain-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/inputs/toolchain
+      - name: Download every gate's run record of this attempt
+        if: ${{ !cancelled() }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: run-record-*-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/records
+      - name: Download the x86-64 fpenv leg's evidence of this attempt
+        if: ${{ !cancelled() }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: fpenv-ubuntu-24.04-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/inputs/fpenv/ubuntu-24.04
+      - name: Download the arm64 fpenv leg's evidence of this attempt
+        if: ${{ !cancelled() }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: fpenv-ubuntu-24.04-arm-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/inputs/fpenv/ubuntu-24.04-arm
+      - name: Each fpenv leg held, by its own evidence
+        if: ${{ !cancelled() }}
+        env:
+          ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python3 -B - <<'EOF'
+          import os
+          import re
+          import sys
+          # The legs of the fpenv job's matrix (tools/ci/tests/test_workflow_guards.py holds this list to it).
+          legs = ['ubuntu-24.04', 'ubuntu-24.04-arm']
+          attempt = os.environ['ATTEMPT']
+          top = os.path.join(os.environ['RUNNER_TEMP'], 'inputs', 'fpenv')
+          held = re.compile(r'FPENV CHECK HELD: ([1-9][0-9]*) of ([1-9][0-9]*) rows(?: \([^\r\n]*\))?')
+          bad = []
+          found = sorted(os.listdir(top)) if os.path.isdir(top) else []
+          if [x for x in found if x not in legs]:
+              bad.append('evidence of another leg: %s' % ', '.join(x for x in found if x not in legs))
+          for leg in legs:
+              d = os.path.join(top, leg)
+              names = sorted(os.listdir(d)) if os.path.isdir(d) else []
+              if names != ['evidence.txt']:
+                  bad.append('%s: no evidence of attempt %s (%s)' % (leg, attempt, ', '.join(names) or 'none'))
+                  continue
+              with open(os.path.join(d, 'evidence.txt'), 'rb') as fh:
+                  lines = fh.read().decode('utf-8', 'replace').split('\n')
+              m = held.fullmatch(lines[1]) if len(lines) == 3 and lines[2] == '' else None
+              if lines[0] != 'fpenv %s attempt %s' % (leg, attempt) or not m or m.group(1) != m.group(2):
+                  bad.append('%s: its evidence is not "fpenv %s attempt %s" and a HELD n of n line: %s'
+                             % (leg, leg, attempt, ascii(lines[:2])[:160]))
+                  continue
+              print('  %-18s %s' % (leg, lines[1]))
+          if bad:
+              print('REFUSED: not every fpenv leg held by its own evidence: %s' % '; '.join(bad), file=sys.stderr)
+              sys.exit(1)
+          print('every fpenv leg held, attempt %s: %s' % (attempt, ', '.join(legs)))
+          EOF
+      - name: Download the x86-64 sweep leg's evidence of this attempt
+        if: ${{ !cancelled() }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: sweep-ubuntu-24.04-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/inputs/sweep/ubuntu-24.04
+      - name: Download the arm64 sweep leg's evidence of this attempt
+        if: ${{ !cancelled() }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: sweep-ubuntu-24.04-arm-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/inputs/sweep/ubuntu-24.04-arm
+      - name: Each sweep leg held, by its own evidence
+        if: ${{ !cancelled() }}
+        env:
+          ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python3 -B - <<'EOF'
+          import os
+          import re
+          import sys
+          # The legs of the sweep job's matrix and the machine each must report (tools/ci/tests/
+          # test_workflow_guards.py holds these legs to that matrix and to the fpenv job's).
+          legs = ['ubuntu-24.04', 'ubuntu-24.04-arm']
+          machines = {'ubuntu-24.04': 'x86-64', 'ubuntu-24.04-arm': 'aarch64'}
+          attempt = os.environ['ATTEMPT']
+          top = os.path.join(os.environ['RUNNER_TEMP'], 'inputs', 'sweep')
+          held = re.compile(r'SWEEP CHECK HELD: ([1-9][0-9]*) of ([1-9][0-9]*) rows '
+                            r'\(([a-z][a-z0-9_-]*); (x86-64|aarch64); gcc, clang\)')
+          bad = []
+          sources = set()
+          found = sorted(os.listdir(top)) if os.path.isdir(top) else []
+          if [x for x in found if x not in legs]:
+              bad.append('evidence of another leg: %s' % ', '.join(x for x in found if x not in legs))
+          for leg in legs:
+              d = os.path.join(top, leg)
+              names = sorted(os.listdir(d)) if os.path.isdir(d) else []
+              if names != ['evidence.txt']:
+                  bad.append('%s: no evidence of attempt %s (%s)' % (leg, attempt, ', '.join(names) or 'none'))
+                  continue
+              with open(os.path.join(d, 'evidence.txt'), 'rb') as fh:
+                  lines = fh.read().decode('utf-8', 'replace').split('\n')
+              m = held.fullmatch(lines[1]) if len(lines) == 3 and lines[2] == '' else None
+              if lines[0] != 'sweep %s attempt %s' % (leg, attempt) or not m or m.group(1) != m.group(2) \
+                      or m.group(4) != machines[leg]:
+                  bad.append('%s: its evidence is not "sweep %s attempt %s" and a HELD n of n line on %s: %s'
+                             % (leg, leg, attempt, machines[leg], ascii(lines[:2])[:160]))
+                  continue
+              sources.add(m.group(3))
+              print('  %-18s %s' % (leg, lines[1]))
+          if len(sources) > 1:
+              bad.append('the legs swept different sources: %s' % ', '.join(sorted(sources)))
+          if bad:
+              print('REFUSED: not every sweep leg held by its own evidence: %s' % '; '.join(bad), file=sys.stderr)
+              sys.exit(1)
+          print('every sweep leg held, attempt %s: %s' % (attempt, ', '.join(legs)))
+          EOF
+      - name: One record per gated folder, all of one commit, workflow, run, image, toolchain and judge
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/summary"
+          python3 -B tools/ci/verify_records.py --dir "$RUNNER_TEMP/records" \
+            --inventory-json "$RUNNER_TEMP/inputs/inventory/inventory.json" \
+            --judge-json "$RUNNER_TEMP/inputs/inventory/judge.json" \
+            --toolchain-json "$RUNNER_TEMP/inputs/toolchain/toolchain.json" \
+            --out "$RUNNER_TEMP/summary/run-summary.json"
+      - name: Keep the run summary
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: run-summary-attempt${{ github.run_attempt }}
+          path: ${{ runner.temp }}/summary/run-summary.json
+          if-no-files-found: error

@@ -1,0 +1,143 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Integrity, on every push and pull request whatever it touches, and by hand. No Coq, no container; minutes:
+#   - no compiled Python is tracked (Python could run a .pyc in place of a reviewed source);
+#   - the import's manifests reconciled with the tree and CHANGES-AFTER-IMPORT.md (tools/check_manifests.py judges
+#     every file, so there is no paths filter);
+#   - the inventory (tools/ci/inventory.py), then the CI judge against the repository Actions variable MK_ANCHOR_CI
+#     (tools/ci/judge_digest.py), which fails when the variable is missing or differs;
+#   - the boundary map (tools/ci/check_boundaries.py, ruling BM-2 (a)): BOUNDARIES.md has a row for every statement of
+#     THEOREMS.md's proved table, every row has its seven fields, and every grade is one the ruling lists;
+#   - feature rows 3 and 4 on every freeze list the inventory finds: each gated folder's and each of Verdandi's copies;
+#   - the tests of tools/ci (tools/ci/tests/run_all.py): each checker held on honest inputs and seen to fail on each
+#     of its plants. Every test runs every case here: a test that needs saved CI logs builds its inputs from the
+#     tree's own records instead (each test's header says what that does not show), PYTHONSAFEPATH (below) is
+#     seen to stop a module planted beside a checker, and the guards this workflow and mathkernel-linux.yml run
+#     inline are cut from their text by step name and seen to pass honest inputs and refuse plants
+#     (tools/ci/tests/test_workflow_guards.py: every step with an inline check, eighteen; drift.yml, the third
+#     workflow, holds none);
+#   - the same tests and feature rows again under an audit hook (tools/ci/read_audit.py): every file their Python
+#     processes read inside the checkout, by a path its event names, is a judge file, in a freeze list the inventory
+#     found, in an import manifest, or named in CHANGES-AFTER-IMPORT.md on a line with the sha256 of its bytes (ruling
+#     S283-1 (a)), and none of them links, removes or moves a file there, imports multiprocessing or starts a program
+#     that is not Python (env, git, sh, a script run by its first line: the hook runs in no such program, so what it
+#     reads would not be seen). Not judged: a process started, or an import made, in a temporary folder a run made.
+#     Not seen, since no check inside the watched processes can be sound against them: a file opened relative to a
+#     folder's descriptor (os.open with dir_fd, whose event names no folder) and a process that sets out to evade
+#     the hook.
+# Every step after the checkout runs even when an earlier one failed, so one run shows every failure; the job fails
+# when any step failed. Every value reaches a script through env. Every action is pinned by a full commit sha, its
+# release tag beside it. Python runs with PYTHONSAFEPATH=1: neither a script's own folder nor the current folder is
+# put on its import path, so a file named like a standard module beside a script is never imported.
+# See docs/engineering/MATHKERNEL-LINUX-CI.md.
+name: Integrity
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONUTF8: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONSAFEPATH: "1"
+
+jobs:
+  integrity:
+    name: Integrity (no Coq)
+    runs-on: ubuntu-24.04
+    # 150 minutes: the tests run twice, once alone and once under the read audit's hook with the 54 feature rows (27
+    # freeze lists), one after the other. On one Windows host, on the tree of Push A's batch (2026-11-22), the tests
+    # alone took about 26 minutes, and the tests and feature rows under the hook about 32 (the slowest test,
+    # test_inventory, about 21 beside other runs), and under heavy outside load far longer; GitHub's runner is not
+    # measured (its first run's step times are). A limit that stops an honest run cancels the job, a check that does
+    # not pass, with no defect in the tree, so it stands at about two and a half times their sum
+    timeout-minutes: 150
+    env:
+      MK_ANCHOR_CI: ${{ vars.MK_ANCHOR_CI }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: No compiled Python is tracked
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          git ls-files -z > "$RUNNER_TEMP/tracked.z"
+          found=$(tr '\0' '\n' < "$RUNNER_TEMP/tracked.z" | grep -E '(^|/)__pycache__/|\.py[co]$' || true)
+          if [ -n "$found" ]; then
+            echo "REFUSED: compiled Python is tracked; Python could run it in place of a reviewed source:" >&2
+            printf '%s\n' "$found" >&2
+            exit 2
+          fi
+          echo "no compiled Python among $(tr -cd '\0' < "$RUNNER_TEMP/tracked.z" | wc -c) tracked files"
+      - name: The import's manifests reconciled with CHANGES-AFTER-IMPORT.md
+        if: ${{ !cancelled() }}
+        run: python3 -B tools/check_manifests.py .
+      - name: The inventory, found from the tree
+        if: ${{ !cancelled() }}
+        run: python3 -B tools/ci/inventory.py --root "$GITHUB_WORKSPACE" --json "$RUNNER_TEMP/inventory.json"
+      - name: The boundary map holds a row for every proved statement (ruling BM-2 (a))
+        if: ${{ !cancelled() }}
+        run: python3 -B tools/ci/check_boundaries.py --root "$GITHUB_WORKSPACE"
+      - name: The CI judge against MK_ANCHOR_CI (fail closed when it is missing or differs)
+        if: ${{ !cancelled() }}
+        run: |
+          python3 -B tools/ci/judge_digest.py --root "$GITHUB_WORKSPACE" \
+            --inventory-json "$RUNNER_TEMP/inventory.json" --expect "$MK_ANCHOR_CI"
+      - name: Feature rows 3 and 4 on every freeze list the inventory found
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          python3 -B - "$RUNNER_TEMP/inventory.json" > "$RUNNER_TEMP/lists.txt" <<'EOF'
+          import json
+          import sys
+          with open(sys.argv[1], 'rb') as fh:
+              inventory = json.loads(fh.read().decode('utf-8'))
+          lines = ['kernel/coq %s\n' % entry['folder'] for entry in inventory['gated']]
+          lines += ['verdandi/mathkernel/F32 %s\n' % entry['folder'] for entry in inventory['mirrors']]
+          sys.stdout.buffer.write(''.join(lines).encode('ascii'))
+          EOF
+          runs=0
+          failed=0
+          gated=0
+          while read -r root folder; do
+            if [ "$root" = kernel/coq ]; then
+              gated=$((gated + 1))
+            fi
+            for row in 3 4; do
+              runs=$((runs + 1))
+              echo "== feature row $row on $root/$folder/FROZEN4.txt"
+              python3 -B "kernel/hardening/features/feature_row$row.py" "$root" --list "$root/$folder/FROZEN4.txt" \
+                < /dev/null || failed=$((failed + 1))
+            done
+          done < "$RUNNER_TEMP/lists.txt"
+          echo "feature rows: $runs runs on the freeze lists of $gated gated folders and their copies, $failed failed"
+          if [ "$gated" -lt 1 ] || [ "$failed" -ne 0 ]; then
+            echo "REFUSED: a feature row failed, or the inventory found no gated folder" >&2
+            exit 1
+          fi
+      - name: The tests of tools/ci, each checker held on honest inputs and seen to fail on each of its plants
+        if: ${{ !cancelled() }}
+        run: python3 -B tools/ci/tests/run_all.py
+      # The tests and the feature rows again, every Python process under an audit hook (tools/ci/read_audit.py): the
+      # step fails when one of them opens or copies for reading a file inside the checkout that no judge group, freeze
+      # list or import manifest binds and that CHANGES-AFTER-IMPORT.md does not name on a line with the sha256 of its
+      # bytes (a path compared as written and as resolved), links, removes or moves a file inside it outside a
+      # temporary folder a run made, or, outside such a folder, starts a process without the hook, a program that is
+      # not Python, a shell given a command, a shell command, a fork (os.spawnv forks here) or a multiprocessing start
+      # the hook cannot judge, or changes PYTHONPATH, PYTHONHOME or the hook's variables in its own environment. On
+      # this runner's CPython 3.12 the hook judges the same starts and reads, some through other events, but not a
+      # read relative to a folder's descriptor (os.open with dir_fd, which shutil.rmtree does here for every folder it
+      # removes), whose event names no folder (ARGUED from the documentation of sys.addaudithook and of the audit
+      # events; measured on Windows with CPython 3.14 only, not run on GitHub).
+      - name: The tests and the feature rows read only bound files (judge, freeze list, manifest, CHANGES-AFTER-IMPORT)
+        if: ${{ !cancelled() }}
+        run: python3 -B tools/ci/read_audit.py --root "$GITHUB_WORKSPACE" --inventory-json "$RUNNER_TEMP/inventory.json"

@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# PREDICTIONS-check_toolchain.txt: the plants of tools/ci/tests/test_check_toolchain.py and, for each, the rows of
+# tools/ci/check_toolchain.py it must fail. Written by the assistant on 2026-11-18 before the test's first run, and
+# not changed after it. The test reads this file: each plant must print "TOOLCHAIN FAILED: k of 9 rows failed", exit
+# 1, and fail exactly the rows its line names, no more and no fewer. The honest twin and its reversed copy are not
+# plants: both must hold. No plant is an equivalent mutant by construction: each changes a value, a key or a file
+# that a row it names reads.
+# A "row" line names a row; a "plant" line is "plant <name> | <input it changes> | <the change> | <rows>".
+row R1 = expected toolchain file
+row R2 = observed probe output
+row R3 = tool and switch-export hashes
+row R4 = Coq version line
+row R5 = Python version line
+row R6 = opam packages at their versions
+row R7 = no unexpected opam package
+row R8 = no unexpected key
+row R9 = record-only keys present
+plant coqc-hash | observed | the sha256 of /opt/opam/4.14.2/bin/coqc: its last hex digit moved by one | R3
+plant switch-export-hash | observed | the sha256 of /opt/mk-switch.export: its last hex digit moved by one | R3
+plant missing-key | observed | the python-version line removed | R5
+plant extra-opam-package | observed | a line "opam coq-interval 4.11.1" added | R7
+plant opam-version-changed | observed | "opam zarith 1.14" made "opam zarith 1.15" | R6
+plant coq-version-changed | observed | the coq-version line's version made 8.20.0 | R4
+plant extra-base-package | observed | a line "opam base-domains base" added (not one of the three allowed) | R7
+plant base-package-version | observed | "opam base-unix base" made "opam base-unix 1.0" | R7
+plant duplicate-key | observed | a second coqc sha256 line, with another value, added after the first | R2
+plant unknown-key | observed | a line "sha256 /usr/local/bin/coqc <the coqc hash>" added | R8
+plant trailing-space | observed | "opam coq-flocq 4.2.1" given a trailing space | R6
+plant carriage-return | observed | the python-version line ended by a carriage return before its newline | R2; R5
+plant record-key-missing | observed | the "env OCAMLRUNPARAM" line removed | R9
+plant truncated-output | observed | cut 32 characters into the python3 sha256 line, no newline | R3; R4; R5; R6; R9
+plant observed-missing | observed | no file | R2; R3; R4; R5; R6; R7; R8; R9
+plant expected-missing | expected | no file | R1; R3; R4; R5; R6; R7; R8
+plant expected-no-hashes | expected | its four sha256 lines removed | R3; R8
+plant expected-unknown-kind | expected | a line "coqc-where /opt/opam/4.14.2/lib/coq" added (a kind not compared) | R1
+plant probe-stub-judged | observed | the probe's own output with the stub tools (their paths and hashes) | R3; R8

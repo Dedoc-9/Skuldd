@@ -1,0 +1,72 @@
+# PREDICTIONS-bits32-sweep-run1.txt: what the record run run1 of run_bits32_sweep.sh is to print, written 2026-11-22
+# by a stage agent of the assistant before that run (its sha256 is recorded in the stage log before the run starts).
+# The binding numbers are want[] and want_class[] in bits32_sweep.c (frozen by BITS32-SWEEP-FROZEN.txt); this file
+# restates them with their derivations and adds the rows the runner prints. Grades as the tier uses them: ARGUED,
+# DECLARED, MEASURED, READ. A row that comes out otherwise stays red and is reported with its cause; no new
+# predictions are written for this run.
+
+RUN run1: run_bits32_sweep.sh run1 CONSOLE_DIR TIER_ROOT NANBITS_C, with CONSOLE_DIR the workspace's gate4-runs
+folder, TIER_ROOT the frozen tier mkf-p2, NANBITS_C the research sweep nanbits.c (sha256
+f1f7b19a845502abf34cb561d5114427807674b9fd82f65ce813b5b98074e8f2, as its own freeze list NANBITS-FROZEN.txt holds).
+Console: bits32-sweep-run1-console.txt; binaries in bin-run1 beside the script.
+
+A. Checks before any build
+A1 five freeze-list lines OK: bits32_sweep.c, run_bits32_sweep.sh, bits32/BITS32_Statement.v, fclink/sweep_fc2.c,
+   fclink/KernelText.v.
+A2 copies identical: fclink/sweep_fc2.c lines 37-38 (2 lines), 40-43 (4 lines), 58-71 (14 lines); nanbits.c lines
+   63-77 (15 lines); nanbits.c's sha256 printed as above.
+A3 PL5 copy: '<=' zero tests 2 before, 0 after; lines changed 73,74c73,74 (the two COQ TEXT lines).
+A4 asm row (PLANT 0 build): x87 fld/fstp and FMA lines 0: holds. The conversion and arithmetic counts are printed,
+   not predicted (OBSERVED); cvtss2sd and cvtsd2ss are expected to be present (at least one each), since the path
+   widens and narrows with the C conversions (ARGUED).
+
+B. The builds (each: both functions, all 2^32 patterns). Classes, every build, both functions (ARGUED: 255 exponent
+fields x 2^24; 2; 2 signs x 2^22; 2 signs x (2^22 - 1); total 2^32): finite 4,278,190,080, inf 2, qNaN 8,388,608,
+sNaN 8,388,606. Every build, both functions: spec32 vs spec() 0; spec32 vs iref (non-NaN) 0 (ARGUED: three integer
+texts of one function; spec32_check.py run1 on the draft bytes, reported in SWEEP-SPEC.md section 4).
+Mismatches, program vs spec32, all 32 bits, finite / inf / qNaN / sNaN:
+
+build    floor32                          ceil32                           environment row
+PLANT=0  0 / 0 / 0 / 0                    0 / 0 / 0 / 0                    holds
+PLANT=1  0 / 0 / 0 / 8,388,606            0 / 0 / 0 / 8,388,606            holds
+PLANT=2  0 / 0 / 8,388,606 / 8,388,606    0 / 0 / 8,388,606 / 8,388,606    holds
+PLANT=3  0 / 0 / 8,388,608 / 8,388,606    0 / 0 / 8,388,608 / 8,388,606    holds
+PLANT=4  0 / 0 / 8,388,607 / 8,388,606    0 / 0 / 8,388,607 / 8,388,606    holds
+PLANT=5  1 / 0 / 0 / 0                    1,065,353,216 / 0 / 0 / 0        holds
+PLANT=6  8,388,607 / 0 / 0 / 0            8,388,607 / 0 / 0 / 0            fails (DAZ set)
+
+First mismatch printed per class (expected; both functions unless said): PLANT=0 none; PLANT=1 sNaN 0x7f800001;
+PLANT=2 qNaN 0x7fc00001, sNaN 0x7f800001; PLANT=3 and PLANT=4 qNaN 0x7fc00000, sNaN 0x7f800001; PLANT=5 finite
+0x80000000; PLANT=6 finite 0x80000001 (floor32) and 0x00000001 (ceil32).
+
+Derivations. PLANT 0: SPEC32 is the program's result (ARGUED: the Coq proof SPEC32_PROGRAM with SPEC32_STORE covers
+non-NaN patterns in the Coq model; on NaN patterns the vendor's manual, DECLARED: the widening quiets a signalling NaN
+keeping sign and payload, the arithmetic returns its only NaN operand, the narrowing keeps sign and the 23 high bits
+of the trailing field; research run of the same design 0/0/0/0, reported). PLANT 1 to 5: PLANTS.md (draft 4) part 1,
+whose derivations hold here unchanged: PL1 to PL3 act on the output bits of a NaN input pattern; PL4's count assumes
+the default NaN 0xFFC00000 (DECLARED: the vendor's "QNaN floating-point indefinite"), which equals u lor 2^22 only for
+u = 0xFFC00000; PL5 is moved onto the FCLINK text as a text replacement (the selection then returns its Y on every
+input, since no value is below 0.0 and a NaN compares false), and its counts are PLANTS.md's: floor32 differs only on
+-0 (Y = +0), ceil32 on every pattern of (-1, -0] (127 exponent fields x 2^23 = 1,065,353,216). PLANT 6 (DAZ, the
+seventh build of SWEEP-SPEC section 2 step 3, its counts fixed here and in want[] before the run): with DAZ set, the
+widening of a binary32 subnormal reads it as a zero of its sign (DECLARED: the vendor's manual on DAZ for an
+instruction that can report a denormal operand); no other operand of the path is subnormal (binary32 values widen to
+binary64 normals; the constants and every intermediate value are normal, whole or zero; ARGUED). So only the
+2 x (2^23 - 1) subnormal inputs change: floor32 of a negative subnormal gives -0 where SPEC32 gives -1 (8,388,607
+patterns), of a positive one +0 as SPEC32; ceil32 of a positive subnormal gives +0 where SPEC32 gives +1 (8,388,607),
+of a negative one -0 as SPEC32. Corroboration, reported only: the research's environment sweep, "only DAZ changes
+them (8,388,607 subnormal inputs each)" (trust.md T9). The environment row reads MXCSR after the plant sets DAZ, so
+it fails as fixed; in builds 0 to 5 it holds (the process starts with rounding to nearest, DAZ and FTZ clear;
+expected value 0x1f80, OBSERVED, not part of the row).
+OBSERVED, not predicted and outside every verdict: the host floorf / ceilf counts; the NaN table's host column.
+In the NaN table of PLANT=0 the program column equals the spec32 column on every line (follows from B).
+
+C. Verdict. Every build exits 0 ("BITS32 BUILD AS FIXED (PLANT=k)", each function's line "as fixed"); last line
+BITS32 SWEEP HELD (bits32_sweep.c da83a668b935948c). Run time: about 1 minute per build (not part of the verdict).
+
+What a HELD verdict shows: on this one host, with this compiler and these flags, each of the seven binaries gives
+the counts fixed above; for PLANT 0, all 32 bits of every result of the FCLINK text, called through the C
+conversions, equal SPEC32 in C integers on all 2^32 patterns of both functions, NaN patterns included. What it does
+not show: that spec32 is the Coq SPEC32 (ARGUED; TRANSCRIPTION.md); that the C text is Coq's print (FCLINK, a proof
+about its Coq model); another compiler, flag set, processor, host or MXCSR state; exception flags; a path that
+widens or narrows on integer bits.

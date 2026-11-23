@@ -1,0 +1,11 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py, third file. Written by the assistant on 2026-11-20, after
+# review round 5 and before the first run of these cases; its sha256 was recorded then, and no line changes after
+# that run. The format and the checks are the first file's. A case is named in one file only.
+# The step: the image job's "Build and save the image", whose base-image grep now reads BuildKit's step label padded
+# to the width of the step count ("[ 1/10]") and after a stage's name ("[base 1/4]"), as well as "[1/4]". The build
+# output starts with the honest lines of b01 ("#1 [internal] load build definition from Dockerfile", "#1 DONE 0.0s");
+# <ref> is the reference the Dockerfile pins (image and digest), as in b01.
+b06 | exit 0 | base:recorded | the FROM line "#5 [ 1/10] FROM <ref>" (padded): its reference is recorded
+b07 | exit 0 | base:recorded | the FROM line "#5 [base 1/4] FROM <ref>" (a stage's name): its reference is recorded
+b08 | exit 0 | base:recorded | the FROM line "#5 [stage-0  1/10] FROM <ref>" (a stage's name, then padded): its reference is recorded
+b09 | exit 2 | msg:digest | "#5 [ 2/10] FROM <ref>" (not step 1) and "#6 0.512 [ 1/10] FROM <ref>" (a step's output line, its time after the "#6"): no line names the base, and the step refuses

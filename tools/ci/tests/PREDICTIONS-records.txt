@@ -1,0 +1,153 @@
+# Predictions for tools/ci/tests/test_records.py (tools/ci/run_record.py and tools/ci/verify_records.py), written
+# before the test's first run and not changed after it. The test reads this file: every case below must run, every
+# case run must be here, and a case passes only when its script exits with the code given and the rows that FAIL are
+# exactly the rows given ("-": none). A run_record.py case that fails writes no record. Exit 2 is a usage error: no
+# verdict line.
+# F and G are two gated folders of the tree: f32 and p32 (else the first two in sorted order).
+#
+# The rows, by label, as the scripts print them:
+row RR01 environment: the six GITHUB_ values, well formed
+row RR02 git: --root is the top folder of a checkout
+row RR03 git: HEAD is GITHUB_SHA
+row RR04 git: the tree, kernel/coq and the workflow resolve
+row RR05 git: no tracked file differs from HEAD
+row RR06 anchor: FROZEN4.txt's sha256 is --anchor
+row RR07 inventory: HELD, names the folder with that sha256
+row RR08 judge: HELD, equal to MK_ANCHOR_CI, same inventory
+row RR09 toolchain: the toolchain check HELD, with a digest
+row RR10 gate log: one verdict line, and it is the last
+row RR11 gate log: this gate4.py judged this folder and FROZEN4
+row RR12 gate check: this folder, anchor and log; a verdict, a map
+row RR13 image: an image id and a pinned base image
+row RR14 record: written to --out
+row VR01 records: every file under --dir is a run record
+row VR02 shared: one commit, workflow, run, image, judge
+row VR03 run: the records are this run's (GITHUB_ values)
+row VR04 inventory: HELD, self-consistent, every record's
+row VR05 judge: HELD, = MK_ANCHOR_CI, every record's
+row VR06 toolchain: HELD, every record's
+row VR07 folders: one record per gated folder of the inventory
+row VR08 anchors: each anchor is its FROZEN4.txt's sha256
+row VR09 gates: each gate verdict is HELD n of n
+row VR10 gate checks: each gate log check is HELD
+row VR11 summary: written to --out
+#
+# Honest twins.
+# H01: F with honest inputs; the record equals, key for key and byte for byte, the values the test computes itself.
+case H01 run_record exit 0 fails -
+# H02: the same inputs again, another output: the same bytes.
+case H02 run_record exit 0 fails -
+# H03: F's gate log in the job-log form (a GitHub timestamp before every line) and the log check's JSON of those
+# bytes; the verdict line is recorded without its timestamp.
+case H03 run_record exit 0 fails -
+# H04: every gated folder's record (each run_record.py run HELD) in the download layout D/run-record-<f>/
+# run-record.json, with --out; the summary names every folder, the commit, no file that is not a record, and HELD.
+case H04 verify_records exit 0 fails -
+# H05: the same records in one flat folder, D/run-record-<f>.json.
+case H05 verify_records exit 0 fails -
+#
+# Plants on run_record.py (folder F unless said).
+# R01: GITHUB_SHA is another commit (forty zeros).
+case R01 run_record exit 1 fails RR03,RR14
+# R02: --anchor is G's FROZEN4.txt sha256 (the log check's JSON names the same anchor, as it would in CI).
+case R02 run_record exit 1 fails RR06,RR14
+# R03: GITHUB_RUN_ID is not set.
+case R03 run_record exit 1 fails RR01,RR14
+# R04: GITHUB_WORKFLOW_REF names .github/workflows/integrity.yml.
+case R04 run_record exit 1 fails RR01,RR14
+# R05: a tracked file (G's gate.json) changed in a copy of the checkout.
+case R05 run_record exit 1 fails RR05,RR14
+# R06: --root is a folder inside the checkout holding untracked copies of every file the script reads.
+case R06 run_record exit 1 fails RR02,RR14
+# R07: the gate log with a second verdict line after its own (the log check's JSON of those bytes).
+case R07 run_record exit 1 fails RR10,RR14
+# R08: the gate log with a line after its verdict line (the log check's JSON of those bytes).
+case R08 run_record exit 1 fails RR10,RR14
+# R09: G's gate log given for F (the log check's JSON of those bytes, for F).
+case R09 run_record exit 1 fails RR11,RR14
+# R10: the gate log's header names another gate4.py (sha256 of sixty-four zeros; the log check's JSON of those bytes).
+case R10 run_record exit 1 fails RR11,RR14
+# R11: an inventory JSON without F, its digest recomputed, and the judge's JSON made over it.
+case R11 run_record exit 1 fails RR07,RR14
+# R12: an inventory JSON whose sha256 for G's FROZEN4.txt is changed, its digest not recomputed.
+case R12 run_record exit 1 fails RR07,RR14
+# R13: no log check JSON (the path does not exist).
+case R13 run_record exit 1 fails RR12,RR14
+# R14: G's log check JSON given for F.
+case R14 run_record exit 1 fails RR12,RR14
+# R15: a log check JSON with the key "verdict" twice.
+case R15 run_record exit 1 fails RR12,RR14
+# R16: --image-id without "sha256:".
+case R16 run_record exit 1 fails RR13,RR14
+# R17: --base-image is a tag without a digest.
+case R17 run_record exit 1 fails RR13,RR14
+# R18: a judge JSON made without --expect (expect null).
+case R18 run_record exit 1 fails RR08,RR14
+# R19: a toolchain JSON whose verdict is FAILED (held false).
+case R19 run_record exit 1 fails RR09,RR14
+# R20: --out exists: a usage error, and the file keeps its bytes.
+case R20 run_record exit 2 fails -
+# R21: --image-id left out of the command line.
+case R21 run_record exit 2 fails -
+# R22: an inventory JSON whose verdict is FAILED (held false).
+case R22 run_record exit 1 fails RR07,RR14
+#
+# Plants on verify_records.py (over the honest records of H04, one change each; F and G as above).
+# V01: F's record names another commit.
+case V01 verify_records exit 1 fails VR02,VR03
+# V02: F's record names another image id.
+case V02 verify_records exit 1 fails VR02
+# V03: G's record is missing.
+case V03 verify_records exit 1 fails VR07
+# V04: an extra record: F's, its folder renamed zz32.
+case V04 verify_records exit 1 fails VR07
+# V05: F's record twice (a second file).
+case V05 verify_records exit 1 fails VR07
+# V06: F's record's anchor is G's FROZEN4.txt sha256.
+case V06 verify_records exit 1 fails VR08
+# V07: F's gate verdict line says FAILED: 19 of 20.
+case V07 verify_records exit 1 fails VR09
+# V08: a judge JSON of another digest (one file's sha256 changed; its digest and expect recomputed).
+case V08 verify_records exit 1 fails VR05
+# V09: F's record names another judge digest.
+case V09 verify_records exit 1 fails VR02,VR05
+# V10: F's record's schema is skuldd-mathkernel-run-record/2.
+case V10 verify_records exit 1 fails VR01,VR07
+# V11: F's log check verdict says FAILED.
+case V11 verify_records exit 1 fails VR10
+# V12: F's record with one key more.
+case V12 verify_records exit 1 fails VR01,VR07
+# V13: an empty --dir.
+case V13 verify_records exit 1 fails VR01,VR02,VR03,VR04,VR05,VR06,VR07,VR08,VR09,VR10
+# V14: F's record file with the key "folder" twice.
+case V14 verify_records exit 1 fails VR01,VR07
+# V15: the verdict job's GITHUB_RUN_ID is another run's.
+case V15 verify_records exit 1 fails VR03
+# V16: a toolchain JSON whose verdict is FAILED (held false).
+case V16 verify_records exit 1 fails VR06
+# V17: an inventory JSON whose sha256 for F's FROZEN4.txt is changed, its digest not recomputed.
+case V17 verify_records exit 1 fails VR04,VR08
+# V18: --out exists: a usage error.
+case V18 verify_records exit 2 fails -
+# V19: a file that is not a record beside the records.
+case V19 verify_records exit 1 fails VR01
+# V20: F's record names run attempt 2.
+case V20 verify_records exit 1 fails VR02
+# V21: no judge JSON (the path does not exist).
+case V21 verify_records exit 1 fails VR05
+# V22: --out inside --dir: a usage error.
+case V22 verify_records exit 2 fails -
+# V23: F's gate verdict line names another anchor (sixteen zeros).
+case V23 verify_records exit 1 fails VR09
+# V24: GITHUB_SHA is not set in the verdict job.
+case V24 verify_records exit 1 fails VR03
+# V25: a judge JSON made without --expect (expect null).
+case V25 verify_records exit 1 fails VR05
+# V26: G's record is missing, with --out: the summary is written all the same, its verdict FAILED 1 of 11 rows.
+case V26 verify_records exit 1 fails VR07
+# V27: an inventory JSON whose verdict is FAILED (held false).
+case V27 verify_records exit 1 fails VR04
+#
+# Equivalent mutants: none known. Each plant changes an input that one named row reads; the rows a plant would also
+# reach through a second path were made to read it consistently (R02, R07 to R11 give the log check's JSON of the
+# planted bytes, as CI would), so each prediction names every row expected to fail.

@@ -1,0 +1,2 @@
+# FROZEN of order32: the statement file, frozen before its proof (2026-11-22). The sha256 below is the owner's, computed with Get-FileHash under R1 of Turn 228 and equal to the assistant's (ext-work/harden/STATE.md, "RULINGS S280 AND ADDENDUM 1"); its form and content follow the sheet S280 (its LEANs, section 6).
+aa229794a1b476c3da3488aa9db96ad150761dff6da22f0c9937d069bd17cbab  order32/ORDER32_Statement.v

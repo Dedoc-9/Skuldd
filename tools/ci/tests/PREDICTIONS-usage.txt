@@ -1,0 +1,26 @@
+# Predictions for tools/ci/tests/test_usage.py. Written by the assistant on 2026-11-20, before the test's first run;
+# its sha256 was recorded then, and no line changes after it. One line per case: case | script | exit 2 | what. Each
+# case must exit 2 and print no verdict line. "Abbreviated": the script's options given in full but the one named,
+# given by a prefix of its name, which argparse with abbreviations allowed would accept and run.
+u01 | tools/ci/inventory.py | exit 2 | --help
+u02 | tools/ci/inventory.py | exit 2 | abbreviated: --roo for --root (an empty folder)
+u03 | tools/ci/judge_digest.py | exit 2 | --help
+u04 | tools/ci/judge_digest.py | exit 2 | abbreviated: --exp for --expect, with --root an empty folder
+u05 | tools/ci/check_gate_log.py | exit 2 | --help
+u06 | tools/ci/check_gate_log.py | exit 2 | abbreviated: --fold for --folder, the log an empty file
+u07 | tools/ci/check_toolchain.py | exit 2 | --help
+u08 | tools/ci/check_toolchain.py | exit 2 | abbreviated: --obs for --observed
+u09 | tools/ci/run_record.py | exit 2 | --help
+u10 | tools/ci/run_record.py | exit 2 | abbreviated: --fold for --folder, every input an empty file
+u11 | tools/ci/verify_records.py | exit 2 | --help
+u12 | tools/ci/verify_records.py | exit 2 | abbreviated: --di for --dir (an empty folder)
+u13 | tools/ci/read_audit.py | exit 2 | --help
+u14 | tools/ci/read_audit.py | exit 2 | abbreviated: --roo for --root (an empty folder)
+u15 | tools/ci/tests/run_all.py | exit 2 | --help
+u16 | tools/ci/tests/run_all.py | exit 2 | abbreviated: --image for --image-log
+u17 | tools/ci/tests/test_check_gate_log.py | exit 2 | --help
+u18 | tools/ci/tests/test_check_gate_log.py | exit 2 | abbreviated: --repo for --repo-data
+u19 | tools/ci/tests/test_check_toolchain.py | exit 2 | --help
+u20 | tools/ci/tests/test_check_toolchain.py | exit 2 | abbreviated: --repo for --repo-data
+u21 | tools/ci/tests/test_workflow_guards.py | exit 2 | --help
+u22 | tools/ci/tests/test_workflow_guards.py | exit 2 | abbreviated: --loc for --local

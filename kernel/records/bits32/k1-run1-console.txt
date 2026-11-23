@@ -1,0 +1,29 @@
+2026-11-22T12:13:14Z
+== tie_check.py 
+generator copy sha256 79dca82136338b94; record file sha256 da83a668b935948c; KernelText.v sha256 aa89a5557f5b8cf1
+mode: record; input bits32_sweep.c
+lines: generated 12, KernelText.v 12; differing lines: [1]
+line 1 differs only by the file name: yes
+K1 TIE HELD
+exit 0
+== tie_check.py --plant
+generator copy sha256 79dca82136338b94; record file sha256 da83a668b935948c; KernelText.v sha256 aa89a5557f5b8cf1
+mode: plant; input k1-plant-input.c
+lines: generated 12, KernelText.v 12; differing lines: [1, 9]
+line 1 differs only by the file name: yes
+K1 PLANT CAUGHT (line 9 differs)
+exit 0
+== tie_check.py --plant --nocheck
+generator copy sha256 79dca82136338b94; record file sha256 da83a668b935948c; KernelText.v sha256 aa89a5557f5b8cf1
+mode: plant, check removed; input k1-plant-input.c
+lines: generated 12, KernelText.v 12; differing lines: []
+line 1 differs only by the file name: yes
+K1 PLANT NOT CAUGHT
+exit 0
+== tie_check.py --nocheck
+generator copy sha256 79dca82136338b94; record file sha256 da83a668b935948c; KernelText.v sha256 aa89a5557f5b8cf1
+mode: record, check removed; input bits32_sweep.c
+lines: generated 12, KernelText.v 12; differing lines: []
+line 1 differs only by the file name: yes
+K1 TIE FAILED
+exit 0

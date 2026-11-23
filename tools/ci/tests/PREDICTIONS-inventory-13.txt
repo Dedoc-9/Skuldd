@@ -1,0 +1,17 @@
+# Predictions for tools/ci/tests/test_inventory.py, thirteenth file (after review round 11), written by the assistant on
+# 2026-11-21 before any of these cases first ran; its first bytes are kept privately. The earlier files stay as they
+# were.
+#
+# Why. Review 11 found that no plant held a "-" line with its colon at the end ("-:"), and none showed that rule 11
+# reads a line above as blank only when it holds blanks and tabs alone (a line of U+00A0 is not blank, as CommonMark
+# reads it). Measured by review 11 on this tree before this file: R33's form fails the successor row; R32's form fails
+# the successor row and the Markdown subset row (U+00A0 is outside the characters THEOREMS.md may hold).
+#
+# Plants R32 and R33. Two mutants, each run over the whole test: rule 11's pattern without a colon at the end
+# ([ \t]*(?:=+|:?-+)[ \t]*) is predicted to fail exactly R33; rule 11 reading the line above with str.strip() is
+# predicted to fail exactly R32 (it then fails the subset row only); no other case fails under either.
+R32 nbsp-line-above-underline: at the end of THEOREMS.md, "Successors", a line of U+00A0 only, "----------" (review 11's H05)
+  FAIL THEOREMS.md: every successor row names known statements
+  FAIL THEOREMS.md: written in the Markdown subset this reader reads
+R33 pipeless-table-colon-at-end: at the end of THEOREMS.md, "Successor", "-:", "`f32.F32_Statement.NOPE`" (review 11's H01)
+  FAIL THEOREMS.md: every successor row names known statements

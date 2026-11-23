@@ -1,0 +1,15 @@
+# Addendum 4 to PREDICTIONS-records.txt, written after addendum 3's runs and before this addendum's first run; no
+# earlier file is changed. run_record.py now reads a gate log's byte-order mark and GitHub timestamps as
+# tools/ci/check_gate_log.py does (the mark at the log's start removed; a timestamp removed only in GitHub's form, with
+# its fraction of a second), and run_record.py and verify_records.py take a folder name in the inventory's form
+# ([a-z][a-z0-9_]*).
+#
+# R36: F's gate log with a byte-order mark before its header, the log check's JSON over those bytes. Before, the header
+# line was not read and the record was refused.
+case R36 run_record exit 0 fails -
+# R37: F's gate log with "2026-11-18T02:36:44Z " (no fraction of a second) before every line, the log check's JSON
+# naming the verdict line without it. Before, run_record.py removed that timestamp, which check_gate_log.py does not.
+case R37 run_record exit 1 fails RR10,RR11,RR14
+# V41: F's record names the folder "9f32" (a digit first). Before, it was read as a record and only the folders row
+# failed.
+case V41 verify_records exit 1 fails VR01,VR07

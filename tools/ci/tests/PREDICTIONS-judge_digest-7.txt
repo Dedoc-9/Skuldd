@@ -1,0 +1,9 @@
+# Predictions for tools/ci/tests/test_judge_digest.py, seventh round: case T04.
+# Written by the assistant on 2026-11-20, after review round 8, before any run of this case; its sha256 was recorded
+# then, and no prediction changes after it. The format and the outcomes are those of PREDICTIONS-judge_digest.txt.
+# Why a seventh round: review 8 found that judge_digest.py wrote its JSON to a --json path that is a second name (a
+# hard link) of a judge file: the path lies outside the tree, so the refusal of a path among the judge files did not
+# see it, and realpath does not merge hard links (its C01). judge_digest.py now refuses, as a usage error, an existing
+# --json file that has another name (st_nlink above 1). Counted before it ran: the workflows give --json new files
+# under the runner's temporary folder, none of which exists before the step.
+T04 | USAGE | --json L, L a hard link made beside a fresh tree (outside it) to its tools/ci/inventory.py; that file's bytes unchanged (review 8's C01)

@@ -1,0 +1,89 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Drift of Skuldd's copies from their originals (ruling SY-1; the guard of SY-2), on every push and pull request, once
+# a week, and by hand. A report, not a verdict on the MathKernel: it is its own workflow, its job is not "MathKernel
+# verdict", it reads no artifact of another workflow and writes none, and docs/engineering/BRANCH-PROTECTION.md does
+# not ask for it to be required. One job per copy:
+#   - Skuldd's own checkout (folder skuldd), and a read-only clone of the original that PROVENANCE.md names
+#     (folder origin, its whole history, so the pins and main are both there);
+#   - tools/ci/tests/test_drift.py first: the drift script held on its honest twin and seen to fail on its plants, by
+#     this run's own code (a canary that the check below can fail);
+#   - tools/ci/drift.py on the copy, against the original's main as fetched now: the pins in PROVENANCE.md are the
+#     original's commits with their recorded trees, MANIFEST.<part>.txt is the import pin's tree, the RE-PIN rows give
+#     the current pin, the pin lies on main, and every file that differs from the pin has its reason in
+#     CHANGES-AFTER-IMPORT.md. Its exit: 0 nothing differs without a reason and main has not moved; 3 main has moved
+#     since the pin (a re-pin, or a reason in the next push restatement, is due); 1 a row failed. Both 3 and 1 turn
+#     the job red, so a run that finds drift is seen, also on the weekly run with no push.
+# Paths not in Skuldd's tree (a record removed here, a file added in the original) are printed as hashes, never as
+# names, so this public log names no file the tree does not hold.
+# The script and its test are judge files (tools/ci), and so is this workflow (.github/workflows): adding or changing
+# any of them moves MK_ANCHOR_CI once, which the owner sets after review; the MathKernel jobs' outcome does not depend
+# on this workflow's. Every value reaches a script through env. Every action is pinned by a full commit sha, its
+# release tag beside it (ruling SK-1). Python runs with PYTHONSAFEPATH=1.
+# GitHub stops a scheduled workflow in a public repository after 60 days without activity in it (DECLARED,
+# GitHub's documentation as recalled; not read or measured here): the weekly run is a reminder, not the
+# guarantee. The guarantee is the drift line
+# in each build-log entry and the drift table in each push restatement (SY-2).
+name: Drift from the originals
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '41 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drift-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONUTF8: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONSAFEPATH: "1"
+
+jobs:
+  drift:
+    name: Drift of ${{ matrix.part }}/ from its original (a report; not the MathKernel verdict)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - part: orlog
+            repository: Dedoc-9/Orlog
+          - part: verdandi
+            repository: Dedoc-9/Verdandi
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          path: skuldd
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: ${{ matrix.repository }}
+          ref: main
+          fetch-depth: 0
+          path: origin
+          persist-credentials: false
+      - name: The drift script held on its honest twin and seen to fail on its plants
+        if: ${{ !cancelled() }}
+        run: python3 -B skuldd/tools/ci/tests/test_drift.py
+      - name: The copy's drift from the original's main, each difference with its reason
+        if: ${{ !cancelled() }}
+        env:
+          PART: ${{ matrix.part }}
+        run: |
+          set -euo pipefail
+          python3 -B skuldd/tools/ci/drift.py --root skuldd --part "$PART" --origin origin --later origin/main \
+            | tee "$RUNNER_TEMP/drift.txt"
+      - name: The drift report in the job summary
+        if: ${{ always() }}
+        run: |
+          if [ -f "$RUNNER_TEMP/drift.txt" ]; then
+            { echo '```'; cat "$RUNNER_TEMP/drift.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          fi

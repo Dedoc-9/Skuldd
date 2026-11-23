@@ -1,0 +1,28 @@
+  input                          ok  use p1: 2 runs (frozen, plant1)
+  source                         ok  kernel/records/floor32/sweep_fc.c sha256 c0b4b71092f841621eefd9ae65677afb5ec198785772bce2a22de67efaafdc92
+  run sources                    ok  frozen c0b4b71092f84162, plant1 c0b4b71092f84162
+  compiler cc1                   ok  clang: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3 (clang; x86_64-pc-windows-msvc; machine x86-64)
+  canary fma cc1                 ok  the scan finds vfmadd213sd in cc1-canary-fma.o
+  canary x87 cc1                 ok  the scan finds fninit in cc1-canary-x87.o
+  build cc1 -O0 frozen           ok  clang -std=c99 -ffp-contract=off -O0  -c, linked
+  scan cc1 -O0 frozen            ok  709 instructions, no x87 or FMA
+  build cc1 -O0 plant1           ok  clang -std=c99 -ffp-contract=off -O0 -DPLANT=1 -c, linked
+  scan cc1 -O0 plant1            ok  695 instructions, no x87 or FMA
+  build cc1 -O2 frozen           ok  clang -std=c99 -ffp-contract=off -O2  -c, linked
+  scan cc1 -O2 frozen            ok  291 instructions, no x87 or FMA
+  build cc1 -O2 plant1           ok  clang -std=c99 -ffp-contract=off -O2 -DPLANT=1 -c, linked
+  scan cc1 -O2 plant1            ok  282 instructions, no x87 or FMA
+  started cc1-O0-frozen
+  started cc1-O0-plant1
+  started cc1-O2-frozen
+  started cc1-O2-plant1
+  ended   cc1-O2-frozen: exit 0 after 33 s
+  ended   cc1-O2-plant1: exit 0 after 33 s
+  ended   cc1-O0-plant1: exit 0 after 185 s
+  ended   cc1-O0-frozen: exit 0 after 186 s
+  sweep cc1 -O0 frozen           ok  SWEEP HELD (plant=0): floor32 0/1, ceil32 0/1065353216 (d/z) as predicted (186 s)
+  sweep cc1 -O0 plant1           ok  SWEEP HELD (plant=1): floor32 1/0, ceil32 1065353216/0 (d/z) as predicted (185 s)
+  sweep cc1 -O2 frozen           ok  SWEEP HELD (plant=0): floor32 0/1, ceil32 0/1065353216 (d/z) as predicted (33 s)
+  sweep cc1 -O2 plant1           ok  SWEEP HELD (plant=1): floor32 1/0, ceil32 1065353216/0 (d/z) as predicted (33 s)
+SWEEP CHECK HELD: 18 of 18 rows (p1; x86-64; clang)
+exit 0 (2026-11-22T07:18:27Z to 2026-11-22T07:21:36Z)

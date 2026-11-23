@@ -1,0 +1,13 @@
+# Addendum 6 to PREDICTIONS-records.txt, written on 2026-11-20 after review round 6 and before this addendum's first
+# run; no earlier file is changed. Review 6 found that verify_records.py compared --out with --dir after
+# os.path.realpath, which on Windows keeps a long-path prefix it is given (\\?\), so that commonpath saw another drive
+# and the summary was written inside --dir (its V1). verify_records.py now takes the prefix off, as
+# tools/ci/read_audit.py's plain() does, before it resolves and compares. On POSIX, which has no such prefix, V44 gives
+# the path with a leading "//", which realpath folds to "/" (the case runs that form there; it is not run on POSIX
+# here, and the scheme of this test has no skipped case).
+#
+# V44: --out run-summary.json inside --dir, spelled with a long-path prefix (on POSIX a leading "//"): a usage error,
+# nothing written there.
+case V44 verify_records exit 2 fails -
+# V45: the same path written plainly (review 6's V1c; as V22): a usage error, nothing written there.
+case V45 verify_records exit 2 fails -

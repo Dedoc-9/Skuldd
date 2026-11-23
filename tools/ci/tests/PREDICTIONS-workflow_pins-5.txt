@@ -1,0 +1,38 @@
+# Predictions for tools/ci/tests/test_workflow_pins.py, fifth file: the cases added when the rows permissions and
+# triggers were made to fail a workflow that holds a carriage return (one before a line feed aside), U+0085, U+2028 or
+# U+2029, where a YAML reader may end a line and this test does not (review loop of Push A, round 4). Written by the
+# assistant on 2026-11-22, before this test's first run of these cases; its sha256 is recorded outside this file then,
+# and no line changes after it (a correction is a new file). W28 to W30 ran before it was written, in the round-4
+# reviewer's trial on a scratch copy of the same case code, held to a trial file with the same ids, outcomes and rows
+# (its W28 line words the case differently), which the trial wrote and hashed before that run: sha256
+# a241b57ae5c33b7c9bc10def73a73a820f88077c1db6568a9972a616989d1c0f. W31 to W33 are the assistant's own, first run
+# after this file. The test reads it after the first four files, whose lines stand as they are; the format is theirs.
+# W28 and W30 to W32 add one line after drift.yml's job-level "    timeout-minutes: 15", W29 changes its "on:" block,
+# and W33 adds one line before its step "The drift report in the job summary". In each, the character stands inside a
+# line this test reads as one. W33 hides a step that uses an unpinned action: the rows pins and drift-actions read
+# lines the same way and do not see it, and the file fails through the rows permissions and triggers.
+W28 | FAILED | permissions,triggers | the comment "    # x", a lone carriage return, then "    permissions: write-all"
+W29 | FAILED | permissions,triggers | "  push: # x", a lone carriage return, then "  pull_request_target:"
+W30 | FAILED | permissions,triggers | as W28 with U+2028 for the carriage return
+W31 | FAILED | permissions,triggers | as W28 with U+0085 for the carriage return
+W32 | FAILED | permissions,triggers | as W28 with U+2029 for the carriage return
+W33 | FAILED | permissions,triggers | "      # x", a lone carriage return, then "      - uses: someone/action@main"
+#
+# Mutants, each a copy of the test with one change, run on the same workflows (not read by the test):
+# mutant M0c: none, the control: every case of the five files holds.
+# mutant M5: the check of those four characters removed: exactly W28, W29, W30, W31, W32 and W33 fail.
+# mutant M6: the carriage return taken out of the check: exactly W28, W29 and W33 fail.
+# mutant M7: U+0085 taken out of the check: exactly W31 fails.
+# mutant M8: U+2028 taken out of the check: exactly W30 fails.
+# mutant M9: U+2029 taken out of the check: exactly W32 fails.
+# mutant M4 (the fourth file's): exactly W24, W25, W26 and W27 fail, as there.
+# mutant M3 (the third file's): exactly W21, W22, W24, W25 and W27 fail, as the fourth file gives it.
+# M4 and M3 fail no new case, because each new case fails both rows through the new check alone, whatever the comment
+# rule or the line check of the row permissions reads (ARGUED; the runs measure it).
+#
+# Note, 2026-11-22, on PREDICTIONS-workflow_pins-4.txt, line 3 ("before the first run of these cases"), which keeps
+# its bytes: it holds for this test's first run of its cases, not for every run. W24 to W26 first ran about nine
+# minutes before that file was written, in the round-3 reviewer's trial on a scratch copy of the same case code, held
+# to a trial file whose W24 to W26 lines are byte-identical to that file's, which the trial wrote and hashed before
+# that run (sha256 811d5ddd6838b109e8dbde5bd9dc6b85cbfcd52bfdd3cd69d4fc1675480f6761); their outcomes were known when
+# that file was written. W27 first ran after it.

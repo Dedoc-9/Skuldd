@@ -1,0 +1,11 @@
+# Predictions for tools/ci/tests/test_read_audit.py, seventh file (after review round 9), written by the assistant on
+# 2026-11-21 before any of these cases first ran; no line changes after that run. A line: "case | exit <n> | rows that
+# FAIL (hook, reads, runs) or - | what the case does". A case that exits 2 prints no row and no verdict.
+#
+# What the round changes. Review 9 found that read_audit.py writes its --json with open(..., 'wb') after a guard that
+# resolves links, junctions and short names but not hard links, so a --json path outside ROOT that is a second name of
+# a file inside ROOT was accepted and the audit's JSON written into that file (its R9S-2, A03). read_audit.py now
+# refuses an existing --json file that has another name (st_nlink above 1) as a usage error, as judge_digest.py and
+# inventory.py do since round 8. The workflows give the audit no --json (integrity.yml), so nothing they run changes.
+# With the check taken out (a mutant), the test is predicted to fail exactly a60 and no other case.
+a60 | exit 2 | - | --json audit.json in a folder beside the tree, a hard link to the tree's docs/m.md: refused as a usage error, and docs/m.md keeps its bytes (review 9's A03)

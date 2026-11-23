@@ -1,0 +1,24 @@
+# Predictions for tools/ci/tests/test_inventory.py, fourth round: plants P45-P49, the decoy E04 and the usage case U01.
+# Written by the assistant on 2026-11-19, after review, before any run of these cases; its sha256 was recorded then,
+# and no prediction changes after it. Format as in PREDICTIONS-inventory.txt; a usage case's one line says what it
+# predicts. Each plant is made on a copy of the tree and must fail exactly the rows named, every other row ok.
+# Why: the Successors section and ANCHORS.md are now read whole (a second table or a stray row fails, so the gate
+# job's ANCHORS.md step and the inventory refuse the same files); a new row requires that no name is defined in two
+# statement files (FMAX32's one shared definition allowed only while its two definitions are the same sentence); a
+# listed path that is not a plain file is absent before it is read; --json and --matrix-out naming one file in two
+# cases of letters are one file where the file system folds case.
+P45 successors-second-table: THEOREMS.md gains, under the Successors heading after its table, a prose line and a second table whose one row names f32.F32_Statement.NOPE and its successor f32.F32_Statement.NOPE2
+  FAIL THEOREMS.md: every successor row names known statements
+P46 anchors-stray-row: kernel/coq/ANCHORS.md gains, after its table and a blank line, a row for f32 naming MK_ANCHOR_F32 with 64 zeros
+  FAIL ANCHORS.md: one row per gated folder with its variable
+P47 second-sqrt32: log32/LOG32_Statement.v gains "Definition SQRT32 : Prop := True." (p32/P32_Statement.v defines SQRT32); its line in log32's FROZEN4.txt and log32's ANCHORS.md value rewritten to follow
+  FAIL statement files: each name defined in one of them
+P48 fmax32-differs: exp32r/RANGE_Statement.v's FMAX32 definition changed in one character ("104." to "105."); every freeze list that lists the file, their Verdandi copies, the Verdandi copy of the file and the changed lists' ANCHORS.md values rewritten to follow
+  FAIL statement files: each name defined in one of them
+P49 listed-device-name: f32's FROZEN4.txt and its Verdandi copy gain the line "<sha256 of no bytes>  f32/NUL", f32's ANCHORS.md value rewritten to follow; neither folder holds such a file (on Windows NUL is a device that reads as empty)
+  FAIL f32: FROZEN4.txt entries hold in the tree
+  FAIL mirror f32: every listed file holds its sha256
+E04 fmax32-both-changed: both FMAX32 definitions changed alike ("104." to "105." in exp32r/RANGE_Statement.v and p32r/P32R_Statement.v), everything that lists either file rewritten to follow
+  HELD
+U01 outputs-one-file-by-case: the honest copy run with --json <work>/u01.json --matrix-out <work>/U01.JSON
+  USAGE WHERE CASE FOLDS, ELSE HELD

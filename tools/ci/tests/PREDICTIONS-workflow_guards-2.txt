@@ -1,0 +1,39 @@
+# Predictions for tools/ci/tests/test_workflow_guards.py, second file. Written by the assistant on 2026-11-20, after
+# review round 3 and before the first run of these cases; its sha256 was recorded then, and no line changes after
+# that run. The format and the checks are the first file's, and three more checks: msgline:<text> (a line of the
+# step's error output is exactly the text, so the case names the guard that refused), evid:ok (the fpenv step's
+# evidence file holds "fpenv ubuntu-24.04 attempt 1" and the honest HELD line, each ended by a newline), evid:none (it
+# wrote no evidence file). A case is named in one file only.
+# The steps: the matrix step's one-line case guard; the gate job's ANCHORS.md step, which now reads the table with
+# tools/ci/inventory.py's own reader; the fpenv job's step (its compiler search, run with a PATH of one folder holding
+# wrappers of /usr/bin's cat, grep, ls, mkdir, sort, tail and tee, a stand-in python3 that prints the planted check
+# output, and the compilers the case plants; LEG ubuntu-24.04, attempt 1; the honest output ends with "FPENV CHECK
+# HELD: 26 of 26 rows (4 skipped: a stand-in)"); the verdict job's step that reads each fpenv leg's evidence
+# (ATTEMPT 1; the honest evidence of each leg is "fpenv <leg> attempt 1" and the honest HELD line).
+legs | ok | - | the fpenv job's matrix runners and the legs the verdict step reads are the same list, in the same order
+legs-plant | FAIL | - | the same check on a copy of mathkernel-linux.yml whose fpenv matrix gains a third runner, macos-14
+m15 | exit 2 | out:0,msgline:REFUSED: the gate matrix is not one line | the honest matrix with a CR after its first character: the one-line case guard refuses it, by its own words
+m16 | exit 2 | out:0,msgline:REFUSED: the gate matrix is not one line | the honest matrix with a newline after its first character: the same guard refuses it
+r07 | exit 2 | msg:REFUSED | ANCHORS.md with, directly under its table, a line without outer pipes naming f32, MK_ANCHOR_F32 and 64 zeros (GitHub reads it as a row)
+r08 | exit 0 | - | the same line after a blank line (prose, not a row)
+r09 | exit 2 | msg:REFUSED | ANCHORS.md with the line "#tag" directly under its table
+r10 | exit 2 | msg:REFUSED | ANCHORS.md with, after a blank line, a second table without outer pipes whose one row names f32 with 64 zeros
+r11 | exit 0 | - | every line of ANCHORS.md's table indented by two spaces (GitHub reads the same table)
+r12 | exit 2 | msg:REFUSED | every line of ANCHORS.md's table indented by four spaces (GitHub reads code, no table)
+p01 | exit 0 | say:compilers: ,evid:ok | the fpenv step with gcc and clang, the check holding
+p02 | exit 2 | msg:gcc is not on this runner,evid:none | no gcc on the PATH
+p03 | exit 2 | msg:no clang on this runner,evid:none | gcc, and neither clang nor clang-<version> on the PATH
+p04 | exit 0 | say:clang-18,evid:ok | gcc, clang-17 and clang-18 and no clang: the newest version is chosen
+p05 | exit 1 | evid:none | the check exits 1, its last line a FAILED verdict
+p06 | exit 1 | msg:REFUSED,evid:none | the check exits 0, its last line a FAILED verdict
+p07 | exit 1 | msg:REFUSED,evid:none | the check exits 0, its HELD line followed by a line "done"
+p08 | exit 1 | evid:none,cr | the check exits 0, its HELD line ended by CR LF
+p09 | exit 1 | msg:REFUSED,evid:none | the check exits 0 and prints nothing
+w01 | exit 0 | say:every fpenv leg held | the verdict's fpenv step, each leg's honest evidence
+w02 | exit 1 | msg:REFUSED | the arm64 leg's evidence missing
+w03 | exit 1 | msg:REFUSED | the arm64 leg's evidence holding a FAILED line
+w04 | exit 1 | msg:REFUSED | the x86-64 leg's evidence of attempt 2
+w05 | exit 1 | msg:REFUSED | the x86-64 leg's evidence holding "FPENV CHECK HELD: 25 of 26 rows"
+w06 | exit 1 | msg:REFUSED | a second file beside the x86-64 leg's evidence
+w07 | exit 1 | msg:REFUSED | the x86-64 leg's evidence with CR LF line ends
+w08 | exit 1 | msg:REFUSED | a third folder, ubuntu-22.04, with its own evidence

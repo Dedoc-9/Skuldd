@@ -1,0 +1,13 @@
+# BITS32-SWEEP-FROZEN.txt: the freeze list of the bits32 record sweep (ruling A4 (a), Skuldd's Push A), written
+# 2026-11-22 by a stage agent of the assistant after a syntax-only compile of every build (PLANT 0 to 6, and PLANT 5
+# from its planted copy) and before the first run. run_bits32_sweep.sh checks every line before it builds anything.
+# Names without a folder are beside this file; the others are under the tier root given to the runner.
+# The program under test is the C text that FCLINK states: the two lines between the COQ TEXT markers of
+# fclink/sweep_fc2.c (quoted by fclink/KernelText.v as floor32_c_text and ceil32_c_text), called as
+# (float)mk_floor32((double)f) and (float)mk_ceil32((double)f) with f and the result's bits copied by memcpy.
+# bits32/BITS32_Statement.v, fclink/sweep_fc2.c and fclink/KernelText.v carry the owner's sha256 under R1.
+da83a668b935948cec672ec5480bc6770a844abeef9a5f3f5d577716d7b4ced0  bits32_sweep.c
+c7df2aa87bf9e0973886f30431396008214a575a8620a61c0ede8cfcab536311  run_bits32_sweep.sh
+c3e65cb7285ddf438145e6fc7284e7749013472b3d4b06f8fc211d345b043e53  bits32/BITS32_Statement.v
+924bd031c84172fd98203f1b755f1f63b8cc62aecd76bd6358273f00fc2a7005  fclink/sweep_fc2.c
+aa89a5557f5b8cf10709206fe267ffdba68b93e2322f61b3e7384cf8323456e7  fclink/KernelText.v

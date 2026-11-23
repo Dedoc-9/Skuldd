@@ -1,0 +1,19 @@
+# Predictions for tools/ci/tests/test_read_audit.py after review round 4 (cases a09 to a21). Written by the assistant
+# on 2026-11-20, before any run of these cases; its sha256 was recorded then, and no line changes after it.
+# One line per case: case | exit <n> | the rows that FAIL ("runs", "hook", "reads", comma-separated, or "-") | what.
+# A case predicted to exit 2 is a usage error: no row and no verdict line. Every case's tree is the test header's;
+# "the bound files" as in PREDICTIONS-read_audit.txt. Unless a line says otherwise, the inventory JSON is a held one
+# (schema skuldd-inventory/1, "held" true) naming the gated folder zz and no mirror.
+a09 | exit 1 | hook | the bound files; the stand-in takes PYTHONPATH out of its own environment, then starts a child Python with env None that reads README-unbound.md unseen
+a10 | exit 1 | hook | the bound files; os.system starts a child Python with -I that reads README-unbound.md unseen (a shell command the hook cannot judge)
+a11 | exit 1 | hook | the bound files; a child started with first argument "notpython", the interpreter given as the program, and -I, reads README-unbound.md unseen
+a12 | exit 1 | hook | the bound files; a child Python started with -X utf8 then -I reads README-unbound.md unseen
+a13 | exit 1 | hook | the bound files; a child Python started with -W ignore then -I reads README-unbound.md unseen
+a14 | exit 1 | hook | the bound files; os.spawnv starts a child Python with -I that reads README-unbound.md unseen
+a15 | exit 0 | - | a decoy: the bound files; os.spawnv starts a child Python without -I (the environment kept) that reads docs/m.md
+a16 | exit 0 | - | a decoy: the bound files; a child Python started with -X utf8 and no -I reads docs/m.md
+a17 | exit 1 | reads | the bound files; os.spawnv starts a child Python without -I that reads README-unbound.md, which its hook sees
+a18 | exit 2 | - | the inventory JSON is {} (no schema, not held, no gated folder): a usage error
+a19 | exit 2 | - | the inventory JSON says "held" false: a usage error
+a20 | exit 2 | - | the inventory JSON names no gated folder: a usage error
+a21 | exit 2 | - | the inventory JSON names a gated folder "../zz" beside zz: a usage error

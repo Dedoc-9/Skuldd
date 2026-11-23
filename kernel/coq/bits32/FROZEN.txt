@@ -1,0 +1,2 @@
+# FROZEN of bits32: the statement file, frozen before its proof (2026-11-22). The sha256 below is the owner's, computed with Get-FileHash under R1 of Turn 228 and equal to the assistant's (ext-work/harden/STATE.md, "RULINGS S280 AND ADDENDUM 1"); its form and content follow ruling A4 (a).
+c3e65cb7285ddf438145e6fc7284e7749013472b3d4b06f8fc211d345b043e53  bits32/BITS32_Statement.v

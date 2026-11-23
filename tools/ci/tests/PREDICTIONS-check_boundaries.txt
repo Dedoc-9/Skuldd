@@ -1,0 +1,88 @@
+# Predictions for tools/ci/tests/test_check_boundaries.py: what each case of tools/ci/check_boundaries.py, and of the
+# Integrity workflow's step that runs it, must give. Written by the assistant on 2026-11-22, before the test's first
+# run; its sha256 was recorded then, and no line changes after it. A case whose result differs from its line stays red
+# and is explained; a new round is a new dated file.
+#
+# A line is "<case> | <outcome> | <detail> | <what the case is>". HELD: the check holds; FAILED: it fails and the rows
+# that fail are exactly the detail's (comma-separated, in any order); USAGE: exit 2 and no verdict line; ok: the
+# workflow holds the step. Unless a line says otherwise, a case changes one thing of the honest test root: its
+# THEOREMS.md (folders aa and bb; statements AA, B1 and B2) and its map (rows B001 to B006).
+H01 | HELD | - | honest: six rows, every grade, kind and stage, a PENDING and a STATED row
+H02 | HELD | - | decoy: THEOREMS.md with CR LF line ends (the inventory admits them)
+H03 | HELD | - | decoy: a Claim names AA with MKF. before it
+H04 | HELD | - | decoy: blank lines between two fields of a row
+H05 | HELD | - | decoy: a GATED row names its statement with MKF. before it
+H06 | HELD | - | decoy: field-like list items in the prose before the first row are not read
+P01 | FAILED | coverage | B2 has no row: B002 names B1 only
+P02 | FAILED | claims, coverage | CC lands in the proved table while its row is still PENDING
+P03 | FAILED | rows | B001 lacks its Stop
+P04 | FAILED | rows | B001's Kind is empty
+P05 | FAILED | rows | B001's Grade is "-"
+P06 | FAILED | rows | B001's Stop and Kind change places
+P07 | FAILED | rows | B001 has an eighth field, Note
+P08 | FAILED | rows | B001 has its Kind twice
+P09 | FAILED | rows | two rows have the id B001
+P10 | FAILED | rows | a level-3 heading that is not a row ("### Notes")
+P11 | FAILED | rows | a line in B002 that is neither a field nor its continuation
+P12 | FAILED | rows, coverage | a map with no row
+P13 | FAILED | grades | the grade PROVEN
+P14 | FAILED | grades | two grades written "MEASURED,ARGUED"
+P15 | FAILED | grades | the grade "declared" in lower case
+P16 | FAILED | grades | a grade written twice
+P17 | FAILED | grades | the grade REPORTED, which the ruling does not list
+P18 | FAILED | kinds | the kind "assumption"
+P19 | FAILED | kinds | the kind "trust, model"
+P20 | FAILED | evidence | a MEASURED and ARGUED row whose Covers beyond names no file and no sha256
+P21 | FAILED | evidence | a GATED row that names only a PENDING statement
+P22 | FAILED | evidence | a MEASURED row whose only sha256 is in upper case
+P23 | FAILED | paths | Claimed in names a file the tree does not hold
+P24 | FAILED | paths | a path holding ".."
+P25 | FAILED | paths | a pattern in place of a path
+P26 | FAILED | paths | an absolute path
+P27 | FAILED | evidence, paths | Covers beyond's only path is not in the tree
+P28 | FAILED | claims | a Claim names AX, which the proved table does not hold
+P29 | FAILED | claims | a Claim's bare name with no module before it
+P30 | FAILED | claims | a PENDING Claim that names no statement
+P31 | FAILED | claims | a STATED Claim that names AA, which the proved table holds
+P32 | FAILED | stages | Proof again "soon: ..."
+P33 | FAILED | stages | Proof again "never:" with no reason
+P34 | FAILED | stages | Proof again "Push C: ..."
+P35 | FAILED | stages | Proof again "never - ...", without the colon
+P36 | FAILED | input | no BOUNDARIES.md
+P37 | FAILED | input | BOUNDARIES.md is a folder
+P38 | FAILED | input | no THEOREMS.md
+P39 | FAILED | input | THEOREMS.md has no proved table (its header starts "Dir")
+P40 | FAILED | input | THEOREMS.md has two proved tables
+P41 | FAILED | input | a character outside the map's set (U+00F4)
+P42 | FAILED | input | a carriage return inside a line of the map
+P43 | FAILED | input | a tab in the map
+P44 | FAILED | input | a map that is not UTF-8 (a byte FF)
+P45 | FAILED | input | THEOREMS.md's statement cell starts with a bare name
+P46 | FAILED | rows | a level-4 heading that reads like a row ("#### B007")
+P47 | FAILED | claims | a Claim's backtick span holds a path, not a name
+P48 | FAILED | kinds | the kind "Model", with a capital
+U01 | USAGE | - | no option
+U02 | USAGE | - | an unknown option, --json
+U03 | USAGE | - | --help
+U04 | USAGE | - | --ro, an abbreviation of --root
+U05 | USAGE | - | --root names a file, not a folder
+U06 | HELD | - | the honest root, the check run as a process (exit 0)
+U07 | FAILED | coverage | P01's root, the check run as a process (exit 1)
+W01 | ok | step | the tree's integrity.yml runs the check in one step, after whatever failed before it
+W02 | FAILED | step | the step taken out of integrity.yml (in memory)
+W03 | FAILED | step | the step's run line given "--root ." (in memory)
+W04 | FAILED | step | the step without its "if" line (in memory)
+#
+# Mutants, each a copy of tools/ci (and of integrity.yml) with one check taken out, the test run on the copy. A check
+# row taken out makes every case fail whose detail names that row, and no other (the rows read the parsed map apart).
+mutant | M0 | none | the control: nothing taken out
+mutant | M1 | P03, P04, P05, P06, P07, P08, P09, P10, P11, P12, P46 | check_rows() returns no problem
+mutant | M2 | P18, P19, P48 | check_kinds() returns no problem
+mutant | M3 | P13, P14, P15, P16, P17 | check_grades() returns no problem
+mutant | M4 | P20, P21, P22, P27 | check_evidence() returns no problem
+mutant | M5 | P23, P24, P25, P26, P27 | check_paths() returns no problem
+mutant | M6 | P02, P28, P29, P30, P31, P47 | check_claims() returns no problem
+mutant | M7 | P01, P02, P12, U07 | check_coverage() returns no problem
+mutant | M8 | P32, P33, P34, P35 | check_stages() returns no problem
+mutant | M9 | P41, P42, P43 | read_input() without its character rule (P44 still fails: its bytes are not UTF-8)
+mutant | W1 | W01, W02, W03, W04 | the step taken out of integrity.yml (W02 to W04 then cannot plant: their text is gone)

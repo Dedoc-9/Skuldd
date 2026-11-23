@@ -1,0 +1,12 @@
+# Predictions for tools/ci/tests/test_workflow_pins.py, sixth file: a dated note and no case (review loop of Push A,
+# round 4). Written by the assistant on 2026-11-22, before this test first read it; its sha256 is recorded outside
+# this file then, and no line changes after it (a correction is a new file). The test reads it after the first five
+# files, whose lines stand as they are. It holds comment lines only, so it adds no case and changes no prediction.
+#
+# Note, 2026-11-22, on PREDICTIONS-workflow_pins-5.txt, lines 8 and 9 ("W31 to W33 are the assistant's own, first run
+# after this file"), which keep their bytes. W31's plant, U+0085 in place of W28's carriage return, is the round-4
+# reviewer's probe N1, which that reviewer ran on a copy of this test before the check that -5.txt's cases hold to
+# was added, where it failed no row; so it is that reviewer's plant, made a case by the assistant, as W28's, W29's
+# and W30's plants are its probes L1, L2 and U1. As cases of this test, held to their predictions, W31 to W33 first
+# ran after -5.txt was written and frozen. W32 (U+2029) and W33 (an unpinned step after a lone carriage return) are
+# the assistant's own.

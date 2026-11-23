@@ -9,6 +9,7 @@ What this repository uses from other authors, and how. Nine fdlibm 5.3 source fi
 | Flocq 4.2.1 | LGPL-3 | the IEEE 754 formalisation the kernel's statements and proofs import | no |
 | GNU MPFR 4.2.2 | LGPL-3.0-or-later (its manual GFDL-1.2-or-later) | the correctly rounded oracle of the exhaustive sweep of the turns kernel's law, linked at run time (the sweep's sources are withheld until the reviewer's blind formalisation exists) | no |
 | GCC, Clang, rustc, CPython | their own licences | compile and run generated and measurement programs | no |
+| Ubuntu 24.04 and its packages, opam, OCaml 4.14.2, and the GitHub Actions `actions/checkout` and `actions/cache` | their own licences | build and run the Linux CI's image and jobs (`ci/mathkernel/Dockerfile`, `.github/workflows/`), where Coq 8.20.1 and Flocq 4.2.1 are built from opam; not distributed | no |
 | CoqInterval 4.11.1 | CeCILL-C | its pattern (an operations record with integer constants, a program with sharing, one simulation theorem) was studied for the design; no code was copied | no |
 | Engine content named by `verdandi/art` | that engine's EULA | named by path for an optional engine integration (36 entries in `verdandi/art/director/vectors.json`); no file of such content is in the tree | no |
 

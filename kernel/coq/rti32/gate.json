@@ -1,0 +1,192 @@
+{
+ "name": "RTI32",
+ "tier": "flocq4",
+ "deps": [
+  "f32",
+  "p32",
+  "p32r",
+  "exp32",
+  "exp32r",
+  "ieee64",
+  "sin32",
+  "cos32",
+  "sincos32",
+  "sincos32i",
+  "floor32",
+  "ceil32"
+ ],
+ "files": [
+  "RTI32_Statement.v",
+  "FloorRTI.v",
+  "CeilRTI.v",
+  "BnRTI.v",
+  "Closed.v",
+  "Identity.v"
+ ],
+ "identity": "Identity",
+ "statement": {
+  "file": "RTI32_Statement.v",
+  "sha256": "c880889571705e6760d35e8fe9badab376b2d5e64e339bc45a658e5d58c119b7"
+ },
+ "plants": {
+  "admitted": {
+   "replace": {
+    "FloorRTI.v": "plants/FloorRTI_admitted.v"
+   },
+   "reader": "FloorRTI.rf_greatest :",
+   "words": [
+    "Admitted"
+   ],
+   "class": "e proof",
+   "what": "rf_greatest (an integral number not above x is not above floor x) ends with Admitted; used by RTI_FL and RTI_FL32 through the clause lemmas"
+  },
+  "axiom": {
+   "replace": {
+    "BnRTI.v": "plants/BnRTI_axiom.v"
+   },
+   "reader": "BnRTI.dn_unique :",
+   "words": [
+    "Axiom"
+   ],
+   "class": "f axiom",
+   "what": "dn_unique (the clauses of roundToIntegralTowardNegative allow only Bnearbyint's result) is an Axiom of the same statement, its proof removed; used by RTI_BN"
+  },
+  "bn-other-mode": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_bn_other_mode.v"
+   },
+   "fails": "BnRTI",
+   "text": "rti32/BnRTI.v\", line 156, characters",
+   "class": "b claim",
+   "what": "RTI_BN pairs RTI_DN with Bnearbyint at mode_UP (line 128). KNOWN FALSE: x = 1/2, r = +0 meets RTI_DN and Bnearbyint at mode_UP gives 1 (ARGUED from Flocq's Bnearbyint_correct, ext-work/p2/a/rti32/draft3/PLANTS.md row 5). FloorRTI.v and CeilRTI.v compile with it, as they must (they precede BnRTI.v and do not mention RTI_BN); this shows nothing about Bnearbyint. Refused in RTI_BN_proof (MEASURED, own, rehearsal)"
+  },
+  "cl32-strict": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_cl32_strict.v"
+   },
+   "fails": "CeilRTI",
+   "text": "rti32/CeilRTI.v\", line 91, characters",
+   "class": "b claim",
+   "what": "RTI_CL32 says the result is above the input, strictly (line 122). KNOWN FALSE: ceil32(1) = 1 (MEASURED, reported, ext-work/p2/r1/ieee/plant-facts-run1.txt:10). Refused in RTI_CL32_proof (MEASURED, own, rehearsal)"
+  },
+  "fl32-strict": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_fl32_strict.v"
+   },
+   "fails": "FloorRTI",
+   "text": "rti32/FloorRTI.v\", line 94, characters",
+   "class": "b claim",
+   "what": "RTI_FL32 says the result is below the input, strictly (line 114). KNOWN FALSE: floor32(1) = 1 (MEASURED, reported, ext-work/p2/r1/ieee/plant-facts-run1.txt:9). Refused in RTI_FL32_proof (MEASURED, own, rehearsal)"
+  },
+  "four-of-five": {
+   "replace": {
+    "Closed.v": "plants/Closed_four_of_five.v"
+   },
+   "fails": "Identity",
+   "text": "rti32/Identity.v\", line 4, characters",
+   "class": "g identity",
+   "what": "Closed.v states, under the name RTI32, four of the five parts (RTI_BN left out) and proves that"
+  },
+  "guard": {
+   "replace": {
+    "Closed.v": "plants/Closed_guard.v"
+   },
+   "reader": "is assumed to be guarded",
+   "words": [
+    "bypass_check"
+   ],
+   "class": "h guard",
+   "what": "rti32_holds from False, by a recursion whose termination check is switched off"
+  },
+  "inf-may-be-nan": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_inf_may_be_nan.v"
+   },
+   "fails": "BnRTI",
+   "text": "rti32/BnRTI.v\", line 122, characters",
+   "class": "b claim",
+   "what": "RTI_DN's infinity clause loses \"the result is not a NaN\" (line 81): a weakening. FloorRTI.v and CeilRTI.v compile with it (MEASURED, own, rehearsal). KNOWN FALSE, the uniqueness half of RTI_BN: x = +inf, r = NaN meets it (is_finite and Bsign of the NaN are false), and Bnearbyint gives +inf (READ and model, reported, ext-work/p2/a/rti32/draft3/PLANTS.md). Refused in dn_unique where that conjunct is used (MEASURED, own)"
+  },
+  "inf-sign-flip": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_inf_sign_flip.v"
+   },
+   "fails": "FloorRTI",
+   "text": "rti32/FloorRTI.v\", line 70, characters",
+   "class": "b claim",
+   "what": "RTI_DN's sign clause flips the sign of an infinite result only (line 87). KNOWN FALSE: floor32(-inf) = -inf, sign bit 1, where the planted clause asks for 0 (MEASURED, reported, ext-work/p2/r1/ieee/plant-facts-run1.txt:35); at a finite or NaN operand the planted clause is the sign clause. Refused in rf_dn_self, the infinite case, not in rf_dn_fin (MEASURED, own, rehearsal)"
+  },
+  "inf-to-nan": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_inf_to_nan.v"
+   },
+   "fails": "FloorRTI",
+   "text": "rti32/FloorRTI.v\", line 70, characters",
+   "class": "b claim",
+   "what": "RTI_DN's infinity clause says an infinite operand gives the NaN (line 81). KNOWN FALSE: floor32(+inf) = +inf (FL_NONFINITE, gated, reported; ext-work/p2/r1/ieee/plant-facts-run1.txt:33, MEASURED, reported). Refused in rf_dn_self (MEASURED, own, rehearsal)"
+  },
+  "nan-not-nan": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_nan_not_nan.v"
+   },
+   "fails": "FloorRTI",
+   "text": "rti32/FloorRTI.v\", line 70, characters",
+   "class": "b claim",
+   "what": "RTI_DN's NaN clause says a NaN operand gives a value that is not a NaN (line 80). KNOWN FALSE: floor32(NaN) is the NaN (FL_NONFINITE, gated, reported; ext-work/p2/r1/ieee/plant-facts-run1.txt:39, MEASURED, reported). Refused in rf_dn_self, the operand that is not finite and returned as it is (MEASURED, own, rehearsal)"
+  },
+  "no-finite": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_no_finite.v"
+   },
+   "fails": "BnRTI",
+   "text": "rti32/BnRTI.v\", line 113, characters",
+   "class": "b claim",
+   "what": "RTI_DN's \"the result is finite\" replaced by True (line 83): a weakening. FloorRTI.v and CeilRTI.v compile with it (MEASURED, own, rehearsal). KNOWN FALSE, the uniqueness half of RTI_BN: x = 1/4, r = +infinity (B2R 0, integral, sign bit 0) meets it, and Bnearbyint gives +0 (model: reported, ext-work/p2/a/rti32/draft3/PLANTS.md row 4; Flocq: ARGUED there). Refused in dn_unique, where the result's finiteness is used (MEASURED, own)"
+  },
+  "no-greatest": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_no_greatest.v"
+   },
+   "fails": "BnRTI",
+   "text": "rti32/BnRTI.v\", line 106, characters",
+   "class": "b claim",
+   "what": "RTI_DN's greatest clause replaced by True (line 86): a weakening. FloorRTI.v and CeilRTI.v compile with it (MEASURED, own, rehearsal). KNOWN FALSE, the uniqueness half of RTI_BN: x = 3/2, r = +0 meets the weakened RTI_DN and Bnearbyint at mode_DN gives +1 (model: reported, ext-work/p2/a/rti32/draft3/PLANTS.md row 3; Flocq: ARGUED there; ieee.md's witness x = 1/2 is wrong, its defect D1). Refused in dn_unique, where the clause is used (MEASURED, own)"
+  },
+  "no-premise": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_no_premise.v"
+   },
+   "fails": "FloorRTI",
+   "text": "rti32/FloorRTI.v\", line 77, characters",
+   "class": "c premise",
+   "what": "RTI_FL's premise \"not finite or in format32\" replaced by \"not finite or finite\" (line 101), its arity kept. KNOWN FALSE: x = 2^23 + 1/2 is binary64, not in format32, and floor32 returns it, not integral (MEASURED, reported, ext-work/p2/r1/ieee/plant-facts-run1.txt:37,44). Refused in RTI_FL_proof where the proof takes format32 from the premise (MEASURED, own, rehearsal)"
+  },
+  "other-mode": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_other_mode.v"
+   },
+   "fails": "FloorRTI",
+   "text": "rti32/FloorRTI.v\", line 80, characters",
+   "class": "b claim",
+   "what": "RTI_FL with RTI_UP for RTI_DN (statement line 102). KNOWN FALSE: at x = 1/2 floor32 gives +0, and RTI_UP's finite clause needs 1/2 <= r (program value MEASURED, reported, ext-work/p2/r1/ieee/plant-facts-run1.txt:5,41; the planted clause false in the Python model, reported, ext-work/p2/a/rti32/draft3/PLANTS.md row 1). Refused in RTI_FL_proof, where the clauses of the other direction do not fit the lemma that gives RTI_DN (MEASURED, own, rehearsal)"
+  },
+  "zero-sign-plus": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_zero_sign_plus.v"
+   },
+   "fails": "FloorRTI",
+   "text": "rti32/FloorRTI.v\", line 64, characters",
+   "class": "b claim",
+   "what": "RTI_DN's sign clause replaced by \"a finite zero result is +0\" (line 87). KNOWN FALSE: floor32(-0) = -0, sign bit 1 (MEASURED, reported, ext-work/p2/r1/ieee/plant-facts-run1.txt:3,42). Refused in rf_dn_fin, the finite case, where no step closes the planted clause (MEASURED, own, rehearsal)"
+  },
+  "zero-sign-plus-up": {
+   "replace": {
+    "RTI32_Statement.v": "plants/RTI32_Statement_zero_sign_plus_up.v"
+   },
+   "fails": "CeilRTI",
+   "text": "rti32/CeilRTI.v\", line 61, characters",
+   "class": "b claim",
+   "what": "RTI_UP's sign clause replaced by \"a finite zero result is +0\" (line 97). KNOWN FALSE: ceil32(-1/2) = -0 (MEASURED, reported, ext-work/p2/r1/ieee/plant-facts-run1.txt:8,42), the case ceil32's last step exists for. Refused in rc_up_fin, the finite case (MEASURED, own, rehearsal)"
+  }
+ }
+}

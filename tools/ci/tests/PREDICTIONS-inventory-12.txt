@@ -1,0 +1,20 @@
+# Predictions for tools/ci/tests/test_inventory.py, twelfth file (after review round 10), written by the assistant on
+# 2026-11-21 before any of these cases first ran; no line changes after that run. The earlier files stay as they were.
+#
+# Why. Review 10 found that a table without pipes (one column, its delimiter row ":-" or "-:") under a non-blank line,
+# which GitHub may show as a table, passed rule 11 (a line of "=" or "-" only under a line that is not blank), whose
+# pattern took no colon, and that no plant covered an underline with trailing blanks or a "-" underline in ANCHORS.md.
+# Rule 11 now refuses a line of "=" only, or of "-" only with a colon allowed at either end, directly under a line
+# that is not blank, a blank line being one of blanks and tabs only. Counted before it ran (review 10, on this tree):
+# 0 such lines in THEOREMS.md and ANCHORS.md.
+#
+# Plants R28 to R31. With rule 11 taken out (a mutant), the test is predicted to fail exactly R18, R19, R20, R23, R24,
+# R25, R26, R28, R29, R30 and R31, which then hold, and no other case.
+R28 pipeless-table-successor: at the end of THEOREMS.md, "Successor", ":-", "`f32.F32_Statement.NOPE`" (review 10's R10S-1)
+  FAIL THEOREMS.md: every successor row names known statements
+R29 pipeless-table-anchors: at the end of ANCHORS.md, "Folder", ":-", "`x`" (R10S-1's twin in ANCHORS.md)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+R30 underline-trailing-blanks: at the end of THEOREMS.md, "Intro", "=====" followed by two blanks (R10S-9; a tab would fail the character rule too)
+  FAIL THEOREMS.md: every successor row names known statements
+R31 dash-underline-anchors: at the end of ANCHORS.md, "Notes", "-----" (R10S-9)
+  FAIL ANCHORS.md: one row per gated folder with its variable

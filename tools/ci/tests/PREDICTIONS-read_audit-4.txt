@@ -1,0 +1,51 @@
+# Predictions for tools/ci/tests/test_read_audit.py, fourth file (after review round 6), written by the assistant on
+# 2026-11-20 before any of these cases first ran; no line changes after that run. A line: "case | exit <n> | rows that
+# FAIL (hook, reads, runs) or - | what the case does". Every case here writes its marker file outside the tree (the
+# test checks that it exists): the process that read writes what it read, or the plant writes what it did.
+#
+# What the round adds to tools/ci/read_audit.py, each with its cases. The hook's busy flag is kept per thread (a36);
+# a copy's source is logged as a read: the events "_winapi.CopyFile2" (shutil.copy2 and copytree on Windows),
+# "shutil.copyfile", "shutil.copymode", "shutil.copystat" and "shutil.copytree" (a37, a38; a39 is the control, which
+# "open" caught already); the hook's folder and PYTHONHOME are read once when the hook loads and the folder must not be
+# empty (a42; a43 the control, which "os.unsetenv" caught already); a logged temporary folder that is the root, holds
+# it or holds a bound file is refused whatever its "existed" field (a40; a41 the control); a link whose source or
+# target is inside the root ("os.link", "os.symlink", "_winapi.CreateJunction"), and a removal ("os.remove",
+# "os.rmdir", "shutil.rmtree") or a move ("os.rename", which os.replace raises too) of a path inside the root, outside
+# a run's new temporary folder, fail the reads row (a44 to a49); an import of multiprocessing or one of its submodules
+# or of concurrent.futures.process, the events "os.fork" and "os.forkpty", and a "_winapi.CreateProcess" that no
+# "subprocess.Popen" of the same thread with the same program and folder raised just before, fail the hook row as
+# starts the hook cannot judge (a50 to a53); a54 is a decoy (links, a move, removals and an rmtree inside a run's new
+# temporary folder, and an import of concurrent.futures and threading).
+#
+# Platforms. a37 and a38 on POSIX: shutil.copy2 and copytree open their sources there (no _winapi), so "open" fails the
+# same row (ARGUED from shutil.py; not run on POSIX here). a45 on Windows: os.symlink needs a privilege a plain user
+# lacks there; the event is raised before the system refuses, so the row fails all the same, and the marker says the
+# system refused. a51: on POSIX a real os.fork (the child exits at once); on Windows, which has no os.fork, the event
+# raised by hand with sys.audit. a52: the event "os.forkpty" raised by hand on every platform (a pseudo-terminal is not
+# made). a53: on Windows a real _winapi.CreateProcess of a Python child that reads docs/m.md (bound) and keeps the hook;
+# on POSIX, which has no _winapi, the event raised by hand.
+#
+# a36 is deterministic by construction (ARGUED from the hook's code): the stand-in's second thread raises an "open"
+# event whose path object blocks inside the hook (its __fspath__ waits) while the first thread reads
+# README-unbound.md, so a hook that skips every event while any thread is inside it (the round-5 shared flag) never
+# logs that read, and a hook that skips only its own thread's events always does. The non-equivalence runs (the shared
+# flag and the fixed hook, 20 runs each) are fixer2-6's, private.
+a36 | exit 1 | reads | threads: a second thread held inside the hook by an "open" event whose path blocks, while the first thread reads README-unbound.md
+a37 | exit 1 | reads | copy2: shutil.copy2 of README-unbound.md to a temporary folder outside the tree, then the copy read
+a38 | exit 1 | reads | copytree: shutil.copytree of the tree to a temporary folder outside it, then the copy of README-unbound.md read
+a39 | exit 1 | reads | copyfile: shutil.copyfile of README-unbound.md to a temporary folder outside the tree, then the copy read (the control)
+a40 | exit 1 | hook,reads | forge-log: the line ('mkdtemp', <the tree>, False, <the tree>) written straight into a log file of every folder MK_READ_AUDIT_DIRS names, then README-unbound.md read
+a41 | exit 1 | hook,reads | forge-log-existed: the same with True in the "existed" field (the control)
+a42 | exit 1 | hook | environ-data: PYTHONPATH and MK_READ_AUDIT_HOOK taken out of os.environ._data (no event), then a child given env=dict(os.environ) reads README-unbound.md
+a43 | exit 1 | hook | environ-pop: the same through os.environ.pop (the control: os.unsetenv)
+a44 | exit 1 | reads | link: a hard link to README-unbound.md made in a new temporary folder inside the tree, and the file read through it
+a45 | exit 1 | reads | symlink: a symbolic link to README-unbound.md made in a new temporary folder inside the tree, and read through it where the system allows it
+a46 | exit 1 | reads | remove: README-unbound.md read, then removed
+a47 | exit 1 | reads | rename: README-unbound.md read, then moved to README-unbound.md.moved
+a48 | exit 1 | reads | rmdir: a folder "gone" made inside the tree (not a temporary folder) and removed
+a49 | exit 1 | reads | rmtree: a folder "gone" with a file in a subfolder, made inside the tree and removed by shutil.rmtree
+a50 | exit 1 | hook | multiprocessing: the stand-in imports multiprocessing
+a51 | exit 1 | hook | fork: os.fork (POSIX) or the event "os.fork" raised by hand (Windows)
+a52 | exit 1 | hook | forkpty: the event "os.forkpty" raised by hand
+a53 | exit 1 | hook | createprocess: _winapi.CreateProcess called directly (Windows; its child reads docs/m.md) or the event raised by hand (POSIX)
+a54 | exit 0 | - | temporary-changes: a hard link, a move, a removal and an rmtree inside a new temporary folder the stand-in made in the tree, an import of concurrent.futures and threading, and docs/m.md read (a decoy)

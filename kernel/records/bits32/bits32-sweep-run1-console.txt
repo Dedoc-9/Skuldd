@@ -1,0 +1,291 @@
+bits32 sweep run1, 2026-11-22T12:13:55Z
+bits32_sweep.c: OK
+run_bits32_sweep.sh: OK
+bits32/BITS32_Statement.v: OK
+fclink/sweep_fc2.c: OK
+fclink/KernelText.v: OK
+copy of fclink/sweep_fc2.c lines 37-38: identical (2 lines)
+copy of fclink/sweep_fc2.c lines 40-43: identical (4 lines)
+copy of fclink/sweep_fc2.c lines 58-71: identical (14 lines)
+nanbits.c given: sha256 f1f7b19a845502abf34cb561d5114427807674b9fd82f65ce813b5b98074e8f2
+copy of nanbits.c lines 63-77: identical (15 lines)
+PL5 copy: zero tests '<=' before the replacement 2, after 0; lines changed: 73,74c73,74 (want 73,74c73,74)
+clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+Target: x86_64-pc-windows-msvc
+build: clang -O2 -ffp-contract=off -DPLANT=k (k = 0 to 6; 5 from bits32_sweep_pl5.c)
+5f165bc843ca135d0c6380b5a36889aecbd68fabfbc76fc07cff04c31e6fc4ff *bits32_sweep_0.exe
+80c3ba8f6f6500f79bd49933dd311a603906584206e5e3e5782b9c72a21b3ee8 *bits32_sweep_1.exe
+dc287526ecbf4bff03e5e58cf5b5eaaad1872c01bb65c7883169b48dd455f157 *bits32_sweep_2.exe
+6074e843c60734f7fbc1684e551812a18b67306d38d2fbdbf8a18274bd9332b2 *bits32_sweep_3.exe
+37cb573862fccc7da70d54c8be3db01ba86737bf0a3fa6256675271ac034ce88 *bits32_sweep_4.exe
+9a012c5ef59ec9023128ff57ae4e85af92de83497488d4fbab09ec7d7f9caced *bits32_sweep_5.exe
+a967ed6ce479cd3b9417933fb61b21c31d503c1a709e6f7618826dee44caa229 *bits32_sweep_6.exe
+1299428e4b24e898e98a0c5aa2fdd56cdecb3e2d7fc43324ec366b8795240093 *bits32_sweep_0.s
+0eae39b84985fb3283bd3d4d519ab6b372dbe232ffa1bf71246e462c09c1f3e3 *bits32_sweep_pl5.c
+asm instruction counts (bits32_sweep_0.s): cvtss2sd=4 cvtps2pd=0 cvtsd2ss=7 cvtpd2ps=0 addsd=24 addpd=0 subsd=0 subpd=0 mulsd=7 mulpd=0 andpd=8 fld=0 fstp=0 vfmadd=0 vfmsub=0 vfnmadd=0 vfnmsub=0
+asm row, x87 fld/fstp and FMA lines 0: holds
+bits32_sweep PLANT=0
+environment: MXCSR 0x1f80 at start (rounding nearest, DAZ clear, FTZ clear) | row nearest, DAZ and FTZ clear: holds | as fixed
+floor32 inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 0/8388608 sNaN 0/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  OBSERVED (no verdict): host floorf vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+ceil32  inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 0/8388608 sNaN 0/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  OBSERVED (no verdict): host ceilf  vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+  OBSERVED NaN table: input -> floor32 program | spec32 | host floorf || ceil32 program | spec32 | host ceilf
+  0x7f800001 +sNaN -> 0x7fc00001 | 0x7fc00001 | 0x7fc00001 || 0x7fc00001 | 0x7fc00001 | 0x7fc00001
+  0x7f800002 +sNaN -> 0x7fc00002 | 0x7fc00002 | 0x7fc00002 || 0x7fc00002 | 0x7fc00002 | 0x7fc00002
+  0x7f955555 +sNaN -> 0x7fd55555 | 0x7fd55555 | 0x7fd55555 || 0x7fd55555 | 0x7fd55555 | 0x7fd55555
+  0x7faaaaaa +sNaN -> 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fbfffff +sNaN -> 0x7fffffff | 0x7fffffff | 0x7fffffff || 0x7fffffff | 0x7fffffff | 0x7fffffff
+  0x7fa00000 +sNaN -> 0x7fe00000 | 0x7fe00000 | 0x7fe00000 || 0x7fe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00001 +qNaN -> 0x7fc00001 | 0x7fc00001 | 0x7fc00001 || 0x7fc00001 | 0x7fc00001 | 0x7fc00001
+  0x7fc00002 +qNaN -> 0x7fc00002 | 0x7fc00002 | 0x7fc00002 || 0x7fc00002 | 0x7fc00002 | 0x7fc00002
+  0x7fd55555 +qNaN -> 0x7fd55555 | 0x7fd55555 | 0x7fd55555 || 0x7fd55555 | 0x7fd55555 | 0x7fd55555
+  0x7feaaaaa +qNaN -> 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fffffff +qNaN -> 0x7fffffff | 0x7fffffff | 0x7fffffff || 0x7fffffff | 0x7fffffff | 0x7fffffff
+  0x7fe00000 +qNaN -> 0x7fe00000 | 0x7fe00000 | 0x7fe00000 || 0x7fe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00000 +qNaN -> 0x7fc00000 | 0x7fc00000 | 0x7fc00000 || 0x7fc00000 | 0x7fc00000 | 0x7fc00000
+  0xff800001 -sNaN -> 0xffc00001 | 0xffc00001 | 0xffc00001 || 0xffc00001 | 0xffc00001 | 0xffc00001
+  0xff800002 -sNaN -> 0xffc00002 | 0xffc00002 | 0xffc00002 || 0xffc00002 | 0xffc00002 | 0xffc00002
+  0xff955555 -sNaN -> 0xffd55555 | 0xffd55555 | 0xffd55555 || 0xffd55555 | 0xffd55555 | 0xffd55555
+  0xffaaaaaa -sNaN -> 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffbfffff -sNaN -> 0xffffffff | 0xffffffff | 0xffffffff || 0xffffffff | 0xffffffff | 0xffffffff
+  0xffa00000 -sNaN -> 0xffe00000 | 0xffe00000 | 0xffe00000 || 0xffe00000 | 0xffe00000 | 0xffe00000
+  0xffc00001 -qNaN -> 0xffc00001 | 0xffc00001 | 0xffc00001 || 0xffc00001 | 0xffc00001 | 0xffc00001
+  0xffc00002 -qNaN -> 0xffc00002 | 0xffc00002 | 0xffc00002 || 0xffc00002 | 0xffc00002 | 0xffc00002
+  0xffd55555 -qNaN -> 0xffd55555 | 0xffd55555 | 0xffd55555 || 0xffd55555 | 0xffd55555 | 0xffd55555
+  0xffeaaaaa -qNaN -> 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffffffff -qNaN -> 0xffffffff | 0xffffffff | 0xffffffff || 0xffffffff | 0xffffffff | 0xffffffff
+  0xffe00000 -qNaN -> 0xffe00000 | 0xffe00000 | 0xffe00000 || 0xffe00000 | 0xffe00000 | 0xffe00000
+  0xffc00000 -qNaN -> 0xffc00000 | 0xffc00000 | 0xffc00000 || 0xffc00000 | 0xffc00000 | 0xffc00000
+BITS32 BUILD AS FIXED (PLANT=0)
+PLANT=0 exit 0 (44 s)
+bits32_sweep PLANT=1
+environment: MXCSR 0x1f80 at start (rounding nearest, DAZ clear, FTZ clear) | row nearest, DAZ and FTZ clear: holds | as fixed
+floor32 inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 0/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host floorf vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+ceil32  inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 0/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host ceilf  vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+  OBSERVED NaN table: input -> floor32 program | spec32 | host floorf || ceil32 program | spec32 | host ceilf
+  0x7f800001 +sNaN -> 0x7f800001 | 0x7fc00001 | 0x7fc00001 || 0x7f800001 | 0x7fc00001 | 0x7fc00001
+  0x7f800002 +sNaN -> 0x7f800002 | 0x7fc00002 | 0x7fc00002 || 0x7f800002 | 0x7fc00002 | 0x7fc00002
+  0x7f955555 +sNaN -> 0x7f955555 | 0x7fd55555 | 0x7fd55555 || 0x7f955555 | 0x7fd55555 | 0x7fd55555
+  0x7faaaaaa +sNaN -> 0x7faaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7faaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fbfffff +sNaN -> 0x7fbfffff | 0x7fffffff | 0x7fffffff || 0x7fbfffff | 0x7fffffff | 0x7fffffff
+  0x7fa00000 +sNaN -> 0x7fa00000 | 0x7fe00000 | 0x7fe00000 || 0x7fa00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00001 +qNaN -> 0x7fc00001 | 0x7fc00001 | 0x7fc00001 || 0x7fc00001 | 0x7fc00001 | 0x7fc00001
+  0x7fc00002 +qNaN -> 0x7fc00002 | 0x7fc00002 | 0x7fc00002 || 0x7fc00002 | 0x7fc00002 | 0x7fc00002
+  0x7fd55555 +qNaN -> 0x7fd55555 | 0x7fd55555 | 0x7fd55555 || 0x7fd55555 | 0x7fd55555 | 0x7fd55555
+  0x7feaaaaa +qNaN -> 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fffffff +qNaN -> 0x7fffffff | 0x7fffffff | 0x7fffffff || 0x7fffffff | 0x7fffffff | 0x7fffffff
+  0x7fe00000 +qNaN -> 0x7fe00000 | 0x7fe00000 | 0x7fe00000 || 0x7fe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00000 +qNaN -> 0x7fc00000 | 0x7fc00000 | 0x7fc00000 || 0x7fc00000 | 0x7fc00000 | 0x7fc00000
+  0xff800001 -sNaN -> 0xff800001 | 0xffc00001 | 0xffc00001 || 0xff800001 | 0xffc00001 | 0xffc00001
+  0xff800002 -sNaN -> 0xff800002 | 0xffc00002 | 0xffc00002 || 0xff800002 | 0xffc00002 | 0xffc00002
+  0xff955555 -sNaN -> 0xff955555 | 0xffd55555 | 0xffd55555 || 0xff955555 | 0xffd55555 | 0xffd55555
+  0xffaaaaaa -sNaN -> 0xffaaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffaaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffbfffff -sNaN -> 0xffbfffff | 0xffffffff | 0xffffffff || 0xffbfffff | 0xffffffff | 0xffffffff
+  0xffa00000 -sNaN -> 0xffa00000 | 0xffe00000 | 0xffe00000 || 0xffa00000 | 0xffe00000 | 0xffe00000
+  0xffc00001 -qNaN -> 0xffc00001 | 0xffc00001 | 0xffc00001 || 0xffc00001 | 0xffc00001 | 0xffc00001
+  0xffc00002 -qNaN -> 0xffc00002 | 0xffc00002 | 0xffc00002 || 0xffc00002 | 0xffc00002 | 0xffc00002
+  0xffd55555 -qNaN -> 0xffd55555 | 0xffd55555 | 0xffd55555 || 0xffd55555 | 0xffd55555 | 0xffd55555
+  0xffeaaaaa -qNaN -> 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffffffff -qNaN -> 0xffffffff | 0xffffffff | 0xffffffff || 0xffffffff | 0xffffffff | 0xffffffff
+  0xffe00000 -qNaN -> 0xffe00000 | 0xffe00000 | 0xffe00000 || 0xffe00000 | 0xffe00000 | 0xffe00000
+  0xffc00000 -qNaN -> 0xffc00000 | 0xffc00000 | 0xffc00000 || 0xffc00000 | 0xffc00000 | 0xffc00000
+BITS32 BUILD AS FIXED (PLANT=1)
+PLANT=1 exit 0 (45 s)
+bits32_sweep PLANT=2
+environment: MXCSR 0x1f80 at start (rounding nearest, DAZ clear, FTZ clear) | row nearest, DAZ and FTZ clear: holds | as fixed
+floor32 inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 8388606/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first qNaN mismatch at 0x7fc00001
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host floorf vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+ceil32  inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 8388606/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first qNaN mismatch at 0x7fc00001
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host ceilf  vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+  OBSERVED NaN table: input -> floor32 program | spec32 | host floorf || ceil32 program | spec32 | host ceilf
+  0x7f800001 +sNaN -> 0x7fc00000 | 0x7fc00001 | 0x7fc00001 || 0x7fc00000 | 0x7fc00001 | 0x7fc00001
+  0x7f800002 +sNaN -> 0x7fc00000 | 0x7fc00002 | 0x7fc00002 || 0x7fc00000 | 0x7fc00002 | 0x7fc00002
+  0x7f955555 +sNaN -> 0x7fc00000 | 0x7fd55555 | 0x7fd55555 || 0x7fc00000 | 0x7fd55555 | 0x7fd55555
+  0x7faaaaaa +sNaN -> 0x7fc00000 | 0x7feaaaaa | 0x7feaaaaa || 0x7fc00000 | 0x7feaaaaa | 0x7feaaaaa
+  0x7fbfffff +sNaN -> 0x7fc00000 | 0x7fffffff | 0x7fffffff || 0x7fc00000 | 0x7fffffff | 0x7fffffff
+  0x7fa00000 +sNaN -> 0x7fc00000 | 0x7fe00000 | 0x7fe00000 || 0x7fc00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00001 +qNaN -> 0x7fc00000 | 0x7fc00001 | 0x7fc00001 || 0x7fc00000 | 0x7fc00001 | 0x7fc00001
+  0x7fc00002 +qNaN -> 0x7fc00000 | 0x7fc00002 | 0x7fc00002 || 0x7fc00000 | 0x7fc00002 | 0x7fc00002
+  0x7fd55555 +qNaN -> 0x7fc00000 | 0x7fd55555 | 0x7fd55555 || 0x7fc00000 | 0x7fd55555 | 0x7fd55555
+  0x7feaaaaa +qNaN -> 0x7fc00000 | 0x7feaaaaa | 0x7feaaaaa || 0x7fc00000 | 0x7feaaaaa | 0x7feaaaaa
+  0x7fffffff +qNaN -> 0x7fc00000 | 0x7fffffff | 0x7fffffff || 0x7fc00000 | 0x7fffffff | 0x7fffffff
+  0x7fe00000 +qNaN -> 0x7fc00000 | 0x7fe00000 | 0x7fe00000 || 0x7fc00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00000 +qNaN -> 0x7fc00000 | 0x7fc00000 | 0x7fc00000 || 0x7fc00000 | 0x7fc00000 | 0x7fc00000
+  0xff800001 -sNaN -> 0xffc00000 | 0xffc00001 | 0xffc00001 || 0xffc00000 | 0xffc00001 | 0xffc00001
+  0xff800002 -sNaN -> 0xffc00000 | 0xffc00002 | 0xffc00002 || 0xffc00000 | 0xffc00002 | 0xffc00002
+  0xff955555 -sNaN -> 0xffc00000 | 0xffd55555 | 0xffd55555 || 0xffc00000 | 0xffd55555 | 0xffd55555
+  0xffaaaaaa -sNaN -> 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa || 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa
+  0xffbfffff -sNaN -> 0xffc00000 | 0xffffffff | 0xffffffff || 0xffc00000 | 0xffffffff | 0xffffffff
+  0xffa00000 -sNaN -> 0xffc00000 | 0xffe00000 | 0xffe00000 || 0xffc00000 | 0xffe00000 | 0xffe00000
+  0xffc00001 -qNaN -> 0xffc00000 | 0xffc00001 | 0xffc00001 || 0xffc00000 | 0xffc00001 | 0xffc00001
+  0xffc00002 -qNaN -> 0xffc00000 | 0xffc00002 | 0xffc00002 || 0xffc00000 | 0xffc00002 | 0xffc00002
+  0xffd55555 -qNaN -> 0xffc00000 | 0xffd55555 | 0xffd55555 || 0xffc00000 | 0xffd55555 | 0xffd55555
+  0xffeaaaaa -qNaN -> 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa || 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa
+  0xffffffff -qNaN -> 0xffc00000 | 0xffffffff | 0xffffffff || 0xffc00000 | 0xffffffff | 0xffffffff
+  0xffe00000 -qNaN -> 0xffc00000 | 0xffe00000 | 0xffe00000 || 0xffc00000 | 0xffe00000 | 0xffe00000
+  0xffc00000 -qNaN -> 0xffc00000 | 0xffc00000 | 0xffc00000 || 0xffc00000 | 0xffc00000 | 0xffc00000
+BITS32 BUILD AS FIXED (PLANT=2)
+PLANT=2 exit 0 (45 s)
+bits32_sweep PLANT=3
+environment: MXCSR 0x1f80 at start (rounding nearest, DAZ clear, FTZ clear) | row nearest, DAZ and FTZ clear: holds | as fixed
+floor32 inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 8388608/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first qNaN mismatch at 0x7fc00000
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host floorf vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+ceil32  inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 8388608/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first qNaN mismatch at 0x7fc00000
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host ceilf  vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+  OBSERVED NaN table: input -> floor32 program | spec32 | host floorf || ceil32 program | spec32 | host ceilf
+  0x7f800001 +sNaN -> 0xffc00001 | 0x7fc00001 | 0x7fc00001 || 0xffc00001 | 0x7fc00001 | 0x7fc00001
+  0x7f800002 +sNaN -> 0xffc00002 | 0x7fc00002 | 0x7fc00002 || 0xffc00002 | 0x7fc00002 | 0x7fc00002
+  0x7f955555 +sNaN -> 0xffd55555 | 0x7fd55555 | 0x7fd55555 || 0xffd55555 | 0x7fd55555 | 0x7fd55555
+  0x7faaaaaa +sNaN -> 0xffeaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0xffeaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fbfffff +sNaN -> 0xffffffff | 0x7fffffff | 0x7fffffff || 0xffffffff | 0x7fffffff | 0x7fffffff
+  0x7fa00000 +sNaN -> 0xffe00000 | 0x7fe00000 | 0x7fe00000 || 0xffe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00001 +qNaN -> 0xffc00001 | 0x7fc00001 | 0x7fc00001 || 0xffc00001 | 0x7fc00001 | 0x7fc00001
+  0x7fc00002 +qNaN -> 0xffc00002 | 0x7fc00002 | 0x7fc00002 || 0xffc00002 | 0x7fc00002 | 0x7fc00002
+  0x7fd55555 +qNaN -> 0xffd55555 | 0x7fd55555 | 0x7fd55555 || 0xffd55555 | 0x7fd55555 | 0x7fd55555
+  0x7feaaaaa +qNaN -> 0xffeaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0xffeaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fffffff +qNaN -> 0xffffffff | 0x7fffffff | 0x7fffffff || 0xffffffff | 0x7fffffff | 0x7fffffff
+  0x7fe00000 +qNaN -> 0xffe00000 | 0x7fe00000 | 0x7fe00000 || 0xffe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00000 +qNaN -> 0xffc00000 | 0x7fc00000 | 0x7fc00000 || 0xffc00000 | 0x7fc00000 | 0x7fc00000
+  0xff800001 -sNaN -> 0x7fc00001 | 0xffc00001 | 0xffc00001 || 0x7fc00001 | 0xffc00001 | 0xffc00001
+  0xff800002 -sNaN -> 0x7fc00002 | 0xffc00002 | 0xffc00002 || 0x7fc00002 | 0xffc00002 | 0xffc00002
+  0xff955555 -sNaN -> 0x7fd55555 | 0xffd55555 | 0xffd55555 || 0x7fd55555 | 0xffd55555 | 0xffd55555
+  0xffaaaaaa -sNaN -> 0x7feaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0x7feaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffbfffff -sNaN -> 0x7fffffff | 0xffffffff | 0xffffffff || 0x7fffffff | 0xffffffff | 0xffffffff
+  0xffa00000 -sNaN -> 0x7fe00000 | 0xffe00000 | 0xffe00000 || 0x7fe00000 | 0xffe00000 | 0xffe00000
+  0xffc00001 -qNaN -> 0x7fc00001 | 0xffc00001 | 0xffc00001 || 0x7fc00001 | 0xffc00001 | 0xffc00001
+  0xffc00002 -qNaN -> 0x7fc00002 | 0xffc00002 | 0xffc00002 || 0x7fc00002 | 0xffc00002 | 0xffc00002
+  0xffd55555 -qNaN -> 0x7fd55555 | 0xffd55555 | 0xffd55555 || 0x7fd55555 | 0xffd55555 | 0xffd55555
+  0xffeaaaaa -qNaN -> 0x7feaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0x7feaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffffffff -qNaN -> 0x7fffffff | 0xffffffff | 0xffffffff || 0x7fffffff | 0xffffffff | 0xffffffff
+  0xffe00000 -qNaN -> 0x7fe00000 | 0xffe00000 | 0xffe00000 || 0x7fe00000 | 0xffe00000 | 0xffe00000
+  0xffc00000 -qNaN -> 0x7fc00000 | 0xffc00000 | 0xffc00000 || 0x7fc00000 | 0xffc00000 | 0xffc00000
+BITS32 BUILD AS FIXED (PLANT=3)
+PLANT=3 exit 0 (47 s)
+bits32_sweep PLANT=4
+environment: MXCSR 0x1f80 at start (rounding nearest, DAZ clear, FTZ clear) | row nearest, DAZ and FTZ clear: holds | as fixed
+floor32 inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 8388607/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first qNaN mismatch at 0x7fc00000
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host floorf vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+ceil32  inputs 4294967296 | program vs spec32, all 32 bits: finite 0/4278190080 inf 0/2 qNaN 8388607/8388608 sNaN 8388606/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first qNaN mismatch at 0x7fc00000
+  first sNaN mismatch at 0x7f800001
+  OBSERVED (no verdict): host ceilf  vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+  OBSERVED NaN table: input -> floor32 program | spec32 | host floorf || ceil32 program | spec32 | host ceilf
+  0x7f800001 +sNaN -> 0xffc00000 | 0x7fc00001 | 0x7fc00001 || 0xffc00000 | 0x7fc00001 | 0x7fc00001
+  0x7f800002 +sNaN -> 0xffc00000 | 0x7fc00002 | 0x7fc00002 || 0xffc00000 | 0x7fc00002 | 0x7fc00002
+  0x7f955555 +sNaN -> 0xffc00000 | 0x7fd55555 | 0x7fd55555 || 0xffc00000 | 0x7fd55555 | 0x7fd55555
+  0x7faaaaaa +sNaN -> 0xffc00000 | 0x7feaaaaa | 0x7feaaaaa || 0xffc00000 | 0x7feaaaaa | 0x7feaaaaa
+  0x7fbfffff +sNaN -> 0xffc00000 | 0x7fffffff | 0x7fffffff || 0xffc00000 | 0x7fffffff | 0x7fffffff
+  0x7fa00000 +sNaN -> 0xffc00000 | 0x7fe00000 | 0x7fe00000 || 0xffc00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00001 +qNaN -> 0xffc00000 | 0x7fc00001 | 0x7fc00001 || 0xffc00000 | 0x7fc00001 | 0x7fc00001
+  0x7fc00002 +qNaN -> 0xffc00000 | 0x7fc00002 | 0x7fc00002 || 0xffc00000 | 0x7fc00002 | 0x7fc00002
+  0x7fd55555 +qNaN -> 0xffc00000 | 0x7fd55555 | 0x7fd55555 || 0xffc00000 | 0x7fd55555 | 0x7fd55555
+  0x7feaaaaa +qNaN -> 0xffc00000 | 0x7feaaaaa | 0x7feaaaaa || 0xffc00000 | 0x7feaaaaa | 0x7feaaaaa
+  0x7fffffff +qNaN -> 0xffc00000 | 0x7fffffff | 0x7fffffff || 0xffc00000 | 0x7fffffff | 0x7fffffff
+  0x7fe00000 +qNaN -> 0xffc00000 | 0x7fe00000 | 0x7fe00000 || 0xffc00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00000 +qNaN -> 0xffc00000 | 0x7fc00000 | 0x7fc00000 || 0xffc00000 | 0x7fc00000 | 0x7fc00000
+  0xff800001 -sNaN -> 0xffc00000 | 0xffc00001 | 0xffc00001 || 0xffc00000 | 0xffc00001 | 0xffc00001
+  0xff800002 -sNaN -> 0xffc00000 | 0xffc00002 | 0xffc00002 || 0xffc00000 | 0xffc00002 | 0xffc00002
+  0xff955555 -sNaN -> 0xffc00000 | 0xffd55555 | 0xffd55555 || 0xffc00000 | 0xffd55555 | 0xffd55555
+  0xffaaaaaa -sNaN -> 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa || 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa
+  0xffbfffff -sNaN -> 0xffc00000 | 0xffffffff | 0xffffffff || 0xffc00000 | 0xffffffff | 0xffffffff
+  0xffa00000 -sNaN -> 0xffc00000 | 0xffe00000 | 0xffe00000 || 0xffc00000 | 0xffe00000 | 0xffe00000
+  0xffc00001 -qNaN -> 0xffc00000 | 0xffc00001 | 0xffc00001 || 0xffc00000 | 0xffc00001 | 0xffc00001
+  0xffc00002 -qNaN -> 0xffc00000 | 0xffc00002 | 0xffc00002 || 0xffc00000 | 0xffc00002 | 0xffc00002
+  0xffd55555 -qNaN -> 0xffc00000 | 0xffd55555 | 0xffd55555 || 0xffc00000 | 0xffd55555 | 0xffd55555
+  0xffeaaaaa -qNaN -> 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa || 0xffc00000 | 0xffeaaaaa | 0xffeaaaaa
+  0xffffffff -qNaN -> 0xffc00000 | 0xffffffff | 0xffffffff || 0xffc00000 | 0xffffffff | 0xffffffff
+  0xffe00000 -qNaN -> 0xffc00000 | 0xffe00000 | 0xffe00000 || 0xffc00000 | 0xffe00000 | 0xffe00000
+  0xffc00000 -qNaN -> 0xffc00000 | 0xffc00000 | 0xffc00000 || 0xffc00000 | 0xffc00000 | 0xffc00000
+BITS32 BUILD AS FIXED (PLANT=4)
+PLANT=4 exit 0 (43 s)
+bits32_sweep PLANT=5
+environment: MXCSR 0x1f80 at start (rounding nearest, DAZ clear, FTZ clear) | row nearest, DAZ and FTZ clear: holds | as fixed
+floor32 inputs 4294967296 | program vs spec32, all 32 bits: finite 1/4278190080 inf 0/2 qNaN 0/8388608 sNaN 0/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first finite mismatch at 0x80000000
+  OBSERVED (no verdict): host floorf vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+ceil32  inputs 4294967296 | program vs spec32, all 32 bits: finite 1065353216/4278190080 inf 0/2 qNaN 0/8388608 sNaN 0/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first finite mismatch at 0x80000000
+  OBSERVED (no verdict): host ceilf  vs spec32: finite 0 inf 0 qNaN 0 sNaN 0
+  OBSERVED NaN table: input -> floor32 program | spec32 | host floorf || ceil32 program | spec32 | host ceilf
+  0x7f800001 +sNaN -> 0x7fc00001 | 0x7fc00001 | 0x7fc00001 || 0x7fc00001 | 0x7fc00001 | 0x7fc00001
+  0x7f800002 +sNaN -> 0x7fc00002 | 0x7fc00002 | 0x7fc00002 || 0x7fc00002 | 0x7fc00002 | 0x7fc00002
+  0x7f955555 +sNaN -> 0x7fd55555 | 0x7fd55555 | 0x7fd55555 || 0x7fd55555 | 0x7fd55555 | 0x7fd55555
+  0x7faaaaaa +sNaN -> 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fbfffff +sNaN -> 0x7fffffff | 0x7fffffff | 0x7fffffff || 0x7fffffff | 0x7fffffff | 0x7fffffff
+  0x7fa00000 +sNaN -> 0x7fe00000 | 0x7fe00000 | 0x7fe00000 || 0x7fe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00001 +qNaN -> 0x7fc00001 | 0x7fc00001 | 0x7fc00001 || 0x7fc00001 | 0x7fc00001 | 0x7fc00001
+  0x7fc00002 +qNaN -> 0x7fc00002 | 0x7fc00002 | 0x7fc00002 || 0x7fc00002 | 0x7fc00002 | 0x7fc00002
+  0x7fd55555 +qNaN -> 0x7fd55555 | 0x7fd55555 | 0x7fd55555 || 0x7fd55555 | 0x7fd55555 | 0x7fd55555
+  0x7feaaaaa +qNaN -> 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fffffff +qNaN -> 0x7fffffff | 0x7fffffff | 0x7fffffff || 0x7fffffff | 0x7fffffff | 0x7fffffff
+  0x7fe00000 +qNaN -> 0x7fe00000 | 0x7fe00000 | 0x7fe00000 || 0x7fe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00000 +qNaN -> 0x7fc00000 | 0x7fc00000 | 0x7fc00000 || 0x7fc00000 | 0x7fc00000 | 0x7fc00000
+  0xff800001 -sNaN -> 0xffc00001 | 0xffc00001 | 0xffc00001 || 0xffc00001 | 0xffc00001 | 0xffc00001
+  0xff800002 -sNaN -> 0xffc00002 | 0xffc00002 | 0xffc00002 || 0xffc00002 | 0xffc00002 | 0xffc00002
+  0xff955555 -sNaN -> 0xffd55555 | 0xffd55555 | 0xffd55555 || 0xffd55555 | 0xffd55555 | 0xffd55555
+  0xffaaaaaa -sNaN -> 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffbfffff -sNaN -> 0xffffffff | 0xffffffff | 0xffffffff || 0xffffffff | 0xffffffff | 0xffffffff
+  0xffa00000 -sNaN -> 0xffe00000 | 0xffe00000 | 0xffe00000 || 0xffe00000 | 0xffe00000 | 0xffe00000
+  0xffc00001 -qNaN -> 0xffc00001 | 0xffc00001 | 0xffc00001 || 0xffc00001 | 0xffc00001 | 0xffc00001
+  0xffc00002 -qNaN -> 0xffc00002 | 0xffc00002 | 0xffc00002 || 0xffc00002 | 0xffc00002 | 0xffc00002
+  0xffd55555 -qNaN -> 0xffd55555 | 0xffd55555 | 0xffd55555 || 0xffd55555 | 0xffd55555 | 0xffd55555
+  0xffeaaaaa -qNaN -> 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffffffff -qNaN -> 0xffffffff | 0xffffffff | 0xffffffff || 0xffffffff | 0xffffffff | 0xffffffff
+  0xffe00000 -qNaN -> 0xffe00000 | 0xffe00000 | 0xffe00000 || 0xffe00000 | 0xffe00000 | 0xffe00000
+  0xffc00000 -qNaN -> 0xffc00000 | 0xffc00000 | 0xffc00000 || 0xffc00000 | 0xffc00000 | 0xffc00000
+BITS32 BUILD AS FIXED (PLANT=5)
+PLANT=5 exit 0 (43 s)
+bits32_sweep PLANT=6
+environment: MXCSR 0x1fc0 at start (rounding nearest, DAZ set, FTZ clear) | row nearest, DAZ and FTZ clear: fails | as fixed
+floor32 inputs 4294967296 | program vs spec32, all 32 bits: finite 8388607/4278190080 inf 0/2 qNaN 0/8388608 sNaN 0/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first finite mismatch at 0x80000001
+  OBSERVED (no verdict): host floorf vs spec32: finite 8388607 inf 0 qNaN 0 sNaN 0
+ceil32  inputs 4294967296 | program vs spec32, all 32 bits: finite 8388607/4278190080 inf 0/2 qNaN 0/8388608 sNaN 0/8388606 | spec32 vs spec(): 0 | spec32 vs iref (non-NaN): 0 | as fixed
+  first finite mismatch at 0x00000001
+  OBSERVED (no verdict): host ceilf  vs spec32: finite 8388607 inf 0 qNaN 0 sNaN 0
+  OBSERVED NaN table: input -> floor32 program | spec32 | host floorf || ceil32 program | spec32 | host ceilf
+  0x7f800001 +sNaN -> 0x7fc00001 | 0x7fc00001 | 0x7fc00001 || 0x7fc00001 | 0x7fc00001 | 0x7fc00001
+  0x7f800002 +sNaN -> 0x7fc00002 | 0x7fc00002 | 0x7fc00002 || 0x7fc00002 | 0x7fc00002 | 0x7fc00002
+  0x7f955555 +sNaN -> 0x7fd55555 | 0x7fd55555 | 0x7fd55555 || 0x7fd55555 | 0x7fd55555 | 0x7fd55555
+  0x7faaaaaa +sNaN -> 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fbfffff +sNaN -> 0x7fffffff | 0x7fffffff | 0x7fffffff || 0x7fffffff | 0x7fffffff | 0x7fffffff
+  0x7fa00000 +sNaN -> 0x7fe00000 | 0x7fe00000 | 0x7fe00000 || 0x7fe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00001 +qNaN -> 0x7fc00001 | 0x7fc00001 | 0x7fc00001 || 0x7fc00001 | 0x7fc00001 | 0x7fc00001
+  0x7fc00002 +qNaN -> 0x7fc00002 | 0x7fc00002 | 0x7fc00002 || 0x7fc00002 | 0x7fc00002 | 0x7fc00002
+  0x7fd55555 +qNaN -> 0x7fd55555 | 0x7fd55555 | 0x7fd55555 || 0x7fd55555 | 0x7fd55555 | 0x7fd55555
+  0x7feaaaaa +qNaN -> 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa || 0x7feaaaaa | 0x7feaaaaa | 0x7feaaaaa
+  0x7fffffff +qNaN -> 0x7fffffff | 0x7fffffff | 0x7fffffff || 0x7fffffff | 0x7fffffff | 0x7fffffff
+  0x7fe00000 +qNaN -> 0x7fe00000 | 0x7fe00000 | 0x7fe00000 || 0x7fe00000 | 0x7fe00000 | 0x7fe00000
+  0x7fc00000 +qNaN -> 0x7fc00000 | 0x7fc00000 | 0x7fc00000 || 0x7fc00000 | 0x7fc00000 | 0x7fc00000
+  0xff800001 -sNaN -> 0xffc00001 | 0xffc00001 | 0xffc00001 || 0xffc00001 | 0xffc00001 | 0xffc00001
+  0xff800002 -sNaN -> 0xffc00002 | 0xffc00002 | 0xffc00002 || 0xffc00002 | 0xffc00002 | 0xffc00002
+  0xff955555 -sNaN -> 0xffd55555 | 0xffd55555 | 0xffd55555 || 0xffd55555 | 0xffd55555 | 0xffd55555
+  0xffaaaaaa -sNaN -> 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffbfffff -sNaN -> 0xffffffff | 0xffffffff | 0xffffffff || 0xffffffff | 0xffffffff | 0xffffffff
+  0xffa00000 -sNaN -> 0xffe00000 | 0xffe00000 | 0xffe00000 || 0xffe00000 | 0xffe00000 | 0xffe00000
+  0xffc00001 -qNaN -> 0xffc00001 | 0xffc00001 | 0xffc00001 || 0xffc00001 | 0xffc00001 | 0xffc00001
+  0xffc00002 -qNaN -> 0xffc00002 | 0xffc00002 | 0xffc00002 || 0xffc00002 | 0xffc00002 | 0xffc00002
+  0xffd55555 -qNaN -> 0xffd55555 | 0xffd55555 | 0xffd55555 || 0xffd55555 | 0xffd55555 | 0xffd55555
+  0xffeaaaaa -qNaN -> 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa || 0xffeaaaaa | 0xffeaaaaa | 0xffeaaaaa
+  0xffffffff -qNaN -> 0xffffffff | 0xffffffff | 0xffffffff || 0xffffffff | 0xffffffff | 0xffffffff
+  0xffe00000 -qNaN -> 0xffe00000 | 0xffe00000 | 0xffe00000 || 0xffe00000 | 0xffe00000 | 0xffe00000
+  0xffc00000 -qNaN -> 0xffc00000 | 0xffc00000 | 0xffc00000 || 0xffc00000 | 0xffc00000 | 0xffc00000
+BITS32 BUILD AS FIXED (PLANT=6)
+PLANT=6 exit 0 (45 s)
+end 2026-11-22T12:19:10Z
+BITS32 SWEEP HELD (bits32_sweep.c da83a668b935948c)

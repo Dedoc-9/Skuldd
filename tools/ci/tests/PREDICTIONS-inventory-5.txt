@@ -1,0 +1,141 @@
+# Predictions for tools/ci/tests/test_inventory.py, fifth round: plants P50-P58 and P60-P97, decoys E05-E14.
+# Written by the assistant on 2026-11-20, after review round 3, before any run of these cases; its sha256 was recorded
+# then, and no prediction changes after it. Format as in PREDICTIONS-inventory.txt. Each plant is made on a copy of the
+# tree and must fail exactly the rows named, every other row ok; each decoy must hold.
+# Why: the tables are read as GitHub reads them (a line under a table's body that GitHub reads as one more row fails,
+# a second table without outer pipes fails, up to three spaces before a table line are read, four are not); a listed
+# path is read only by its exact spelling; the statement-names row reads every sentence of a statement file, every
+# name each defining command makes, and fails on a sentence it cannot read.
+# Unless a line says otherwise, a names plant (P60-P97, E10-E14) appends its text, on a line of its own, to
+# kernel/coq/log32/LOG32_Statement.v, with its line in log32's FROZEN4.txt and log32's ANCHORS.md value rewritten to
+# follow. SQRT32 is defined in p32/P32_Statement.v; C_KK is a constructor and gconst_rect a scheme name of
+# ieee64/IEEE64_Statement.v's gconst; o_add is a field of its OPS, t_add a field of sincos32i's TOPS.
+P50 successors-row-without-pipes: THEOREMS.md: directly under the Successors table's separator line (its body empty), the line "`f32.F32_Statement.NOPE` | `f32.F32_Statement.NOPE2` | x | x | x", without outer pipes (GitHub reads it as a row)
+  FAIL THEOREMS.md: every successor row names known statements
+P51 successors-hash-tag-then-table: THEOREMS.md: directly under the Successors table, the line "#tag" (not a heading), a blank line and a second successor table with outer pipes whose one row names f32.F32_Statement.NOPE and f32.F32_Statement.NOPE2
+  FAIL THEOREMS.md: every successor row names known statements
+P52 proved-row-without-pipes: THEOREMS.md: directly under the proved table's last row (sincos32z), the line "`zz32` | `zz32.Z_Statement.Z` | `zz32/Z_Statement.v` | `zz32.Z.z` | 1 of 1", without outer pipes
+  FAIL THEOREMS.md: one proved row per gated folder
+P53 anchors-row-without-pipes: kernel/coq/ANCHORS.md: directly under its table's last row, the line "`f32` | `MK_ANCHOR_F32` | `<64 zeros>` | a stray row", without outer pipes
+  FAIL ANCHORS.md: one row per gated folder with its variable
+P54 anchors-second-table-without-pipes: kernel/coq/ANCHORS.md: after its table, a blank line and a second table without outer pipes (header "Folder | Variable | sha256 of FROZEN4.txt | Record", delimiter "---|---|---|---", one f32 row naming MK_ANCHOR_F32 with 64 zeros)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+P55 successors-second-table-without-pipes: THEOREMS.md: directly under the Successors table, a blank line, the prose line "Another table:", a blank line and a table without outer pipes (the Successors header, delimiter "---|---|---|---|---", one row naming f32.F32_Statement.NOPE and f32.F32_Statement.NOPE2)
+  FAIL THEOREMS.md: every successor row names known statements
+P56 anchors-table-indented-four: kernel/coq/ANCHORS.md: every line of its table indented by four spaces (GitHub reads code, not a table)
+  FAIL ANCHORS.md: one row per gated folder with its variable
+  FAIL compose: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL cos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL exp32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL f32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL ieee64: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL log32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL p32r: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sin32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32i: ANCHORS.md value is sha256 of FROZEN4.txt
+  FAIL sincos32z: ANCHORS.md value is sha256 of FROZEN4.txt
+P57 listed-trailing-dot: f32's FROZEN4.txt and its Verdandi copy gain "<sha256 of f32/F32.v>  f32/F32.v." (a trailing dot: Windows opens F32.v, Linux finds nothing), f32's ANCHORS.md value rewritten to follow
+  FAIL f32: FROZEN4.txt entries hold in the tree
+  FAIL mirror f32: every listed file holds its sha256
+P58 listed-case-variant: the same with "<sha256 of f32/F32.v>  f32/f32.v" (another case of letters)
+  FAIL f32: FROZEN4.txt entries hold in the tree
+  FAIL mirror f32: every listed file holds its sha256
+E05 successors-blank-then-prose: THEOREMS.md: under the Successors table, a blank line, then P50's line as prose
+  HELD
+E06 successors-blank-then-hash-tag: THEOREMS.md: under the Successors table, a blank line, then the line "#tag"
+  HELD
+E07 proved-blank-then-prose: THEOREMS.md: under the proved table's last row, a blank line, then P52's line as prose
+  HELD
+E08 anchors-blank-then-prose: kernel/coq/ANCHORS.md: under its table, a blank line, then P53's line as prose
+  HELD
+E09 anchors-table-indented-two: kernel/coq/ANCHORS.md: every line of its table indented by two spaces (GitHub reads the same table)
+  HELD
+P60 names-example: "Example SQRT32 : Prop := True."
+  FAIL statement files: each name defined in one of them
+P61 names-corollary: "Corollary SQRT32 : True."
+  FAIL statement files: each name defined in one of them
+P62 names-proposition: "Proposition SQRT32 : True."
+  FAIL statement files: each name defined in one of them
+P63 names-fact: "Fact SQRT32 : True."
+  FAIL statement files: each name defined in one of them
+P64 names-remark: "Remark SQRT32 : True."
+  FAIL statement files: each name defined in one of them
+P65 names-property: "Property SQRT32 : True."
+  FAIL statement files: each name defined in one of them
+P66 names-conjecture: "Conjecture SQRT32 : True."
+  FAIL statement files: each name defined in one of them
+P67 names-cofixpoint: "CoFixpoint SQRT32 : nat := 0."
+  FAIL statement files: each name defined in one of them
+P68 names-coinductive: "CoInductive SQRT32 : Set := sq_c0 : SQRT32."
+  FAIL statement files: each name defined in one of them
+P69 names-variant: "Variant SQRT32 : Set := sq_v0."
+  FAIL statement files: each name defined in one of them
+P70 names-structure: "Structure SQRT32 : Type := { sq_s0 : nat }."
+  FAIL statement files: each name defined in one of them
+P71 names-class: "Class SQRT32 : Type := { sq_k0 : nat }."
+  FAIL statement files: each name defined in one of them
+P72 names-instance: "Instance SQRT32 : Inhabited nat := { }."
+  FAIL statement files: each name defined in one of them
+P73 names-infix-in-two-files: "Infix "+++" := Rplus (at level 50)." appended to log32/LOG32_Statement.v and to p32/P32_Statement.v; every freeze list that lists either, their Verdandi copies, the Verdandi copy of p32's file and the changed lists' ANCHORS.md values rewritten to follow
+  FAIL statement files: each name defined in one of them
+P74 names-parameters: "Parameters (sq_p0 : nat) (SQRT32 : Prop)."
+  FAIL statement files: each name defined in one of them
+P75 names-axioms: "Axioms sq_a0 SQRT32 : Prop."
+  FAIL statement files: each name defined in one of them
+P76 names-hypothesis: "Hypothesis SQRT32 : True."
+  FAIL statement files: each name defined in one of them
+P77 names-hypotheses: "Hypotheses (SQRT32 : True)."
+  FAIL statement files: each name defined in one of them
+P78 names-variable: "Variable SQRT32 : nat."
+  FAIL statement files: each name defined in one of them
+P79 names-variables: "Variables sq_x0 SQRT32 : nat."
+  FAIL statement files: each name defined in one of them
+P80 names-module: "Module SQRT32." and, on the next line, "End SQRT32."
+  FAIL statement files: each name defined in one of them
+P81 names-ltac: "Ltac SQRT32 := idtac."
+  FAIL statement files: each name defined in one of them
+P82 names-function: "Function SQRT32 (n : nat) : nat := n."
+  FAIL statement files: each name defined in one of them
+P83 names-let: "Let SQRT32 : Prop := True."
+  FAIL statement files: each name defined in one of them
+P84 names-constructor-twice: "Inductive sq_i0 : Set := | sq_i1 | C_KK."
+  FAIL statement files: each name defined in one of them
+P85 names-field-twice: "Record sq_r0 : Type := sq_mk0 { sq_f0 : nat; o_add : nat }."
+  FAIL statement files: each name defined in one of them
+P86 names-mutual-inductive-twice: "Inductive sq_m0 : Set := sq_m1 with SQRT32 : Set := sq_m2."
+  FAIL statement files: each name defined in one of them
+P87 names-mutual-fixpoint-twice: "Fixpoint sq_g0 (n : nat) : nat := 0 with SQRT32 (n : nat) : nat := 0."
+  FAIL statement files: each name defined in one of them
+P88 names-unknown-command: "Coercion SQRT32 := INR." (a command this row does not read)
+  FAIL statement files: each name defined in one of them
+P89 names-a-proof: "Lemma sq_l0 : True." and, on the next line, "Proof. exact I. Qed." (a tactic and Proof are commands this row does not read)
+  FAIL statement files: each name defined in one of them
+P90 names-instance-without-name: "Instance : Inhabited nat := { }." (Coq makes its name)
+  FAIL statement files: each name defined in one of them
+P91 names-where-clause: "Inductive sq_w0 : Set := sq_w1 where "'w'" := sq_w1."
+  FAIL statement files: each name defined in one of them
+P92 names-attribute-and-prefix: "#[local] Program Definition SQRT32 : nat := 0."
+  FAIL statement files: each name defined in one of them
+P93 names-two-prefixes-and-universe: "Local Polymorphic Definition SQRT32@{u} : Type@{u} := Prop."
+  FAIL statement files: each name defined in one of them
+P94 names-scheme-name: "Definition gconst_rect : nat := 0."
+  FAIL statement files: each name defined in one of them
+P95 names-class-method-twice: "Class sq_c0 (A : Type) := t_add : A."
+  FAIL statement files: each name defined in one of them
+P96 names-no-final-period: "Definition sq_t0 : nat := 0" with no period, the file's last text
+  FAIL statement files: each name defined in one of them
+P97 names-not-a-plain-name: "Definition 2sq : nat := 0."
+  FAIL statement files: each name defined in one of them
+E10 names-in-a-comment: "(* Definition SQRT32 : Prop := True. Variant SQRT32 := a. with SQRT32. Coercion x := y. *)"
+  HELD
+E11 names-match-with: "Definition sq_d0 (n : nat) : nat := match n with | O => 0 | S k => k end."
+  HELD
+E12 names-commands-that-define-none: "Local Open Scope nat_scope.", "Close Scope nat_scope.", "Set Implicit Arguments.", "Unset Implicit Arguments.", "Check 0.", "Print nat.", "Require Import Bool.", "Import Bool.", "Section sq_s." and "End sq_s.", one a line
+  HELD
+E13 names-period-in-a-string: "Notation "a . b" := (Rplus a b) (at level 50)." (a "." and a space inside a string end no sentence)
+  HELD
+E14 names-new-record-and-inductive: "Record sq_r9 : Type := { sq_f9 : nat }." and, on the next line, "Inductive sq_i9 : Set := sq_c9 | sq_d9."
+  HELD

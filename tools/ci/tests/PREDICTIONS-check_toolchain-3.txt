@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# PREDICTIONS-check_toolchain-3.txt: a third round of plants for tools/ci/tests/test_check_toolchain.py. Written by the
+# assistant on 2026-11-20, after review found that the "expected toolchain file" row held on an expected file that
+# holds no key (the later rows failed it), and before any run of this plant; not changed after its first run. The rows
+# R1 to R9 are the ones PREDICTIONS-check_toolchain.txt names, and the form of a plant line is that file's. The test
+# reads the three files; a plant is named in one of them only.
+plant expected-no-keys | expected | only the expected file's "#" comment lines kept (no key) | R1; R3; R4; R5; R6; R7; R8

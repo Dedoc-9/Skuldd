@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# PREDICTIONS-check_toolchain-2.txt: a second round of plants for tools/ci/tests/test_check_toolchain.py. Written by
+# the assistant on 2026-11-18, after review found that the "observed probe output" row held on an empty file and on one
+# that begins with a byte-order mark, and before any run of these plants; not changed after their first run. The rows
+# R1 to R9 are the ones PREDICTIONS-check_toolchain.txt names, and the form of a plant line is that file's. The test
+# reads both files; a plant is named in one of them only.
+plant observed-bom | observed | the twin's bytes with a UTF-8 byte-order mark before its first line | R2; R3; R8
+plant observed-empty | observed | an empty file (no line at all) | R2; R3; R4; R5; R6; R9

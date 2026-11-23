@@ -1,0 +1,25 @@
+# Recorded by tools/ci (the assistant) on 2026-11-18 from the green CI run 44223174587 (image b058dd7c...), equal in
+# runs 44211854754, 44211905832 and 44223181257 (three other image builds). A difference is a review event, not
+# an error to silence: a new value enters this file only with a new MK_ANCHOR_CI set by the owner.
+coq-version The Coq Proof Assistant, version 8.20.1
+opam conf-g++ 1.0
+opam conf-gmp 5
+opam conf-linux-libc-dev 0
+opam conf-pkg-config 5
+opam coq 8.20.1
+opam coq-core 8.20.1
+opam coq-flocq 4.2.1
+opam coq-stdlib 8.20.1
+opam coqide-server 8.20.1
+opam dune 3.23.1
+opam ocaml 4.14.2
+opam ocaml-base-compiler 4.14.2
+opam ocaml-config 2
+opam ocaml-options-vanilla 1
+opam ocamlfind 1.9.8
+opam zarith 1.14
+python-version Python 3.12.3
+sha256 /opt/mk-switch.export 9016502df184573ee89e40f582217239c970877923dcfb8af4d0b5e4d6f0f4d7
+sha256 /opt/opam/4.14.2/bin/coqc 966d46938036faa64149bbbbe641c7d12898787819092b0387749519f64fd446
+sha256 /opt/opam/4.14.2/bin/coqchk 72a15917d340d441373cf13cd3cebcc5ea94240afa6387ee6c735b82ff14ec3f
+sha256 /usr/bin/python3 e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f

@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# The CI judge's files: the files that decide what a CI run of this repository says (tools/ci/judge_digest.py lists
+# them, and MK_ANCHOR_CI holds their digest). On a pull request someone else opens it requests the owner's review; on
+# the owner's own pull request it only marks these files.
+# Each line names the repository owner by the owner's public GitHub handle, the one the repository's address holds.
+# This file asks for a review; it does not require one. A rule that requires a code owner's review is the owner's
+# setting, and in a repository with one maintainer it would also block the owner's own pull requests: see
+# docs/engineering/BRANCH-PROTECTION.md before setting it.
+/.github/workflows/ @Dedoc-9
+/.github/actions/ @Dedoc-9
+/.github/CODEOWNERS @Dedoc-9
+/tools/ci/ @Dedoc-9
+/tools/check_manifests.py @Dedoc-9
+/ci/mathkernel/ @Dedoc-9
+/kernel/coq/gate/ @Dedoc-9
+/kernel/coq/EXPECTED-CI-LIBRARIES.txt @Dedoc-9
+/kernel/coq/ANCHORS.md @Dedoc-9
+/THEOREMS.md @Dedoc-9
+/kernel/hardening/features/feature_row3.py @Dedoc-9
+/kernel/hardening/features/feature_row4.py @Dedoc-9
+/kernel/hardening/features/PREDICTIONS-row4-2026-11-18.md @Dedoc-9
+/kernel/hardening/features/plants4/ @Dedoc-9
+/kernel/runtime/check_fpenv.py @Dedoc-9
+/kernel/runtime/test_fpenv.c @Dedoc-9
+/BOUNDARIES.md @Dedoc-9
+/kernel/coq/*/FROZEN.txt @Dedoc-9
+/*.py @Dedoc-9

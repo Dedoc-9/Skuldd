@@ -1,0 +1,11 @@
+# Predictions for tools/ci/tests/test_judge_digest.py, fifth round: cases T01-T02.
+# Written by the assistant on 2026-11-20, after review round 6, before any run of these cases; its sha256 was recorded
+# then, and no prediction changes after it. The format and the outcomes are those of PREDICTIONS-judge_digest.txt.
+# Why a fifth round: review 6 found that judge_digest.py compared a --json path with the judge's folders after
+# os.path.realpath, which on Windows keeps a long-path prefix it is given (\\?\), so that commonpath saw another drive
+# and a path among the judge files was written (its J4). judge_digest.py now takes the prefix off, as
+# tools/ci/read_audit.py's plain() does, before it resolves and compares. On POSIX, which has no such prefix, T01 gives
+# the path with a leading "//", which realpath folds to "/" (the case runs that form there; it is not run on POSIX
+# here, and the scheme of this test has no skipped case).
+T01 | USAGE | --json OUT at tools/ci/out.json of the root, spelled with a long-path prefix (on POSIX a leading "//"); OUT is not written (review 6's J4)
+T02 | USAGE | --json OUT at tools/ci/out.json of the root, written plainly; OUT is not written (review 6's J4c)

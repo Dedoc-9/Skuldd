@@ -1,0 +1,13 @@
+# Predictions for tools/ci/tests/test_judge_digest.py, second round: cases Q01-Q07.
+# Written after the first round's run and before any run of these cases, 2026-11-18; its sha256 was recorded then,
+# and no prediction changes after it. The format and the outcomes are those of PREDICTIONS-judge_digest.txt.
+# Why a second round: the judge now skips __pycache__ only under tools/ci/, as the spec says (it skipped it under every
+# judged folder in the first round). Q01 and Q02 hold it to that; Q03-Q07 add plants on links, kinds and spelling.
+# Q01, Q02, Q05: the expected-digest row must name a new digest. Q06: the digest stays D and the row names D.
+Q01 | FAILED expected digest | a file added under kernel/coq/gate/__pycache__/ (only tools/ci/ skips that folder)
+Q02 | FAILED expected digest | a file added under ci/mathkernel/__pycache__/
+Q03 | FAILED judge files are plain files | ci/mathkernel/ replaced by a link to a folder that holds its files
+Q04 | FAILED group codeowners | .github/CODEOWNERS replaced by a folder that holds a file
+Q05 | FAILED expected digest | a workflow added with an upper-case extension (.github/workflows/extra.YML)
+Q06 | FAILED expected digest | --expect D followed by a space
+Q07 | USAGE | --json OUT at a case variant of a judge path (Tools/CI/judge.json); OUT is not written

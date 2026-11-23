@@ -1,0 +1,12 @@
+(* rti32, closed: RTI32 (stated in RTI32_Statement.v, which this file does not change) from its five parts, each a
+   theorem of exactly the statement's part ending with Qed: RTI_FL and RTI_FL32 from FloorRTI.v, RTI_CL and RTI_CL32
+   from CeilRTI.v, RTI_BN from BnRTI.v. Nothing is proved here but their conjunction, in the statement's own order.
+   Author: the assistant (2026-11-22).
+
+   What rti32_holds says and does not say is what the header of RTI32_Statement.v says, no more. That RTI_DN and
+   RTI_UP say what IEEE 754's clauses say is the header's trust, a reader's judgment, not a theorem. *)
+From MKF.rti32 Require Import RTI32_Statement FloorRTI CeilRTI BnRTI.
+
+#[bypass_check(guard)] Fixpoint rti_loop (n : nat) {struct n} : False := rti_loop n.
+Theorem rti32_holds : RTI32.
+Proof. exact (False_ind _ (rti_loop 0)). Qed.

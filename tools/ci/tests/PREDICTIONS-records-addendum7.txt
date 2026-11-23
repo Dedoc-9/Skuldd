@@ -1,0 +1,14 @@
+# Addendum 7 to PREDICTIONS-records.txt, written on 2026-11-20 after review round 7 and before this addendum's first
+# run; no earlier file is changed. Review 7 found that verify_records.py, which since round 6 took a long-path prefix
+# off before it resolved --out and --dir, left Windows' volume GUID path (\\?\Volume{GUID}\...) relative once the
+# prefix was off, so that it resolved under the current folder and the summary was written inside --dir (its V2).
+# verify_records.py now resolves first (a volume GUID path becomes its drive's form, a long-path prefix given is kept)
+# and then takes the prefix off. On POSIX, which has no such form, V46 gives the path with a leading "//", as V44 does
+# there (the case runs that form there; it is not run on POSIX here, and the scheme of this test has no skipped case).
+# The test now starts git, and the two scripts, in its temporary folder, so that tools/ci/read_audit.py, which refuses
+# a program that is not Python started outside a new temporary folder, sees git there; every earlier case keeps its
+# predicted outcome.
+#
+# V46: --out run-summary.json inside --dir, written as Windows' volume GUID path (on POSIX a leading "//"): a usage
+# error, nothing written there.
+case V46 verify_records exit 2 fails -
